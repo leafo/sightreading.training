@@ -4,6 +4,8 @@ window.N = window.N || {};
 let MIDDLE_C_PITCH = 60
 let OCTAVE_SIZE = 12
 
+let NOTE_WIDTH = 120
+
 let NOTE_EVENTS = {
   [144]: "noteOn",
   [128]: "noteOff"
@@ -91,6 +93,7 @@ class Page extends React.Component {
       notes: [],
       hits: 0,
       misses: 0,
+      noteOffset: 0,
     };
     navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
   }
@@ -117,6 +120,33 @@ class Page extends React.Component {
     let idx = this.generator.int() % 8;
     this.state.notes.push(available[idx]);
     this.forceUpdate();
+  }
+
+  componentDidUpdate() {
+    if (this.state.noteOffset > 0 && !this.state.sliding) {
+      let speed = 10;
+      let start;
+
+      let animate = function(time) {
+        if (start == undefined) {
+          start = time
+        } else {
+          let dt = (time - start) / 1000;
+          this.setState({
+            noteOffset: Math.max(0, this.state.noteOffset - dt * speed)
+          });
+        }
+
+        if (this.state.noteOffset > 0) {
+          window.requestAnimationFrame(animate);
+        } else {
+          this.setState({sliding: false});
+        }
+      }.bind(this);
+
+      this.setState({sliding: true});
+      window.requestAnimationFrame(animate)
+    }
   }
 
   pickInput(e) {
@@ -146,7 +176,10 @@ class Page extends React.Component {
       if (n == this.state.notes[0]) {
         this.shiftNote();
         this.pushRandomNote();
-        this.setState({hits: this.state.hits + 1})
+        this.setState({
+          hits: this.state.hits + 1,
+          noteOffset: this.state.noteOffset + NOTE_WIDTH,
+        })
       } else {
         this.setState({misses: this.state.misses + 1})
       }
@@ -190,7 +223,7 @@ class Page extends React.Component {
         <h1>Sight reading trainer</h1>
       </div>
 
-      <Staff notes={this.state.notes}/>
+      <Staff notes={this.state.notes} noteOffset={this.state.noteOffset}/>
       {inputSelect}
     </div>;
   }
@@ -231,7 +264,7 @@ class Staff extends React.Component {
 
       let style = {
         top: `${Math.floor(fromTop * 25/2)}%`,
-        left: `${120 * idx}px`
+        left: `${NOTE_WIDTH * idx + this.props.noteOffset}px`
       }
 
       return <img
