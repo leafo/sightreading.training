@@ -94,6 +94,7 @@ class Page extends React.Component {
       hits: 0,
       misses: 0,
       noteOffset: 0,
+      noteShaking: false
     };
     navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
   }
@@ -179,9 +180,14 @@ class Page extends React.Component {
         this.setState({
           hits: this.state.hits + 1,
           noteOffset: this.state.noteOffset + NOTE_WIDTH,
+          noteShaking: false,
         })
       } else {
-        this.setState({misses: this.state.misses + 1})
+        this.setState({
+          misses: this.state.misses + 1,
+          noteShaking: true,
+        })
+        setTimeout(() => this.setState({noteShaking: false}), 500);
       }
     }
   }
@@ -223,7 +229,7 @@ class Page extends React.Component {
         <h1>Sight reading trainer</h1>
       </div>
 
-      <Staff notes={this.state.notes} noteOffset={this.state.noteOffset}/>
+      <Staff {...this.state} />
       {inputSelect}
     </div>;
   }
@@ -267,12 +273,17 @@ class Staff extends React.Component {
         left: `${NOTE_WIDTH * idx + this.props.noteOffset}px`
       }
 
+      let classes = classNames("whole_note", "note", {
+        outside: pitch > this.upperLedger || pitch < this.lowerLedger,
+        shake: this.props.noteShaking && idx == 0
+      })
+
       return <img
         key={idx}
         style={style}
         data-note={note}
         data-midi-note={pitch}
-        className={classNames("whole_note", "note", {outside: pitch > this.upperLedger || pitch < this.lowerLedger})}
+        className={classes}
         src="svg/noteheads.s0.svg" />
 
     }.bind(this));
