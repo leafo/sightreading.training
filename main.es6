@@ -86,13 +86,32 @@ let letterOffset = function(pitch) {
 class Page extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { midi: null };
+    this.state = { midi: null, notes: [] };
     navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
+  }
+
+  componentDidMount() {
+    for (let i = 0; i < 5; i++) {
+      this.pushRandomNote();
+    }
   }
 
   midiInputs() {
     if (!this.state.midi) return;
     return [...this.state.midi.inputs.values()];
+  }
+
+  shiftNote() {
+    this.state.notes.shift();
+    this.forceUpdate();
+  }
+
+  pushRandomNote() {
+    let available = ["C5", "D5", "E5", "F5", "G5", "A5", "B5", "C6"];
+    this.generator = this.generator || new MersenneTwister();
+    let idx = this.generator.int() % 8;
+    this.state.notes.push(available[idx]);
+    this.forceUpdate();
   }
 
   pickInput(e) {
@@ -119,9 +138,10 @@ class Page extends React.Component {
 
     if (NOTE_EVENTS[type] == "noteOn") {
       let n = noteName(pitch)
-      console.log("original:", pitch);
-      console.log("Got note:", n);
-      console.log("parsed:", parseNote(n));
+      if (n == this.state.notes[0]) {
+        this.shiftNote();
+        this.pushRandomNote();
+      }
     }
   }
 
@@ -144,7 +164,7 @@ class Page extends React.Component {
     }
 
     return <div>
-      <Staff />
+      <Staff notes={this.state.notes}/>
       {inputSelect}
     </div>;
   }
@@ -153,7 +173,6 @@ class Page extends React.Component {
 class Staff extends React.Component {
   constructor(props) {
     super(props);
-
     this.upperLedger = 77;
     this.lowerLedger = 64;
   }
@@ -172,7 +191,7 @@ class Staff extends React.Component {
         </div>
 
         <div className="notes">
-          {this.renderNotes(["F6", "E6", "D6", "C6", "B5", "A5", "G5", "F5", "E5", "D5", "C5"])}
+          {this.renderNotes(this.props.notes || [])}
         </div>
 
       </div>
@@ -186,7 +205,7 @@ class Staff extends React.Component {
 
       let style = {
         top: `${Math.floor(fromTop * 25/2)}%`,
-        left: `${60 * idx}px`
+        left: `${120 * idx}px`
       }
 
       return <img
