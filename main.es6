@@ -27,6 +27,16 @@ let OFFSETS = {
   "B": 11
 }
 
+let LETTER_OFFSETS = {
+  [0]: 0,
+  [2]: 1,
+  [4]: 2,
+  [5]: 3,
+  [7]: 4,
+  [9]: 5,
+  [11]: 6
+}
+
 let noteName = function(pitch) {
   let octave = Math.floor(pitch / OCTAVE_SIZE)
   let offset = pitch - octave * OCTAVE_SIZE
@@ -56,6 +66,21 @@ let parseNote = function(note) {
   }
 
   return n;
+}
+
+let letterOffset = function(pitch) {
+  let offset = 0
+
+  while (pitch >= 12) {
+    offset += 7
+    pitch -= 12
+  }
+
+  while (LETTER_OFFSETS[pitch] == undefined) {
+    pitch -= 1
+  }
+
+  return offset + LETTER_OFFSETS[pitch]
 }
 
 class Page extends React.Component {
@@ -157,8 +182,7 @@ class Staff extends React.Component {
   renderNotes(notes) {
     return notes.map(function(note, idx) {
       let pitch = parseNote(note);
-      let fromTop = this.upperLedger - pitch;
-      console.log("rendering", note, "top", fromTop, "pitch:", pitch, "upper",this.upperLedger);
+      let fromTop = letterOffset(this.upperLedger) - letterOffset(pitch);
 
       let style = {
         top: `${Math.floor(fromTop * 25/2)}%`,
