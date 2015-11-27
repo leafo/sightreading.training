@@ -1,6 +1,6 @@
+include_rules
+!join = |> ^ join %o^ cat %f > %o |>
 
-!babel = |> babel %f > %o |>
-!scss = |> ^ scss %o^ sassc -I scss/ < %f > %o |>
+: src/main.js src/*.js |> !join |> main.js
 
-: foreach *.es6 |> !babel |> %B.js
-: foreach *.scss |> !scss |> %B.css
+

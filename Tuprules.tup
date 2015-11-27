@@ -1,0 +1,5 @@
+!babel = |> babel %f > %o |>
+!scss = |> ^ scss %o^ sassc -I scss/ < %f > %o |>
+
+: foreach *.es6 |> !babel |> %B.js
+: foreach *.scss |> !scss |> %B.css
