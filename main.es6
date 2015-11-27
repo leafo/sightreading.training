@@ -125,14 +125,14 @@ class Page extends React.Component {
     this.forceUpdate();
   }
 
-  // callend when held notes reaches 0
+  // called when held notes reaches 0
   checkForMiss() {
     this.setState({
       misses: this.state.misses + 1,
       noteShaking: true,
       heldNotes: {},
       touchedNotes: {},
-    })
+    });
     setTimeout(() => this.setState({noteShaking: false}), 500);
     return true;
   }
@@ -148,7 +148,9 @@ class Page extends React.Component {
         hits: this.state.hits + 1,
         noteOffset: this.state.noteOffset + NOTE_WIDTH,
         noteShaking: false,
-      })
+        heldNotes: {},
+        touchedNotes: {},
+      });
 
       return true;
     } else {
@@ -192,7 +194,7 @@ class Page extends React.Component {
     if (!input) {
       return;
     }
-    
+
     console.log(`Binding to: ${input.name}`)
     input.onmidimessage = this.onMidiMessage.bind(this);
     this.setState({currentInput: input});
@@ -204,7 +206,6 @@ class Page extends React.Component {
     let cmd = raw >> 4,
       channel = raw & 0xf,
       type = raw & 0xf0;
-
 
     let n = noteName(pitch)
 
@@ -218,9 +219,12 @@ class Page extends React.Component {
     }
 
     if (NOTE_EVENTS[type] == "noteOff") {
-      delete this.state.heldNotes[n];
-      if (Object.keys(this.state.heldNotes).length == 0) {
-        this.checkForMiss();
+      // note might no longer be considered held if we just moved to next note
+      if (this.state.heldNotes[n]) {
+        delete this.state.heldNotes[n];
+        if (Object.keys(this.state.heldNotes).length == 0) {
+          this.checkForMiss();
+        }
       }
     }
   }
@@ -295,37 +299,54 @@ class Staff extends React.Component {
         </div>
 
         <div className="notes">
-          {this.renderNotes(this.props.notes || [])}
+          {this.renderNotes()}
+          {this.renderHeld()}
         </div>
 
       </div>
     </div>
   }
 
-  renderNotes(notes) {
-    return notes.map(function(note, idx) {
-      let pitch = parseNote(note);
-      let fromTop = letterOffset(this.upperLedger) - letterOffset(pitch);
-
-      let style = {
-        top: `${Math.floor(fromTop * 25/2)}%`,
-        left: `${NOTE_WIDTH * idx + this.props.noteOffset}px`
-      }
-
-      let classes = classNames("whole_note", "note", {
-        outside: pitch > this.upperLedger || pitch < this.lowerLedger,
-        shake: this.props.noteShaking && idx == 0
+  renderHeld(notes) {
+    // notes that are held down but aren't correct
+    return Object.keys(this.props.heldNotes).map((note, idx) =>
+      note != this.props.notes[0] && this.renderNote(note, {
+        key: `ghost-${idx}`,
+        classes: { ghost: true }
       })
+    );
+  }
 
-      return <img
-        key={idx}
-        style={style}
-        data-note={note}
-        data-midi-note={pitch}
-        className={classes}
-        src="svg/noteheads.s0.svg" />
+  renderNotes(notes) {
+    return this.props.notes.map((note, idx) =>
+      this.renderNote(note, {
+        offset: NOTE_WIDTH * idx + this.props.noteOffset,
+        first: idx == 0,
+        key: idx
+      }));
+  }
 
-    }.bind(this));
+  renderNote(note, opts={}) {
+    let pitch = parseNote(note);
+    let fromTop = letterOffset(this.upperLedger) - letterOffset(pitch);
+
+    let style = {
+      top: `${Math.floor(fromTop * 25/2)}%`,
+      left: `${opts.offset || 0}px`
+    }
+
+    let classes = classNames("whole_note", "note", {
+      outside: pitch > this.upperLedger || pitch < this.lowerLedger,
+      shake: this.props.noteShaking && opts.first
+    }, opts.classes || {})
+
+    return <img
+      key={opts.key}
+      style={style}
+      data-note={note}
+      data-midi-note={pitch}
+      className={classes}
+      src="svg/noteheads.s0.svg" />;
   }
 }
 

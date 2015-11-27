@@ -116,6 +116,10 @@ body {
             left: 120px;
             height: 20%;
             margin-top: -13px;
+
+            &.ghost {
+                opacity: 0.2;
+            }
         }
     }
 
@@ -145,7 +149,6 @@ body {
 }
 
 .shake {
-    //-webkit-animation-name: shake;
     animation-name: shake;
     animation-duration: 0.5s;
 }
