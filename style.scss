@@ -3,4 +3,54 @@ body {
     color: #333;
 }
 
+.staff_wrapper {
+    box-shadow: 0 0 0 5px darken(#f7f7f7, 20%);
+    margin: 20px;
+    padding: 0 20px;
+    overflow: hidden;
+}
+
+.staff {
+    position: relative;
+    width: 600px;
+    height: 140px;
+    border-left: 6px solid black;
+    margin: 45px 0 60px 0;
+
+    .ledger_lines {
+        .ledger {
+            height: 2px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: black;
+        }
+
+        .ledger2 {
+            top: percentage(1.0/4.0);
+        }
+
+        .ledger3 {
+            top: percentage(2.0/4.0);
+        }
+
+        .ledger4 {
+            top: percentage(3.0/4.0);
+        }
+
+        .ledger5 {
+            top: auto;
+            bottom: 0;
+        }
+    }
+
+    .g_cleff {
+        position: absolute;
+        left: 10px;
+        height: 165%;
+        top: -28%;
+    }
+}
+
 
