@@ -1,7 +1,7 @@
 {
-  "name": "notes",
+  "name": "mursicjs",
   "version": "1.0.0",
-  "description": "",
+  "description": "sight reading trainer",
   "main": "test.js",
   "dependencies": {
     "babel-preset-react": "^6.1.18",
@@ -12,6 +12,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "leaf corcoran",
+  "license": "MIT"
 }
