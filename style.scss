@@ -1,12 +1,71 @@
 
+$border_color: darken(#dadada, 5%);
+
 body {
     color: #333;
+    background: #e7e7e7;
+    font-family: 'Raleway', sans-serif;
+}
+
+.page_container {
+    max-width: 800px;
+    margin: 0 auto;
+    margin-top: 80px;
+
+    h1 {
+        font-size: 28px;
+        margin: 0;
+        margin-top: 13px;
+    }
+
+    .header {
+        overflow: hidden;
+    }
+
+    .stats {
+        float: right;
+    }
+
+    .stat_container {
+        display: inline-block;
+        vertical-align: top;
+        text-align: right;
+        margin-left: 15px;
+        border-left: 1px solid $border_color;
+        padding: 5px 0 5px 15px;
+
+        &:first-child {
+            border-left: 0;
+        }
+
+        .value {
+            font-size: 22px;
+            margin-bottom: 4px;
+        }
+
+        .label {
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #999;
+        }
+    }
+}
+
+.input_picker {
+    color: #666;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
 }
 
 .staff_wrapper {
-    box-shadow: 0 0 0 5px darken(#f7f7f7, 20%);
-    margin: 20px;
-    padding: 0 20px;
+    margin-top: 20px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid $border_color;
+    margin: 20px 0;
+    padding: 15px 0 10px 40px;
     overflow: hidden;
 }
 

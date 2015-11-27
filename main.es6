@@ -86,12 +86,17 @@ let letterOffset = function(pitch) {
 class Page extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { midi: null, notes: [] };
+    this.state = {
+      midi: null,
+      notes: [],
+      hits: 0,
+      misses: 0,
+    };
     navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
   }
 
   componentDidMount() {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
       this.pushRandomNote();
     }
   }
@@ -141,6 +146,9 @@ class Page extends React.Component {
       if (n == this.state.notes[0]) {
         this.shiftNote();
         this.pushRandomNote();
+        this.setState({hits: this.state.hits + 1})
+      } else {
+        this.setState({misses: this.state.misses + 1})
       }
     }
   }
@@ -163,7 +171,25 @@ class Page extends React.Component {
       </div>
     }
 
-    return <div>
+    return <div className="page_container">
+      <div className="header">
+        <div className="stats">
+
+          <div className="stat_container">
+            <div className="value">{this.state.hits}</div>
+            <div className="label">hits</div>
+          </div>
+
+          <div className="stat_container">
+            <div className="value">{this.state.misses}</div>
+            <div className="label">misses</div>
+          </div>
+
+
+        </div>
+        <h1>Sight reading trainer</h1>
+      </div>
+
       <Staff notes={this.state.notes}/>
       {inputSelect}
     </div>;
