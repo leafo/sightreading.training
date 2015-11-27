@@ -155,7 +155,7 @@ class Staff extends React.Component {
     super(props);
 
     this.upperLedger = 77;
-    this.lowerLedger = 62;
+    this.lowerLedger = 64;
   }
 
   render() {
@@ -192,8 +192,9 @@ class Staff extends React.Component {
       return <img
         key={idx}
         style={style}
-        title={note}
-        className="whote_note note"
+        data-note={note}
+        data-midi-note={pitch}
+        className={classNames("whole_note", "note", {outside: pitch > this.upperLedger || pitch < this.lowerLedger})}
         src="svg/noteheads.s0.svg" />
 
     }.bind(this));
