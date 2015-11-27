@@ -85,12 +85,61 @@ let letterOffset = function(pitch) {
   return offset + LETTER_OFFSETS[pitch]
 }
 
+class NoteList {
+  constructor(notes) {
+    this.notes = notes || [];
+  }
+
+  push(column) {
+    this.notes.push(column);
+  }
+
+  pushRandom() {
+    let available = ["C5", "D5", "E5", "F5", "G5", "A5", "B5", "C6"];
+    // let available = [["C5", "G5"]];
+    this.generator = this.generator || new MersenneTwister();
+    let idx = this.generator.int() % 8;
+    return this.push(available[idx]);
+  }
+
+  shift() {
+    return this.notes.shift();
+  }
+
+  map(callback) {
+    return this.notes.map(callback);
+  }
+
+  // must be an array of notes
+  matchesHead(notes) {
+    let first = this.notes[0];
+    if (Array.isArray(first)) {
+      if (first.length != notes.length) {
+        return false;
+      }
+      return first.every((n) => notes.indexOf(n) >= 0);
+    } else {
+      return notes.length == 1 && notes[0] == first;
+    }
+  }
+
+  // if single note is in head
+  inHead(note) {
+    let first = this.notes[0];
+    if (Array.isArray(first)) {
+      first.some((n) => n == note);
+    } else {
+      return note == first
+    }
+  }
+}
+
 class Page extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       midi: null,
-      notes: [],
+      notes: new NoteList(),
       hits: 0,
       misses: 0,
       noteOffset: 0,
@@ -103,26 +152,14 @@ class Page extends React.Component {
 
   componentDidMount() {
     for (let i = 0; i < 6; i++) {
-      this.pushRandomNote();
+      this.state.notes.pushRandom()
     }
+    this.forceUpdate();
   }
 
   midiInputs() {
     if (!this.state.midi) return;
     return [...this.state.midi.inputs.values()];
-  }
-
-  shiftNote() {
-    this.state.notes.shift();
-    this.forceUpdate();
-  }
-
-  pushRandomNote() {
-    let available = ["C5", "D5", "E5", "F5", "G5", "A5", "B5", "C6"];
-    this.generator = this.generator || new MersenneTwister();
-    let idx = this.generator.int() % 8;
-    this.state.notes.push(available[idx]);
-    this.forceUpdate();
   }
 
   // called when held notes reaches 0
@@ -140,11 +177,12 @@ class Page extends React.Component {
   // called on every noteOn
   checkForHit() {
     let touched = Object.keys(this.state.touchedNotes);
-    if (touched.length == 1 && touched[0] == this.state.notes[0]) {
+    if (this.state.notes.matchesHead(touched)) {
+      this.state.notes.shift();
+      this.state.notes.pushRandom();
 
-      this.shiftNote();
-      this.pushRandomNote();
       this.setState({
+        notes: this.state.notes,
         hits: this.state.hits + 1,
         noteOffset: this.state.noteOffset + NOTE_WIDTH,
         noteShaking: false,
@@ -310,7 +348,7 @@ class Staff extends React.Component {
   renderHeld(notes) {
     // notes that are held down but aren't correct
     return Object.keys(this.props.heldNotes).map((note, idx) =>
-      note != this.props.notes[0] && this.renderNote(note, {
+      !this.props.notes.inHead(note) && this.renderNote(note, {
         key: `ghost-${idx}`,
         classes: { ghost: true }
       })
@@ -323,7 +361,8 @@ class Staff extends React.Component {
         offset: NOTE_WIDTH * idx + this.props.noteOffset,
         first: idx == 0,
         key: idx
-      }));
+      })
+    );
   }
 
   renderNote(note, opts={}) {
