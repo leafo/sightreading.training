@@ -95,11 +95,10 @@ class NoteList {
   }
 
   pushRandom() {
-    let available = ["C5", "D5", "E5", "F5", "G5", "A5", "B5", "C6"];
-    // let available = [["C5", "G5"]];
+    let available = ["C5", "D5", "E5", "F5", "G5", "A5", "B5", "C6", ["C5", "G5"]];
     this.generator = this.generator || new MersenneTwister();
-    let idx = this.generator.int() % 8;
-    return this.push(available[idx]);
+    let idx = this.generator.int();
+    return this.push(available[idx % available.length]);
   }
 
   shift() {
@@ -127,7 +126,7 @@ class NoteList {
   inHead(note) {
     let first = this.notes[0];
     if (Array.isArray(first)) {
-      first.some((n) => n == note);
+      return first.some((n) => n == note);
     } else {
       return note == first
     }
@@ -355,14 +354,25 @@ class Staff extends React.Component {
     );
   }
 
-  renderNotes(notes) {
-    return this.props.notes.map((note, idx) =>
-      this.renderNote(note, {
+  renderNotes() {
+    return this.props.notes.map(function(note, idx) {
+      let opts = {
+        goal: true,
         offset: NOTE_WIDTH * idx + this.props.noteOffset,
         first: idx == 0,
-        key: idx
-      })
-    );
+      }
+
+      if (Array.isArray(note)) {
+        return note.map(function(sub_note, col_idx) {
+          opts.key = `${idx}-${col_idx}`;
+          return this.renderNote(sub_note, opts);
+        }.bind(this));
+      } else {
+        opts.key = idx;
+        return this.renderNote(note, opts);
+      }
+
+    }.bind(this));
   }
 
   renderNote(note, opts={}) {
@@ -376,7 +386,8 @@ class Staff extends React.Component {
 
     let classes = classNames("whole_note", "note", {
       outside: pitch > this.upperLedger || pitch < this.lowerLedger,
-      shake: this.props.noteShaking && opts.first
+      shake: this.props.noteShaking && opts.first,
+      held: opts.goal && opts.first && this.props.heldNotes[note],
     }, opts.classes || {})
 
     return <img
