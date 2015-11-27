@@ -82,3 +82,52 @@ function letterOffset(pitch) {
   return offset + LETTER_OFFSETS[pitch]
 }
 
+class NoteList {
+  constructor(notes) {
+    this.notes = notes || [];
+  }
+
+  push(column) {
+    this.notes.push(column);
+  }
+
+  pushRandom() {
+    let available = ["C5", "D5", "E5", "F5", "G5", "A5", "B5", "C6", ["C5", "G5"]];
+    this.generator = this.generator || new MersenneTwister();
+    let idx = this.generator.int();
+    return this.push(available[idx % available.length]);
+  }
+
+  shift() {
+    return this.notes.shift();
+  }
+
+  map(callback) {
+    return this.notes.map(callback);
+  }
+
+  // must be an array of notes
+  matchesHead(notes) {
+    let first = this.notes[0];
+    if (Array.isArray(first)) {
+      if (first.length != notes.length) {
+        return false;
+      }
+      return first.every((n) => notes.indexOf(n) >= 0);
+    } else {
+      return notes.length == 1 && notes[0] == first;
+    }
+  }
+
+  // if single note is in head
+  inHead(note) {
+    let first = this.notes[0];
+    if (Array.isArray(first)) {
+      return first.some((n) => n == note);
+    } else {
+      return note == first
+    }
+  }
+}
+
+
