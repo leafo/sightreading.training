@@ -12,7 +12,6 @@ body {
 
 .staff {
     position: relative;
-    width: 600px;
     height: 140px;
     border-left: 6px solid black;
     margin: 45px 0 60px 0;
@@ -42,6 +41,22 @@ body {
         .ledger5 {
             top: auto;
             bottom: 0;
+        }
+    }
+
+    .notes {
+        position: absolute;
+        top: 0;
+        left: 120px;
+        right: 0;
+        bottom: 0;
+
+        .note {
+            position: absolute;
+            top: 0;
+            left: 120px;
+            height: 20%;
+            margin-top: -13px;
         }
     }
 

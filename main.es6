@@ -16,7 +16,15 @@ let OFFSETS = {
   [5]: "F",
   [7]: "G",
   [9]: "A",
-  [11]: "B"
+  [11]: "B",
+
+  "C": 0,
+  "D": 2,
+  "E": 4,
+  "F": 5,
+  "G": 7,
+  "A": 9,
+  "B": 11
 }
 
 let noteName = function(pitch) {
@@ -31,8 +39,26 @@ let noteName = function(pitch) {
   return `${name}${octave}`;
 }
 
-class Page extends React.Component {
+let parseNote = function(note) {
+  let [, letter, accidental, octave] = note.match(/^(\w)(#|b)?(\d+)$/);
+  if (OFFSETS[letter] == undefined) {
+    throw `invalid note letter: ${letter}`
+  }
 
+  let n = OFFSETS[letter] + parseInt(octave, 10) * OCTAVE_SIZE;
+
+  if (accidental == "#") {
+    n += 1
+  }
+
+  if (accidental == "b") {
+    n -= 1
+  }
+
+  return n;
+}
+
+class Page extends React.Component {
   constructor(props) {
     super(props);
     this.state = { midi: null };
@@ -67,7 +93,10 @@ class Page extends React.Component {
       type = raw & 0xf0;
 
     if (NOTE_EVENTS[type] == "noteOn") {
-      console.log("Got note:", noteName(pitch));
+      let n = noteName(pitch)
+      console.log("original:", pitch);
+      console.log("Got note:", n);
+      console.log("parsed:", parseNote(n));
     }
   }
 
@@ -97,6 +126,13 @@ class Page extends React.Component {
 }
 
 class Staff extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.upperLedger = 77;
+    this.lowerLedger = 62;
+  }
+
   render() {
     return <div className="staff_wrapper">
       <div className="staff">
@@ -110,8 +146,33 @@ class Staff extends React.Component {
           <div className="ledger5 ledger"></div>
         </div>
 
+        <div className="notes">
+          {this.renderNotes(["F6", "E6", "D6", "C6", "B5", "A5", "G5", "F5", "E5", "D5", "C5"])}
+        </div>
+
       </div>
     </div>
+  }
+
+  renderNotes(notes) {
+    return notes.map(function(note, idx) {
+      let pitch = parseNote(note);
+      let fromTop = this.upperLedger - pitch;
+      console.log("rendering", note, "top", fromTop, "pitch:", pitch, "upper",this.upperLedger);
+
+      let style = {
+        top: `${Math.floor(fromTop * 25/2)}%`,
+        left: `${60 * idx}px`
+      }
+
+      return <img
+        key={idx}
+        style={style}
+        title={note}
+        className="whote_note note"
+        src="svg/noteheads.s0.svg" />
+
+    }.bind(this));
   }
 }
 
