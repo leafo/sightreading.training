@@ -1,17 +1,17 @@
 
 window.N = window.N || {};
 
-let MIDDLE_C_PITCH = 60
-let OCTAVE_SIZE = 12
+const MIDDLE_C_PITCH = 60
+const OCTAVE_SIZE = 12
 
-let NOTE_WIDTH = 120
+const NOTE_WIDTH = 120
 
-let NOTE_EVENTS = {
+const NOTE_EVENTS = {
   [144]: "noteOn",
   [128]: "noteOff"
 }
 
-let OFFSETS = {
+const OFFSETS = {
   [0]: "C",
   [2]: "D",
   [4]: "E",
@@ -29,7 +29,7 @@ let OFFSETS = {
   "B": 11
 }
 
-let LETTER_OFFSETS = {
+const LETTER_OFFSETS = {
   [0]: 0,
   [2]: 1,
   [4]: 2,
@@ -39,7 +39,7 @@ let LETTER_OFFSETS = {
   [11]: 6
 }
 
-let noteName = function(pitch) {
+function noteName(pitch) {
   let octave = Math.floor(pitch / OCTAVE_SIZE)
   let offset = pitch - octave * OCTAVE_SIZE
 
@@ -51,7 +51,7 @@ let noteName = function(pitch) {
   return `${name}${octave}`;
 }
 
-let parseNote = function(note) {
+function parseNote(note) {
   let [, letter, accidental, octave] = note.match(/^(\w)(#|b)?(\d+)$/);
   if (OFFSETS[letter] == undefined) {
     throw `invalid note letter: ${letter}`
@@ -70,7 +70,7 @@ let parseNote = function(note) {
   return n;
 }
 
-let letterOffset = function(pitch) {
+function letterOffset(pitch) {
   let offset = 0
 
   while (pitch >= 12) {
