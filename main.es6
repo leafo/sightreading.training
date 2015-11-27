@@ -94,7 +94,9 @@ class Page extends React.Component {
       hits: 0,
       misses: 0,
       noteOffset: 0,
-      noteShaking: false
+      noteShaking: false,
+      heldNotes: {},
+      touchedNotes: {},
     };
     navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
   }
@@ -121,6 +123,37 @@ class Page extends React.Component {
     let idx = this.generator.int() % 8;
     this.state.notes.push(available[idx]);
     this.forceUpdate();
+  }
+
+  // callend when held notes reaches 0
+  checkForMiss() {
+    this.setState({
+      misses: this.state.misses + 1,
+      noteShaking: true,
+      heldNotes: {},
+      touchedNotes: {},
+    })
+    setTimeout(() => this.setState({noteShaking: false}), 500);
+    return true;
+  }
+
+  // called on every noteOn
+  checkForHit() {
+    let touched = Object.keys(this.state.touchedNotes);
+    if (touched.length == 1 && touched[0] == this.state.notes[0]) {
+
+      this.shiftNote();
+      this.pushRandomNote();
+      this.setState({
+        hits: this.state.hits + 1,
+        noteOffset: this.state.noteOffset + NOTE_WIDTH,
+        noteShaking: false,
+      })
+
+      return true;
+    } else {
+      return false;
+    }
   }
 
   componentDidUpdate() {
@@ -172,22 +205,22 @@ class Page extends React.Component {
       channel = raw & 0xf,
       type = raw & 0xf0;
 
+
+    let n = noteName(pitch)
+
     if (NOTE_EVENTS[type] == "noteOn") {
-      let n = noteName(pitch)
-      if (n == this.state.notes[0]) {
-        this.shiftNote();
-        this.pushRandomNote();
-        this.setState({
-          hits: this.state.hits + 1,
-          noteOffset: this.state.noteOffset + NOTE_WIDTH,
-          noteShaking: false,
-        })
-      } else {
-        this.setState({
-          misses: this.state.misses + 1,
-          noteShaking: true,
-        })
-        setTimeout(() => this.setState({noteShaking: false}), 500);
+      this.state.heldNotes[n] = true;
+      this.state.touchedNotes[n] = true;
+
+      if (!this.checkForHit()) {
+        this.forceUpdate();
+      }
+    }
+
+    if (NOTE_EVENTS[type] == "noteOff") {
+      delete this.state.heldNotes[n];
+      if (Object.keys(this.state.heldNotes).length == 0) {
+        this.checkForMiss();
       }
     }
   }
@@ -223,14 +256,20 @@ class Page extends React.Component {
             <div className="value">{this.state.misses}</div>
             <div className="label">misses</div>
           </div>
-
-
         </div>
         <h1>Sight reading trainer</h1>
       </div>
 
       <Staff {...this.state} />
       {inputSelect}
+
+      <div className="debug">
+        <pre>
+          held: {JSON.stringify(this.state.heldNotes)}
+          {" "}
+          pressed: {JSON.stringify(this.state.touchedNotes)}
+        </pre>
+      </div>
     </div>;
   }
 }
