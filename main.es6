@@ -1,9 +1,34 @@
 
 window.N = window.N || {};
 
+let MIDDLE_C_PITCH = 60
+let OCTAVE_SIZE = 12
+
 let NOTE_EVENTS = {
   [144]: "noteOn",
   [128]: "noteOff"
+}
+
+let OFFSETS = {
+  [0]: "C",
+  [2]: "D",
+  [4]: "E",
+  [5]: "F",
+  [7]: "G",
+  [9]: "A",
+  [11]: "B"
+}
+
+let noteName = function(pitch) {
+  let octave = Math.floor(pitch / OCTAVE_SIZE)
+  let offset = pitch - octave * OCTAVE_SIZE
+
+  let name = OFFSETS[offset]
+  if (!name) {
+    name = OFFSETS[offset - 1] + "#"
+  }
+
+  return `${name}${octave}`;
 }
 
 class Page extends React.Component {
@@ -35,9 +60,14 @@ class Page extends React.Component {
   }
 
   onMidiMessage(message) {
-    let [noteEvent, key, velocity] = message.data;
-    if (NOTE_EVENTS[noteEvent] == "noteOn") {
-      console.log("note on: ", key);
+    let [raw, pitch, velocity] = message.data;
+
+    let cmd = raw >> 4,
+      channel = raw & 0xf,
+      type = raw & 0xf0;
+
+    if (NOTE_EVENTS[type] == "noteOn") {
+      console.log("Got note:", noteName(pitch));
     }
   }
 
