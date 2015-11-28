@@ -3,6 +3,52 @@ let {PropTypes: types} = React;
 
 const NOTE_WIDTH = 100;
 
+// used to control animation outside of react
+class SlideToZero {
+  constructor(opts={}) {
+    this.value = 0;
+    this.speed = opts.speed || 100; // 100 pixels a second
+    this.animating = false;
+    this.onUpdate = opts.onUpdate || function() {}
+  }
+
+  cancel() {
+    this.canceled = true
+  }
+
+  add(delta) {
+    let wasZero = this.value == 0;
+
+    this.value += delta;
+    if (wasZero && this.value > 0) {
+      let lastFrame = performance.now();
+      this.animating = true;
+      console.log("starting animate...");
+
+      let frameUpdate = function(time) {
+        let dt = (time - lastFrame) / 1000;
+        lastFrame = time;
+
+        if (dt == 0) {
+          return;
+        }
+
+        this.value = Math.max(0, this.value - this.speed * dt);
+        this.onUpdate(this.value);
+
+        if (this.value > 0) {
+          window.requestAnimationFrame(frameUpdate);
+        } else {
+          this.animating = false;
+          console.log("done animating...");
+        }
+      }.bind(this);
+
+      window.requestAnimationFrame(frameUpdate)
+    }
+  }
+}
+
 class Page extends React.Component {
   constructor(props) {
     super(props);
@@ -12,12 +58,19 @@ class Page extends React.Component {
       notes: new NoteList(),
       hits: 0,
       misses: 0,
-      noteOffset: 0,
       noteShaking: false,
       heldNotes: {},
       touchedNotes: {},
 
       bufferSize: 10,
+
+      slider: new SlideToZero({
+        speed: 400,
+        onUpdate: function(value) {
+          if (!this.staff) { return; }
+          this.staff.setOffset(value);
+        }.bind(this)
+      }),
     };
 
     navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
@@ -27,6 +80,7 @@ class Page extends React.Component {
     for (let i = 0; i < this.state.bufferSize; i++) {
       this.state.notes.pushRandom()
     }
+
     this.forceUpdate();
   }
 
@@ -57,42 +111,16 @@ class Page extends React.Component {
       this.setState({
         notes: this.state.notes,
         hits: this.state.hits + 1,
-        noteOffset: this.state.noteOffset + NOTE_WIDTH,
         noteShaking: false,
         heldNotes: {},
         touchedNotes: {},
       });
 
+      this.state.slider.add(NOTE_WIDTH);
+
       return true;
     } else {
       return false;
-    }
-  }
-
-  componentDidUpdate() {
-    if (this.state.noteOffset > 0 && !this.state.sliding) {
-      let speed = 10;
-      let start;
-
-      let animate = function(time) {
-        if (start == undefined) {
-          start = time
-        } else {
-          let dt = (time - start) / 1000;
-          this.setState({
-            noteOffset: Math.max(0, this.state.noteOffset - dt * speed)
-          });
-        }
-
-        if (this.state.noteOffset > 0) {
-          window.requestAnimationFrame(animate);
-        } else {
-          this.setState({sliding: false});
-        }
-      }.bind(this);
-
-      this.setState({sliding: true});
-      window.requestAnimationFrame(animate)
     }
   }
 
@@ -212,7 +240,9 @@ class Page extends React.Component {
       <div className="workspace_wrapper">
         {header}
         <div className="staff_wrapper">
-          <GrandStaff {...this.state} />
+          <GrandStaff
+            ref={(staff) => this.staff = staff}
+            {...this.state} />
         </div>
         {inputSelect}
         {debug}
@@ -240,6 +270,16 @@ class Staff extends React.Component {
     super(props);
   }
 
+  // skips react for performance
+  setOffset(amount) {
+    console.log("setting offset on staff", this.props.staffClass, amount);
+    this.refs.notes.style.transform = `translate3d(${amount}px, 0, 0)`;
+  }
+
+  componentDidUpdate() {
+    this.setOffset(this.props.slider.value);
+  }
+
   render() {
     return <div className={classNames("staff", this.props.staffClass)}>
       <img className="cleff" src={this.props.cleffImage} />
@@ -252,7 +292,7 @@ class Staff extends React.Component {
         <div className="line5 line"></div>
       </div>
 
-      <div className="notes">
+      <div ref="notes" className="notes">
         {this.renderNotes()}
         {this.renderHeld()}
       </div>
@@ -274,7 +314,7 @@ class Staff extends React.Component {
     return this.props.notes.map(function(note, idx) {
       let opts = {
         goal: true,
-        offset: NOTE_WIDTH * idx + this.props.noteOffset,
+        offset: NOTE_WIDTH * idx,
         first: idx == 0,
       }
 
@@ -351,10 +391,26 @@ class FStaff extends Staff {
 }
 
 class GrandStaff extends React.Component {
+  // skips react for performance
+  setOffset(amount) {
+    if (!this.gstaff) {
+      return;
+    }
+
+    this.gstaff.setOffset(amount);
+    this.fstaff.setOffset(amount);
+  }
+
   render() {
     return <div className="grand_staff">
-      <GStaff inGrand={true} {...this.props} />
-      <FStaff inGrand={true} {...this.props} />
+      <GStaff
+        ref={(s) => this.gstaff = s}
+        inGrand={true}
+        {...this.props} />
+      <FStaff
+        ref={(s) => this.fstaff = s}
+        inGrand={true}
+        {...this.props} />
     </div>;
   }
 }
