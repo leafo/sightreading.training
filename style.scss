@@ -1,10 +1,16 @@
 
 $border_color: #a2a2a2;
+$keyboard_height: 180px;
 
 @mixin unselectable {
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
+}
+
+@mixin border_box {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 
 body {
@@ -14,9 +20,22 @@ body {
 }
 
 .page_container {
-    max-width: 800px;
-    margin: 0 auto;
-    margin-top: 80px;
+}
+
+.workspace {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: $keyboard_height;
+
+    .workspace_wrapper {
+        flex: 1;
+        max-width: 800px;
+    }
 
     h1 {
         font-size: 28px;
@@ -166,13 +185,14 @@ body {
     $white_width: 40px;
     $black_width: 35px;
 
+    @include border_box;
     @include unselectable;
 
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 180px;
+    height: $keyboard_height;
     background: #D6D6D6;
     display: flex;
     justify-content: center;

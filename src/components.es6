@@ -144,6 +144,24 @@ class Page extends React.Component {
   }
 
   render() {
+    return <div className="page_container">
+      {this.renderWorkspace()}
+      {this.renderKeyboard()}
+    </div>;
+  }
+
+  renderKeyboard() {
+    return <Keyboard
+      heldNotes={this.state.heldNotes}
+      onClickKey={function(note) {
+        this.pressNote(note);
+        setTimeout(function() {
+          this.releaseNote(note);
+        }.bind(this), 100);
+      }.bind(this)} />;
+  }
+
+  renderWorkspace() {
     if (this.state.midi) {
       window.current_midi = this.state.midi;
 
@@ -161,42 +179,40 @@ class Page extends React.Component {
       </div>
     }
 
-    return <div className="page_container">
-      <div className="header">
-        <div className="stats">
+    let header = <div className="header">
+      <div className="stats">
 
-          <div className="stat_container">
-            <div className="value">{this.state.hits}</div>
-            <div className="label">hits</div>
-          </div>
-
-          <div className="stat_container">
-            <div className="value">{this.state.misses}</div>
-            <div className="label">misses</div>
-          </div>
+        <div className="stat_container">
+          <div className="value">{this.state.hits}</div>
+          <div className="label">hits</div>
         </div>
-        <h1>Sight reading trainer</h1>
+
+        <div className="stat_container">
+          <div className="value">{this.state.misses}</div>
+          <div className="label">misses</div>
+        </div>
       </div>
+      <h1>Sight reading trainer</h1>
+    </div>;
 
-      <Staff {...this.state} />
-      {inputSelect}
+    let debug = <div className="debug">
+      <pre>
+        held: {JSON.stringify(this.state.heldNotes)}
+        {" "}
+        pressed: {JSON.stringify(this.state.touchedNotes)}
+      </pre>
+    </div>;
 
-      <div className="debug">
-        <pre>
-          held: {JSON.stringify(this.state.heldNotes)}
-          {" "}
-          pressed: {JSON.stringify(this.state.touchedNotes)}
-        </pre>
+    return <div className="workspace">
+      <div className="workspace_wrapper">
+        {header}
+        <Staff {...this.state} />
+        {inputSelect}
+        {debug}
       </div>
-
-      <Keyboard onClickKey={function(note) {
-        this.pressNote(note);
-        setTimeout(function() {
-          this.releaseNote(note);
-        }.bind(this), 100);
-      }.bind(this)} />
     </div>;
   }
+
 }
 
 class Staff extends React.Component {
@@ -289,6 +305,7 @@ class Keyboard extends React.Component {
   static propTypes = {
     lower: types.oneOfType([types.string, types.number]),
     upper: types.oneOfType([types.string, types.number]),
+    heldNotes: types.object,
   }
 
   defaultLower = "C5"
@@ -337,7 +354,8 @@ class Keyboard extends React.Component {
       let classes = classNames("key", {
         labeled: this.isC(pitch),
         white: !black,
-        black: black
+        black: black,
+        held: this.props.heldNotes && this.props.heldNotes[name]
       });
 
       keys.push(<div key={pitch} className="key_wrapper">
