@@ -1,6 +1,12 @@
 
 $border_color: #a2a2a2;
 
+@mixin unselectable {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
 body {
     color: #333;
     background: #e7e7e7;
@@ -160,6 +166,8 @@ body {
     $white_width: 40px;
     $black_width: 35px;
 
+    @include unselectable;
+
     position: absolute;
     bottom: 0;
     left: 0;
@@ -174,6 +182,19 @@ body {
     .key_wrapper {
         position: relative;
         height: 100%;
+    }
+
+    .key.labeled {
+        &:before {
+            content: attr(data-note);
+            position: absolute;
+            bottom: 20%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+        }
     }
 
     .key.black {

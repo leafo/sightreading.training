@@ -187,7 +187,6 @@ class Page extends React.Component {
       </div>
 
       <Keyboard onClickKey={function(note) {
-        console.log("")
         this.pressNote(note);
         setTimeout(function() {
           this.releaseNote(note);
@@ -290,7 +289,11 @@ class Keyboard extends React.Component {
   }
 
   isBlack(pitch) {
-    return LETTER_OFFSETS[pitch % 12] == undefined;
+    return LETTER_OFFSETS[pitch % 12] === undefined;
+  }
+
+  isC(pitch) {
+    return LETTER_OFFSETS[pitch % 12] === 0;
   }
 
   onClickKey(e) {
@@ -322,6 +325,7 @@ class Keyboard extends React.Component {
       let name = noteName(pitch);
 
       let classes = classNames("key", {
+        labeled: this.isC(pitch),
         white: !black,
         black: black
       });
