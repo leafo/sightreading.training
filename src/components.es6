@@ -103,6 +103,25 @@ class Page extends React.Component {
     this.setState({currentInput: input});
   }
 
+  pressNote(note) {
+    this.state.heldNotes[note] = true;
+    this.state.touchedNotes[note] = true;
+
+    if (!this.checkForHit()) {
+      this.forceUpdate();
+    }
+  }
+
+  releaseNote(note) {
+    // note might no longer be considered held if we just moved to next note
+    if (this.state.heldNotes[note]) {
+      delete this.state.heldNotes[note];
+      if (Object.keys(this.state.heldNotes).length == 0) {
+        this.checkForMiss();
+      }
+    }
+  }
+
   onMidiMessage(message) {
     let [raw, pitch, velocity] = message.data;
 
@@ -113,22 +132,11 @@ class Page extends React.Component {
     let n = noteName(pitch)
 
     if (NOTE_EVENTS[type] == "noteOn") {
-      this.state.heldNotes[n] = true;
-      this.state.touchedNotes[n] = true;
-
-      if (!this.checkForHit()) {
-        this.forceUpdate();
-      }
+      this.pressNote(n);
     }
 
     if (NOTE_EVENTS[type] == "noteOff") {
-      // note might no longer be considered held if we just moved to next note
-      if (this.state.heldNotes[n]) {
-        delete this.state.heldNotes[n];
-        if (Object.keys(this.state.heldNotes).length == 0) {
-          this.checkForMiss();
-        }
-      }
+      this.releaseNote(n);
     }
   }
 
@@ -178,7 +186,13 @@ class Page extends React.Component {
         </pre>
       </div>
 
-      <Keyboard />
+      <Keyboard onClickKey={function(note) {
+        console.log("")
+        this.pressNote(note);
+        setTimeout(function() {
+          this.releaseNote(note);
+        }.bind(this), 100);
+      }.bind(this)} />
     </div>;
   }
 }
@@ -275,8 +289,15 @@ class Keyboard extends React.Component {
     this.defaultUpper = "C6";
   }
 
-  isBlack(note) {
-    return LETTER_OFFSETS[note % 12] == undefined;
+  isBlack(pitch) {
+    return LETTER_OFFSETS[pitch % 12] == undefined;
+  }
+
+  onClickKey(e) {
+    e.preventDefault();
+    if (this.props.onClickKey) {
+      this.props.onClickKey(e.target.dataset.note);
+    }
   }
 
   render() {
@@ -296,16 +317,20 @@ class Keyboard extends React.Component {
       throw "lower must be less than upper for keyboard";
     }
 
-    for (let i = lower; i <= upper; i++) {
-      let black = this.isBlack(i);
+    for (let pitch = lower; pitch <= upper; pitch++) {
+      let black = this.isBlack(pitch);
+      let name = noteName(pitch);
 
       let classes = classNames("key", {
         white: !black,
         black: black
       });
 
-      keys.push(<div key={i} className="key_wrapper">
-        <div className={classes} />
+      keys.push(<div key={pitch} className="key_wrapper">
+        <div
+          onClick={this.onClickKey.bind(this)}
+          data-note={name}
+          className={classes} />
       </div>);
     }
 
