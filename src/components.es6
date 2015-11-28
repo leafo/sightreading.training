@@ -203,13 +203,11 @@ class Page extends React.Component {
       </pre>
     </div>;
 
-    // <GStaff {...this.state} />
-
     return <div className="workspace">
       <div className="workspace_wrapper">
         {header}
         <div className="staff_wrapper">
-          <FStaff {...this.state} />
+          <GrandStaff {...this.state} />
         </div>
         {inputSelect}
         {debug}
@@ -221,10 +219,16 @@ class Page extends React.Component {
 
 class Staff extends React.Component {
   static propTypes = {
+    // rendering props
     upperLine: types.number.isRequired,
     lowerLine: types.number.isRequired,
     cleffImage: types.string.isRequired,
     staffClass: types.string.isRequired,
+
+    // state props
+    notes: types.object,
+    heldNotes: types.object,
+    inGrand: types.bool,
   }
 
   constructor(props) {
@@ -284,6 +288,22 @@ class Staff extends React.Component {
 
   renderNote(note, opts={}) {
     let pitch = parseNote(note);
+
+    if (this.props.inGrand) {
+      switch (this.props.staffClass) {
+        case "f_staff":  // lower
+          if (pitch >= MIDDLE_C_PITCH) {
+            return;
+          }
+          break;
+        case "g_staff":  // upper
+          if (pitch < MIDDLE_C_PITCH) {
+            return;
+          }
+          break;
+      }
+    }
+
     let fromTop = letterOffset(this.props.upperLine) - letterOffset(pitch);
 
     let style = {
@@ -322,6 +342,15 @@ class FStaff extends Staff {
     lowerLine: 57 - 13,
     cleffImage: "svg/clefs.F_change.svg",
     staffClass: "f_staff",
+  }
+}
+
+class GrandStaff extends React.Component {
+  render() {
+    return <div className="grand_staff">
+      <GStaff inGrand={true} {...this.props} />
+      <FStaff inGrand={true} {...this.props} />
+    </div>;
   }
 }
 
