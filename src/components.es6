@@ -203,11 +203,12 @@ class Page extends React.Component {
       </pre>
     </div>;
 
+    // <GStaff {...this.state} />
+
     return <div className="workspace">
       <div className="workspace_wrapper">
         {header}
         <div className="staff_wrapper">
-          <GStaff {...this.state} />
           <FStaff {...this.state} />
         </div>
         {inputSelect}
@@ -292,7 +293,7 @@ class Staff extends React.Component {
 
     let classes = classNames("whole_note", "note", {
       outside: pitch > this.props.upperLine || pitch < this.props.lowerLine,
-      shake: this.props.noteShaking && opts.first,
+      noteshake: this.props.noteShaking && opts.first,
       held: opts.goal && opts.first && this.props.heldNotes[note],
     }, opts.classes || {})
 
@@ -317,8 +318,8 @@ class GStaff extends Staff {
 
 class FStaff extends Staff {
   static defaultProps = {
-    upperLine: 77,
-    lowerLine: 64,
+    upperLine: 57,
+    lowerLine: 57 - 13,
     cleffImage: "svg/clefs.F_change.svg",
     staffClass: "f_staff",
   }

@@ -85,6 +85,8 @@ function letterOffset(pitch) {
 class NoteList {
   constructor(notes) {
     this.notes = notes || [];
+    // this.generator = new SimpleRandomNotes();
+    this.generator = new StepNotes(parseNote("F4"));
   }
 
   push(column) {
@@ -92,10 +94,7 @@ class NoteList {
   }
 
   pushRandom() {
-    let available = ["C5", "D5", "E5", "F5", "G5", "A5", "B5", "C6", ["C5", "G5"]];
-    this.generator = this.generator || new MersenneTwister();
-    let idx = this.generator.int();
-    return this.push(available[idx % available.length]);
+    return this.push(this.generator.nextNote());
   }
 
   shift() {

@@ -78,22 +78,22 @@ body {
     overflow: hidden;
 }
 
-@keyframes shake {
+@keyframes noteshake {
     from, 100% {
-        transform: translate3d(0, 0, 0);
+        transform: translate(0, -47%);
     }
 
     10%, 30%, 50%, 70%, 90% {
-        transform: translate3d(-10px, 0, 0);
+        transform: translate(-7%, -47%);
     }
 
     20%, 40%, 60%, 80% {
-        transform: translate3d(10px, 0, 0);
+        transform: translate(7%, -47%);
     }
 }
 
-.shake {
-    animation-name: shake;
+.noteshake {
+    animation-name: noteshake;
     animation-duration: 0.5s;
 }
 
