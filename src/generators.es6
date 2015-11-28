@@ -55,3 +55,34 @@ class StepNotes {
     return this.notes[this.i++ % this.notes.length];
   }
 }
+
+
+
+class MiniSteps {
+  constructor(notes) {
+    this.notes = notes;
+    this.generator = new MersenneTwister();
+  }
+
+  nextStep() {
+    return {
+      position: this.generator.int() % this.notes.length,
+      remaining: 2 + this.generator.int() % 2,
+      direction: this.generator.int() % 2 == 0 ? 1 : -1,
+    };
+  }
+
+  nextNote() {
+    if (!this.currentStep || this.currentStep.remaining == 0) {
+      this.currentStep = this.nextStep();
+    }
+
+    let position = this.currentStep.position + this.notes.length;
+    this.currentStep.position += this.currentStep.direction;
+    this.currentStep.remaining -= 1;
+
+    return this.notes[position % this.notes.length];
+  }
+}
+
+

@@ -85,7 +85,8 @@ class NoteList {
     this.notes = notes || [];
     let scale = new MajorScale("C");
     // this.generator = new StepNotes(scale.getRange(3, 24, 2));
-    this.generator = new RandomNotes(scale.getRange(3, 24, 2));
+    // this.generator = new RandomNotes(scale.getRange(3, 24, 2));
+    this.generator = new MiniSteps(scale.getRange(3, 24, 2));
   }
 
   getKeyRange() {
