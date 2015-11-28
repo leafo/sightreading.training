@@ -443,15 +443,21 @@ class Keyboard extends React.Component {
 
   onKeyDown(e) {
     e.preventDefault();
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(e.target.dataset.note);
-    }
-  }
+    let note = e.target.dataset.note;
 
-  onKeyUp(e) {
-    e.preventDefault();
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(note);
+    }
+
     if (this.props.onKeyUp) {
-      this.props.onKeyUp(e.target.dataset.note);
+      let onUp = function(e) {
+        e.preventDefault();
+        if (this.props.onKeyUp) {
+          this.props.onKeyUp(note);
+        }
+        document.removeEventListener("mouseup", onUp);
+      }.bind(this);
+      document.addEventListener("mouseup", onUp);
     }
   }
 
@@ -486,7 +492,6 @@ class Keyboard extends React.Component {
       keys.push(<div key={pitch} className="key_wrapper">
         <div
           onMouseDown={this.onKeyDown.bind(this)}
-          onMouseUp={this.onKeyUp.bind(this)}
           data-note={name}
           className={classes} />
       </div>);
