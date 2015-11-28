@@ -183,16 +183,13 @@ class Page extends React.Component {
 
   renderKeyboard() {
     let [lower, upper] = this.state.notes.getKeyRange();
+
     return <Keyboard
       lower={lower}
       upper={upper}
       heldNotes={this.state.heldNotes}
-      onClickKey={function(note) {
-        this.pressNote(note);
-        setTimeout(function() {
-          this.releaseNote(note);
-        }.bind(this), 100);
-      }.bind(this)} />;
+      onKeyDown={this.pressNote.bind(this)}
+      onKeyUp={this.releaseNote.bind(this)} />;
   }
 
   renderWorkspace() {
@@ -444,6 +441,20 @@ class Keyboard extends React.Component {
     }
   }
 
+  onKeyDown(e) {
+    e.preventDefault();
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(e.target.dataset.note);
+    }
+  }
+
+  onKeyUp(e) {
+    e.preventDefault();
+    if (this.props.onKeyUp) {
+      this.props.onKeyUp(e.target.dataset.note);
+    }
+  }
+
   render() {
     let keys = [];
     let lower = this.props.lower || this.defaultLower;
@@ -474,7 +485,8 @@ class Keyboard extends React.Component {
 
       keys.push(<div key={pitch} className="key_wrapper">
         <div
-          onClick={this.onClickKey.bind(this)}
+          onMouseDown={this.onKeyDown.bind(this)}
+          onMouseUp={this.onKeyUp.bind(this)}
           data-note={name}
           className={classes} />
       </div>);
