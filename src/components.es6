@@ -182,7 +182,10 @@ class Page extends React.Component {
   }
 
   renderKeyboard() {
+    let [lower, upper] = this.state.notes.getKeyRange();
     return <Keyboard
+      lower={lower}
+      upper={upper}
       heldNotes={this.state.heldNotes}
       onClickKey={function(note) {
         this.pressNote(note);

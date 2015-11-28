@@ -88,6 +88,11 @@ class NoteList {
     this.generator = new RandomNotes(scale.getRange(3, 24, 2));
   }
 
+  getKeyRange() {
+    let notes = new MajorScale("C").getRange(3, 24, 2);
+    return [notes[0], notes[notes.length - 1]];
+  }
+
   push(column) {
     this.notes.push(column);
   }
