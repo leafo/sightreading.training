@@ -1,0 +1,13 @@
+$border_color: #a2a2a2;
+$keyboard_height: 180px;
+
+@mixin unselectable {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+@mixin border_box {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}

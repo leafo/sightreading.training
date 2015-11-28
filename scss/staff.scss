@@ -1,0 +1,69 @@
+@import "include/common";
+
+.staff {
+    position: relative;
+    height: 140px;
+    border-left: 6px solid black;
+    margin: 45px 0 60px 0;
+
+    .ledger_lines {
+        .ledger {
+            height: 2px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: black;
+        }
+
+        .ledger2 {
+            top: percentage(1.0/4.0);
+        }
+
+        .ledger3 {
+            top: percentage(2.0/4.0);
+        }
+
+        .ledger4 {
+            top: percentage(3.0/4.0);
+        }
+
+        .ledger5 {
+            top: auto;
+            bottom: 0;
+        }
+    }
+
+    .notes {
+        position: absolute;
+        top: 0;
+        left: 120px;
+        right: 0;
+        bottom: 0;
+
+        .note {
+            position: absolute;
+            top: 0;
+            left: 120px;
+            height: 20%;
+            margin-top: -13px;
+            transition: 0.1s ease transform;
+
+            &.ghost {
+                opacity: 0.2;
+            }
+
+            &.held {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+    }
+
+    .g_cleff {
+        position: absolute;
+        left: 10px;
+        height: 165%;
+        top: -28%;
+    }
+}
+
