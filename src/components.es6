@@ -1,4 +1,6 @@
 
+let {PropTypes: types} = React;
+
 class Page extends React.Component {
   constructor(props) {
     super(props);
@@ -12,6 +14,7 @@ class Page extends React.Component {
       heldNotes: {},
       touchedNotes: {},
     };
+
     navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
   }
 
@@ -197,10 +200,11 @@ class Page extends React.Component {
 }
 
 class Staff extends React.Component {
+  upperLedger = 77;
+  lowerLedger = 64;
+
   constructor(props) {
     super(props);
-    this.upperLedger = 77;
-    this.lowerLedger = 64;
   }
 
   render() {
@@ -282,10 +286,16 @@ class Staff extends React.Component {
 }
 
 class Keyboard extends React.Component {
+  static propTypes = {
+    lower: types.oneOfType([types.string, types.number]),
+    upper: types.oneOfType([types.string, types.number]),
+  }
+
+  defaultLower = "C5"
+  defaultUpper = "B6"
+
   constructor(props) {
     super(props);
-    this.defaultLower = "C4";
-    this.defaultUpper = "C6";
   }
 
   isBlack(pitch) {

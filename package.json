@@ -4,7 +4,9 @@
   "description": "sight reading trainer",
   "main": "test.js",
   "dependencies": {
+    "babel-plugin-syntax-class-properties": "^6.1.18",
     "babel-preset-react": "^6.1.18",
+    "babel-preset-stage-1": "^6.1.18",
     "classnames": "^2.2.1",
     "mersenne-twister": "^1.0.1",
     "mersennetwister": "^0.2.2",
