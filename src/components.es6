@@ -23,7 +23,6 @@ class SlideToZero {
     if (wasZero && this.value > 0) {
       let lastFrame = performance.now();
       this.animating = true;
-      console.log("starting animate...");
 
       let frameUpdate = function(time) {
         let dt = (time - lastFrame) / 1000;
@@ -40,7 +39,6 @@ class SlideToZero {
           window.requestAnimationFrame(frameUpdate);
         } else {
           this.animating = false;
-          console.log("done animating...");
         }
       }.bind(this);
 
@@ -272,7 +270,6 @@ class Staff extends React.Component {
 
   // skips react for performance
   setOffset(amount) {
-    console.log("setting offset on staff", this.props.staffClass, amount);
     this.refs.notes.style.transform = `translate3d(${amount}px, 0, 0)`;
   }
 

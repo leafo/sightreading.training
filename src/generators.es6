@@ -33,14 +33,14 @@ class MajorScale extends Scale {
   }
 }
 
-class SimpleRandomNotes {
-  constructor() {
+class RandomNotes {
+  constructor(notes) {
+    this.notes = notes;
     this.generator = new MersenneTwister();
   }
 
   nextNote() {
-    let available = new MajorScale("C").getRange(4, 16);
-    return available[this.generator.int() % available.length]
+    return this.notes[this.generator.int() % this.notes.length];
   }
 }
 

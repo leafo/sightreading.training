@@ -83,9 +83,9 @@ function letterOffset(pitch) {
 class NoteList {
   constructor(notes) {
     this.notes = notes || [];
-    // this.generator = new SimpleRandomNotes();
     let scale = new MajorScale("C");
-    this.generator = new StepNotes(scale.getRange(3, 24, 2));
+    // this.generator = new StepNotes(scale.getRange(3, 24, 2));
+    this.generator = new RandomNotes(scale.getRange(3, 24, 2));
   }
 
   push(column) {
