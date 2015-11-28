@@ -22,23 +22,21 @@
             top: -28%;
         }
 
-        .note {
-            -webkit-filter: #{"invert()"} sepia() saturate(8000%) hue-rotate(20deg);
-        }
+        // .note {
+        //     -webkit-filter: #{"invert()"} sepia() saturate(8000%) hue-rotate(20deg);
+        // }
     }
 
     &.f_staff {
-        margin-bottom: 30px;
-
         .cleff {
             position: absolute;
             left: 8px;
             height: 82%;
         }
 
-        .note {
-            -webkit-filter: #{"invert()"} sepia() saturate(8000%) hue-rotate(80deg);
-        }
+        // .note {
+        //     -webkit-filter: #{"invert()"} sepia() saturate(8000%) hue-rotate(80deg);
+        // }
     }
 
     .lines {

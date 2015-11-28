@@ -1,8 +1,6 @@
 const MIDDLE_C_PITCH = 60
 const OCTAVE_SIZE = 12
 
-const NOTE_WIDTH = 120
-
 const NOTE_EVENTS = {
   [144]: "noteOn",
   [128]: "noteOff"
@@ -86,7 +84,8 @@ class NoteList {
   constructor(notes) {
     this.notes = notes || [];
     // this.generator = new SimpleRandomNotes();
-    this.generator = new StepNotes(parseNote("F4"));
+    let scale = new MajorScale("C");
+    this.generator = new StepNotes(scale.getRange(3, 24, 2));
   }
 
   push(column) {

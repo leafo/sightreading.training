@@ -1,9 +1,12 @@
 
 let {PropTypes: types} = React;
 
+const NOTE_WIDTH = 100;
+
 class Page extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       midi: null,
       notes: new NoteList(),
@@ -13,13 +16,15 @@ class Page extends React.Component {
       noteShaking: false,
       heldNotes: {},
       touchedNotes: {},
+
+      bufferSize: 10,
     };
 
     navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
   }
 
   componentDidMount() {
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < this.state.bufferSize; i++) {
       this.state.notes.pushRandom()
     }
     this.forceUpdate();
