@@ -177,6 +177,8 @@ class Page extends React.Component {
           pressed: {JSON.stringify(this.state.touchedNotes)}
         </pre>
       </div>
+
+      <Keyboard />
     </div>;
   }
 }
@@ -266,3 +268,47 @@ class Staff extends React.Component {
   }
 }
 
+class Keyboard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.defaultLower = "C4";
+    this.defaultUpper = "C6";
+  }
+
+  isBlack(note) {
+    return LETTER_OFFSETS[note % 12] == undefined;
+  }
+
+  render() {
+    let keys = [];
+    let lower = this.props.lower || this.defaultLower;
+    let upper = this.props.upper || this.defaultUpper;
+
+    if (typeof lower == "string") {
+      lower = parseNote(lower);
+    }
+
+    if (typeof upper == "string") {
+      upper = parseNote(upper);
+    }
+
+    if (lower >= upper) {
+      throw "lower must be less than upper for keyboard";
+    }
+
+    for (let i = lower; i <= upper; i++) {
+      let black = this.isBlack(i);
+
+      let classes = classNames("key", {
+        white: !black,
+        black: black
+      });
+
+      keys.push(<div key={i} className="key_wrapper">
+        <div className={classes} />
+      </div>);
+    }
+
+    return <div className="keyboard">{keys}</div>
+  }
+}
