@@ -206,7 +206,10 @@ class Page extends React.Component {
     return <div className="workspace">
       <div className="workspace_wrapper">
         {header}
-        <Staff {...this.state} />
+        <div className="staff_wrapper">
+          <GStaff {...this.state} />
+          <FStaff {...this.state} />
+        </div>
         {inputSelect}
         {debug}
       </div>
@@ -216,41 +219,43 @@ class Page extends React.Component {
 }
 
 class Staff extends React.Component {
-  upperLedger = 77;
-  lowerLedger = 64;
+  static propTypes = {
+    upperLine: types.number.isRequired,
+    lowerLine: types.number.isRequired,
+    cleffImage: types.string.isRequired,
+    staffClass: types.string.isRequired,
+  }
 
   constructor(props) {
     super(props);
   }
 
   render() {
-    return <div className="staff_wrapper">
-      <div className="staff">
-        <img className="g_cleff" src="svg/clefs.G.svg" />
+    return <div className={classNames("staff", this.props.staffClass)}>
+      <img className="cleff" src={this.props.cleffImage} />
 
-        <div className="ledger_lines">
-          <div className="ledger1 ledger"></div>
-          <div className="ledger2 ledger"></div>
-          <div className="ledger3 ledger"></div>
-          <div className="ledger4 ledger"></div>
-          <div className="ledger5 ledger"></div>
-        </div>
-
-        <div className="notes">
-          {this.renderNotes()}
-          {this.renderHeld()}
-        </div>
-
+      <div className="lines">
+        <div className="line1 line"></div>
+        <div className="line2 line"></div>
+        <div className="line3 line"></div>
+        <div className="line4 line"></div>
+        <div className="line5 line"></div>
       </div>
-    </div>
+
+      <div className="notes">
+        {this.renderNotes()}
+        {this.renderHeld()}
+      </div>
+
+    </div>;
   }
 
   renderHeld(notes) {
     // notes that are held down but aren't correct
     return Object.keys(this.props.heldNotes).map((note, idx) =>
       !this.props.notes.inHead(note) && this.renderNote(note, {
-        key: `ghost-${idx}`,
-        classes: { ghost: true }
+        key: `held-${idx}`,
+        classes: { held: true }
       })
     );
   }
@@ -278,7 +283,7 @@ class Staff extends React.Component {
 
   renderNote(note, opts={}) {
     let pitch = parseNote(note);
-    let fromTop = letterOffset(this.upperLedger) - letterOffset(pitch);
+    let fromTop = letterOffset(this.props.upperLine) - letterOffset(pitch);
 
     let style = {
       top: `${Math.floor(fromTop * 25/2)}%`,
@@ -286,7 +291,7 @@ class Staff extends React.Component {
     }
 
     let classes = classNames("whole_note", "note", {
-      outside: pitch > this.upperLedger || pitch < this.lowerLedger,
+      outside: pitch > this.props.upperLine || pitch < this.props.lowerLine,
       shake: this.props.noteShaking && opts.first,
       held: opts.goal && opts.first && this.props.heldNotes[note],
     }, opts.classes || {})
@@ -298,6 +303,24 @@ class Staff extends React.Component {
       data-midi-note={pitch}
       className={classes}
       src="svg/noteheads.s0.svg" />;
+  }
+}
+
+class GStaff extends Staff {
+  static defaultProps = {
+    upperLine: 77,
+    lowerLine: 64,
+    cleffImage: "svg/clefs.G.svg",
+    staffClass: "g_staff",
+  }
+}
+
+class FStaff extends Staff {
+  static defaultProps = {
+    upperLine: 77,
+    lowerLine: 64,
+    cleffImage: "svg/clefs.F_change.svg",
+    staffClass: "f_staff",
   }
 }
 

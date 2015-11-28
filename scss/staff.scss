@@ -6,8 +6,25 @@
     border-left: 6px solid black;
     margin: 45px 0 60px 0;
 
-    .ledger_lines {
-        .ledger {
+    &.g_staff {
+        .cleff {
+            position: absolute;
+            left: 14px;
+            height: 165%;
+            top: -28%;
+        }
+    }
+
+    &.f_staff {
+        .cleff {
+            position: absolute;
+            left: 8px;
+            height: 82%;
+        }
+    }
+
+    .lines {
+        .line {
             height: 2px;
             position: absolute;
             top: 0;
@@ -16,19 +33,19 @@
             background: black;
         }
 
-        .ledger2 {
+        .line2 {
             top: percentage(1.0/4.0);
         }
 
-        .ledger3 {
+        .line3 {
             top: percentage(2.0/4.0);
         }
 
-        .ledger4 {
+        .line4 {
             top: percentage(3.0/4.0);
         }
 
-        .ledger5 {
+        .line5 {
             top: auto;
             bottom: 0;
         }
@@ -46,10 +63,10 @@
             top: 0;
             left: 120px;
             height: 20%;
-            margin-top: -13px;
+            transform: translate(0, -47%);
             transition: 0.1s ease transform;
 
-            &.ghost {
+            &.held {
                 opacity: 0.2;
             }
 
@@ -59,11 +76,5 @@
         }
     }
 
-    .g_cleff {
-        position: absolute;
-        left: 10px;
-        height: 165%;
-        top: -28%;
-    }
 }
 
