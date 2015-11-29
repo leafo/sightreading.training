@@ -89,6 +89,7 @@ class Page extends React.Component {
 
   // called when held notes reaches 0
   checkForMiss() {
+    N.event("sight_reading", "note", "miss");
     this.setState({
       misses: this.state.misses + 1,
       noteShaking: true,
@@ -103,6 +104,8 @@ class Page extends React.Component {
   checkForHit() {
     let touched = Object.keys(this.state.touchedNotes);
     if (this.state.notes.matchesHead(touched)) {
+      N.event("sight_reading", "note", "hit");
+
       this.state.notes.shift();
       this.state.notes.pushRandom();
 
