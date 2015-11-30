@@ -30,7 +30,9 @@ class Page extends React.Component {
       }),
     };
 
-    navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
+    if (navigator.requestMIDIAccess) {
+      navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
+    }
   }
 
   componentDidMount() {
@@ -172,9 +174,18 @@ class Page extends React.Component {
   }
 
   toggleMode() {
-    this.setState({
-      mode: this.state.mode == "wait" ? "scroll" : "wait",
-    });
+    let newMode = this.state.mode == "wait" ? "scroll" : "wait"
+    this.setState({ mode: newMode, });
+
+    if (newMode == "scroll") {
+      this.state.slider.loop(NOTE_WIDTH, function() {
+        this.state.notes.shift();
+        this.state.notes.pushRandom();
+        this.forceUpdate();
+      }.bind(this));
+    } else {
+      this.state.slider.stopLoop();
+    }
   }
 
   toggleKeyboard() {
