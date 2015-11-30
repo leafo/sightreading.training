@@ -111,6 +111,25 @@ button {
     bottom: 10px;
     right: 10px;
 }
+
+.github_link {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    opacity: 0.5;
+
+    &:hover {
+        opacity: 1.0;
+    }
+
+    img {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+
 @keyframes noteshake {
     from, 100% {
         transform: translate(0, -47%);

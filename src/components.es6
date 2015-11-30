@@ -142,6 +142,11 @@ class Page extends React.Component {
     })}>
       {this.renderWorkspace()}
       {this.renderKeyboard()}
+
+      <a className="github_link" href="https://github.com/leafo/mursicjs">
+        <img src="img/github-icon.svg" alt="GitHub Repository" />
+      </a>
+
       <button
         onClick={this.toggleKeyboard.bind(this)}
         className="keyboard_toggle">
