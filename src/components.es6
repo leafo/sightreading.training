@@ -17,8 +17,9 @@ class Page extends React.Component {
       touchedNotes: {},
 
       bufferSize: 10,
-
       keyboardOpen: true,
+
+      mode: "wait",
 
       slider: new SlideToZero({
         speed: 400,
@@ -170,6 +171,12 @@ class Page extends React.Component {
       onKeyUp={this.releaseNote.bind(this)} />;
   }
 
+  toggleMode() {
+    this.setState({
+      mode: this.state.mode == "wait" ? "scroll" : "wait",
+    });
+  }
+
   toggleKeyboard() {
     this.setState({keyboardOpen: !this.state.keyboardOpen});
     this.refs.workspace.style.height = "0px";
@@ -219,6 +226,19 @@ class Page extends React.Component {
       </pre>
     </div>;
 
+    let modeToggle = <div className="tool">
+      <span className="label">Mode</span>
+      <div
+        onClick={this.toggleMode.bind(this)}
+        className={classNames("toggle_switch", {
+          first: this.state.mode == "wait",
+          second: this.state.mode == "scroll",
+        })}>
+        <span className="toggle_option">Wait</span>
+        <span className="toggle_option">Scroll</span>
+      </div>
+    </div>
+
     return <div ref="workspace" className="workspace">
       <div className="workspace_wrapper">
         {header}
@@ -227,8 +247,12 @@ class Page extends React.Component {
             ref={(staff) => this.staff = staff}
             {...this.state} />
         </div>
-        {inputSelect}
-        {debug}
+        <div className="toolbar">
+          <div className="left_tools">
+            {inputSelect}
+          </div>
+          {modeToggle}
+        </div>
       </div>
     </div>;
   }

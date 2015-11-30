@@ -12,7 +12,7 @@ button {
     font-family: 'Raleway', sans-serif;
     font-size: 13px;
     border: 0;
-    background: #727290;
+    background: $button_color;
     padding: 4px 10px;
     border-radius: 4px;
     box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
@@ -37,6 +37,7 @@ button {
     left: 0;
     right: 0;
     bottom: 0;
+    overflow: auto;
 
     .keyboard_open & {
         bottom: $keyboard_height;
@@ -55,6 +56,7 @@ button {
 
     .header {
         overflow: hidden;
+        margin-bottom: 20px;
     }
 
     .stats {
@@ -87,19 +89,11 @@ button {
     }
 }
 
-.input_picker {
-    color: #666;
-    margin-top: 10px;
-    text-align: center;
-    font-size: 14px;
-}
-
 .staff_wrapper {
-    margin-top: 20px;
     background: white;
     border-radius: 10px;
     border: 2px solid $border_color;
-    margin: 20px 0;
+    margin: 0 0 20px 0;
     padding: 15px 0 10px 40px;
     overflow: hidden;
 }
@@ -149,4 +143,92 @@ button {
     animation-duration: 0.5s;
 }
 
+.toolbar {
+    text-align: right;
+    margin: 20px 0;
+
+    .left_tools {
+        float: left;
+    }
+
+    .tool {
+        display: inline-block;
+
+        .label {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 5px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    }
+}
+
+.input_picker {
+    color: #666;
+    font-size: 14px;
+    display: inline-block;
+    margin-top: 3px;
+}
+
+.toggle_switch {
+    display: inline-block;
+    vertical-align: middle;
+    border: 2px solid #333;
+    border-radius: 4px;
+    background: #333;
+    position: relative;
+    // box-shadow: inset 0 0 0 1px rgba(white, 0.8);
+    font-weight: bold;
+    font-size: 13px;
+    cursor: pointer;
+    @include unselectable;
+    overflow: hidden;
+
+    &:before {
+        position: absolute;
+        content: "";
+        width: 50%;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background: $button_color;
+        z-index: 1;
+        border-radius: 2px;
+        transition: 0.1s ease all;
+        box-shadow: inset 0 0 0 1px rgba(white, 0.2);
+    }
+
+    &.second {
+        &:before {
+            left: 50%;
+            right: 2px;
+        }
+
+        .toggle_option {
+            &:nth-child(1) {
+                opacity: 0.5;
+            }
+
+            &:nth-child(2) {
+                opacity: 1;
+            }
+
+        }
+    }
+
+    .toggle_option {
+        &:nth-child(2) {
+            opacity: 0.5;
+        }
+
+        display: inline-block;
+        position: relative;
+        z-index: 2;
+        width: 60px;
+        color: white;
+        text-align: center;
+        padding: 4px 10px;
+    }
+}
 
