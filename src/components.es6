@@ -1,7 +1,7 @@
 
 let {PropTypes: types} = React;
 
-const NOTE_WIDTH = 100;
+const DEFAULT_NOTE_WIDTH = 100;
 
 class Page extends React.Component {
   constructor(props) {
@@ -15,6 +15,8 @@ class Page extends React.Component {
       noteShaking: false,
       heldNotes: {},
       touchedNotes: {},
+
+      noteWidth: DEFAULT_NOTE_WIDTH,
 
       bufferSize: 10,
       keyboardOpen: true,
@@ -78,7 +80,7 @@ class Page extends React.Component {
         touchedNotes: {},
       });
 
-      this.state.slider.add(NOTE_WIDTH);
+      this.state.slider.add(this.state.noteWidth);
 
       return true;
     } else {
@@ -178,7 +180,7 @@ class Page extends React.Component {
     this.setState({ mode: newMode, });
 
     if (newMode == "scroll") {
-      this.state.slider.loop(NOTE_WIDTH, function() {
+      this.state.slider.loop(this.state.noteWidth, function() {
         this.state.notes.shift();
         this.state.notes.pushRandom();
         this.forceUpdate();
@@ -331,7 +333,7 @@ class Staff extends React.Component {
     return this.props.notes.map(function(note, idx) {
       let opts = {
         goal: true,
-        offset: NOTE_WIDTH * idx,
+        offset: this.props.noteWidth * idx,
         first: idx == 0,
       }
 
