@@ -18,6 +18,8 @@ class Page extends React.Component {
 
       bufferSize: 10,
 
+      keyboardOpen: true,
+
       slider: new SlideToZero({
         speed: 400,
         onUpdate: function(value) {
@@ -134,13 +136,25 @@ class Page extends React.Component {
   }
 
   render() {
-    return <div className="page_container">
+    return <div
+      className={classNames("page_container", {
+        keyboard_open: this.state.keyboardOpen
+    })}>
       {this.renderWorkspace()}
       {this.renderKeyboard()}
+      <button
+        onClick={this.toggleKeyboard.bind(this)}
+        className="keyboard_toggle">
+        {this.state.keyboardOpen ? "Hide Keyboard" : "Show Keyboard"}
+      </button>
     </div>;
   }
 
   renderKeyboard() {
+    if (!this.state.keyboardOpen) {
+      return;
+    }
+
     let [lower, upper] = this.state.notes.getKeyRange();
 
     return <Keyboard
@@ -149,6 +163,13 @@ class Page extends React.Component {
       heldNotes={this.state.heldNotes}
       onKeyDown={this.pressNote.bind(this)}
       onKeyUp={this.releaseNote.bind(this)} />;
+  }
+
+  toggleKeyboard() {
+    this.setState({keyboardOpen: !this.state.keyboardOpen});
+    this.refs.workspace.style.height = "0px";
+    this.refs.workspace.offsetHeight;
+    this.refs.workspace.style.height = "auto";
   }
 
   renderWorkspace() {
@@ -193,7 +214,7 @@ class Page extends React.Component {
       </pre>
     </div>;
 
-    return <div className="workspace">
+    return <div ref="workspace" className="workspace">
       <div className="workspace_wrapper">
         {header}
         <div className="staff_wrapper">
