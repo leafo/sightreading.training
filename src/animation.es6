@@ -9,32 +9,16 @@ class SlideToZero {
     this.onStop = opts.onStop || function() {}
     this.onStart = opts.onStart || function() {}
     this.onLoop = opts.onLoop || function() {}
+
+    if (opts.loopPhase) {
+      this.looping = true;
+      this.loopPhase = opts.loopPhase;
+      this.add(this.loopPhase);
+    }
   }
 
   cancel() {
     this.canceled = true
-  }
-
-  // loop forever
-  loop(phase, onLoop) {
-    if (onLoop) {
-      this.onLoop = onLoop;
-    }
-
-    this.looping = true;
-    this.loopPhase = phase;
-    this.add(phase);
-  }
-
-  stopLoop() {
-    this.looping = false;
-    this.onLoop = function() {};
-    this.set(0);
-  }
-
-  set(value) {
-    this.value = value;
-    this.checkAndStart();
   }
 
   add(delta) {
@@ -54,6 +38,10 @@ class SlideToZero {
     let frameUpdate = function(time) {
       let dt = (time - lastFrame) / 1000;
       lastFrame = time;
+
+      if (this.canceled) {
+        return;
+      }
 
       if (dt == 0) {
         return;

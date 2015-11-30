@@ -2,6 +2,7 @@
 let {PropTypes: types} = React;
 
 const DEFAULT_NOTE_WIDTH = 100;
+const DEFAULT_SPEED = 400;
 
 class Page extends React.Component {
   constructor(props) {
@@ -20,17 +21,8 @@ class Page extends React.Component {
 
       bufferSize: 10,
       keyboardOpen: true,
-
-      mode: "wait",
-
-      slider: new SlideToZero({
-        speed: 400,
-        onUpdate: function(value) {
-          if (!this.staff) { return; }
-          this.staff.setOffset(value);
-        }.bind(this)
-      }),
     };
+
 
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
@@ -42,7 +34,7 @@ class Page extends React.Component {
       this.state.notes.pushRandom()
     }
 
-    this.forceUpdate();
+    this.enterWaitMode();
   }
 
   midiInputs() {
@@ -176,18 +168,52 @@ class Page extends React.Component {
   }
 
   toggleMode() {
-    let newMode = this.state.mode == "wait" ? "scroll" : "wait"
-    this.setState({ mode: newMode, });
-
-    if (newMode == "scroll") {
-      this.state.slider.loop(this.state.noteWidth, function() {
-        this.state.notes.shift();
-        this.state.notes.pushRandom();
-        this.forceUpdate();
-      }.bind(this));
+    if (this.state.mode == "wait") {
+      this.enterScrollMode();
     } else {
-      this.state.slider.stopLoop();
+      this.enterWaitMode();
     }
+  }
+
+  enterScrollMode() {
+    if (this.state.slider) {
+      this.state.slider.cancel();
+    }
+
+    this.setState({
+      mode: "scroll",
+      noteWidth: DEFAULT_NOTE_WIDTH * 2,
+      slider: new SlideToZero({
+        speed: 100,
+        loopPhase: DEFAULT_NOTE_WIDTH * 2,
+        onUpdate: this.setOffset.bind(this),
+        onLoop: function() {
+          this.state.notes.shift();
+          this.state.notes.pushRandom();
+          this.forceUpdate();
+        }.bind(this)
+      })
+    });
+  }
+
+  enterWaitMode() {
+    if (this.state.slider) {
+      this.state.slider.cancel();
+    }
+
+    this.setState({
+      mode: "wait",
+      noteWidth: DEFAULT_NOTE_WIDTH,
+      slider: new SlideToZero({
+        speed: DEFAULT_SPEED,
+        onUpdate: this.setOffset.bind(this)
+      })
+    })
+  }
+
+  setOffset(value) {
+    if (!this.staff) { return; }
+    this.staff.setOffset(value);
   }
 
   toggleKeyboard() {
