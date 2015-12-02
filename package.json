@@ -4,16 +4,16 @@
   "description": "sight reading trainer",
   "main": "test.js",
   "dependencies": {
-    "babel-plugin-syntax-class-properties": "^6.1.18",
-    "babel-preset-react": "^6.1.18",
-    "babel-preset-stage-1": "^6.1.18",
     "classnames": "^2.2.1",
-    "mersenne-twister": "^1.0.1",
     "mersennetwister": "^0.2.2",
     "react": "^0.14.3",
     "react-dom": "^0.14.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-preset-react": "^6.1.18",
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-stage-1": "^6.1.18"
+	},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
