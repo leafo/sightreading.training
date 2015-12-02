@@ -56,8 +56,6 @@ class StepNotes {
   }
 }
 
-
-
 class MiniSteps {
   constructor(notes) {
     this.notes = notes;
@@ -85,4 +83,17 @@ class MiniSteps {
   }
 }
 
+class Double {
+  constructor(upper, lower) {
+    this.upperNotes = upper;
+    this.lowerNotes = lower;
+  }
+
+  nextNote() {
+    return [
+      this.upperNotes[this.i++ % this.upperNotes.length],
+      this.lowerNotes[this.i++ % this.lowerNotes.length]
+    ];
+  }
+}
 
