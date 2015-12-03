@@ -87,12 +87,14 @@ class Double {
   constructor(upper, lower) {
     this.upperNotes = upper;
     this.lowerNotes = lower;
+
+    this.generator = new MersenneTwister();
   }
 
   nextNote() {
     return [
-      this.upperNotes[this.i++ % this.upperNotes.length],
-      this.lowerNotes[this.i++ % this.lowerNotes.length]
+      this.upperNotes[this.generator.int() % this.upperNotes.length],
+      this.lowerNotes[this.generator.int() % this.lowerNotes.length]
     ];
   }
 }
