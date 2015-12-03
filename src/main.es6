@@ -1,5 +1,6 @@
 
 window.N = window.N || {};
+window.exports = window.exports || window.N;
 
 N.event = function(category, action, label, value, interactive=true) {
   let opts = {
@@ -26,5 +27,4 @@ N.event = function(category, action, label, value, interactive=true) {
 N.init = function() {
   ReactDOM.render(<Page/>, document.getElementById("page"));
 };
-
 

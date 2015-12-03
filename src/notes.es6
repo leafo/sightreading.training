@@ -114,8 +114,15 @@ function filterNotesByRange(notes, a, b) {
   });
 }
 
+function maxNote(notes) {
 
-class NoteList {
+}
+
+function minNote(notes) {
+}
+
+
+export class NoteList {
   constructor(notes) {
     this.notes = notes || [];
     let scale = new MajorScale("C");
@@ -169,5 +176,4 @@ class NoteList {
     }
   }
 }
-
 

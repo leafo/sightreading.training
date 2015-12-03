@@ -10,10 +10,11 @@
     "react-dom": "^0.14.3"
   },
   "devDependencies": {
-    "babel-preset-react": "^6.1.18",
     "babel-preset-es2015": "^6.1.18",
-    "babel-preset-stage-1": "^6.1.18"
-	},
+    "babel-preset-react": "^6.1.18",
+    "babel-preset-stage-1": "^6.1.18",
+    "jasmine": "^2.4.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
