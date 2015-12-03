@@ -134,7 +134,7 @@ export class Scale {
     return this.getRange(0, (this.steps.length + 1) * 8);
   }
 
-  getRange(octave, count, offset=0) {
+  getRange(octave, count=this.steps.length+1, offset=0) {
     let current = parseNote(`${this.root}${octave}`);
     let range = [];
 

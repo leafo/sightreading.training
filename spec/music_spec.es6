@@ -1,6 +1,5 @@
 
 let music = require("../src/music.js");
-music
 
 describe("music", function() {
   it("less than", function() {
@@ -21,14 +20,14 @@ describe("music", function() {
 
   it("gets music in C MajorScale", function() {
     let scale = new music.MajorScale("C");
-    expect(scale.getRange(5, 8)).toEqual([
+    expect(scale.getRange(5)).toEqual([
       "C5", "D5", "E5", "F5", "G5", "A5", "B5", "C6"
     ]);
   });
 
   it("gets notes in D MajorScale", function() {
     let scale = new music.MajorScale("D");
-    expect(scale.getRange(5, 8)).toEqual([
+    expect(scale.getRange(5)).toEqual([
       "D5", "E5", "F#5", "G5", "A5", "B5", "C#6", "D6"
     ]);
   });
@@ -36,7 +35,7 @@ describe("music", function() {
   it("gets notes in F MajorScale", function() {
     let scale = new music.MajorScale("F");
     // TODO: should be Bb5
-    expect(scale.getRange(5, 8)).toEqual([
+    expect(scale.getRange(5)).toEqual([
       "F5", "G5", "A5", "A#5", "C6", "D6", "E6", "F6"
     ]);
   });
