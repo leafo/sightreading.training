@@ -80,6 +80,41 @@ function letterOffset(pitch) {
   return offset + LETTER_OFFSETS[pitch]
 }
 
+// returns 0 if notes are same
+// returns < 0 if a < b
+// returns > 0 if a > b
+function compareNotes(a, b) {
+  let a = parseNote(a);
+  let b = parseNote(b);
+  return a - b;
+}
+
+
+function notesLessThan(a, b) {
+  return compareNotes(a,b) < 0;
+}
+
+function notesGreaterThan(a, b) {
+  return compareNotes(a,b) > 0;
+}
+
+// only return notes that fall between range
+// a must be < b
+function filterNotesByRange(notes, a, b) {
+  return notes.filter(function(n) {
+    if (notesLessThan(n, a)) {
+      return false;
+    }
+
+    if (notesLessThan(b, n)) {
+      return false;
+    }
+
+    return true;
+  });
+}
+
+
 class NoteList {
   constructor(notes) {
     this.notes = notes || [];
