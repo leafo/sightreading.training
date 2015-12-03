@@ -115,12 +115,10 @@ export function filterNotesByRange(notes, a, b) {
 }
 
 function maxNote(notes) {
-
 }
 
 function minNote(notes) {
 }
-
 
 export class NoteList {
   constructor(notes) {
@@ -176,4 +174,44 @@ export class NoteList {
     }
   }
 }
+
+
+export class Scale {
+  // root should be letter without octave
+  constructor(root) {
+    if (!root.match(/^[A-G][b#]?$/)) {
+      throw "scale root not properly formed"
+    }
+
+    this.root = root;
+  }
+
+  getFullRange() {
+    return this.getRange(0, (this.steps.length + 1) * 8);
+  }
+
+  getRange(octave, count, offset=0) {
+    let current = parseNote(`${this.root}${octave}`);
+    let range = [];
+
+    let k = 0;
+
+    for (let i = 0; i < count + offset; i++) {
+      if (i >= offset) {
+        range.push(noteName(current));
+      }
+      current += this.steps[k++ % this.steps.length];
+    }
+
+    return range;
+  }
+}
+
+export class MajorScale extends Scale {
+  constructor(root) {
+    super(root);
+    this.steps = [2, 2, 1, 2, 2, 2, 1];
+  }
+}
+
 
