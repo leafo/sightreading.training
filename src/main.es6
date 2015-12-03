@@ -1,8 +1,5 @@
 
-window.N = window.N || {};
-window.exports = window.exports || window.N;
-
-N.event = function(category, action, label, value, interactive=true) {
+export function event(category, action, label, value, interactive=true) {
   let opts = {
     hitType: "event",
     eventCategory: category,

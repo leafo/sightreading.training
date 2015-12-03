@@ -1,5 +1,5 @@
 
-class Scale {
+export class Scale {
   // root should be letter without octave
   constructor(root) {
     if (!root.match(/^[A-C][b#]?$/)) {
@@ -26,14 +26,14 @@ class Scale {
   }
 }
 
-class MajorScale extends Scale {
+export class MajorScale extends Scale {
   constructor(root) {
     super(root);
     this.steps = [2, 2, 1, 2, 2, 2, 1];
   }
 }
 
-class RandomNotes {
+export class RandomNotes {
   constructor(notes) {
     this.notes = notes;
     this.generator = new MersenneTwister();
@@ -45,7 +45,7 @@ class RandomNotes {
 }
 
 // for debugging staves
-class StepNotes {
+export class StepNotes {
   constructor(notes) {
     this.notes = notes;
     this.i = 0
@@ -56,7 +56,7 @@ class StepNotes {
   }
 }
 
-class MiniSteps {
+export class MiniSteps {
   constructor(notes) {
     this.notes = notes;
     this.generator = new MersenneTwister();
@@ -83,7 +83,7 @@ class MiniSteps {
   }
 }
 
-class Double {
+export class Double {
   constructor(upper, lower) {
     this.upperNotes = upper;
     this.lowerNotes = lower;

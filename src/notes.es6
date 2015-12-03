@@ -1,12 +1,12 @@
-const MIDDLE_C_PITCH = 60
-const OCTAVE_SIZE = 12
+export const MIDDLE_C_PITCH = 60
+export const OCTAVE_SIZE = 12
 
-const NOTE_EVENTS = {
+export const NOTE_EVENTS = {
   [144]: "noteOn",
   [128]: "noteOff"
 }
 
-const OFFSETS = {
+export const OFFSETS = {
   [0]: "C",
   [2]: "D",
   [4]: "E",
@@ -24,7 +24,7 @@ const OFFSETS = {
   "B": 11
 }
 
-const LETTER_OFFSETS = {
+export const LETTER_OFFSETS = {
   [0]: 0,
   [2]: 1,
   [4]: 2,
@@ -34,7 +34,7 @@ const LETTER_OFFSETS = {
   [11]: 6
 }
 
-function noteName(pitch) {
+export function noteName(pitch) {
   let octave = Math.floor(pitch / OCTAVE_SIZE)
   let offset = pitch - octave * OCTAVE_SIZE
 
@@ -46,7 +46,7 @@ function noteName(pitch) {
   return `${name}${octave}`;
 }
 
-function parseNote(note) {
+export function parseNote(note) {
   let [, letter, accidental, octave] = note.match(/^(\w)(#|b)?(\d+)$/);
   if (OFFSETS[letter] == undefined) {
     throw `invalid note letter: ${letter}`
@@ -65,7 +65,7 @@ function parseNote(note) {
   return n;
 }
 
-function letterOffset(pitch) {
+export function letterOffset(pitch) {
   let offset = 0
 
   while (pitch >= 12) {
@@ -83,24 +83,24 @@ function letterOffset(pitch) {
 // returns 0 if notes are same
 // returns < 0 if a < b
 // returns > 0 if a > b
-function compareNotes(a, b) {
+export function compareNotes(a, b) {
   a = parseNote(a);
   b = parseNote(b);
   return a - b;
 }
 
 
-function notesLessThan(a, b) {
+export function notesLessThan(a, b) {
   return compareNotes(a,b) < 0;
 }
 
-function notesGreaterThan(a, b) {
+export function notesGreaterThan(a, b) {
   return compareNotes(a,b) > 0;
 }
 
 // only return notes that fall between range
 // a must be < b
-function filterNotesByRange(notes, a, b) {
+export function filterNotesByRange(notes, a, b) {
   return notes.filter(function(n) {
     if (notesLessThan(n, a)) {
       return false;
