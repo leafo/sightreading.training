@@ -84,8 +84,8 @@ function letterOffset(pitch) {
 // returns < 0 if a < b
 // returns > 0 if a > b
 function compareNotes(a, b) {
-  let a = parseNote(a);
-  let b = parseNote(b);
+  a = parseNote(a);
+  b = parseNote(b);
   return a - b;
 }
 
