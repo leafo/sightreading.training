@@ -5,12 +5,52 @@ const DEFAULT_NOTE_WIDTH = 100;
 const DEFAULT_SPEED = 400;
 
 class Page extends React.Component {
+  static STAVES = [
+    {
+      name: "Treble",
+      range: ["B4", "C7"],
+      render: function() {
+        return <GStaff
+          ref={(staff) => this.staff = staff}
+          {...this.state} />;
+      },
+    },
+    {
+      name: "Bass",
+      range: ["C3", "C5"],
+      render: function() {
+        return <FStaff
+          ref={(staff) => this.staff = staff}
+          {...this.state} />;
+      },
+    },
+    {
+      name: "Grand",
+      range: ["C3", "C7"],
+      render: function() {
+        return <GrandStaff
+          ref={(staff) => this.staff = staff}
+          {...this.state} />;
+      },
+    }
+  ];
+
+  static GENERATORS = {
+    random: function(staff) {
+      let scale = new MajorScale("C");
+      let notes = filterNotesByRange(scale.getFullRange(), staff.range[0], staff.range[1]);
+      return new RandomNotes(notes);
+    },
+    dual: function(staff) {
+      // this.generator = new Double(scale.getRange(3, 10, 2), scale.getRange(5, 12));
+    }
+  };
+
   constructor(props) {
     super(props);
 
     this.state = {
       midi: null,
-      notes: new NoteList(),
       hits: 0,
       misses: 0,
       noteShaking: false,
@@ -21,8 +61,11 @@ class Page extends React.Component {
 
       bufferSize: 10,
       keyboardOpen: true,
+      setupOpen: false,
+      currentStaff: Page.STAVES[0],
     };
 
+    this.state.notes = this.newNoteList();
 
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
@@ -30,11 +73,26 @@ class Page extends React.Component {
   }
 
   componentDidMount() {
-    for (let i = 0; i < this.state.bufferSize; i++) {
-      this.state.notes.pushRandom()
-    }
-
+    this.state.notes.fillBuffer(this.state.bufferSize);
     this.enterWaitMode();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // transitioning to new staff
+    if (prevState.currentStaff != this.state.currentStaff) {
+      let notes = this.newNoteList();
+      notes.fillBuffer(this.state.bufferSize);
+
+      this.setState({
+        notes: notes
+      });
+    }
+  }
+
+  newNoteList() {
+    return new NoteList([], {
+      generator: Page.GENERATORS.random.call(this, this.state.currentStaff)
+    });
   }
 
   midiInputs() {
@@ -336,9 +394,7 @@ class Page extends React.Component {
       </div>
     </div>
 
-    let staff = <GrandStaff
-      ref={(staff) => this.staff = staff}
-      {...this.state} />;
+    let staff = this.state.currentStaff && this.state.currentStaff.render.call(this);
 
     return <div ref="workspace" className="workspace">
       <div className="workspace_wrapper">
@@ -661,4 +717,5 @@ class Keyboard extends React.Component {
 
     return <div className="keyboard">{keys}</div>
   }
+
 }

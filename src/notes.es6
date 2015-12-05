@@ -1,11 +1,13 @@
 export class NoteList {
-  constructor(notes) {
+  constructor(notes, opts={}) {
     this.notes = notes || [];
-    let scale = new MajorScale("C");
-    // this.generator = new StepNotes(scale.getRange(3, 24, 2));
-    // this.generator = new RandomNotes(scale.getRange(3, 24, 2));
-    // this.generator = new MiniSteps(scale.getRange(3, 24, 2));
-    this.generator = new Double(scale.getRange(3, 10, 2), scale.getRange(5, 12));
+    this.generator = opts.generator;
+
+    // let scale = new MajorScale("C");
+    // // this.generator = new StepNotes(scale.getRange(3, 24, 2));
+    // // this.generator = new RandomNotes(scale.getRange(3, 24, 2));
+    // // this.generator = new MiniSteps(scale.getRange(3, 24, 2));
+    // this.generator = new Double(scale.getRange(3, 10, 2), scale.getRange(5, 12));
   }
 
   getKeyRange() {
@@ -19,6 +21,12 @@ export class NoteList {
 
   pushRandom() {
     return this.push(this.generator.nextNote());
+  }
+
+  fillBuffer(count) {
+    for (let i = 0; i < count; i++) {
+      this.pushRandom();
+    }
   }
 
   shift() {
