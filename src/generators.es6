@@ -11,14 +11,29 @@ export class RandomNotes {
 }
 
 // for debugging staves
-export class StepNotes {
+export class SweepRangeNotes {
   constructor(notes) {
     this.notes = notes;
-    this.i = 0
+    this.i = 0;
+    this.ascending = true;
   }
 
   nextNote() {
-    return this.notes[this.i++ % this.notes.length];
+    if (this.i < 0) {
+      this.i = 1;
+      this.ascending = !this.ascending;
+    }
+
+    if (this.i >= this.notes.length) {
+      this.i = this.notes.length - 2;
+      this.ascending = !this.ascending;
+    }
+
+    if (this.ascending) {
+      return this.notes[this.i++ % this.notes.length];
+    } else {
+      return this.notes[this.i-- % this.notes.length];
+    }
   }
 }
 

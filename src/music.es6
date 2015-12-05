@@ -98,28 +98,6 @@ export function notesGreaterThan(a, b) {
   return compareNotes(a,b) > 0;
 }
 
-// only return notes that fall between range
-// a must be < b
-export function filterNotesByRange(notes, a, b) {
-  return notes.filter(function(n) {
-    if (notesLessThan(n, a)) {
-      return false;
-    }
-
-    if (notesLessThan(b, n)) {
-      return false;
-    }
-
-    return true;
-  });
-}
-
-function maxNote(notes) {
-}
-
-function minNote(notes) {
-}
-
 export class Scale {
   // root should be letter without octave
   constructor(root) {
@@ -134,9 +112,13 @@ export class Scale {
     return this.getRange(0, (this.steps.length + 1) * 8);
   }
 
+  getLooseRange(min, max) {
+    return this.getFullRange().filterByRange(min, max);
+  }
+
   getRange(octave, count=this.steps.length+1, offset=0) {
     let current = parseNote(`${this.root}${octave}`);
-    let range = [];
+    let range = new NoteList;
 
     let k = 0;
 

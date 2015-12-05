@@ -21,6 +21,20 @@ export class NoteList extends Array {
     return [notes[0], notes[notes.length - 1]];
   }
 
+  filterByRange(min, max) {
+    return new NoteList(this.filter(function(n) {
+      if (notesLessThan(n, min)) {
+        return false;
+      }
+
+      if (notesLessThan(max, n)) {
+        return false;
+      }
+
+      return true;
+    }));
+  }
+
   pushRandom() {
     return this.push(this.generator.nextNote());
   }

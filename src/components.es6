@@ -8,7 +8,7 @@ class Page extends React.Component {
   static STAVES = [
     {
       name: "Treble",
-      range: ["B4", "C7"],
+      range: ["A4", "C7"],
       render: function() {
         return <GStaff
           ref={(staff) => this.staff = staff}
@@ -17,7 +17,7 @@ class Page extends React.Component {
     },
     {
       name: "Bass",
-      range: ["C3", "C5"],
+      range: ["C3", "E5"],
       render: function() {
         return <FStaff
           ref={(staff) => this.staff = staff}
@@ -37,9 +37,12 @@ class Page extends React.Component {
 
   static GENERATORS = {
     random: function(staff) {
-      let scale = new MajorScale("C");
-      let notes = filterNotesByRange(scale.getFullRange(), staff.range[0], staff.range[1]);
+      let notes = new MajorScale("C").getLooseRange(...staff.range);
       return new RandomNotes(notes);
+    },
+    sweep: function(staff) {
+      let notes = new MajorScale("C").getLooseRange(...staff.range);
+      return new SweepRangeNotes(notes);
     },
     dual: function(staff) {
       // this.generator = new Double(scale.getRange(3, 10, 2), scale.getRange(5, 12));
@@ -63,6 +66,7 @@ class Page extends React.Component {
       keyboardOpen: true,
       setupOpen: false,
       currentStaff: Page.STAVES[0],
+      generatorName: "sweep",
     };
 
     this.state.notes = this.newNoteList();
@@ -91,7 +95,7 @@ class Page extends React.Component {
 
   newNoteList() {
     return new NoteList([], {
-      generator: Page.GENERATORS.random.call(this, this.state.currentStaff)
+      generator: Page.GENERATORS[this.state.generatorName].call(this, this.state.currentStaff)
     });
   }
 
