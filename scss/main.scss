@@ -30,6 +30,11 @@ button {
 
 .workspace {
     display: flex;
+
+    @include on_narrow_height {
+        display: block;
+    }
+
     justify-content: center;
     align-items: center;
     position: absolute;
@@ -41,26 +46,43 @@ button {
 
     .keyboard_open & {
         bottom: $keyboard_height;
+        @include on_narrow_height {
+            bottom: $keyboard_height_short;
+        }
     }
 
     .workspace_wrapper {
         flex: 1;
-        max-width: 900px;
+        max-width: $default_width;
+        @include on_narrow_width {
+            max-width: none;
+        }
     }
 
     h1 {
         font-size: 28px;
         margin: 0;
         margin-top: 13px;
+        @include on_narrow_width {
+            margin-top: 25px;
+        }
     }
 
     .header {
         overflow: hidden;
         margin-bottom: 20px;
+
+        @include on_narrow_width {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
     }
 
     .stats {
         float: right;
+        @include on_narrow_width {
+            margin-top: 20px;
+        }
     }
 
     .stat_container {
@@ -96,6 +118,12 @@ button {
     margin: 0 0 20px 0;
     padding: 15px 0 10px 40px;
     overflow: hidden;
+
+    @include on_narrow_width {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+    }
 }
 
 
@@ -120,6 +148,10 @@ button {
     img {
         width: 30px;
         height: 30px;
+    }
+
+    @include on_narrow_width {
+        display: none;
     }
 }
 
@@ -146,6 +178,11 @@ button {
 .toolbar {
     text-align: right;
     margin: 20px 0;
+
+    @include on_narrow_width {
+        padding: 0 20px;
+        margin-bottom: 40px;
+    }
 
     .left_tools {
         float: left;

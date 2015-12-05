@@ -12,6 +12,11 @@
     left: 0;
     right: 0;
     height: $keyboard_height;
+
+    @include on_narrow_height {
+        height: $keyboard_height_short;
+    }
+
     background: #D6D6D6;
     display: flex;
     justify-content: center;

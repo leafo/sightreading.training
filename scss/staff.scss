@@ -10,9 +10,9 @@
 
 .staff {
     position: relative;
-    height: 140px;
+    height: $line_spacing * 4;
     border-left: 6px solid black;
-    margin: 45px 0 60px 0;
+    margin: $line_spacing 0 $line_spacing*2 0;
 
     &.g_staff {
         .cleff {

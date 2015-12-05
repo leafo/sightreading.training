@@ -1,6 +1,9 @@
 $border_color: #a2a2a2;
 $keyboard_height: 180px;
+$keyboard_height_short: 120px;
 $button_color: #727290;
+$default_width: 900px;
+$line_spacing: 30px;
 
 @mixin unselectable {
     -moz-user-select: none;
@@ -12,3 +15,17 @@ $button_color: #727290;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
 }
+
+@mixin on_narrow_width {
+    @media (max-width: 1100px) {
+        @content;
+    }
+}
+
+@mixin on_narrow_height {
+    @media (max-width: 1100px) {
+        @content;
+    }
+}
+
+
