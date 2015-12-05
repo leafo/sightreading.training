@@ -5,6 +5,8 @@ $button_color: #727290;
 $default_width: 900px;
 $line_spacing: 30px;
 
+$setup_panel_width: 250px;
+
 @mixin unselectable {
     -moz-user-select: none;
     -webkit-user-select: none;

@@ -17,6 +17,10 @@
         height: $keyboard_height_short;
     }
 
+    .setup_open & {
+        left: $setup_panel_width;
+    }
+
     background: #D6D6D6;
     display: flex;
     justify-content: center;

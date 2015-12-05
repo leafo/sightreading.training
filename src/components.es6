@@ -133,16 +133,29 @@ class Page extends React.Component {
   }
 
   render() {
+    let setupToggleButton;
+    if (!this.state.setupOpen) {
+      setupToggleButton = <button
+        onClick={this.toggleSetup.bind(this)}
+        className="setup_toggle">
+        Settings
+      </button>;
+    }
+
     return <div
       className={classNames("page_container", {
-        keyboard_open: this.state.keyboardOpen
+        keyboard_open: this.state.keyboardOpen,
+        setup_open: this.state.setupOpen,
     })}>
       {this.renderWorkspace()}
       {this.renderKeyboard()}
+      {this.renderSetup()}
 
       <a className="github_link" href="https://github.com/leafo/mursicjs">
         <img src="img/github-icon.svg" alt="GitHub Repository" />
       </a>
+
+      {setupToggleButton}
 
       <button
         onClick={this.toggleKeyboard.bind(this)}
@@ -152,12 +165,46 @@ class Page extends React.Component {
     </div>;
   }
 
+  renderSetup() {
+    if (!this.state.setupOpen) {
+      return;
+    }
+
+    let staves = Page.STAVES.map(function(staffConfig) {
+      return <div
+        key={staffConfig.name}
+        onClick={function(e) {
+          e.preventDefault();
+          this.setState({ currentStaff: staffConfig });
+        }.bind(this)}
+        className={classNames("toggle_option", {
+          active: this.state.currentStaff == staffConfig
+        })}>
+        {staffConfig.name}</div>;
+    }.bind(this));
+
+    return <div className="setup_panel">
+      <div className="setup_header">
+        <button
+          onClick={this.toggleSetup.bind(this)}>
+          Close</button>
+        <h3>Settings</h3>
+      </div>
+
+      <div className="settings_group">
+        <h4>Staves</h4>
+        {staves}
+      </div>
+
+    </div>;
+  }
+
   renderKeyboard() {
     if (!this.state.keyboardOpen) {
       return;
     }
 
-    let [lower, upper] = this.state.notes.getKeyRange();
+    let [lower, upper] = this.state.currentStaff.range;
 
     return <Keyboard
       lower={lower}
@@ -216,8 +263,19 @@ class Page extends React.Component {
     this.staff.setOffset(value);
   }
 
+  toggleSetup() {
+    this.setState({
+      setupOpen: !this.state.setupOpen
+    });
+    this.recalcFlex();
+  }
+
   toggleKeyboard() {
     this.setState({keyboardOpen: !this.state.keyboardOpen});
+    this.recalcFlex();
+  }
+
+  recalcFlex() {
     this.refs.workspace.style.height = "0px";
     this.refs.workspace.offsetHeight;
     this.refs.workspace.style.height = "auto";
