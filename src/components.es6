@@ -44,6 +44,10 @@ class Page extends React.Component {
       let notes = new MajorScale("C").getLooseRange(...staff.range);
       return new SweepRangeNotes(notes);
     },
+    steps: function(staff) {
+      let notes = new MajorScale("C").getLooseRange(...staff.range);
+      return new MiniSteps(notes);
+    },
     dual: function(staff) {
       // this.generator = new Double(scale.getRange(3, 10, 2), scale.getRange(5, 12));
     }
@@ -66,7 +70,7 @@ class Page extends React.Component {
       keyboardOpen: true,
       setupOpen: false,
       currentStaff: Page.STAVES[0],
-      generatorName: "sweep",
+      generatorName: "steps",
     };
 
     this.state.notes = this.newNoteList();
@@ -208,6 +212,8 @@ class Page extends React.Component {
       className={classNames("page_container", {
         keyboard_open: this.state.keyboardOpen,
         setup_open: this.state.setupOpen,
+        scroll_mode: this.state.mode == "scroll",
+        wait_mode: this.state.mode == "wait",
     })}>
       {this.renderWorkspace()}
       {this.renderKeyboard()}
@@ -254,7 +260,7 @@ class Page extends React.Component {
       </div>
 
       <div className="settings_group">
-        <h4>Staves</h4>
+        <h4>Staff</h4>
         {staves}
       </div>
 
@@ -285,21 +291,26 @@ class Page extends React.Component {
   }
 
   enterScrollMode() {
+    let noteWidth = DEFAULT_NOTE_WIDTH * 2;
+
     if (this.state.slider) {
       this.state.slider.cancel();
     }
 
     this.setState({
       mode: "scroll",
-      noteWidth: DEFAULT_NOTE_WIDTH * 2,
+      noteWidth: noteWidth,
       slider: new SlideToZero({
         speed: 100,
-        loopPhase: DEFAULT_NOTE_WIDTH * 2,
+        loopPhase: noteWidth,
+        initialValue: noteWidth * 3,
         onUpdate: this.setOffset.bind(this),
         onLoop: function() {
           this.state.notes.shift();
           this.state.notes.pushRandom();
-          this.forceUpdate();
+          this.setState({ // also updates notes
+            misses: this.state.misses + 1,
+          })
         }.bind(this)
       })
     });

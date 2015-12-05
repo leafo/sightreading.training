@@ -13,7 +13,7 @@ class SlideToZero {
     if (opts.loopPhase) {
       this.looping = true;
       this.loopPhase = opts.loopPhase;
-      this.add(this.loopPhase);
+      this.add(opts.initialValue || this.loopPhase);
     }
   }
 

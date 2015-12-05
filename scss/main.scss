@@ -122,11 +122,25 @@ button {
     margin: 0 0 20px 0;
     padding: 15px 0 10px 40px;
     overflow: hidden;
+    position: relative;
 
     @include on_narrow_width {
         border-radius: 0;
         border-left: 0;
         border-right: 0;
+    }
+
+    .scroll_mode & {
+        &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: calc(50% - 60px);
+            right: 0;
+            width: 120px;
+            background: rgba($button_color, 0.2);
+        }
     }
 }
 
