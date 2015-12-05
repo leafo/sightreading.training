@@ -423,7 +423,7 @@ class Staff extends React.Component {
     staffClass: types.string.isRequired,
 
     // state props
-    notes: types.object,
+    notes: types.array,
     heldNotes: types.object,
     inGrand: types.bool,
   }
