@@ -19,7 +19,7 @@ class Page extends React.Component {
 
       noteWidth: DEFAULT_NOTE_WIDTH,
 
-      bufferSize: 1,
+      bufferSize: 10,
       keyboardOpen: true,
     };
 
@@ -34,10 +34,6 @@ class Page extends React.Component {
       this.state.notes.pushRandom()
     }
 
-    this.state.notes.notes = [
-      "D5", "C5", "B4", "A4", "G4",
-      "G6", "A6", "B6", "C7", "D7"
-    ];
     this.enterWaitMode();
   }
 
@@ -283,10 +279,6 @@ class Page extends React.Component {
     </div>
 
     let staff = <GrandStaff
-      ref={(staff) => this.staff = staff}
-      {...this.state} />;
-
-    staff = <GStaff
       ref={(staff) => this.staff = staff}
       {...this.state} />;
 
