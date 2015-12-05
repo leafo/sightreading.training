@@ -49,7 +49,9 @@ class Page extends React.Component {
       return new MiniSteps(notes);
     },
     dual: function(staff) {
-      // this.generator = new Double(scale.getRange(3, 10, 2), scale.getRange(5, 12));
+      let notes = new MajorScale("C").getLooseRange(...staff.range);
+      let mid = Math.floor(notes.length / 2);
+      return new DualRandomNotes(notes.slice(0, mid), notes.slice(mid));
     }
   };
 
@@ -70,7 +72,7 @@ class Page extends React.Component {
       keyboardOpen: true,
       setupOpen: false,
       currentStaff: Page.STAVES[0],
-      generatorName: "steps",
+      generatorName: "dual",
     };
 
     this.state.notes = this.newNoteList();

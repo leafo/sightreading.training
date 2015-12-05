@@ -64,7 +64,7 @@ export class MiniSteps {
   }
 }
 
-export class Double {
+export class DualRandomNotes {
   constructor(upper, lower) {
     this.upperNotes = upper;
     this.lowerNotes = lower;
