@@ -296,6 +296,7 @@ button {
 
 .setup_panel {
     @include border_box;
+    @include unselectable;
     position: absolute;
     overflow: auto;
     left: 0;
@@ -319,6 +320,7 @@ button {
 
     .settings_group {
         padding: 0 10px;
+        margin-bottom: 20px;
 
         h4 {
             font-weight: bold;

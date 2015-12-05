@@ -7,7 +7,7 @@ const DEFAULT_SPEED = 400;
 class Page extends React.Component {
   static STAVES = [
     {
-      name: "Treble",
+      name: "treble",
       range: ["A4", "C7"],
       render: function() {
         return <GStaff
@@ -16,7 +16,7 @@ class Page extends React.Component {
       },
     },
     {
-      name: "Bass",
+      name: "bass",
       range: ["C3", "E5"],
       render: function() {
         return <FStaff
@@ -25,7 +25,7 @@ class Page extends React.Component {
       },
     },
     {
-      name: "Grand",
+      name: "grand",
       range: ["C3", "C7"],
       render: function() {
         return <GrandStaff
@@ -35,25 +35,39 @@ class Page extends React.Component {
     }
   ];
 
-  static GENERATORS = {
-    random: function(staff) {
-      let notes = new MajorScale("C").getLooseRange(...staff.range);
-      return new RandomNotes(notes);
+  static GENERATORS = [
+    {
+      name: "random",
+      create: function(staff) {
+        let notes = new MajorScale("C").getLooseRange(...staff.range);
+        return new RandomNotes(notes);
+      }
     },
-    sweep: function(staff) {
-      let notes = new MajorScale("C").getLooseRange(...staff.range);
-      return new SweepRangeNotes(notes);
+    {
+      name: "sweep",
+      debug: true,
+      create: function(staff) {
+        let notes = new MajorScale("C").getLooseRange(...staff.range);
+        return new SweepRangeNotes(notes);
+      }
     },
-    steps: function(staff) {
-      let notes = new MajorScale("C").getLooseRange(...staff.range);
-      return new MiniSteps(notes);
+    {
+      name: "steps",
+      create: function(staff) {
+        let notes = new MajorScale("C").getLooseRange(...staff.range);
+        return new MiniSteps(notes);
+      }
     },
-    dual: function(staff) {
-      let notes = new MajorScale("C").getLooseRange(...staff.range);
-      let mid = Math.floor(notes.length / 2);
-      return new DualRandomNotes(notes.slice(0, mid), notes.slice(mid));
+    {
+      name: "dual",
+      create: function(staff) {
+        let notes = new MajorScale("C").getLooseRange(...staff.range);
+        let mid = Math.floor(notes.length / 2);
+        return new DualRandomNotes(notes.slice(0, mid), notes.slice(mid));
+
+      }
     }
-  };
+  ]
 
   constructor(props) {
     super(props);
@@ -72,7 +86,7 @@ class Page extends React.Component {
       keyboardOpen: true,
       setupOpen: false,
       currentStaff: Page.STAVES[0],
-      generatorName: "dual",
+      currentGenerator: Page.GENERATORS[0]
     };
 
     this.state.notes = this.newNoteList();
@@ -88,8 +102,10 @@ class Page extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // transitioning to new staff
-    if (prevState.currentStaff != this.state.currentStaff) {
+    // transitioning to new staff or generator
+    if (prevState.currentStaff != this.state.currentStaff ||
+        prevState.currentGenerator != this.state.currentGenerator)
+    {
       let notes = this.newNoteList();
       notes.fillBuffer(this.state.bufferSize);
 
@@ -101,7 +117,7 @@ class Page extends React.Component {
 
   newNoteList() {
     return new NoteList([], {
-      generator: Page.GENERATORS[this.state.generatorName].call(this, this.state.currentStaff)
+      generator: this.state.currentGenerator.create.call(this, this.state.currentStaff),
     });
   }
 
@@ -253,6 +269,23 @@ class Page extends React.Component {
         {staffConfig.name}</div>;
     }.bind(this));
 
+    
+    let generators = Page.GENERATORS.map(function (generator) {
+      if (generator.debug) {
+        return null;
+      }
+
+      return <div
+        key={generator.name}
+        onClick={function(e) {
+          e.preventDefault();
+          this.setState({ currentGenerator: generator });
+        }.bind(this)}
+        className={classNames("toggle_option", {
+          active: this.state.currentGenerator == generator
+        })}>{generator.name}</div>;
+    }.bind(this));
+
     return <div className="setup_panel">
       <div className="setup_header">
         <button
@@ -264,6 +297,11 @@ class Page extends React.Component {
       <div className="settings_group">
         <h4>Staff</h4>
         {staves}
+      </div>
+
+      <div className="settings_group">
+        <h4>Generators</h4>
+        {generators}
       </div>
 
     </div>;
