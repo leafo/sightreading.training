@@ -19,7 +19,7 @@ class Page extends React.Component {
 
       noteWidth: DEFAULT_NOTE_WIDTH,
 
-      bufferSize: 10,
+      bufferSize: 1,
       keyboardOpen: true,
     };
 
@@ -34,6 +34,10 @@ class Page extends React.Component {
       this.state.notes.pushRandom()
     }
 
+    this.state.notes.notes = [
+      "D5", "C5", "B4", "A4", "G4",
+      "G6", "A6", "B6", "C7", "D7"
+    ];
     this.enterWaitMode();
   }
 
@@ -278,13 +282,19 @@ class Page extends React.Component {
       </div>
     </div>
 
+    let staff = <GrandStaff
+      ref={(staff) => this.staff = staff}
+      {...this.state} />;
+
+    staff = <GStaff
+      ref={(staff) => this.staff = staff}
+      {...this.state} />;
+
     return <div ref="workspace" className="workspace">
       <div className="workspace_wrapper">
         {header}
         <div className="staff_wrapper">
-          <GrandStaff
-            ref={(staff) => this.staff = staff}
-            {...this.state} />
+          {staff}
         </div>
         <div className="toolbar">
           <div className="left_tools">
@@ -376,6 +386,49 @@ class Staff extends React.Component {
     }.bind(this));
   }
 
+  renderLedgerLines(note, opts={}) {
+    let pitch = parseNote(note);
+    let fromLeft =  opts.offset || 0;
+    let letterDelta = 0;
+    let below = false;
+
+    // above
+    if (pitch > this.props.upperLine) {
+      letterDelta = letterOffset(pitch) - letterOffset(this.props.upperLine);
+    }
+
+    // below
+    if (pitch < this.props.lowerLine) {
+      letterDelta = letterOffset(this.props.lowerLine) - letterOffset(pitch);
+      below = true;
+    }
+
+    let numLines = Math.floor(letterDelta / 2);
+
+    let lines = [];
+    for (let i = 0; i < numLines; i++) {
+      let style = {
+        left: `${(opts.offset || 0) - 10}px`,
+        width: `${40 + 20}`,
+      }
+
+      if (below) {
+        style.top = `${100 + 25*(i + 1)}%`;
+      } else {
+        style.bottom = `${100 + 25*(i + 1)}%`;
+      }
+
+      lines.push(<div
+        className={classNames("ledger_line", {
+          above: !below,
+          below: below
+        })}
+        style={style} />);
+    }
+
+    return lines;
+  }
+
   renderNote(note, opts={}) {
     let pitch = parseNote(note);
 
@@ -401,19 +454,30 @@ class Staff extends React.Component {
       left: `${opts.offset || 0}px`
     }
 
+    let outside = pitch > this.props.upperLine || pitch < this.props.lowerLine;
+
     let classes = classNames("whole_note", "note", {
-      outside: pitch > this.props.upperLine || pitch < this.props.lowerLine,
+      outside: outside,
       noteshake: this.props.noteShaking && opts.first,
       held: opts.goal && opts.first && this.props.heldNotes[note],
     }, opts.classes || {})
 
-    return <img
+    let noteEl = <img
       key={opts.key}
       style={style}
       data-note={note}
       data-midi-note={pitch}
       className={classes}
       src="svg/noteheads.s0.svg" />;
+
+    if (outside) {
+      return [
+        noteEl,
+        this.renderLedgerLines(note, opts),
+      ];
+    } else {
+      return noteEl;
+    }
   }
 }
 

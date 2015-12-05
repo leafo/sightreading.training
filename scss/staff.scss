@@ -12,7 +12,7 @@
     position: relative;
     height: $line_spacing * 4;
     border-left: 6px solid black;
-    margin: $line_spacing 0 $line_spacing*2 0;
+    margin: $line_spacing*4 0 $line_spacing*4 0;
 
     &.g_staff {
         .cleff {
@@ -37,6 +37,12 @@
         // .note {
         //     -webkit-filter: #{"invert()"} sepia() saturate(8000%) hue-rotate(80deg);
         // }
+    }
+
+    .ledger_line {
+        position: absolute;
+        height: 2px;
+        background: black;;
     }
 
     .lines {

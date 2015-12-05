@@ -4,8 +4,9 @@ export class NoteList {
     let scale = new MajorScale("C");
     // this.generator = new StepNotes(scale.getRange(3, 24, 2));
     // this.generator = new RandomNotes(scale.getRange(3, 24, 2));
-    this.generator = new MiniSteps(scale.getRange(3, 24, 2));
-    this.generator = new Double(scale.getRange(3, 10, 2), scale.getRange(5, 12));
+    // this.generator = new MiniSteps(scale.getRange(3, 24, 2));
+    // this.generator = new Double(scale.getRange(3, 10, 2), scale.getRange(5, 12));
+    this.generator = new RandomNotes(["C5"]);
   }
 
   getKeyRange() {
