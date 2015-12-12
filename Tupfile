@@ -1,7 +1,7 @@
 include_rules
 !join = |> ^ join %o^ cat %f > %o |>
 
-: src/_pre.js src/main.js src/*.js |> !join |> main.js
+: src/_pre.js src/main.js src/*.js src/components/*.js |> !join |> main.js
 : scss/*.css |> !join |> style.css
 
 
