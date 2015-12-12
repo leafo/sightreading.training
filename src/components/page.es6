@@ -81,6 +81,7 @@ class Page extends React.Component {
       touchedNotes: {},
 
       noteWidth: DEFAULT_NOTE_WIDTH,
+      statsLightboxOpen: false,
 
       bufferSize: 10,
       keyboardOpen: true,
@@ -241,13 +242,19 @@ class Page extends React.Component {
   }
 
   render() {
-    let setupToggleButton;
+    let setupToggleButton, statsLightbox;
     if (!this.state.setupOpen) {
       setupToggleButton = <button
         onClick={this.toggleSetup.bind(this)}
         className="setup_toggle">
         Settings
       </button>;
+    }
+
+    if (this.state.statsLightboxOpen) {
+      statsLightbox = <StatsLightbox
+        close={function() { this.setState({statsLightboxOpen: false}); }.bind(this)}
+        noteStats={this.state.noteStats} />;
     }
 
     return <div
@@ -272,6 +279,8 @@ class Page extends React.Component {
         className="keyboard_toggle">
         {this.state.keyboardOpen ? "Hide Keyboard" : "Show Keyboard"}
       </button>
+
+      {statsLightbox}
     </div>;
   }
 
@@ -434,7 +443,7 @@ class Page extends React.Component {
         {" "}
         <button onClick={this.pickInput.bind(this)}>Connect</button>
         {this.state.currentInput ? <strong> Connected</strong> : null}
-      </div>
+      </div>;
     }
 
     if (this.state.streak) {
@@ -445,7 +454,9 @@ class Page extends React.Component {
     }
 
     let header = <div className="header">
-      <div className="stats">
+      <div className="stats" onClick={function() {
+        this.setState({statsLightboxOpen: true});
+      }.bind(this)}>
         {streak}
         <div className="stat_container">
           <div className="value">{this.state.hits}</div>
@@ -495,7 +506,6 @@ class Page extends React.Component {
           </div>
           {modeToggle}
         </div>
-        <pre>{JSON.stringify(this.state.noteStats)}</pre>
       </div>
     </div>;
   }

@@ -1,0 +1,83 @@
+@import "include/common";
+
+
+.lightbox_shroud {
+    position: fixed; 
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    background: rgba(white, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .lightbox {
+        background: white;
+        border: 1px solid lighten($border_color, 10%);
+        border-radius: 6px;
+        box-shadow: 0 0 20px rgba(black, 0.2);
+        width: 600px;
+        padding: 20px;
+
+        h2 {
+            margin-top: 0;
+            color: #444;
+        }
+
+        p {
+            line-height: 1.5;
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+.stats_lightbox {
+    .note_bars_container {
+        margin: 30px 0;
+    }
+
+    .note_stat_row {
+        line-height: 24px;
+        display: flex;
+        margin-bottom: 10px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+
+        .note_name {
+            text-align: center;
+            width: 40px;
+            font-weight: bold;
+        }
+
+        .note_rates {
+            flex: 1;
+            display: flex;
+            height: 100%;
+        }
+
+        .hit_bar, .miss_bar {
+            height: 100%;
+            box-sizing: border-box;
+            padding: 0 8px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 0 0 4px white;
+        }
+
+        .hit_bar {
+            background: desaturate(darken($green, 8%), 5%);
+        }
+
+        .miss_bar {
+            background: $red;
+            text-align: right;
+        }
+    }
+}

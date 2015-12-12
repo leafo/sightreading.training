@@ -7,6 +7,14 @@ $line_spacing: 30px;
 
 $setup_panel_width: 250px;
 
+$teal: #7ED6D7;
+$red: #fe4e50;
+$green: #aada80;
+$blue: #34a0f2;
+$orange: #FB9175;
+$yellow: #FDBF6C;
+$purple: #A287C0;
+
 @mixin unselectable {
     -moz-user-select: none;
     -webkit-user-select: none;
