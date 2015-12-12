@@ -151,6 +151,7 @@ class Page extends React.Component {
       this.setState({
         notes: this.state.notes,
         hits: this.state.hits + 1,
+        streak: (this.state.hits || 0) + 1,
         noteShaking: false,
         heldNotes: {},
         touchedNotes: {},
@@ -350,6 +351,7 @@ class Page extends React.Component {
           this.state.notes.pushRandom();
           this.setState({ // also updates notes
             misses: this.state.misses + 1,
+            streak: 0,
           })
         }.bind(this)
       })
@@ -412,9 +414,16 @@ class Page extends React.Component {
       </div>
     }
 
+    if (this.state.streak) {
+      var streak = <div className="stat_container">
+        <div className="value">{this.state.hits}</div>
+        <div className="label">streak</div>
+      </div>;
+    }
+
     let header = <div className="header">
       <div className="stats">
-
+        {streak}
         <div className="stat_container">
           <div className="value">{this.state.hits}</div>
           <div className="label">hits</div>
