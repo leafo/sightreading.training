@@ -58,6 +58,15 @@ export class NoteList extends Array {
     }
   }
 
+  currentColumn() {
+    let first = this[0];
+    if (Array.isArray(first)) {
+      return first;
+    } else {
+      return [first];
+    }
+  }
+
   // if single note is in head
   inHead(note) {
     let first = this[0];

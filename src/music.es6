@@ -46,6 +46,11 @@ export function noteName(pitch) {
   return `${name}${octave}`;
 }
 
+export function normalizeNote(note) {
+  return note.replace(/\d+$/, "");
+}
+
+
 export function parseNote(note) {
   let [, letter, accidental, octave] = note.match(/^(\w)(#|b)?(\d+)$/);
   if (OFFSETS[letter] == undefined) {

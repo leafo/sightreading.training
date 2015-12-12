@@ -86,7 +86,8 @@ class Page extends React.Component {
       keyboardOpen: true,
       setupOpen: false,
       currentStaff: Page.STAVES[0],
-      currentGenerator: Page.GENERATORS[0]
+      currentGenerator: Page.GENERATORS[0],
+      noteStats: {},
     };
 
     this.state.notes = this.newNoteList();
@@ -129,11 +130,25 @@ class Page extends React.Component {
   // called when held notes reaches 0
   checkForMiss() {
     N.event("sight_reading", "note", "miss");
+
+    let stats = this.state.noteStats;
+    this.state.notes.currentColumn().map(function(note) {
+      if (this.state.heldNotes[note]) {
+        return;
+      }
+
+      note = normalizeNote(note);
+      stats[note] = stats[note] || {}
+      stats[note].misses = (stats[note].misses || 0) + 1;
+    }.bind(this));
+
     this.setState({
       misses: this.state.misses + 1,
+      streak: 0,
       noteShaking: true,
       heldNotes: {},
       touchedNotes: {},
+      noteStats: stats,
     });
     setTimeout(() => this.setState({noteShaking: false}), 500);
     return true;
@@ -148,6 +163,13 @@ class Page extends React.Component {
       this.state.notes.shift();
       this.state.notes.pushRandom();
 
+      let stats = this.state.noteStats;
+      touched.map(function(note) {
+        note = normalizeNote(note);
+        stats[note] = stats[note] || {}
+        stats[note].hits = (stats[note].hits || 0) + 1;
+      });
+
       this.setState({
         notes: this.state.notes,
         hits: this.state.hits + 1,
@@ -155,6 +177,7 @@ class Page extends React.Component {
         noteShaking: false,
         heldNotes: {},
         touchedNotes: {},
+        noteStats: stats,
       });
 
       this.state.slider.add(this.state.noteWidth);
@@ -472,6 +495,7 @@ class Page extends React.Component {
           </div>
           {modeToggle}
         </div>
+        <pre>{JSON.stringify(this.state.noteStats)}</pre>
       </div>
     </div>;
   }
