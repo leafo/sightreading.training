@@ -174,7 +174,7 @@ class Page extends React.Component {
       this.setState({
         notes: this.state.notes,
         hits: this.state.hits + 1,
-        streak: (this.state.hits || 0) + 1,
+        streak: (this.state.streak || 0) + 1,
         noteShaking: false,
         heldNotes: {},
         touchedNotes: {},
