@@ -448,7 +448,7 @@ class Page extends React.Component {
 
     if (this.state.streak) {
       var streak = <div className="stat_container">
-        <div className="value">{this.state.hits}</div>
+        <div className="value">{this.state.streak}</div>
         <div className="label">streak</div>
       </div>;
     }
