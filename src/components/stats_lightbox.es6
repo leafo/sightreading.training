@@ -56,7 +56,14 @@ class StatsLightbox extends React.Component {
       </div>
     }
 
-    return <div className="lightbox_shroud">
+    return <div
+      onClick={function(e) {
+        if (e.target.classList.contains("lightbox_shroud")) {
+          this.props.close();
+          e.preventDefault();
+        }
+      }.bind(this)}
+      className="lightbox_shroud">
       <div className="lightbox stats_lightbox">
         <h2>Session stats</h2>
         {statsContent}
@@ -66,9 +73,5 @@ class StatsLightbox extends React.Component {
         </p>
       </div>
     </div>;
-  }
-
-  close() {
-    alert("close me");
   }
 }
