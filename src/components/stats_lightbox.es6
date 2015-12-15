@@ -49,10 +49,18 @@ class StatsLightbox extends React.Component {
       </p>;
     }
 
+    if (this.props.stats.averageHitTime) {
+      var hitTime = <div className="hit_time">
+        Average hit time
+        <strong> {Math.round(this.props.stats.averageHitTime)}ms</strong>
+      </div>
+    }
+
     return <div className="lightbox_shroud">
       <div className="lightbox stats_lightbox">
         <h2>Session stats</h2>
         {statsContent}
+        {hitTime}
         <p>
           <button onClick={this.props.close}>Close</button>
         </p>
