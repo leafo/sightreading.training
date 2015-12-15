@@ -130,12 +130,10 @@ class Page extends React.Component {
   checkForMiss() {
     N.event("sight_reading", "note", "miss");
 
-    this.state.notes.currentColumn().map(function(note) {
-      if (this.state.heldNotes[note]) {
-        return;
-      }
-      this.state.stats.missNote(note);
-    }.bind(this));
+    let missed = this.state.notes.currentColumn()
+      .filter((n) => !this.state.heldNotes[n]);
+
+    this.state.stats.missNotes(missed);
 
     this.setState({
       noteShaking: true,
@@ -155,10 +153,7 @@ class Page extends React.Component {
 
       this.state.notes.shift();
       this.state.notes.pushRandom();
-
-      touched.map(function(note) {
-        this.state.stats.hitNote(note);
-      }.bind(this));
+      this.state.stats.hitNotes(touched);
 
       this.setState({
         notes: this.state.notes,
@@ -365,12 +360,10 @@ class Page extends React.Component {
         initialValue: noteWidth * 3,
         onUpdate: this.setOffset.bind(this),
         onLoop: function() {
+          this.state.stats.missNotes(this.state.notes.currentColumn());
           this.state.notes.shift();
           this.state.notes.pushRandom();
-          this.setState({ // also updates notes
-            misses: this.state.misses + 1,
-            streak: 0,
-          })
+          this.forceUpdate();
         }.bind(this)
       })
     });
@@ -432,9 +425,9 @@ class Page extends React.Component {
       </div>;
     }
 
-    if (this.state.streak) {
+    if (this.state.stats.streak) {
       var streak = <div className="stat_container">
-        <div className="value">{this.state.streak}</div>
+        <div className="value">{this.state.stats.streak}</div>
         <div className="label">streak</div>
       </div>;
     }

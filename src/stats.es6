@@ -6,16 +6,22 @@ export class NoteStats {
     this.misses = 0;
   }
 
-  hitNote(note) {
-    this.incrementNote(note, 1);
+  hitNotes(notes) {
+    for (let note of notes) {
+      this.incrementNote(note, 1);
+    }
+
     this.streak += 1;
-    this.hits += 1
+    this.hits += 1;
   }
 
-  missNote(note) {
-    this.incrementNote(note, -1);
+  missNotes(notes) {
+    for (let note of notes) {
+      this.incrementNote(note, -1);
+    }
+
     this.streak = 0;
-    this.misses += 1
+    this.misses += 1;
   }
 
   incrementNote(note, val) {
