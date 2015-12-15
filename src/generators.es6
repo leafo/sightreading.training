@@ -80,3 +80,24 @@ export class DualRandomNotes {
   }
 }
 
+export class TriadNotes {
+  constructor(notes) {
+    this.notes = notes;
+    this.shapes = [
+      [0, 2, 4],
+      [0, 2, 5],
+      [0, 3, 5],
+    ];
+
+    this.generator = new MersenneTwister();
+  }
+
+  nextNote() {
+    let shape = this.shapes[this.generator.int() % this.shapes.length];
+    let shapeMax = shape[shape.length - 1];
+
+    let bass = this.generator.int() % (this.notes.length - shapeMax);
+    return shape.map((offset) => this.notes[bass + offset]);
+  }
+}
+

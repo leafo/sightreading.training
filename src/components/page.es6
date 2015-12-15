@@ -66,6 +66,13 @@ class Page extends React.Component {
         return new DualRandomNotes(notes.slice(0, mid), notes.slice(mid));
 
       }
+    },
+    {
+      name: "triads",
+      create: function(staff) {
+        let notes = new MajorScale("C").getLooseRange(...staff.range);
+        return new TriadNotes(notes);
+      }
     }
   ]
 
