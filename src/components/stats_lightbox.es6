@@ -2,22 +2,24 @@ let {PropTypes: types} = React;
 
 class StatsLightbox extends React.Component {
   static propTypes = {
-    noteStats: types.object.isRequired,
+    stats: types.object.isRequired,
     close: types.func.isRequired,
   }
 
   render() {
-    let availableNotes = Object.keys(this.props.noteStats);
+    let hitStats = this.props.stats.noteHitStats;
+
+    let availableNotes = Object.keys(hitStats);
     availableNotes.sort();
 
     if (availableNotes.length) {
       var statsContent = availableNotes.map(function (note) {
-        let stats = this.props.noteStats[note]
+        let stats = hitStats[note];
         let hits = stats.hits || 0;
         let misses = stats.misses || 0;
 
-        let hit_rate = hits / (hits + misses) * 100
-        let miss_rate = misses / (hits + misses) * 100
+        let hit_rate = hits / (hits + misses) * 100;
+        let miss_rate = misses / (hits + misses) * 100;
 
         if (hit_rate > 0) {
           var hit_bar = <div className="hit_bar" style={{ width: `${hit_rate}%`}}>

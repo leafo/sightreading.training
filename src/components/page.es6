@@ -74,8 +74,6 @@ class Page extends React.Component {
 
     this.state = {
       midi: null,
-      hits: 0,
-      misses: 0,
       noteShaking: false,
       heldNotes: {},
       touchedNotes: {},
@@ -88,7 +86,7 @@ class Page extends React.Component {
       setupOpen: false,
       currentStaff: Page.STAVES[0],
       currentGenerator: Page.GENERATORS[0],
-      noteStats: {},
+      stats: new NoteStats(),
     };
 
     this.state.notes = this.newNoteList();
@@ -132,25 +130,19 @@ class Page extends React.Component {
   checkForMiss() {
     N.event("sight_reading", "note", "miss");
 
-    let stats = this.state.noteStats;
     this.state.notes.currentColumn().map(function(note) {
       if (this.state.heldNotes[note]) {
         return;
       }
-
-      note = normalizeNote(note);
-      stats[note] = stats[note] || {}
-      stats[note].misses = (stats[note].misses || 0) + 1;
+      this.state.stats.missNote(note);
     }.bind(this));
 
     this.setState({
-      misses: this.state.misses + 1,
-      streak: 0,
       noteShaking: true,
       heldNotes: {},
       touchedNotes: {},
-      noteStats: stats,
     });
+
     setTimeout(() => this.setState({noteShaking: false}), 500);
     return true;
   }
@@ -164,21 +156,15 @@ class Page extends React.Component {
       this.state.notes.shift();
       this.state.notes.pushRandom();
 
-      let stats = this.state.noteStats;
       touched.map(function(note) {
-        note = normalizeNote(note);
-        stats[note] = stats[note] || {}
-        stats[note].hits = (stats[note].hits || 0) + 1;
-      });
+        this.state.stats.hitNote(note);
+      }.bind(this));
 
       this.setState({
         notes: this.state.notes,
-        hits: this.state.hits + 1,
-        streak: (this.state.streak || 0) + 1,
         noteShaking: false,
         heldNotes: {},
         touchedNotes: {},
-        noteStats: stats,
       });
 
       this.state.slider.add(this.state.noteWidth);
@@ -254,7 +240,7 @@ class Page extends React.Component {
     if (this.state.statsLightboxOpen) {
       statsLightbox = <StatsLightbox
         close={function() { this.setState({statsLightboxOpen: false}); }.bind(this)}
-        noteStats={this.state.noteStats} />;
+        stats={this.state.stats} />;
     }
 
     return <div
@@ -459,12 +445,12 @@ class Page extends React.Component {
       }.bind(this)}>
         {streak}
         <div className="stat_container">
-          <div className="value">{this.state.hits}</div>
+          <div className="value">{this.state.stats.hits}</div>
           <div className="label">hits</div>
         </div>
 
         <div className="stat_container">
-          <div className="value">{this.state.misses}</div>
+          <div className="value">{this.state.stats.misses}</div>
           <div className="label">misses</div>
         </div>
       </div>
