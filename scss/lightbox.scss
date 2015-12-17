@@ -36,8 +36,24 @@
 }
 
 .stats_lightbox {
-    .note_bars_container {
+    .note_bars_container, .note_timings_container {
         margin: 30px 0;
+    }
+
+    .note_timing_row {
+        line-height: 24px;
+        margin-bottom: 10px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        .note_name {
+            display: inline-block;
+            font-weight: bold;
+            text-align: center;
+            width: 40px;
+        }
     }
 
     .note_stat_row {
@@ -48,7 +64,6 @@
         &:last-child {
             margin-bottom: 0;
         }
-
 
         .note_name {
             text-align: center;
