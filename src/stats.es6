@@ -23,7 +23,7 @@ export class NoteStats {
         this.averageHitTime = (this.averageHitTime * this.hits + timeTaken) / (this.hits + 1);
         for (let note of notes) {
           let noteStats = this.noteHitStats[this.normalizeNote(note)];
-          noteStats.averageHitTime = (noteStats.averageHitTime * (noteStats.hits || 0) + noteStats.averageHitTime) / (noteStats.hits + 1);
+          noteStats.averageHitTime = ((noteStats.averageHitTime || 0) * (noteStats.hits || 0) + timeTaken) / (noteStats.hits + 1);
         }
       }
     }
