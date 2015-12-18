@@ -84,6 +84,7 @@ class Page extends React.Component {
       noteShaking: false,
       heldNotes: {},
       touchedNotes: {},
+      scrollSpeed: 100,
 
       noteWidth: DEFAULT_NOTE_WIDTH,
       statsLightboxOpen: false,
@@ -362,7 +363,7 @@ class Page extends React.Component {
       mode: "scroll",
       noteWidth: noteWidth,
       slider: new SlideToZero({
-        speed: 100,
+        speed: this.state.scrollSpeed,
         loopPhase: noteWidth,
         initialValue: noteWidth * 3,
         onUpdate: this.setOffset.bind(this),
@@ -465,7 +466,18 @@ class Page extends React.Component {
       </pre>
     </div>;
 
+
     let modeToggle = <div className="tool">
+      <span className="speed_picker">
+        <span className="speed_value">{ this.state.scrollSpeed }</span>
+        <input type="range"
+          min="50"
+          max="300"
+          disabled={this.state.mode == "scroll"}
+          value={this.state.scrollSpeed}
+          onChange={(e) => this.setState({scrollSpeed: e.target.value})} />
+      </span>
+
       <span className="label">Mode</span>
       <div
         onClick={this.toggleMode.bind(this)}

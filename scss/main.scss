@@ -217,6 +217,26 @@ button {
             opacity: 0.8;
         }
     }
+
+    .speed_picker {
+        border: 1px solid $border_color;
+        margin-right: 10px;
+        padding: 5px;
+        display: inline-flex;
+        align-items: center;
+
+        input {
+            margin: 0;
+            margin-left: 10px;
+            &:disabled {
+                opacity: 0.5;
+            }
+        }
+
+        .speed_value {
+            font-family: monospace;
+        }
+    }
 }
 
 .input_picker {
