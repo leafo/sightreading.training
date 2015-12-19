@@ -57,6 +57,10 @@ class Staff extends React.Component {
     );
   }
 
+  renderKeySignature() {
+    let keySignature = this.keySignature || 0;
+  }
+
   renderNotes() {
     return this.props.notes.map(function(note, idx) {
       let opts = {
