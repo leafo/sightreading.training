@@ -81,6 +81,27 @@ export function letterOffset(pitch) {
   return offset + LETTER_OFFSETS[pitch]
 }
 
+export function addInterval(note, halfSteps) {
+  return noteName(parseNote(note) + halfSteps);
+}
+
+// F C G D A E B Gb Db Ab Eb Bb
+export function keySignatureNotes(octave, count) {
+  if (count == 0) {
+    return [];
+  }
+
+  if (count > 0) {
+    let notes = [`F${octave}`];
+    while (count > 1) {
+      count -= 1;
+      notes.push(addInterval(notes[notes.length - 1], 7));
+    }
+
+    return notes;
+  }
+}
+
 // returns 0 if notes are same
 // returns < 0 if a < b
 // returns > 0 if a > b
@@ -89,7 +110,6 @@ export function compareNotes(a, b) {
   b = parseNote(b);
   return a - b;
 }
-
 
 export function notesLessThan(a, b) {
   return compareNotes(a,b) < 0;
