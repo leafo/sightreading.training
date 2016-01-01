@@ -222,7 +222,11 @@ class Page extends React.Component {
     let n = noteName(pitch)
 
     if (NOTE_EVENTS[type] == "noteOn") {
-      this.pressNote(n);
+      if (velocity == 0) {
+        this.releaseNote(n);
+      } else {
+        this.pressNote(n);
+      }
     }
 
     if (NOTE_EVENTS[type] == "noteOff") {
