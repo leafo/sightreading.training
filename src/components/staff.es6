@@ -40,8 +40,9 @@ class Staff extends React.Component {
         <div className="line5 line"></div>
       </div>
 
+      {this.renderKeySignature()}
+
       <div ref="notes" className="notes">
-        {this.renderKeySignature()}
         {this.renderNotes()}
         {this.renderHeld()}
       </div>
@@ -65,8 +66,7 @@ class Staff extends React.Component {
       return;
     }
 
-    let sigNotes = keySignatureNotes(5, signature);
-    console.log("key signature", sigNotes);
+    let sigNotes = keySignatureNotes(signature, this.props.lowerLine, this.props.upperLine);
 
     let topOffset = letterOffset(this.props.upperLine);
 
@@ -84,6 +84,7 @@ class Staff extends React.Component {
 
         return <img
           key={`sig-${n}`}
+          data-note={n}
           style={style}
           className={classNames("accidental", sigClass)}
           src={src} />;
@@ -92,10 +93,13 @@ class Staff extends React.Component {
   }
 
   renderNotes() {
+    let keySignatureWidth = Math.abs(this.props.keySignature || 0)
+    keySignatureWidth = keySignatureWidth > 0 ? keySignatureWidth * 20 + 20 : 0;
+
     return this.props.notes.map(function(note, idx) {
       let opts = {
         goal: true,
-        offset: this.props.noteWidth * idx,
+        offset: keySignatureWidth + this.props.noteWidth * idx,
         first: idx == 0,
       }
 

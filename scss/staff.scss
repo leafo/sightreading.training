@@ -74,11 +74,24 @@
     }
 
     .key_signature {
+        position: absolute;
+        left: 100px;
+        top: 0;
+        bottom: 0;
+
         .accidental {
             position: absolute;
             top: 0;
-            height: 40%;
-            transform: translate(0, -60%);
+
+            &.sharp {
+                height: 78%;
+                transform: translate(0, -50%);
+            }
+
+            &.flat {
+                height: 78%;
+                transform: translate(-44%, -62%);
+            }
         }
     }
 

@@ -86,32 +86,43 @@ export function addInterval(note, halfSteps) {
 }
 
 // F C G D A E B Gb Db Ab Eb Bb
-export function keySignatureNotes(octave, count) {
+// within the midi pitches min, max
+export function keySignatureNotes(count, min, max) {
   if (count == 0) {
     return [];
   }
 
+  let octave = 5; // TODO: pick something close to min/max
+
   if (count > 0) {
-    let notes = [`F${octave}`];
+    var notes = [parseNote(`F${octave}`)];
     while (count > 1) {
       count -= 1;
-      notes.push(addInterval(notes[notes.length - 1], 7));
+      notes.push(notes[notes.length - 1] + 7);
     }
-
-    return notes;
   }
 
   if (count < 0) {
     count = -1 * count;
 
-    let notes = [`B${octave}`];
+    var notes = [parseNote(`B${octave}`)];
     while (count > 1) {
       count -= 1;
-      notes.push(addInterval(notes[notes.length - 1], -7));
+      notes.push(notes[notes.length - 1] - 7);
+    }
+  }
+
+  return notes.map(function(n) {
+    while (n <= min) {
+      n += 12;
     }
 
-    return notes;
-  }
+    while (n > max) {
+      n -= 12;
+    }
+
+    return noteName(n);
+  });
 }
 
 
