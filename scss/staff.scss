@@ -73,6 +73,15 @@
         }
     }
 
+    .key_signature {
+        .accidental {
+            position: absolute;
+            top: 0;
+            height: 40%;
+            transform: translate(0, -60%);
+        }
+    }
+
     .notes {
         position: absolute;
         top: 0;

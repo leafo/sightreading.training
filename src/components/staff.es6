@@ -65,22 +65,28 @@ class Staff extends React.Component {
       return;
     }
 
-    console.log("getting key signature notes for", signature);
-
     let sigNotes = keySignatureNotes(5, signature);
+    console.log("key signature", sigNotes);
+
     let topOffset = letterOffset(this.props.upperLine);
 
     let sigClass = signature < 0 ? "flat" : "sharp";
+    let src = signature < 0 ? "svg/flat.svg" : "svg/sharp.svg";
 
     return <div className="key_signature">
-      {sigNotes.map(function(n) {
+      {sigNotes.map(function(n, i) {
         let pitch = parseNote(n);
         let fromTop = topOffset - letterOffset(pitch);
         let style = {
           top: `${Math.floor(fromTop * 25/2)}%`,
+          left: `${i * 20}px`
         }
 
-        return <div key={`sig-${n}`} className={sigClass} style={style}></div>;
+        return <img
+          key={`sig-${n}`}
+          style={style}
+          className={classNames("accidental", sigClass)}
+          src={src} />;
       }.bind(this))}
     </div>;
   }
