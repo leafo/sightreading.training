@@ -100,7 +100,20 @@ export function keySignatureNotes(octave, count) {
 
     return notes;
   }
+
+  if (count < 0) {
+    count = -1 * count;
+
+    let notes = [`B${octave}`];
+    while (count > 1) {
+      count -= 1;
+      notes.push(addInterval(notes[notes.length - 1], -7));
+    }
+
+    return notes;
+  }
 }
+
 
 // returns 0 if notes are same
 // returns < 0 if a < b
