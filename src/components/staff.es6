@@ -7,6 +7,7 @@ class Staff extends React.Component {
     lowerLine: types.number.isRequired,
     cleffImage: types.string.isRequired,
     staffClass: types.string.isRequired,
+    keySignature: types.number,
 
     // state props
     notes: types.array,
@@ -40,6 +41,7 @@ class Staff extends React.Component {
       </div>
 
       <div ref="notes" className="notes">
+        {this.renderKeySignature()}
         {this.renderNotes()}
         {this.renderHeld()}
       </div>
@@ -58,7 +60,29 @@ class Staff extends React.Component {
   }
 
   renderKeySignature() {
-    let keySignature = this.keySignature || 0;
+    let signature = this.props.keySignature || 0;
+    if (signature == 0) {
+      return;
+    }
+
+    console.log("getting key signature notes for", signature);
+
+    let sigNotes = keySignatureNotes(5, signature);
+    let topOffset = letterOffset(this.props.upperLine);
+
+    let sigClass = signature < 0 ? "flat" : "sharp";
+
+    return <div className="key_signature">
+      {sigNotes.map(function(n) {
+        let pitch = parseNote(n);
+        let fromTop = topOffset - letterOffset(pitch);
+        let style = {
+          top: `${Math.floor(fromTop * 25/2)}%`,
+        }
+
+        return <div key={`sig-${n}`} className={sigClass} style={style}></div>;
+      }.bind(this))}
+    </div>;
   }
 
   renderNotes() {
