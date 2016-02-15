@@ -1,7 +1,10 @@
 $border_color: #a2a2a2;
+$light_border_color: lighten(#a2a2a2, 20%);
+
 $keyboard_height: 180px;
 $keyboard_height_short: 120px;
 $button_color: #727290;
+$button_color_highlight: #E0E0E7;
 $default_width: 900px;
 $line_spacing: 30px;
 
@@ -38,4 +41,8 @@ $purple: #A287C0;
     }
 }
 
-
+@mixin single_line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -254,8 +254,8 @@ class Page extends React.Component {
 
     if (this.state.introLightboxOpen) {
       introLightbox = <IntroLightbox
-        close={() => this.setState({introLightboxOpen: false})}
-        />;
+        midi={this.state.midi}
+        close={() => this.setState({introLightboxOpen: false})} />;
     }
 
     return <div
