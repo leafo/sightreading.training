@@ -8,18 +8,23 @@ class IntroLightbox extends React.Component {
 
   constructor(props) {
     super(props)
+    this.state = {}
   }
 
   render() {
-    let midi_setup
+    let midiSetup
 
     if (this.props.midi) {
-      midi_setup = <div>
+      midiSetup = <div>
         <h4>Select your MIDI device:</h4>
-        <MidiSelector midi={this.props.midi} />
+        <MidiSelector
+          selectedInput={(idx) => {
+            this.setState({selectedInput: idx})
+          }}
+          midi={this.props.midi} />
       </div>
     } else {
-      midi_setup = <p>MIDI support not detected on your computer. You'll only be able to use the on-srcreen keyboard.</p>
+      midiSetup = <p>MIDI support not detected on your computer. You'll only be able to use the on-srcreen keyboard.</p>
     }
 
 
@@ -33,19 +38,26 @@ class IntroLightbox extends React.Component {
         <p>You can customize how the notes are generated, and what staff you
         use from the settings menu.</p>
 
-        {midi_setup}
+        {midiSetup}
 
         <p>
-          <button onClick={this.props.close}>Continue</button>
+          <button onClick={this.callClose.bind(this)}>Continue</button>
         </p>
       </div>
     </div>
+  }
+
+  callClose() {
+    this.props.close({
+      input: this.state.selectedInput
+    })
   }
 }
 
 class MidiSelector extends React.Component {
   static propTypes = {
     midi: types.object.isRequired,
+    selectedInput: types.func,
   }
 
   constructor(props) {
@@ -67,6 +79,9 @@ class MidiSelector extends React.Component {
             })}
             onClick={() => {
               this.setState({selected: i})
+              if (this.props.selectedInput) {
+                this.props.selectedInput(i);
+              }
             }}
             >
             <img className="row_icon" src="img/notes_icon.svg" alt="MIDI Device" />

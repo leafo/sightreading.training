@@ -179,16 +179,9 @@ class Page extends React.Component {
     }
   }
 
-  pickInput(e) {
-    e.preventDefault();
-    let idx = this.refs.inputPicker.value;
-    idx = parseInt(idx, 10);
+  pickInput(idx) {
     let input = this.midiInputs()[idx]
-
-    if (!input) {
-      return;
-    }
-
+    if (!input) { return; }
     console.log(`Binding to: ${input.name}`)
     input.onmidimessage = this.onMidiMessage.bind(this);
     this.setState({currentInput: input});
@@ -255,7 +248,12 @@ class Page extends React.Component {
     if (this.state.introLightboxOpen) {
       introLightbox = <IntroLightbox
         midi={this.state.midi}
-        close={() => this.setState({introLightboxOpen: false})} />;
+        close={(opts) => {
+          this.setState({introLightboxOpen: false})
+          if (opts.input != null) {
+            this.pickInput(this.input);
+          }
+        }} />;
     }
 
     return <div
@@ -429,23 +427,6 @@ class Page extends React.Component {
   }
 
   renderWorkspace() {
-    if (this.state.midi) {
-      window.current_midi = this.state.midi;
-
-      var inputSelect = <div className="input_picker">
-        <select
-          ref="inputPicker">
-          {
-            this.midiInputs().map((input, i) =>
-              <option value={i} key={i}>{input.name}</option>)
-          }
-        </select>
-        {" "}
-        <button onClick={this.pickInput.bind(this)}>Connect</button>
-        {this.state.currentInput ? <strong> Connected</strong> : null}
-      </div>;
-    }
-
     if (this.state.stats.streak) {
       var streak = <div className="stat_container">
         <div className="value">{this.state.stats.streak}</div>
@@ -513,7 +494,6 @@ class Page extends React.Component {
         </div>
         <div className="toolbar">
           <div className="left_tools">
-            {inputSelect}
           </div>
           {modeToggle}
         </div>
