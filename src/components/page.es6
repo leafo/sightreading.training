@@ -88,6 +88,7 @@ class Page extends React.Component {
 
       noteWidth: DEFAULT_NOTE_WIDTH,
       statsLightboxOpen: false,
+      introLightboxOpen: true,
 
       bufferSize: 10,
       keyboardOpen: true,
@@ -235,7 +236,8 @@ class Page extends React.Component {
   }
 
   render() {
-    let setupToggleButton, statsLightbox;
+    let setupToggleButton, statsLightbox, introLightbox;
+
     if (!this.state.setupOpen) {
       setupToggleButton = <button
         onClick={this.toggleSetup.bind(this)}
@@ -248,6 +250,12 @@ class Page extends React.Component {
       statsLightbox = <StatsLightbox
         close={function() { this.setState({statsLightboxOpen: false}); }.bind(this)}
         stats={this.state.stats} />;
+    }
+
+    if (this.state.introLightboxOpen) {
+      introLightbox = <IntroLightbox
+        close={() => this.setState({introLightboxOpen: false})}
+        />;
     }
 
     return <div
@@ -274,6 +282,7 @@ class Page extends React.Component {
       </button>
 
       {statsLightbox}
+      {introLightbox}
     </div>;
   }
 
