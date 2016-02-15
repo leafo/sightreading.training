@@ -9,8 +9,8 @@ class SettingsPanel extends React.Component {
   }
 
   render() {
-    return <div className="setup_panel">
-      <div className="setup_header">
+    return <div className="settings_panel">
+      <div className="settings_header">
         <button onClick={this.props.close}>Close</button>
         <h3>Settings</h3>
       </div>

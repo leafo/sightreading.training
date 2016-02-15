@@ -92,7 +92,7 @@ class Page extends React.Component {
 
       bufferSize: 10,
       keyboardOpen: true,
-      setupOpen: false,
+      settingsOpen: false,
       currentStaff: Page.STAVES[0],
       currentGenerator: Page.GENERATORS[0],
       stats: new NoteStats(),
@@ -229,12 +229,12 @@ class Page extends React.Component {
   }
 
   render() {
-    let setupToggleButton, statsLightbox, introLightbox;
+    let settingsToggleButton, statsLightbox, introLightbox;
 
-    if (!this.state.setupOpen) {
-      setupToggleButton = <button
-        onClick={this.toggleSetup.bind(this)}
-        className="setup_toggle">
+    if (!this.state.settingsOpen) {
+      settingsToggleButton = <button
+        onClick={this.toggleSettings.bind(this)}
+        className="settings_toggle">
         Settings
       </button>;
     }
@@ -259,19 +259,19 @@ class Page extends React.Component {
     return <div
       className={classNames("page_container", {
         keyboard_open: this.state.keyboardOpen,
-        setup_open: this.state.setupOpen,
+        settings_open: this.state.settingsOpen,
         scroll_mode: this.state.mode == "scroll",
         wait_mode: this.state.mode == "wait",
     })}>
       {this.renderWorkspace()}
       {this.renderKeyboard()}
-      {this.renderSetup()}
+      {this.renderSettings()}
 
       <a className="github_link" href="https://github.com/leafo/mursicjs">
         <img src="img/github-icon.svg" alt="GitHub Repository" />
       </a>
 
-      {setupToggleButton}
+      {settingsToggleButton}
 
       <button
         onClick={this.toggleKeyboard.bind(this)}
@@ -284,13 +284,13 @@ class Page extends React.Component {
     </div>;
   }
 
-  renderSetup() {
-    if (!this.state.setupOpen) {
+  renderSettings() {
+    if (!this.state.settingsOpen) {
       return;
     }
 
     return <SettingsPanel
-      close={this.toggleSetup.bind(this)}
+      close={this.toggleSettings.bind(this)}
       staves={Page.STAVES}
       generators={Page.GENERATORS}
       currentGenerator={this.state.currentGenerator}
@@ -368,9 +368,9 @@ class Page extends React.Component {
     this.staff.setOffset(value);
   }
 
-  toggleSetup() {
+  toggleSettings() {
     this.setState({
-      setupOpen: !this.state.setupOpen
+      settingsOpen: !this.state.settingsOpen
     });
     this.recalcFlex();
   }

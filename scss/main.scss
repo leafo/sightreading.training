@@ -51,8 +51,8 @@ button {
         }
     }
 
-    .setup_open & {
-        left: $setup_panel_width;
+    .settings_open & {
+        left: $settings_panel_width;
     }
 
     .workspace_wrapper {
@@ -307,14 +307,14 @@ button {
     }
 }
 
-.setup_toggle {
+.settings_toggle {
     position: absolute;
     top: 10px;
     left: 10px;
     z-index: 2;
 }
 
-.setup_panel {
+.settings_panel {
     @include border_box;
     @include unselectable;
     position: absolute;
@@ -323,10 +323,10 @@ button {
     top: 0;
     bottom: 0;
     background: #D6D6D6;
-    width: $setup_panel_width;
+    width: $settings_panel_width;
     border-right: 2px solid $border_color;
 
-    .setup_header {
+    .settings_header {
         h3 {
             margin: 0;
         }
