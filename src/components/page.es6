@@ -289,55 +289,15 @@ class Page extends React.Component {
       return;
     }
 
-    let staves = Page.STAVES.map(function(staffConfig) {
-      return <div
-        key={staffConfig.name}
-        onClick={function(e) {
-          e.preventDefault();
-          this.setState({ currentStaff: staffConfig });
-        }.bind(this)}
-        className={classNames("toggle_option", {
-          active: this.state.currentStaff == staffConfig
-        })}>
-        {staffConfig.name}</div>;
-    }.bind(this));
-
-    
-    let generators = Page.GENERATORS.map(function (generator) {
-      if (generator.debug) {
-        return null;
-      }
-
-      return <div
-        key={generator.name}
-        onClick={function(e) {
-          e.preventDefault();
-          this.setState({ currentGenerator: generator });
-        }.bind(this)}
-        className={classNames("toggle_option", {
-          active: this.state.currentGenerator == generator
-        })}>{generator.name}</div>;
-    }.bind(this));
-
-    return <div className="setup_panel">
-      <div className="setup_header">
-        <button
-          onClick={this.toggleSetup.bind(this)}>
-          Close</button>
-        <h3>Settings</h3>
-      </div>
-
-      <div className="settings_group">
-        <h4>Staff</h4>
-        {staves}
-      </div>
-
-      <div className="settings_group">
-        <h4>Generators</h4>
-        {generators}
-      </div>
-
-    </div>;
+    return <SettingsPanel
+      close={this.toggleSetup.bind(this)}
+      staves={Page.STAVES}
+      generators={Page.GENERATORS}
+      currentGenerator={this.state.currentGenerator}
+      currentStaff={this.state.currentStaff}
+      setGenerator={(g) => this.setState({currentGenerator: g})}
+      setStaff={(g) => this.setState({currentStaff: g})}
+    />
   }
 
   renderKeyboard() {
