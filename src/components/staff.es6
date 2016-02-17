@@ -194,7 +194,11 @@ class Staff extends React.Component {
 
     let outside = pitch > this.props.upperLine || pitch < this.props.lowerLine;
 
+    let accidentals = this.props.keySignature ? this.props.keySignature.accidentalsForNote(pitch) : 0
+
     let classes = classNames("whole_note", "note", {
+      flat: accidentals < 0,
+      sharp: accidentals > 0,
       outside: outside,
       noteshake: this.props.noteShaking && opts.first,
       held: opts.goal && opts.first && this.props.heldNotes[note],

@@ -41,7 +41,7 @@ N.GENERATORS = [
     name: "sweep",
     debug: true,
     create: function(staff) {
-      let notes = new MajorScale("D").getLooseRange(...staff.range);
+      let notes = new MajorScale("C").getLooseRange(...staff.range);
       return new SweepRangeNotes(notes);
     }
   },

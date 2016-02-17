@@ -110,11 +110,16 @@
             transform: translate(0, -47%);
             transition: 0.1s ease transform;
 
-            &.held {
-                opacity: 0.2;
+            &.flat {
+                background: blue;
+            }
+
+            &.sharp {
+                background: red;
             }
 
             &.held {
+                opacity: 0.2;
                 transform: scale3d(1.1, 1.1, 1) translate(0, -47%);
             }
         }

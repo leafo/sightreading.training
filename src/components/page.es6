@@ -25,6 +25,7 @@ class Page extends React.Component {
       currentStaff: N.STAVES[0],
       currentGenerator: N.GENERATORS[1],
       stats: new NoteStats(),
+      keySignature: new KeySignature(2),
     };
 
     this.state.notes = this.newNoteList();
