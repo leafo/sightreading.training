@@ -61,15 +61,22 @@ class Staff extends React.Component {
   }
 
   renderKeySignature() {
-    if (!this.props.keySignature) {
+    let keySignature = this.props.keySignature
+
+    if (!keySignature) {
       return;
     }
 
-    let sigNotes = this.props.keySignature.notesInRange(this.props.lowerLine, this.props.upperLine)
+    if (keySignature.count == 0) {
+      return;
+    }
+
+    let sigNotes = keySignature.notesInRange(this.props.lowerLine, this.props.upperLine)
     let topOffset = letterOffset(this.props.upperLine)
 
-    let sigClass = signature < 0 ? "flat" : "sharp";
-    let src = signature < 0 ? "svg/flat.svg" : "svg/sharp.svg";
+    let sigClass = keySignature.isFlat() ? "flat" : "sharp";
+
+    let src = keySignature.isFlat() ? "svg/flat.svg" : "svg/sharp.svg";
 
     return <div className="key_signature">
       {sigNotes.map(function(n, i) {
