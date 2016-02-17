@@ -118,6 +118,11 @@
                 background: red;
             }
 
+            &.natural {
+                background: green;
+            }
+
+
             &.held {
                 opacity: 0.2;
                 transform: scale3d(1.1, 1.1, 1) translate(0, -47%);
