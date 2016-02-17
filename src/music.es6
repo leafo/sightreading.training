@@ -47,6 +47,21 @@ export function noteName(pitch) {
 }
 
 
+function parseNoteAccidentals(note) {
+  let [, letter, accidental] = note.match(/^(\w)(#|b)?/);
+  let n = 0;
+
+  if (accidental == "#") {
+    n += 1
+  }
+
+  if (accidental == "b") {
+    n -= 1
+  }
+
+  return n;
+}
+
 export function parseNote(note) {
   let [, letter, accidental, octave] = note.match(/^(\w)(#|b)?(\d+)$/);
   if (OFFSETS[letter] == undefined) {
@@ -85,46 +100,6 @@ export function addInterval(note, halfSteps) {
   return noteName(parseNote(note) + halfSteps);
 }
 
-// F C G D A E B Gb Db Ab Eb Bb
-// within the midi pitches min, max
-export function keySignatureNotes(count, min, max) {
-  if (count == 0) {
-    return [];
-  }
-
-  let octave = 5; // TODO: pick something close to min/max
-
-  if (count > 0) {
-    var notes = [parseNote(`F${octave}`)];
-    while (count > 1) {
-      count -= 1;
-      notes.push(notes[notes.length - 1] + 7);
-    }
-  }
-
-  if (count < 0) {
-    count = -1 * count;
-
-    var notes = [parseNote(`B${octave}`)];
-    while (count > 1) {
-      count -= 1;
-      notes.push(notes[notes.length - 1] - 7);
-    }
-  }
-
-  return notes.map(function(n) {
-    while (n <= min) {
-      n += 12;
-    }
-
-    while (n > max) {
-      n -= 12;
-    }
-
-    return noteName(n);
-  });
-}
-
 
 // returns 0 if notes are same
 // returns < 0 if a < b
@@ -141,6 +116,70 @@ export function notesLessThan(a, b) {
 
 export function notesGreaterThan(a, b) {
   return compareNotes(a,b) > 0;
+}
+
+export class KeySignature {
+  // count: the number of accidentals in the key
+  constructor(count) {
+    this.count = count;
+  }
+
+  isSharp() {
+    return this.count > 0
+  }
+
+  isFlat() {
+    return this.count < 0
+  }
+
+  // F C G D A E B Gb Db Ab Eb Bb
+  // within the midi pitches min, max
+  notesInRange(min, max) {
+    if (this.count == 0) {
+      return []
+    }
+
+    if (typeof max == "string") {
+      max = parseNote(max)
+    }
+
+    if (typeof min == "string") {
+      min = parseNote(min)
+    }
+
+    let octave = 5; // TODO: pick something close to min/max
+
+    if (this.count > 0) {
+      let count = this.count
+      var notes = [parseNote(`F${octave}`)]
+      while (count > 1) {
+        count -= 1;
+        notes.push(notes[notes.length - 1] + 7)
+      }
+    }
+
+    if (this.count < 0) {
+      let count = -1 * this.count
+
+      var notes = [parseNote(`B${octave}`)]
+      while (count > 1) {
+        count -= 1
+        notes.push(notes[notes.length - 1] - 7)
+      }
+    }
+
+    return notes.map(function(n) {
+      while (n <= min) {
+        n += 12;
+      }
+
+      while (n > max) {
+        n -= 12;
+      }
+
+      return noteName(n);
+    });
+  }
 }
 
 export class Scale {

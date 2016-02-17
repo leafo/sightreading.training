@@ -51,8 +51,42 @@ describe("scales", function() {
 })
 
 describe("key signature", function() {
-  it("gets key signature notes for 0", function() {
+  let trebleCleff = ["A4", "C7"]
+  let bassCleff = ["C3", "E5"]
+
+  it("gets key signature notes for C", function() {
     let key = new KeySignature(0)
-    console.log(key)
+
+    expect(key.isFlat()).toBe(false)
+    expect(key.isSharp()).toBe(false)
+
+    expect(key.notesInRange(...trebleCleff)).toEqual([])
+  })
+
+  it("gets key signature notes for D", function() {
+    let key = new KeySignature(2)
+    expect(key.isFlat()).toBe(false)
+    expect(key.isSharp()).toBe(true)
+
+    expect(key.notesInRange(...trebleCleff)).toEqual(["F5", "C6"])
+    expect(key.notesInRange(...trebleCleff)).toEqual(["F5", "C6"])
+  })
+
+  it("gets key signature notes for Bb", function() {
+    let key = new KeySignature(-2)
+    expect(key.isFlat()).toBe(true)
+    expect(key.isSharp()).toBe(false)
+
+    expect(key.notesInRange(...trebleCleff)).toEqual(["B5", "E5"])
+    expect(key.notesInRange(...trebleCleff)).toEqual(["B5", "E5"])
+  })
+
+  it("gets key signature notes for E", function() {
+    let key = new KeySignature(4)
+    expect(key.isFlat()).toBe(false)
+    expect(key.isSharp()).toBe(true)
+
+    expect(key.notesInRange(...trebleCleff)).toEqual(["F5", "C6", "G6", "D6"])
+    expect(key.notesInRange(...trebleCleff)).toEqual(["F5", "C6", "G6", "D6"])
   })
 })
