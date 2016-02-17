@@ -136,4 +136,44 @@ describe("key signature", function() {
     }
   })
 
+  it("gets accidentals for notes in D", function() {
+    let key = new KeySignature(-3) // f c
+
+    let examples = [
+      ["C5", 0],
+      ["C#5", 1],
+      ["Cb5", -1],
+
+      ["D5", 0],
+      ["D#5", 1],
+      ["Db5", -1],
+
+      ["E5", 1],
+      ["E#5", 2],
+      ["Eb5", 0],
+
+      ["F5", 0],
+      ["F#5", 1],
+      ["Fb5", -1],
+
+      ["G5", 0],
+      ["G#5", 1],
+      ["Gb5", -1],
+
+      ["A5", 1],
+      ["A#5", 2],
+      ["Ab5", 0],
+
+      ["B5", 1],
+      ["B#5", 2],
+      ["Bb5", 0],
+    ]
+
+    for (let [note, accidentals] of examples) {
+      expect(key.accidentalsForNote(note)).toBe(accidentals)
+    }
+
+  })
+
+
 })
