@@ -119,6 +119,14 @@ export function notesGreaterThan(a, b) {
 }
 
 export class KeySignature {
+  static FIFTHS = [
+    "F", "C", "G", "D", "A", "E", "B", "Gb", "Db", "Ab", "Eb", "Bb"
+  ]
+
+  static FIFTHS_TRUNCATED = [
+    "F", "C", "G", "D", "A", "E", "B"
+  ]
+
   // count: the number of accidentals in the key
   constructor(count) {
     this.count = count;
@@ -132,8 +140,24 @@ export class KeySignature {
     return this.count < 0
   }
 
-  // F C G D A E B Gb Db Ab Eb Bb
-  // within the midi pitches min, max
+  // which notes have accidentals in this key
+  accidentalNotes() {
+    let fifths = KeySignature.FIFTHS_TRUNCATED
+
+    if (this.count > 0) {
+      return fifths.slice(0, this.count)
+    } else {
+      return fifths.slice(fifths.length + this.count).reverse()
+    }
+  }
+
+  // how many accidentals should display on note for this key
+  accidentalsForNote(note) {
+    return 0
+  }
+
+  // the notes to give accidentals to within the range [min, max], the returned
+  // notes will not be sharp or flat
   notesInRange(min, max) {
     if (this.count == 0) {
       return []

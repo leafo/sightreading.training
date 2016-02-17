@@ -1,5 +1,5 @@
 
-describe("music", function() {
+describe("notes", function() {
   it("less than", function() {
     expect(notesLessThan("C5", "C#5")).toBe(true);
     expect(notesLessThan("B5", "D6")).toBe(true);
@@ -60,13 +60,18 @@ describe("key signature", function() {
     expect(key.isFlat()).toBe(false)
     expect(key.isSharp()).toBe(false)
 
+    expect(key.accidentalNotes()).toEqual([])
+
     expect(key.notesInRange(...trebleCleff)).toEqual([])
   })
 
   it("gets key signature notes for D", function() {
     let key = new KeySignature(2)
+
     expect(key.isFlat()).toBe(false)
     expect(key.isSharp()).toBe(true)
+
+    expect(key.accidentalNotes()).toEqual(["F", "C"])
 
     expect(key.notesInRange(...trebleCleff)).toEqual(["F5", "C6"])
     expect(key.notesInRange(...trebleCleff)).toEqual(["F5", "C6"])
@@ -77,6 +82,8 @@ describe("key signature", function() {
     expect(key.isFlat()).toBe(true)
     expect(key.isSharp()).toBe(false)
 
+    expect(key.accidentalNotes()).toEqual(["B", "E"])
+
     expect(key.notesInRange(...trebleCleff)).toEqual(["B5", "E5"])
     expect(key.notesInRange(...trebleCleff)).toEqual(["B5", "E5"])
   })
@@ -86,7 +93,15 @@ describe("key signature", function() {
     expect(key.isFlat()).toBe(false)
     expect(key.isSharp()).toBe(true)
 
+    expect(key.accidentalNotes()).toEqual(["F", "C", "G", "D"])
+
     expect(key.notesInRange(...trebleCleff)).toEqual(["F5", "C6", "G6", "D6"])
     expect(key.notesInRange(...trebleCleff)).toEqual(["F5", "C6", "G6", "D6"])
   })
+
+  it("gets accidentals for note in key signature", function() {
+    let key = new KeySignature(2)
+    key.accidentalsForNote("C5")
+  })
+
 })
