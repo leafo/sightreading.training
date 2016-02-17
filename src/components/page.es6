@@ -5,77 +5,6 @@ const DEFAULT_NOTE_WIDTH = 100;
 const DEFAULT_SPEED = 400;
 
 class Page extends React.Component {
-  static STAVES = [
-    {
-      name: "treble",
-      range: ["A4", "C7"],
-      render: function() {
-        return <GStaff
-          ref={(staff) => this.staff = staff}
-          {...this.state} />;
-      },
-    },
-    {
-      name: "bass",
-      range: ["C3", "E5"],
-      render: function() {
-        return <FStaff
-          ref={(staff) => this.staff = staff}
-          {...this.state} />;
-      },
-    },
-    {
-      name: "grand",
-      range: ["C3", "C7"],
-      render: function() {
-        return <GrandStaff
-          ref={(staff) => this.staff = staff}
-          {...this.state} />;
-      },
-    }
-  ];
-
-  static GENERATORS = [
-    {
-      name: "random",
-      create: function(staff) {
-        let notes = new MajorScale("C").getLooseRange(...staff.range);
-        return new RandomNotes(notes);
-      }
-    },
-    {
-      name: "sweep",
-      debug: true,
-      create: function(staff) {
-        let notes = new MajorScale("C").getLooseRange(...staff.range);
-        return new SweepRangeNotes(notes);
-      }
-    },
-    {
-      name: "steps",
-      create: function(staff) {
-        let notes = new MajorScale("C").getLooseRange(...staff.range);
-        return new MiniSteps(notes);
-      }
-    },
-    {
-      name: "dual",
-      create: function(staff) {
-        let notes = new MajorScale("C").getLooseRange(...staff.range);
-        let mid = Math.floor(notes.length / 2);
-        return new DualRandomNotes(notes.slice(0, mid), notes.slice(mid));
-
-      }
-    },
-    {
-      name: "triads",
-      create: function(staff) {
-        let notes = new MajorScale("C").getLooseRange(...staff.range);
-        return new TriadNotes(notes);
-      }
-    }
-  ]
-
   constructor(props) {
     super(props);
 
@@ -88,13 +17,13 @@ class Page extends React.Component {
 
       noteWidth: DEFAULT_NOTE_WIDTH,
       statsLightboxOpen: false,
-      introLightboxOpen: true,
+      introLightboxOpen: false,
 
       bufferSize: 10,
       keyboardOpen: true,
       settingsOpen: false,
-      currentStaff: Page.STAVES[0],
-      currentGenerator: Page.GENERATORS[0],
+      currentStaff: N.STAVES[0],
+      currentGenerator: N.GENERATORS[1],
       stats: new NoteStats(),
     };
 
@@ -291,8 +220,8 @@ class Page extends React.Component {
 
     return <SettingsPanel
       close={this.toggleSettings.bind(this)}
-      staves={Page.STAVES}
-      generators={Page.GENERATORS}
+      staves={N.STAVES}
+      generators={N.GENERATORS}
       currentGenerator={this.state.currentGenerator}
       currentStaff={this.state.currentStaff}
       setGenerator={(g) => this.setState({currentGenerator: g})}
