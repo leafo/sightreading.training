@@ -7,7 +7,7 @@ class Staff extends React.Component {
     lowerLine: types.number.isRequired,
     cleffImage: types.string.isRequired,
     staffClass: types.string.isRequired,
-    keySignature: types.number,
+    keySignature: types.object,
 
     // state props
     notes: types.array,
@@ -61,14 +61,12 @@ class Staff extends React.Component {
   }
 
   renderKeySignature() {
-    let signature = this.props.keySignature || 0;
-    if (signature == 0) {
+    if (!this.props.keySignature) {
       return;
     }
 
-    let sigNotes = keySignatureNotes(signature, this.props.lowerLine, this.props.upperLine);
-
-    let topOffset = letterOffset(this.props.upperLine);
+    let sigNotes = this.props.keySignature.notesInRange(this.props.lowerLine, this.props.upperLine)
+    let topOffset = letterOffset(this.props.upperLine)
 
     let sigClass = signature < 0 ? "flat" : "sharp";
     let src = signature < 0 ? "svg/flat.svg" : "svg/sharp.svg";
@@ -93,8 +91,11 @@ class Staff extends React.Component {
   }
 
   renderNotes() {
-    let keySignatureWidth = Math.abs(this.props.keySignature || 0)
-    keySignatureWidth = keySignatureWidth > 0 ? keySignatureWidth * 20 + 20 : 0;
+    let keySignatureWidth = 0
+    if (this.props.keySignature) {
+      let count = Math.abs(this.props.keySignature.count)
+      keySignatureWidth = count > 0 ? count * 20 + 20 : 0;
+    }
 
     return this.props.notes.map(function(note, idx) {
       let opts = {
