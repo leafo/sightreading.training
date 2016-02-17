@@ -3,7 +3,9 @@ export class NoteList extends Array {
     super();
     Object.setPrototypeOf(this, NoteList.prototype);
 
-    this.generator = opts.generator;
+    if (opts.generator) {
+      this.generator = opts.generator
+    }
 
     if (notes && notes.length) {
       this.push.apply(this, notes);
