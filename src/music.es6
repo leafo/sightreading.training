@@ -152,6 +152,11 @@ export class KeySignature {
   }
 
   // how many accidentals should display on note for this key
+  // null: nothing
+  // 0: a natural
+  // 1: a sharp
+  // -1: a flat
+  // 2: double sharp, etc.
   accidentalsForNote(note) {
     if (typeof note == "number") {
       note = noteName(note)
@@ -166,15 +171,21 @@ export class KeySignature {
     for (let modifiedNote of this.accidentalNotes()) {
       if (modifiedNote == name) {
         if (this.isSharp()) {
-          n -= 1
+          if (a == "#") { return null }
+          if (a == "b") { return -1 }
         } else if (this.isFlat()) {
-          n += 1
+          if (a == "#") { return 1 }
+          if (a == "b") { return null }
         }
-        break;
+
+        return 0
       }
     }
 
-    return n
+    // not modified by the key
+    if (a == "#") { return 1 }
+    if (a == "b") { return -1 }
+    return null
   }
 
   // the notes to give accidentals to within the range [min, max], the returned

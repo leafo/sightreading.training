@@ -102,31 +102,31 @@ describe("key signature", function() {
   it("gets accidentals for notes in D", function() {
     let key = new KeySignature(2) // f c
     let examples = [
-      ["C5", -1],
-      ["C#5", 0],
-      ["Cb5", -2],
+      ["C5", 0],
+      ["C#5", null],
+      ["Cb5", -1],
 
-      ["D5", 0],
+      ["D5", null],
       ["D#5", 1],
       ["Db5", -1],
 
-      ["E5", 0],
+      ["E5", null],
       ["E#5", 1],
       ["Eb5", -1],
 
-      ["F5", -1],
-      ["F#5", 0],
-      ["Fb5", -2],
+      ["F5", 0],
+      ["F#5", null],
+      ["Fb5", -1],
 
-      ["G5", 0],
+      ["G5", null],
       ["G#5", 1],
       ["Gb5", -1],
 
-      ["A5", 0],
+      ["A5", null],
       ["A#5", 1],
       ["Ab5", -1],
 
-      ["B5", 0],
+      ["B5", null],
       ["B#5", 1],
       ["Bb5", -1],
     ]
@@ -136,37 +136,37 @@ describe("key signature", function() {
     }
   })
 
-  it("gets accidentals for notes in D", function() {
-    let key = new KeySignature(-3) // f c
+  it("gets accidentals for notes in Eb", function() {
+    let key = new KeySignature(-3) // b e a
 
     let examples = [
-      ["C5", 0],
+      ["C5", null],
       ["C#5", 1],
       ["Cb5", -1],
 
-      ["D5", 0],
+      ["D5", null],
       ["D#5", 1],
       ["Db5", -1],
 
-      ["E5", 1],
-      ["E#5", 2],
-      ["Eb5", 0],
+      ["E5", 0],
+      ["E#5", 1],
+      ["Eb5", null],
 
-      ["F5", 0],
+      ["F5", null],
       ["F#5", 1],
       ["Fb5", -1],
 
-      ["G5", 0],
+      ["G5", null],
       ["G#5", 1],
       ["Gb5", -1],
 
-      ["A5", 1],
-      ["A#5", 2],
-      ["Ab5", 0],
+      ["A5", 0],
+      ["A#5", 1],
+      ["Ab5", null],
 
-      ["B5", 1],
-      ["B#5", 2],
-      ["Bb5", 0],
+      ["B5", 0],
+      ["B#5", 1],
+      ["Bb5", null],
     ]
 
     for (let [note, accidentals] of examples) {
