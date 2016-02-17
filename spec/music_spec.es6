@@ -99,9 +99,41 @@ describe("key signature", function() {
     expect(key.notesInRange(...trebleCleff)).toEqual(["F5", "C6", "G6", "D6"])
   })
 
-  it("gets accidentals for note in key signature", function() {
-    let key = new KeySignature(2)
-    key.accidentalsForNote("C5")
+  it("gets accidentals for notes in D", function() {
+    let key = new KeySignature(2) // f c
+    let examples = [
+      ["C5", -1],
+      ["C#5", 0],
+      ["Cb5", -2],
+
+      ["D5", 0],
+      ["D#5", 1],
+      ["Db5", -1],
+
+      ["E5", 0],
+      ["E#5", 1],
+      ["Eb5", -1],
+
+      ["F5", -1],
+      ["F#5", 0],
+      ["Fb5", -2],
+
+      ["G5", 0],
+      ["G#5", 1],
+      ["Gb5", -1],
+
+      ["A5", 0],
+      ["A#5", 1],
+      ["Ab5", -1],
+
+      ["B5", 0],
+      ["B#5", 1],
+      ["Bb5", -1],
+    ]
+
+    for (let [note, accidentals] of examples) {
+      expect(key.accidentalsForNote(note)).toBe(accidentals)
+    }
   })
 
 })

@@ -48,7 +48,7 @@ export function noteName(pitch) {
 
 
 function parseNoteAccidentals(note) {
-  let [, letter, accidental] = note.match(/^(\w)(#|b)?/);
+  let [, letter, accidental] = note.match(/^([A-G])(#|b)?/);
   let n = 0;
 
   if (accidental == "#") {
@@ -63,7 +63,7 @@ function parseNoteAccidentals(note) {
 }
 
 export function parseNote(note) {
-  let [, letter, accidental, octave] = note.match(/^(\w)(#|b)?(\d+)$/);
+  let [, letter, accidental, octave] = note.match(/^([A-G])(#|b)?(\d+)$/);
   if (OFFSETS[letter] == undefined) {
     throw `invalid note letter: ${letter}`
   }
@@ -153,7 +153,28 @@ export class KeySignature {
 
   // how many accidentals should display on note for this key
   accidentalsForNote(note) {
-    return 0
+    if (typeof note == "number") {
+      note = noteName(note)
+    }
+
+    let [_, name, a] = note.match(/^([A-G])(#|b)?/)
+    let n = 0
+
+    if (a == "#") { n += 1 }
+    if (a == "b") { n -= 1 }
+
+    for (let modifiedNote of this.accidentalNotes()) {
+      if (modifiedNote == name) {
+        if (this.isSharp()) {
+          n -= 1
+        } else if (this.isFlat()) {
+          n += 1
+        }
+        break;
+      }
+    }
+
+    return n
   }
 
   // the notes to give accidentals to within the range [min, max], the returned
