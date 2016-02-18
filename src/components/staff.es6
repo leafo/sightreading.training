@@ -197,21 +197,37 @@ class Staff extends React.Component {
     let accidentals = this.props.keySignature ? this.props.keySignature.accidentalsForNote(pitch) : null
 
     let classes = classNames("whole_note", "note", {
-      flat: accidentals == -1,
-      sharp: accidentals == 1,
-      natural: accidentals == 0,
+      is_flat: accidentals == -1,
+      is_sharp: accidentals == 1,
+      is_natural: accidentals == 0,
       outside: outside,
       noteshake: this.props.noteShaking && opts.first,
       held: opts.goal && opts.first && this.props.heldNotes[note],
     }, opts.classes || {})
 
-    let noteEl = <img
+    let parts = [
+      <img className="primary" src="svg/noteheads.s0.svg" />
+    ]
+
+    if (accidentals == 0) {
+      parts.push(<img className="accidental natural" src="svg/natural.svg" />)
+    }
+
+    if (accidentals == -1) {
+      parts.push(<img className="accidental flat" src="svg/flat.svg" />)
+    }
+
+    if (accidentals == 1) {
+      parts.push(<img className="accidental sharp" src="svg/sharp.svg" />)
+    }
+
+    let noteEl = <div
       key={opts.key}
       style={style}
       data-note={note}
       data-midi-note={pitch}
       className={classes}
-      src="svg/noteheads.s0.svg" />;
+      children={parts}></div>
 
     if (outside) {
       return [

@@ -102,6 +102,28 @@
         right: 0;
         bottom: 0;
 
+        .accidental {
+            height: 100%;
+            position: absolute;
+            right: 110%;
+
+            &.sharp {
+                height: 300%;
+                top: -100%;
+            }
+
+            &.flat {
+                height: 200%;
+                top: -91%;
+            }
+
+            &.natural {
+                height: 300%;
+                top: -100%;
+                right: 115%;
+            }
+        }
+
         .note {
             position: absolute;
             top: 0;
@@ -110,18 +132,9 @@
             transform: translate(0, -47%);
             transition: 0.1s ease transform;
 
-            &.flat {
-                background: blue;
+            .primary {
+                height: 100%;
             }
-
-            &.sharp {
-                background: red;
-            }
-
-            &.natural {
-                background: green;
-            }
-
 
             &.held {
                 opacity: 0.2;

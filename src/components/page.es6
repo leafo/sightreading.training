@@ -23,9 +23,9 @@ class Page extends React.Component {
       keyboardOpen: true,
       settingsOpen: false,
       currentStaff: N.STAVES[0],
-      currentGenerator: N.GENERATORS[1],
+      currentGenerator: N.GENERATORS[0],
       stats: new NoteStats(),
-      keySignature: new KeySignature(2),
+      keySignature: new KeySignature(0),
     };
 
     this.state.notes = this.newNoteList();
