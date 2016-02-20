@@ -33,7 +33,9 @@ N.GENERATORS = [
   {
     name: "random",
     create: function(staff) {
-      let notes = new MajorScale("C").getLooseRange(...staff.range);
+      let notes = new MajorScale(this.state.keySignature.name())
+        .getLooseRange(...staff.range);
+
       return new RandomNotes(notes);
     }
   },
@@ -41,22 +43,28 @@ N.GENERATORS = [
     name: "sweep",
     debug: true,
     create: function(staff) {
-      let notes = new MajorScale("C").getLooseRange(...staff.range);
+      let notes = new MajorScale(this.state.keySignature.name())
+        .getLooseRange(...staff.range);
+
       return new SweepRangeNotes(notes);
     }
   },
   {
     name: "steps",
     create: function(staff) {
-      let notes = new MajorScale("C").getLooseRange(...staff.range);
+      let notes = new MajorScale(this.state.keySignature.name())
+        .getLooseRange(...staff.range);
       return new MiniSteps(notes);
     }
   },
   {
     name: "dual",
     create: function(staff) {
-      let notes = new MajorScale("C").getLooseRange(...staff.range);
+      let notes = new MajorScale(this.state.keySignature.name())
+        .getLooseRange(...staff.range);
+
       let mid = Math.floor(notes.length / 2);
+
       return new DualRandomNotes(notes.slice(0, mid), notes.slice(mid));
 
     }
@@ -64,7 +72,8 @@ N.GENERATORS = [
   {
     name: "triads",
     create: function(staff) {
-      let notes = new MajorScale("C").getLooseRange(...staff.range);
+      let notes = new MajorScale(this.state.keySignature.name())
+        .getLooseRange(...staff.range);
       return new TriadNotes(notes);
     }
   }
