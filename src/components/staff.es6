@@ -125,19 +125,22 @@ class Staff extends React.Component {
   }
 
   renderLedgerLines(note, opts={}) {
-    let pitch = parseNote(note);
-    let fromLeft =  opts.offset || 0;
-    let letterDelta = 0;
-    let below = false;
+    let key = this.props.keySignature
+    let pitch = parseNote(note)
+    let fromLeft =  opts.offset || 0
+    let letterDelta = 0
+    let below = false
+
+    let offset = letterOffset(pitch, !key.isFlat())
 
     // above
     if (pitch > this.props.upperLine) {
-      letterDelta = letterOffset(pitch) - letterOffset(this.props.upperLine);
+      letterDelta = offset - letterOffset(this.props.upperLine);
     }
 
     // below
     if (pitch < this.props.lowerLine) {
-      letterDelta = letterOffset(this.props.lowerLine) - letterOffset(pitch);
+      letterDelta = letterOffset(this.props.lowerLine) - offset;
       below = true;
     }
 
@@ -168,7 +171,10 @@ class Staff extends React.Component {
   }
 
   renderNote(note, opts={}) {
-    let pitch = parseNote(note);
+    let key = this.props.keySignature
+    note = key.enharmonic(note)
+
+    let pitch = parseNote(note)
 
     if (this.props.inGrand) {
       switch (this.props.staffClass) {
@@ -185,7 +191,7 @@ class Staff extends React.Component {
       }
     }
 
-    let fromTop = letterOffset(this.props.upperLine) - letterOffset(pitch);
+    let fromTop = letterOffset(this.props.upperLine) - letterOffset(pitch, !key.isFlat());
 
     let style = {
       top: `${Math.floor(fromTop * 25/2)}%`,
@@ -193,8 +199,7 @@ class Staff extends React.Component {
     }
 
     let outside = pitch > this.props.upperLine || pitch < this.props.lowerLine;
-
-    let accidentals = this.props.keySignature ? this.props.keySignature.accidentalsForNote(pitch) : null
+    let accidentals = key.accidentalsForNote(note)
 
     let classes = classNames("whole_note", "note", {
       is_flat: accidentals == -1,

@@ -85,7 +85,7 @@ export function parseNote(note) {
   return n;
 }
 
-export function letterOffset(pitch) {
+export function letterOffset(pitch, sharp=true) {
   let offset = 0
 
   while (pitch >= 12) {
@@ -94,7 +94,9 @@ export function letterOffset(pitch) {
   }
 
   while (LETTER_OFFSETS[pitch] == undefined) {
-    pitch -= 1
+    // go down sinc we assume we're sharp
+    if (sharp) { pitch -= 1 }
+    else { pitch += 1 }
   }
 
   return offset + LETTER_OFFSETS[pitch]
