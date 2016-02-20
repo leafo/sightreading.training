@@ -140,6 +140,15 @@ export class KeySignature {
     return this.count < 0
   }
 
+  name() {
+    let offset = this.count + 1
+    if (offset < 0) {
+      offset += KeySignature.FIFTHS.length
+    }
+
+    return KeySignature.FIFTHS[offset]
+  }
+
   // which notes have accidentals in this key
   accidentalNotes() {
     let fifths = KeySignature.FIFTHS_TRUNCATED
@@ -244,7 +253,7 @@ export class Scale {
     if (!root.match(/^[A-G][b#]?$/)) {
       throw "scale root not properly formed"
     }
-
+ 
     this.root = root;
   }
 

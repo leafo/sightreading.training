@@ -54,6 +54,11 @@ describe("key signature", function() {
   let trebleCleff = ["A4", "C7"]
   let bassCleff = ["C3", "E5"]
 
+  it("gets name for key signature", function() {
+    let key = new KeySignature(2)
+    expect(key.name()).toBe("D")
+  })
+
   it("gets key signature notes for C", function() {
     let key = new KeySignature(0)
 
