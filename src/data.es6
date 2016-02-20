@@ -76,5 +76,14 @@ N.GENERATORS = [
         .getLooseRange(...staff.range);
       return new TriadNotes(notes);
     }
+  },
+  {
+    name: "sevens",
+    create: function(staff) {
+      let notes = new MajorScale(this.state.keySignature)
+        .getLooseRange(...staff.range);
+      return new SevenOpenNotes(notes);
+    }
   }
+
 ]

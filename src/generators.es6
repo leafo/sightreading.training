@@ -80,24 +80,78 @@ export class DualRandomNotes {
   }
 }
 
-export class TriadNotes {
-  constructor(notes) {
-    this.notes = notes;
-    this.shapes = [
-      [0, 2, 4],
-      [0, 2, 5],
-      [0, 3, 5],
-    ];
 
-    this.generator = new MersenneTwister();
+export class ShapeGenerator {
+  constructor() {
+    this.generator = new MersenneTwister()
   }
 
   nextNote() {
-    let shape = this.shapes[this.generator.int() % this.shapes.length];
-    let shapeMax = shape[shape.length - 1];
+    let shape = this.shapes[this.generator.int() % this.shapes.length]
+    let shapeMax = Math.max(...shape)
 
-    let bass = this.generator.int() % (this.notes.length - shapeMax);
-    return shape.map((offset) => this.notes[bass + offset]);
+    if (shapeMax > this.notes.length) {
+      throw "shape too big for available notes";
+    }
+
+    let bass = this.generator.int() % (this.notes.length - shapeMax)
+
+    return shape.map((offset) => this.notes[(bass + offset) % this.notes.length])
+  }
+
+  // get the shape and all the inversions for it
+  inversions(shape) {
+    shape = [...shape]
+    shape.sort((a,b) => a - b)
+
+    let out = [shape]
+    let count = shape.length - 1
+
+    while (count > 0) {
+      let dupe = [...out[out.length - 1]]
+      dupe.push(dupe.shift() + 7)
+      dupe.sort((a,b) => a - b)
+
+      while (dupe[0] > 0) {
+        for (let i in dupe) {
+          dupe[i] -= 1
+        }
+      }
+      out.push(dupe)
+      count--;
+    }
+
+    return out
+  }
+}
+
+export class TriadNotes extends ShapeGenerator {
+  constructor(notes) {
+    super()
+    this.notes = notes
+    this.shapes = this.inversions([0,2,4])
+  }
+}
+
+export class SevenOpenNotes extends ShapeGenerator {
+  constructor(notes) {
+    super()
+    this.notes = notes;
+    // some random inversions spaced apart
+    this.shapes = [
+      // root on bottom 
+      [0, 4, 9, 13],
+      [0, 6, 9, 11],
+
+      // third on bottom
+      [2 - 2, 6 - 2, 11 - 2, 14 - 2],
+      [2 - 2, 7 - 2, 11 - 2, 13 - 2],
+
+      // fifth on bottom
+      [4 - 4, 6 - 4, 9 - 4, 14 - 4],
+      [4 - 4, 7 - 4, 9 - 4, 13 - 4],
+
+    ]
   }
 }
 
