@@ -71,7 +71,11 @@ class Staff extends React.Component {
       return;
     }
 
-    let sigNotes = keySignature.notesInRange(this.props.lowerLine, this.props.upperLine)
+    let ksCenter = parseNote(this.props.keySignatureCenter)
+    if (keySignature.isFlat()) { ksCenter -= 2 }
+
+    let sigNotes = keySignature.notesInRange(ksCenter - 10, ksCenter + 2)
+
     let topOffset = letterOffset(this.props.upperLine)
 
     let sigClass = keySignature.isFlat() ? "flat" : "sharp";
@@ -247,6 +251,8 @@ class Staff extends React.Component {
 
 class GStaff extends Staff {
   static defaultProps = {
+    // where the key signature is centered around
+    keySignatureCenter: "F6",
     upperLine: 77,
     lowerLine: 64,
     cleffImage: "svg/clefs.G.svg",
@@ -256,6 +262,7 @@ class GStaff extends Staff {
 
 class FStaff extends Staff {
   static defaultProps = {
+    keySignatureCenter: "F4",
     upperLine: 57,
     lowerLine: 57 - 13,
     cleffImage: "svg/clefs.F_change.svg",
