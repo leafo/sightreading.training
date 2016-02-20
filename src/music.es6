@@ -272,13 +272,16 @@ export class KeySignature {
 }
 
 export class Scale {
-  // root should be letter without octave
   constructor(root) {
+    if (root instanceof KeySignature) {
+      root = root.name()
+    }
+
     if (!root.match(/^[A-G][b#]?$/)) {
       throw "scale root not properly formed"
     }
  
-    this.root = root;
+    this.root = root
   }
 
   getFullRange() {
