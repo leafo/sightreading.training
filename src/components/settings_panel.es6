@@ -24,6 +24,11 @@ class SettingsPanel extends React.Component {
         <h4>Generator</h4>
         {this.renderGenerators()}
       </div>
+
+      <div className="settings_group">
+        <h4>Key</h4>
+        {this.renderKeys()}
+      </div>
     </div>
   }
 
@@ -59,6 +64,23 @@ class SettingsPanel extends React.Component {
           active: this.props.currentGenerator == generator
         })}>
         {generator.name}</div>;
+    })
+  }
+
+  renderKeys() {
+    return [0, 1, 2, 3, 4, 5, -1, -2, -3, -4, -5, -6].map((key) => {
+      var key = new KeySignature(key)
+
+      return <div
+        onClick={(e) => {
+          this.props.setKeySignature(key)
+        }}
+        className={classNames("toggle_option", {
+          active: this.props.currentKey.name() == key.name()
+        })}
+        key={key.name()}>
+          {key.name()}
+        </div>
     })
   }
 }

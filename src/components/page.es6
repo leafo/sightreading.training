@@ -43,7 +43,8 @@ class Page extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     // transitioning to new staff or generator
     if (prevState.currentStaff != this.state.currentStaff ||
-        prevState.currentGenerator != this.state.currentGenerator)
+        prevState.currentGenerator != this.state.currentGenerator ||
+        prevState.keySignature != this.state.keySignature)
     {
       let notes = this.newNoteList();
       notes.fillBuffer(this.state.bufferSize);
@@ -223,10 +224,14 @@ class Page extends React.Component {
       close={this.toggleSettings.bind(this)}
       staves={N.STAVES}
       generators={N.GENERATORS}
+
       currentGenerator={this.state.currentGenerator}
       currentStaff={this.state.currentStaff}
+      currentKey={this.state.keySignature}
+
       setGenerator={(g) => this.setState({currentGenerator: g})}
-      setStaff={(g) => this.setState({currentStaff: g})}
+      setStaff={(s) => this.setState({currentStaff: s})}
+      setKeySignature={(k) => this.setState({keySignature: k})}
     />
   }
 
