@@ -34,13 +34,17 @@ export const LETTER_OFFSETS = {
   [11]: 6
 }
 
-export function noteName(pitch) {
+export function noteName(pitch, sharpen=true) {
   let octave = Math.floor(pitch / OCTAVE_SIZE)
   let offset = pitch - octave * OCTAVE_SIZE
 
   let name = OFFSETS[offset]
   if (!name) {
-    name = OFFSETS[offset - 1] + "#"
+    if (sharpen) {
+      name = OFFSETS[offset - 1] + "#"
+    } else {
+      name = OFFSETS[offset + 1] + "b"
+    }
   }
 
   return `${name}${octave}`;

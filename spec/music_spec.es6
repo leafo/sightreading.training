@@ -16,6 +16,39 @@ describe("notes", function() {
     expect(compareNotes("E#5", "F5")).toBe(0);
   });
 
+  it("gets note names", function() {
+    let pitches = [24,25,26,27,28,29,30,31,32,33,34,35,36]
+
+    // sharpened
+    expect(pitches.map((p) => noteName(p))).toEqual([
+      "C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2", "C3"
+    ])
+
+    // flattened
+    expect(pitches.map((p) => noteName(p, false))).toEqual([
+      "C2", "Db2", "D2", "Eb2", "E2", "F2", "Gb2", "G2", "Ab2", "A2", "Bb2", "B2", "C3"
+    ])
+
+  })
+
+  it("gets notes pitches", function() {
+    let sharpNames = [
+      "C2", "C#2", "D2", "D#2", "E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2", "C3"
+    ]
+
+    let flatNames = [
+      "C2", "Db2", "D2", "Eb2", "E2", "F2", "Gb2", "G2", "Ab2", "A2", "Bb2", "B2", "C3"
+    ]
+
+    expect(sharpNames.map((n) => parseNote(n))).toEqual([
+      24,25,26,27,28,29,30,31,32,33,34,35,36
+    ])
+
+    expect(flatNames.map((n) => parseNote(n))).toEqual([
+      24,25,26,27,28,29,30,31,32,33,34,35,36
+    ])
+
+  })
 });
 
 describe("scales", function() {
