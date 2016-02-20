@@ -55,8 +55,21 @@ describe("key signature", function() {
   let bassCleff = ["C3", "E5"]
 
   it("gets name for key signature", function() {
-    let key = new KeySignature(2)
-    expect(key.name()).toBe("D")
+
+    expect(new KeySignature(0).name()).toBe("C")
+
+    expect(new KeySignature(1).name()).toBe("G")
+    expect(new KeySignature(2).name()).toBe("D")
+    expect(new KeySignature(3).name()).toBe("A")
+    expect(new KeySignature(4).name()).toBe("E")
+    expect(new KeySignature(5).name()).toBe("B")
+
+    expect(new KeySignature(-1).name()).toBe("F")
+    expect(new KeySignature(-2).name()).toBe("Bb")
+    expect(new KeySignature(-3).name()).toBe("Eb")
+    expect(new KeySignature(-4).name()).toBe("Ab")
+    expect(new KeySignature(-5).name()).toBe("Db")
+    expect(new KeySignature(-6).name()).toBe("Gb")
   })
 
   it("gets key signature notes for C", function() {
