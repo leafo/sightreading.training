@@ -223,8 +223,14 @@ describe("key signature", function() {
     for (let [note, accidentals] of examples) {
       expect(key.accidentalsForNote(note)).toBe(accidentals)
     }
-
   })
 
+  it("gets enharmonic spelling of notes for key", function() {
+    let key = new KeySignature(-3) // b e a
+    let notes = new MajorScale(key.name()).getRange(4).map((n) => key.enharmonic(n))
 
+    expect(notes).toEqual([
+        "Eb4", "F4", "G4", "Ab4", "Bb4", "C5", "D5", "Eb5"
+    ])
+  })
 })

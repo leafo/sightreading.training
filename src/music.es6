@@ -153,6 +153,24 @@ export class KeySignature {
     return KeySignature.FIFTHS[offset]
   }
 
+  // convert note to enharmonic equivalent that fits into this key signature
+  // TODO: this might have to be done at the scale level
+  enharmonic(note) {
+    if (this.isFlat()) {
+      if (note.indexOf("#") != -1) {
+        return noteName(parseNote(note), false)
+      }
+    }
+
+    if (this.isSharp()) {
+      if (note.indexOf("b") != -1) {
+        return noteName(parseNote(note), true)
+      }
+    }
+
+    return note
+  }
+
   // which notes have accidentals in this key
   accidentalNotes() {
     let fifths = KeySignature.FIFTHS_TRUNCATED
