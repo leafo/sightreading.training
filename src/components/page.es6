@@ -17,7 +17,7 @@ class Page extends React.Component {
 
       noteWidth: DEFAULT_NOTE_WIDTH,
       statsLightboxOpen: false,
-      introLightboxOpen: false,
+      introLightboxOpen: true,
 
       bufferSize: 10,
       keyboardOpen: true,
