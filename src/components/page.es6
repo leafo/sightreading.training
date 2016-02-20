@@ -182,7 +182,7 @@ class Page extends React.Component {
         close={(opts) => {
           this.setState({introLightboxOpen: false})
           if (opts.input != null) {
-            this.pickInput(this.input);
+            this.pickInput(opts.input);
           }
         }} />;
     }
