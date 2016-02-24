@@ -1,8 +1,9 @@
 
-let {PropTypes: types} = React;
+let {PropTypes: types} = React
+let {CSSTransitionGroup} = React.addons
 
-const DEFAULT_NOTE_WIDTH = 100;
-const DEFAULT_SPEED = 400;
+const DEFAULT_NOTE_WIDTH = 100
+const DEFAULT_SPEED = 400
 
 class Page extends React.Component {
   constructor(props) {
@@ -213,7 +214,9 @@ class Page extends React.Component {
     })}>
       {this.renderWorkspace()}
       {this.renderKeyboard()}
-      {this.renderSettings()}
+      <CSSTransitionGroup transitionName="slide_right" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
+        {this.renderSettings()}
+      </CSSTransitionGroup>
 
       <a className="github_link" href="https://github.com/leafo/mursicjs">
         <img src="img/github-icon.svg" alt="GitHub Repository" />

@@ -12,12 +12,38 @@
     width: $settings_panel_width;
     border-right: 2px solid $border_color;
 
+    &.slide_right-enter {
+        opacity: 0;
+        transform: translate(-20%, 0);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+
+        &.slide_right-enter-active {
+            transform: translate(0, 0);
+            opacity: 1;
+        }
+    }
+
+    &.slide_right-leave {
+        opacity: 1;
+        transition: opacity 0.1s ease;
+
+        &.slide_right-leave-active {
+            opacity: 0;
+        }
+    }
+
+
     .settings_header {
+        margin-bottom: 15px;
+
+        padding: 15px 20px;
+        background: $border_color;
+        color: white;
+
         h3 {
             margin: 0;
         }
 
-        padding: 10px 20px 20px 20px;
 
         button {
             float: right;
