@@ -13,6 +13,33 @@
     justify-content: center;
     align-items: center;
 
+    &.show_lightbox-enter {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+
+        .lightbox {
+            transition: transform 0.2s ease-out;
+            transform: translate(0, 10%);
+        }
+
+        &.show_lightbox-enter-active {
+            opacity: 1;
+
+            .lightbox {
+                transform: translate(0, 0);
+            }
+        }
+    }
+
+    &.show_lightbox-leave {
+        opacity: 1;
+        transition: opacity 0.1s ease;
+
+        &.show_lightbox-leave-active {
+            opacity: 0;
+        }
+    }
+
     .lightbox {
         background: white;
         border: 1px solid lighten($border_color, 10%);

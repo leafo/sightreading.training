@@ -230,7 +230,9 @@ class Page extends React.Component {
         {this.state.keyboardOpen ? "Hide Keyboard" : "Show Keyboard"}
       </button>
 
-      {currentLightbox}
+      <CSSTransitionGroup transitionName="show_lightbox" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
+        {currentLightbox}
+      </CSSTransitionGroup>
     </div>;
   }
 
