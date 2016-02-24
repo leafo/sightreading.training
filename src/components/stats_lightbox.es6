@@ -39,27 +39,18 @@ class StatsLightbox extends React.Component {
       </div>
     }
 
-    return <div
-      onClick={function(e) {
-        if (e.target.classList.contains("lightbox_shroud")) {
-          this.props.close();
-          e.preventDefault();
-        }
-      }.bind(this)}
-      className="lightbox_shroud">
-      <div className="lightbox stats_lightbox">
-        <h2>Session stats</h2>
-        <button onClick={(e) => { this.setState({tab: "ratios"}) }}>Ratios</button>
-        {" "}
-        <button onClick={(e) => { this.setState({tab: "timings"}) }}>Timings</button>
+    return <div className="lightbox stats_lightbox">
+      <h2>Session stats</h2>
+      <button onClick={(e) => { this.setState({tab: "ratios"}) }}>Ratios</button>
+      {" "}
+      <button onClick={(e) => { this.setState({tab: "timings"}) }}>Timings</button>
 
-        {statsContent}
-        {hitTime}
-        <p>
-          <button onClick={this.props.close}>Close</button>
-        </p>
-      </div>
-    </div>;
+      {statsContent}
+      {hitTime}
+      <p>
+        <button onClick={this.props.close}>Close</button>
+      </p>
+    </div>
   }
 
   renderNoteHitRatios(availableNotes) {
@@ -120,5 +111,9 @@ class StatsLightbox extends React.Component {
 
     statsContent = <div className="note_timings_container">{statsContent}</div>;
     return statsContent;
+  }
+
+  close() {
+    this.props.close()
   }
 }

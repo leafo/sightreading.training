@@ -27,26 +27,24 @@ class IntroLightbox extends React.Component {
       midiSetup = <p>MIDI support not detected on your computer. You'll only be able to use the on-srcreen keyboard.</p>
     }
 
+    return <div className="lightbox">
+      <h2>Sight reading trainer</h2>
+      <p>This tool gives you a way to practice sight reading randomly
+      generated notes. It works best with Chrome and a MIDI keyboard
+      plugged into your computer.</p>
 
-    return <div className="lightbox_shroud">
-      <div className="lightbox">
-        <h2>Sight reading trainer</h2>
-        <p>This tool gives you a way to practice sight reading randomly
-        generated notes. It works best with Chrome and a MIDI keyboard
-        plugged into your computer.</p>
+      <p>You can customize how the notes are generated, and what staff you
+      use from the settings menu.</p>
 
-        <p>You can customize how the notes are generated, and what staff you
-        use from the settings menu.</p>
+      {midiSetup}
 
-        {midiSetup}
-
-        <p>
-          <button onClick={this.callClose.bind(this)}>Continue</button>
-        </p>
-      </div>
+      <p>
+        <button onClick={this.callClose.bind(this)}>Continue</button>
+      </p>
     </div>
   }
 
+  // not called close so the auto-closing behavior of shroud is not inherited
   callClose() {
     this.props.close({
       input: this.state.selectedInput

@@ -17,7 +17,7 @@ class Page extends React.Component {
 
       noteWidth: DEFAULT_NOTE_WIDTH,
       statsLightboxOpen: false,
-      introLightboxOpen: true,
+      introLightboxOpen: false,
 
       bufferSize: 10,
       keyboardOpen: true,
@@ -36,8 +36,9 @@ class Page extends React.Component {
   }
 
   componentDidMount() {
-    this.state.notes.fillBuffer(this.state.bufferSize);
-    this.enterWaitMode();
+    this.state.notes.fillBuffer(this.state.bufferSize)
+    this.enterWaitMode()
+    this.setState({introLightboxOpen: true})
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -160,7 +161,7 @@ class Page extends React.Component {
   }
 
   render() {
-    let settingsToggleButton, statsLightbox, introLightbox;
+    let settingsToggleButton, currentLightbox
 
     if (!this.state.settingsOpen) {
       settingsToggleButton = <button
@@ -171,13 +172,15 @@ class Page extends React.Component {
     }
 
     if (this.state.statsLightboxOpen) {
-      statsLightbox = <StatsLightbox
+      currentLightbox = <StatsLightbox
+        ref="currentLightbox"
         close={function() { this.setState({statsLightboxOpen: false}); }.bind(this)}
         stats={this.state.stats} />;
     }
 
     if (this.state.introLightboxOpen) {
-      introLightbox = <IntroLightbox
+      currentLightbox = <IntroLightbox
+        ref="currentLightbox"
         midi={this.state.midi}
         close={(opts) => {
           this.setState({introLightboxOpen: false})
@@ -185,6 +188,20 @@ class Page extends React.Component {
             this.pickInput(opts.input);
           }
         }} />;
+    }
+
+    if (currentLightbox) {
+      currentLightbox = <div
+        className="lightbox_shroud"
+        onClick={function(e) {
+          if (e.target.classList.contains("lightbox_shroud")) {
+            if (this.refs.currentLightbox.close) {
+              this.refs.currentLightbox.close()
+            }
+            e.preventDefault();
+          }
+        }.bind(this)}
+        >{currentLightbox}</div>
     }
 
     return <div
@@ -210,8 +227,7 @@ class Page extends React.Component {
         {this.state.keyboardOpen ? "Hide Keyboard" : "Show Keyboard"}
       </button>
 
-      {statsLightbox}
-      {introLightbox}
+      {currentLightbox}
     </div>;
   }
 
