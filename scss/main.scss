@@ -314,67 +314,6 @@ button {
     z-index: 2;
 }
 
-.settings_panel {
-    @include border_box;
-    @include unselectable;
-    position: absolute;
-    overflow: auto;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    background: #D6D6D6;
-    width: $settings_panel_width;
-    border-right: 2px solid $border_color;
-
-    .settings_header {
-        h3 {
-            margin: 0;
-        }
-
-        padding: 10px 20px 20px 20px;
-
-        button {
-            float: right;
-        }
-    }
-
-    .settings_group {
-        padding: 0 10px;
-        margin-bottom: 20px;
-
-        h4 {
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #666;
-            font-size: 12px;
-            margin: 0 10px;
-            margin-bottom: 10px;
-        }
-
-        .toggle_option {
-            @include border_box;
-            display: inline-block;
-            width: calc(50% - 10px);
-            background: white;
-            border: 1px solid $border_color;
-            padding: 5px 10px;
-            text-align: center;
-            font-size: 14px;
-            margin: 0 5px 5px 5px;
-            cursor: pointer;
-
-            &.active {
-                color: $button_color;
-                background: mix(white, $button_color, 80%);
-                border-color: $button_color;
-                box-shadow: 0 0 0 1px $button_color;
-                font-weight: bold;
-            }
-        }
-    }
-}
-
-
 .midi_selector {
     border: 2px solid $light_border_color;
     max-height: 200px;
