@@ -67,6 +67,11 @@ class MidiSelector extends React.Component {
   }
 
   render() {
+    let midiInputs = this.midiInputs()
+    if (!midiInputs.length) {
+      return <p>No MIDI devices connected</p>
+    }
+
     return <div className="midi_selector">
       {
         this.midiInputs().map((input, i) => {
