@@ -125,8 +125,13 @@ class StatsLightbox extends React.Component {
       </div>;
     });
 
-    statsContent = <div className="note_timings_container">{statsContent}</div>;
-    return statsContent;
+    return <div className="note_timings_container">
+      <div className="timing_legend">Average</div>
+      <div className="line_container">
+        <div className="average_line"></div>
+      </div>
+      {statsContent}
+    </div>;
   }
 
   close() {

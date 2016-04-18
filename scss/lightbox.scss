@@ -63,9 +63,41 @@
 }
 
 .stats_lightbox {
+    $note_column_width: 40px;
+
     .note_bars_container, .note_timings_container {
         margin: 30px 0;
+        position: relative;
     }
+
+    .timing_legend {
+        color: #999;
+        font-size: 14px;
+        text-align: center;
+        text-transform: uppercase;
+        margin-left: $note_column_width;
+        margin-bottom: 5px;
+    }
+
+    .line_container {
+        margin-left: $note_column_width;
+        position: absolute;
+        top: 24px;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        .average_line {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            background: white;
+            z-index: 1;
+            bottom: 0;
+        }
+    }
+
 
     .note_timing_row {
         line-height: 24px;
@@ -80,7 +112,7 @@
             display: inline-block;
             font-weight: bold;
             text-align: center;
-            width: 40px;
+            width: $note_column_width;
         }
 
         .note_timing {
@@ -116,7 +148,7 @@
 
         .note_name {
             text-align: center;
-            width: 40px;
+            width: $note_column_width;
             font-weight: bold;
         }
 
