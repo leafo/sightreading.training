@@ -380,12 +380,14 @@ class Page extends React.Component {
     let modeToggle = <div className="tool">
       <span className="speed_picker">
         <span className="speed_value">{ this.state.scrollSpeed }</span>
-        <input type="range"
-          min="50"
-          max="300"
+        <Slider
+          min={50}
+          max={300}
           disabled={this.state.mode == "scroll"}
-          value={this.state.scrollSpeed}
-          onChange={(e) => this.setState({scrollSpeed: e.target.value})} />
+          onChange={(value) => this.setState({
+            scrollSpeed: Math.round(value)
+          })}
+          value={+this.state.scrollSpeed} />
       </span>
 
       <span className="label">Mode</span>
