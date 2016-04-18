@@ -1,0 +1,32 @@
+
+
+.slider_component {
+    display: inline-block;
+    min-width: 100px;
+    position: relative;
+
+    .slider_track {
+        background: rgba(black, 0.3);
+        height: 4px;
+        border-radius: 4px;
+        position: absolute;
+        top: calc(50% - 2px);
+        left: 0;
+        right: 0;
+    }
+
+    .slider_nub {
+        position: absolute;
+        padding: 0;
+        width: 12px;
+        height: 12px;
+        border-radius: 12px;
+        box-shadow: 0 0 0 2px white;
+
+        margin-top: -6px;
+        margin-left: -6px;
+
+        top: 50%;
+        left: 50%;
+    }
+}
