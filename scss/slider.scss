@@ -1,4 +1,4 @@
-
+@import "include/common";
 
 .slider_component {
     display: inline-block;
@@ -28,5 +28,9 @@
 
         top: 50%;
         left: 50%;
+
+        &:focus {
+            box-shadow: 0 0 0 2px mix(white, $blue, 80%);
+        }
     }
 }

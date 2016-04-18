@@ -56,7 +56,7 @@ class Slider extends React.Component {
   }
 
   percent() {
-    return this.state.value / (this.props.max - this.props.min)
+    return (this.currentValue() - this.props.min) / (this.props.max - this.props.min)
   }
 
   render() {
