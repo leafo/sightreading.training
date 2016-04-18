@@ -2,17 +2,23 @@
 
 .slider_component {
     display: inline-block;
+    box-sizing: border-box;
     min-width: 100px;
     position: relative;
+    padding: 5px 10px;
+
+    &.disabled {
+        opacity: 0.5;
+        .slider_nub {
+            cursor: default;
+        }
+    }
 
     .slider_track {
         background: rgba(black, 0.3);
         height: 4px;
         border-radius: 4px;
-        position: absolute;
-        top: calc(50% - 2px);
-        left: 0;
-        right: 0;
+        position: relative;
     }
 
     .slider_nub {

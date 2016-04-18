@@ -6,6 +6,7 @@ class Slider extends React.Component {
     max: types.number,
     value: types.number,
     onChange: types.func,
+    disabled: types.bool,
   }
 
   constructor(props) {
@@ -22,8 +23,13 @@ class Slider extends React.Component {
   }
 
   startDrag(startX, startY) {
+    if (this.props.disabled) {
+      return true;
+    }
+
     // width of slider
     let width = this.refs.track.clientWidth
+
     let startValue = this.currentValue()
 
     let moveListener = (e) => {
@@ -60,14 +66,17 @@ class Slider extends React.Component {
   }
 
   render() {
-    return <div className="slider_component">
-      <div ref="track" className="slider_track"></div>
-      <button
-        onMouseDown={(e) => this.startDrag(e.pageX, e.pageY)}
-        style={{
-          left: this.percent() * 100 + "%"
-        }}
-        className="slider_nub"></button>
+    return <div className={classNames("slider_component", {
+      disabled: this.props.disabled
+    })}>
+      <div ref="track" className="slider_track">
+        <button
+          onMouseDown={(e) => this.startDrag(e.pageX, e.pageY)}
+          style={{
+            left: this.percent() * 100 + "%"
+          }}
+          className="slider_nub"></button>
+      </div>
     </div>
   }
 }
