@@ -90,22 +90,38 @@ class StatsLightbox extends React.Component {
   }
 
   renderNoteTimings(availableNotes) {
-    let hitStats = this.props.stats.noteHitStats;
+    let hitStats = this.props.stats.noteHitStats
+    let globalAverage = this.props.stats.averageHitTime
+
+    let maxRange = 0;
+
+    for (let note of availableNotes) {
+      let stats = hitStats[note];
+      if (!stats.averageHitTime) continue
+      maxRange = Math.max(maxRange, Math.abs(globalAverage - stats.averageHitTime))
+    }
+
+    let graphRange = Math.max(0.1 * globalAverage, maxRange*2)
 
     var statsContent = availableNotes.map(function (note) {
       let stats = hitStats[note];
-      console.log(stats);
 
       if (!stats.averageHitTime) {
         return;
       }
 
+      let widthPercent = 0.5 + (stats.averageHitTime - globalAverage) / (graphRange * 2)
 
       return <div key={note} className="note_timing_row">
-        <span className="note_name">{note}</span>
-        <span className="note_timing">
-          {Math.round(stats.averageHitTime)}ms
-        </span>
+        <div className="note_name">{note}</div>
+        <div className="note_timing">
+        <div className="timing_progress" style={{
+          width: widthPercent * 100 + "%"
+        }}></div>
+          <div className="timing_label">
+            {Math.round(stats.averageHitTime)}ms
+          </div>
+        </div>
       </div>;
     });
 

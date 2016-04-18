@@ -70,6 +70,7 @@
     .note_timing_row {
         line-height: 24px;
         margin-bottom: 10px;
+        display: flex;
 
         &:last-child {
             margin-bottom: 0;
@@ -80,6 +81,27 @@
             font-weight: bold;
             text-align: center;
             width: 40px;
+        }
+
+        .note_timing {
+            flex: 1;
+            position: relative;
+            background: rgba($blue, 0.5);
+
+            .timing_progress {
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                background: $blue;
+            }
+
+            .timing_label {
+                position: absolute;
+                color: white;
+                top: 0;
+                left: 10px;
+            }
         }
     }
 
