@@ -307,6 +307,43 @@ export class Scale {
 
     return range;
   }
+
+  // degrees are 1 indexed
+  getScaleDegree(note) {
+    let pitch = parseNote(note)
+    let rootPitch = parseNote(this.root + "5")
+
+    // move note within an octave of root
+    while (pitch < rootPitch) {
+      pitch += 12
+    }
+
+    while (pitch >= rootPitch + 12) {
+      pitch -= 12
+    }
+
+    let degree = 1
+    let currentPitch = rootPitch
+
+    if (currentPitch == pitch) {
+      return degree
+    }
+
+    for (let offset of this.steps) {
+      currentPitch += offset
+      degree += 1
+
+      if (currentPitch == pitch) {
+        return degree
+      }
+
+      if (currentPitch > pitch) {
+        break
+      }
+    }
+
+    throw new Error(`${note} is not in scale ${this.root}`)
+  }
 }
 
 export class MajorScale extends Scale {

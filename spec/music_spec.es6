@@ -81,6 +81,24 @@ describe("scales", function() {
       "C5", "D5", "E5", "F#5", "G5", "A5", "B5", "C6"
     ]);
   });
+
+  it("gets scale degrees for C major", function() {
+    let scale = new MajorScale("C")
+    let range = scale.getLooseRange("C5", "C6")
+
+    expect(range.map(scale.getScaleDegree.bind(scale))).toEqual([
+      1, 2, 3, 4, 5, 6, 7, 1
+    ])
+  })
+
+  it("gets scale degrees for G major", function() {
+    let scale = new MajorScale("G")
+    let range = scale.getLooseRange("C5", "C6")
+
+    expect(range.map(scale.getScaleDegree.bind(scale))).toEqual([
+      4, 5, 6, 7, 1, 2, 3, 4
+    ])
+  })
 })
 
 describe("key signature", function() {
