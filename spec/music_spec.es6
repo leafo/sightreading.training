@@ -99,6 +99,23 @@ describe("scales", function() {
       4, 5, 6, 7, 1, 2, 3, 4
     ])
   })
+
+  it("gets notes in A MinorScale", function() {
+    let scale = new MinorScale("A");
+    expect(scale.getRange(5)).toEqual([
+      "A5", "B5", "C6", "D6", "E6", "F6", "G6", "A6"
+    ]);
+  });
+
+  it("gets notes in C MinorScale", function() {
+    let scale = new MinorScale("C");
+    // TODO: this should be giving flats not sharps
+    expect(scale.getRange(5)).toEqual([
+      "C5", "D5", "D#5", "F5", "G5", "G#5", "A#5", "C6"
+    ]);
+  });
+
+
 })
 
 describe("key signature", function() {

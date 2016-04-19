@@ -377,3 +377,10 @@ export class MajorScale extends Scale {
   }
 }
 
+export class MinorScale extends Scale {
+  constructor(root) {
+    super(root);
+    this.steps = [2, 1, 2, 2, 1, 2, 2];
+  }
+}
+
