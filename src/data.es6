@@ -91,6 +91,8 @@ N.GENERATORS = [
       let scale = new MajorScale(this.state.keySignature)
 
       // iv7 – VII7 – IIImaj7 – VImaj7 – ii7(b5) – V7 – i
+      // in minor degrees
+      // TODO: make it work with minor progressions
       let progression = [
         [4, "m7"],
         [7, "7"],
@@ -99,6 +101,17 @@ N.GENERATORS = [
         [2, "m7b5"],
         [5, "7"],
         [1, "m"],
+      ]
+
+      // major degrees
+      progression = [
+        [2, "m7"],
+        [5, "7"],
+        [1, "M7"],
+        [4, "M7"],
+        [7, "m7b5"],
+        [3, "7"],
+        [6, "m"],
       ]
 
       return new ProgressionGenerator(scale, staff.range, progression)
