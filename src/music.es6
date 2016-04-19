@@ -66,6 +66,20 @@ function parseNoteAccidentals(note) {
   return n;
 }
 
+// get the octave independent offset in halfsteps (from C), used for comparison
+function parseNoteOffset(note) {
+  let [, letter, accidental] = note.match(/^([A-G])(#|b)?/);
+
+  if (OFFSETS[letter] == undefined) {
+    throw `invalid note letter: ${letter}`
+  }
+
+  let n = OFFSETS[letter];
+  if (accidental == "#") { n += 1 }
+  if (accidental == "b") { n -= 1 }
+  return n;
+}
+
 export function parseNote(note) {
   let [, letter, accidental, octave] = note.match(/^([A-G])(#|b)?(\d+)$/);
   if (OFFSETS[letter] == undefined) {
@@ -310,16 +324,16 @@ export class Scale {
 
   // degrees are 1 indexed
   getScaleDegree(note) {
-    let pitch = parseNote(note)
-    let rootPitch = parseNote(this.root + "5")
+    let pitch = parseNoteOffset(note)
+    let rootPitch = parseNoteOffset(this.root)
 
     // move note within an octave of root
     while (pitch < rootPitch) {
-      pitch += 12
+      pitch += OCTAVE_SIZE
     }
 
-    while (pitch >= rootPitch + 12) {
-      pitch -= 12
+    while (pitch >= rootPitch + OCTAVE_SIZE) {
+      pitch -= OCTAVE_SIZE
     }
 
     let degree = 1
