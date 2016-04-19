@@ -155,3 +155,44 @@ export class SevenOpenNotes extends ShapeGenerator {
   }
 }
 
+export class ProgressionGenerator {
+  constructor(scale, range, progression) {
+    this.position = 0
+    this.progression = progression
+    this.generator = new MersenneTwister()
+
+    // calculate all the roots we can use to build chords on top of
+    let roots = scale.getLooseRange(...range)
+    this.rootsByDegree = {}
+
+    for (let r of roots) {
+      let degree = scale.getDegree(r)
+      this.rootsByDegree[degree] = this.rootsByDegree[degree] || []
+      this.rootsByDegree[degree].push(r)
+    }
+  }
+
+  buildChord(root, intervals) {
+    return intervals.map((i) => noteName(parseNote(root) + i))
+  }
+
+  nextNote() {
+    let [degree, chord] = this.progression[this.position % this.progression.length]
+    this.position += 1
+
+    let chordIntervals = CHORDS[chord]
+
+    if (!chordIntervals) {
+      throw new Error("invalid chord: " + chord)
+    }
+
+    let availableRoots = this.rootsByDegree[degree]
+
+    if (!availableRoots) {
+      throw new Error("chord doesn't fit in scale range")
+    }
+
+    return this.buildChord(availableRoots[0], chordIntervals)
+  }
+}
+

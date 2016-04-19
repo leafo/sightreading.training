@@ -84,6 +84,25 @@ N.GENERATORS = [
         .getLooseRange(...staff.range);
       return new SevenOpenNotes(notes);
     }
+  },
+  {
+    name: "progression",
+    create: function(staff) {
+      let scale = new MajorScale(this.state.keySignature)
+
+      // iv7 – VII7 – IIImaj7 – VImaj7 – ii7(b5) – V7 – i
+      let progression = [
+        [4, "m7"],
+        [7, "7"],
+        [3, "M7"],
+        [6, "M7"],
+        [2, "m7b5"],
+        [5, "7"],
+        [1, "m"],
+      ]
+
+      return new ProgressionGenerator(scale, staff.range, progression)
+    }
   }
 
 ]
