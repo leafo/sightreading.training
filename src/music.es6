@@ -323,7 +323,7 @@ export class Scale {
   }
 
   // degrees are 1 indexed
-  getScaleDegree(note) {
+  getDegree(note) {
     let pitch = parseNoteOffset(note)
     let rootPitch = parseNoteOffset(this.root)
 

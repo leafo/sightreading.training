@@ -86,7 +86,7 @@ describe("scales", function() {
     let scale = new MajorScale("C")
     let range = scale.getLooseRange("C5", "C6")
 
-    expect(range.map(scale.getScaleDegree.bind(scale))).toEqual([
+    expect(range.map(scale.getDegree.bind(scale))).toEqual([
       1, 2, 3, 4, 5, 6, 7, 1
     ])
   })
@@ -95,7 +95,7 @@ describe("scales", function() {
     let scale = new MajorScale("G")
     let range = scale.getLooseRange("C5", "C6")
 
-    expect(range.map(scale.getScaleDegree.bind(scale))).toEqual([
+    expect(range.map(scale.getDegree.bind(scale))).toEqual([
       4, 5, 6, 7, 1, 2, 3, 4
     ])
   })
