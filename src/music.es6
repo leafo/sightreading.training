@@ -372,15 +372,43 @@ export class Scale {
 
 export class MajorScale extends Scale {
   constructor(root) {
-    super(root);
-    this.steps = [2, 2, 1, 2, 2, 2, 1];
+    super(root)
+    this.steps = [2, 2, 1, 2, 2, 2, 1]
   }
 }
 
 export class MinorScale extends Scale {
   constructor(root) {
-    super(root);
-    this.steps = [2, 1, 2, 2, 1, 2, 2];
+    super(root)
+    this.steps = [2, 1, 2, 2, 1, 2, 2]
   }
 }
+
+
+export class Chord extends Scale {
+  static SHAPES = {
+    "M": [4, 3],
+    "m": [3, 4],
+
+    "M7": [4, 3, 4],
+    "7": [4, 3, 3],
+    "m7": [3, 4, 3],
+    "m7b5": [3, 3, 4],
+  }
+
+  constructor(root, intervals) {
+    super(root)
+
+    if (typeof(intervals) == "string") {
+      intervals = Chord.SHAPES[intervals]
+    }
+
+    if (!intervals) {
+      throw new Error("Missing intervals for chord")
+    }
+
+    this.steps = intervals
+  }
+}
+
 

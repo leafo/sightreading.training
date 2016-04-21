@@ -114,8 +114,50 @@ describe("scales", function() {
       "C5", "D5", "D#5", "F5", "G5", "G#5", "A#5", "C6"
     ]);
   });
+})
 
+describe("chords", function() {
+  it("gets notes for major chord", function() {
+    let chord = new Chord("C", "M")
+    expect(chord.getRange(5)).toEqual([
+      "C5", "E5", "G5"
+    ])
+  })
 
+  it("gets notes for minor chord", function() {
+    let chord = new Chord("C", "m")
+    expect(chord.getRange(5)).toEqual([
+      "C5", "D#5", "G5"
+    ])
+  })
+
+  it("gets notes for major 7 chord", function() {
+    let chord = new Chord("C", "M7")
+    expect(chord.getRange(5)).toEqual([
+      "C5", "E5", "G5", "B5"
+    ])
+  })
+
+  it("gets notes for dominant 7 chord", function() {
+    let chord = new Chord("C", "7")
+    expect(chord.getRange(5)).toEqual([
+      "C5", "E5", "G5", "A#5"
+    ])
+  })
+
+  it("gets notes for minor 7 chord", function() {
+    let chord = new Chord("C", "m7")
+    expect(chord.getRange(5)).toEqual([
+      "C5", "D#5", "G5", "A#5"
+    ])
+  })
+
+  it("gets notes for minor 7 flat 5 chord", function() {
+    let chord = new Chord("C", "m7b5")
+    expect(chord.getRange(5)).toEqual([
+      "C5", "D#5", "F#5", "A#5"
+    ])
+  })
 })
 
 describe("key signature", function() {
@@ -265,7 +307,7 @@ describe("key signature", function() {
     let notes = new MajorScale(key.name()).getRange(4).map((n) => key.enharmonic(n))
 
     expect(notes).toEqual([
-        "Eb4", "F4", "G4", "Ab4", "Bb4", "C5", "D5", "Eb5"
+      "Eb4", "F4", "G4", "Ab4", "Bb4", "C5", "D5", "Eb5"
     ])
   })
 })
