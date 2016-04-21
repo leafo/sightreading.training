@@ -176,6 +176,19 @@ export class ProgressionGenerator {
     return intervals.map((i) => noteName(parseNote(root) + i))
   }
 
+  buildInversion(root, intervals, inv) {
+    if (inv == 0) {
+      return buildChord(root, intervals)
+    } else if (inv > 0) {
+      let expanded = this.buildChord(root, intervals).concat(this.buildChord(addInterval(root, OCTAVE_SIZE), intervals))
+      return expanded.slice(inv, inv + intervals.length)
+    } else {
+      let expanded = this.buildChord(addInterval(root, -OCTAVE_SIZE), intervals).concat(this.buildChord(root, intervals))
+      let start = intervals.length + inv
+      return expanded.slice(start, start + intervals.length)
+    }
+  }
+
   nextNote() {
     let [degree, chord] = this.progression[this.position % this.progression.length]
     this.position += 1
@@ -192,7 +205,7 @@ export class ProgressionGenerator {
       throw new Error("chord doesn't fit in scale range")
     }
 
-    return this.buildChord(availableRoots[0], chordIntervals)
+    return this.buildInversion(availableRoots[0], chordIntervals, -1)
   }
 }
 
