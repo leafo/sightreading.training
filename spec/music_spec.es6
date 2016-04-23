@@ -125,6 +125,19 @@ describe("chords", function() {
     expect(Chord.notes("C5", "M", 1)).toEqual([
       "E5", "G5", "C6"
     ])
+
+    expect(Chord.notes("C5", "M", -1)).toEqual([
+      "G4", "C5", "E5"
+    ])
+
+    expect(Chord.notes("C5", "M", -2)).toEqual([
+      "E4", "G4", "C5"
+    ])
+
+    expect(Chord.notes("C5", "M", -3)).toEqual([
+      "C4", "E4", "G4"
+    ])
+
   })
 
   it("gets notes for minor chord", function() {
@@ -145,6 +158,19 @@ describe("chords", function() {
     expect(Chord.notes("C5", "M7", 1)).toEqual([
       "E5", "G5", "B5", "C6"
     ])
+
+    expect(Chord.notes("C5", "M7", -1)).toEqual([
+      "B4", "C5", "E5", "G5"
+    ])
+
+    expect(Chord.notes("C5", "M7", -2)).toEqual([
+      "G4", "B4", "C5", "E5"
+    ])
+
+    expect(Chord.notes("C5", "M7", -3)).toEqual([
+      "E4", "G4", "B4", "C5"
+    ])
+
   })
 
   it("gets notes for dominant 7 chord", function() {

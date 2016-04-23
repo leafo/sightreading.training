@@ -317,16 +317,26 @@ export class Scale {
   }
 
   getRange(octave, count=this.steps.length+1, offset=0) {
-    let current = parseNote(`${this.root}${octave}`);
-    let range = new NoteList;
+    let current = parseNote(`${this.root}${octave}`)
+    let range = new NoteList
 
     let k = 0;
 
+    while (offset < 0) {
+      k--
+      if (k < 0) {
+        k += this.steps.length
+      }
+
+      current -= this.steps[k % this.steps.length]
+      offset++
+    }
+
     for (let i = 0; i < count + offset; i++) {
       if (i >= offset) {
-        range.push(noteName(current));
+        range.push(noteName(current))
       }
-      current += this.steps[k++ % this.steps.length];
+      current += this.steps[k++ % this.steps.length]
     }
 
     return range;
@@ -383,7 +393,6 @@ export class MinorScale extends Scale {
     this.steps = [2, 1, 2, 2, 1, 2, 2]
   }
 }
-
 
 export class Chord extends Scale {
   static SHAPES = {
