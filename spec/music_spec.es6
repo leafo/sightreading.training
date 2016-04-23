@@ -118,43 +118,53 @@ describe("scales", function() {
 
 describe("chords", function() {
   it("gets notes for major chord", function() {
-    let chord = new Chord("C", "M")
-    expect(chord.getRange(5)).toEqual([
+    expect(Chord.notes("C5", "M")).toEqual([
       "C5", "E5", "G5"
+    ])
+
+    expect(Chord.notes("C5", "M", 1)).toEqual([
+      "E5", "G5", "C6"
     ])
   })
 
   it("gets notes for minor chord", function() {
-    let chord = new Chord("C", "m")
-    expect(chord.getRange(5)).toEqual([
+    expect(Chord.notes("C5", "m")).toEqual([
       "C5", "D#5", "G5"
+    ])
+
+    expect(Chord.notes("C5", "m", 1)).toEqual([
+      "D#5", "G5", "C6"
     ])
   })
 
   it("gets notes for major 7 chord", function() {
-    let chord = new Chord("C", "M7")
-    expect(chord.getRange(5)).toEqual([
+    expect(Chord.notes("C5", "M7")).toEqual([
       "C5", "E5", "G5", "B5"
+    ])
+
+    expect(Chord.notes("C5", "M7", 1)).toEqual([
+      "E5", "G5", "B5", "C6"
     ])
   })
 
   it("gets notes for dominant 7 chord", function() {
-    let chord = new Chord("C", "7")
-    expect(chord.getRange(5)).toEqual([
+    expect(Chord.notes("C5", "7")).toEqual([
       "C5", "E5", "G5", "A#5"
+    ])
+
+    expect(Chord.notes("C5", "7", 1)).toEqual([
+      "E5", "G5", "A#5", "C6"
     ])
   })
 
   it("gets notes for minor 7 chord", function() {
-    let chord = new Chord("C", "m7")
-    expect(chord.getRange(5)).toEqual([
+    expect(Chord.notes("C5", "m7")).toEqual([
       "C5", "D#5", "G5", "A#5"
     ])
   })
 
   it("gets notes for minor 7 flat 5 chord", function() {
-    let chord = new Chord("C", "m7b5")
-    expect(chord.getRange(5)).toEqual([
+    expect(Chord.notes("C5", "m7b5")).toEqual([
       "C5", "D#5", "F#5", "A#5"
     ])
   })

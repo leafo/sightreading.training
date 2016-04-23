@@ -396,12 +396,18 @@ export class Chord extends Scale {
     "m7b5": [3, 3, 4],
   }
 
-  // takes root note
-  static buildChord(note, chordName, inversion=0) {
+  // Chord.notes("C5", "M", 1) -> first inversion C major chord
+  static notes(note, chordName, inversion=0, notesCount=0) {
     let [, root, octave] = note.match(/^([^\d]+)(\d+)$/);
     octave = +octave
-    let intervals = this.SHAPES[chordName]
-      return new Chord(root, intervals).getRange(octave)
+
+    let intervals = Chord.SHAPES[chordName]
+
+    if (notesCount == 0) {
+      notesCount = intervals.length + 1
+    }
+
+    return new Chord(root, intervals).getRange(octave, notesCount, inversion)
   }
 
   constructor(root, intervals) {
@@ -415,7 +421,20 @@ export class Chord extends Scale {
       throw new Error("Missing intervals for chord")
     }
 
-    this.steps = intervals
+    this.steps = [...intervals]
+
+    // add wrapping interval to get back to octave
+    let sum = 0
+    for (let i of this.steps) {
+      sum += i
+    }
+
+    let rest = -sum
+    while (rest < 0) {
+      rest += OCTAVE_SIZE
+    }
+
+    this.steps.push(rest)
   }
 }
 
