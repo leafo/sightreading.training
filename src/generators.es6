@@ -172,40 +172,16 @@ export class ProgressionGenerator {
     }
   }
 
-  buildChord(root, intervals) {
-    return intervals.map((i) => noteName(parseNote(root) + i))
-  }
-
-  buildInversion(root, intervals, inv) {
-    if (inv == 0) {
-      return buildChord(root, intervals)
-    } else if (inv > 0) {
-      let expanded = this.buildChord(root, intervals).concat(this.buildChord(addInterval(root, OCTAVE_SIZE), intervals))
-      return expanded.slice(inv, inv + intervals.length)
-    } else {
-      let expanded = this.buildChord(addInterval(root, -OCTAVE_SIZE), intervals).concat(this.buildChord(root, intervals))
-      let start = intervals.length + inv
-      return expanded.slice(start, start + intervals.length)
-    }
-  }
-
   nextNote() {
     let [degree, chord] = this.progression[this.position % this.progression.length]
-    this.position += 1
-
-    let chordIntervals = CHORDS[chord]
-
-    if (!chordIntervals) {
-      throw new Error("invalid chord: " + chord)
-    }
-
     let availableRoots = this.rootsByDegree[degree]
+    this.position += 1
 
     if (!availableRoots) {
       throw new Error("chord doesn't fit in scale range")
     }
 
-    return this.buildInversion(availableRoots[0], chordIntervals, -1)
+    return Chord.notes(availableRoots[0], chord)
   }
 }
 
