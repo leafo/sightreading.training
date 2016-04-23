@@ -396,6 +396,14 @@ export class Chord extends Scale {
     "m7b5": [3, 3, 4],
   }
 
+  // takes root note
+  static buildChord(note, chordName, inversion=0) {
+    let [, root, octave] = note.match(/^([^\d]+)(\d+)$/);
+    octave = +octave
+    let intervals = this.SHAPES[chordName]
+      return new Chord(root, intervals).getRange(octave)
+  }
+
   constructor(root, intervals) {
     super(root)
 
