@@ -34,15 +34,6 @@ export const LETTER_OFFSETS = {
   [11]: 6
 }
 
-export const CHORDS = {
-  "M": [0, 4, 7],
-  "m": [0, 3, 7],
-
-  "M7": [0, 4, 7, 11],
-  "7": [0, 4, 7, 10],
-  "m7": [0, 3, 7, 10],
-  "m7b5": [0, 3, 6, 10],
-}
 
 export function noteName(pitch, sharpen=true) {
   let octave = Math.floor(pitch / OCTAVE_SIZE)
