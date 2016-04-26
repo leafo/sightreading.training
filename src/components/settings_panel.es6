@@ -26,6 +26,10 @@ class SettingsPanel extends React.Component {
       </div>
 
       <div className="settings_group">
+        {this.renderGeneratorInputs()}
+      </div>
+
+      <div className="settings_group">
         <h4>Key</h4>
         {this.renderKeys()}
       </div>
@@ -64,6 +68,30 @@ class SettingsPanel extends React.Component {
           active: this.props.currentGenerator == generator
         })}>
         {generator.name}</div>;
+    })
+  }
+
+  renderGeneratorInputs() {
+    let g = this.props.currentGenerator
+    if (!g.inputs) return
+
+    return g.inputs.map((input, idx) => {
+      switch (input.type) {
+        case "select":
+          return <div key={input.name} className="generator_input">
+            {input.name}
+            <select>
+            {
+              input.values.map((input_val, input_val_idx) => {
+                return <option value={input_val_idx}>{input_val.name}</option>
+              })
+            }
+            </select>
+          </div>
+          break
+        default:
+          throw new Error("unknown input type: " + input.type)
+      }
     })
   }
 
