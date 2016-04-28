@@ -32,8 +32,9 @@ N.STAVES = [
 N.GENERATORS = [
   {
     name: "random",
-    create: function(staff) {
-      let notes = new MajorScale(this.state.keySignature)
+    create: function(staff, keySignature) {
+
+      let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
 
       return new RandomNotes(notes);
@@ -42,8 +43,8 @@ N.GENERATORS = [
   {
     name: "sweep",
     debug: true,
-    create: function(staff) {
-      let notes = new MajorScale(this.state.keySignature)
+    create: function(staff, keySignature) {
+      let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
 
       return new SweepRangeNotes(notes);
@@ -51,16 +52,16 @@ N.GENERATORS = [
   },
   {
     name: "steps",
-    create: function(staff) {
-      let notes = new MajorScale(this.state.keySignature)
+    create: function(staff, keySignature) {
+      let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
       return new MiniSteps(notes);
     }
   },
   {
     name: "dual",
-    create: function(staff) {
-      let notes = new MajorScale(this.state.keySignature)
+    create: function(staff, keySignature) {
+      let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
 
       let mid = Math.floor(notes.length / 2);
@@ -71,16 +72,16 @@ N.GENERATORS = [
   },
   {
     name: "triads",
-    create: function(staff) {
-      let notes = new MajorScale(this.state.keySignature)
+    create: function(staff, keySignature) {
+      let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
       return new TriadNotes(notes);
     }
   },
   {
     name: "sevens",
-    create: function(staff) {
-      let notes = new MajorScale(this.state.keySignature)
+    create: function(staff, keySignature) {
+      let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
       return new SevenOpenNotes(notes);
     }
@@ -104,10 +105,23 @@ N.GENERATORS = [
               [3, "7"],
               [6, "m"],
             ],
+
+            // // iv7 – VII7 – IIImaj7 – VImaj7 – ii7(b5) – V7 – i
+            // // in minor degrees
+            // // TODO: make it work with minor progressions
+            // let progression = [
+            //   [4, "m7"],
+            //   [7, "7"],
+            //   [3, "M7"],
+            //   [6, "M7"],
+            //   [2, "m7b5"],
+            //   [5, "7"],
+            //   [1, "m"],
+            // ]
           },
 
           {
-            name: "test",
+            name: "basic",
             value: [
               [1, "M7"],
               [4, "M7"],
@@ -117,25 +131,13 @@ N.GENERATORS = [
         ],
       }
     ],
-    create: function(staff, inputs) {
-      let scale = new MajorScale(this.state.keySignature)
+    create: function(staff, keySignature, options) {
+      let scale = new MajorScale(keySignature)
+      let progressionInputs = this.inputs.find(i => i.name == "progression")
+      let progressionName = options.progression || progressionInputs.values[0].name
+      let progression = progressionInputs.values.find(v => v.name == progressionName)
 
-      // // iv7 – VII7 – IIImaj7 – VImaj7 – ii7(b5) – V7 – i
-      // // in minor degrees
-      // // TODO: make it work with minor progressions
-      // let progression = [
-      //   [4, "m7"],
-      //   [7, "7"],
-      //   [3, "M7"],
-      //   [6, "M7"],
-      //   [2, "m7b5"],
-      //   [5, "7"],
-      //   [1, "m"],
-      // ]
-
-      return new ProgressionGenerator(scale, staff.range, [
-        [2, "m7"],
-      ])
+      return new ProgressionGenerator(scale, staff.range, progression.value)
     }
   }
 

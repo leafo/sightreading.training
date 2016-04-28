@@ -6,6 +6,8 @@ class SettingsPanel extends React.Component {
     close: types.func.isRequired,
     staves: types.array.isRequired,
     generators: types.array.isRequired,
+    setStaff: types.func.isRequired,
+    setGenerator: types.func.isRequired,
   }
 
   render() {
@@ -61,9 +63,9 @@ class SettingsPanel extends React.Component {
         key={generator.name}
         onClick={(e) => {
           e.preventDefault();
-          this.props.setGenerator(generator);
+          this.props.setGenerator(generator, {});
         }}
-        
+
         className={classNames("toggle_option", {
           active: this.props.currentGenerator == generator
         })}>
@@ -74,33 +76,9 @@ class SettingsPanel extends React.Component {
   renderGeneratorInputs() {
     let g = this.props.currentGenerator
     if (!g.inputs) return
-
-    return <form
-      onChange={function() {
-        console.log("inputs updated..")
-      }}
-      action="generator_inputs">
-      {g.inputs.map((input, idx) => {
-        switch (input.type) {
-          case "select":
-            return <div key={input.name} className="generator_input">
-              {input.name}
-              <select>
-              {
-                input.values.map((input_val, input_val_idx) => {
-                  return <option
-                    key={input_val_idx}
-                    value={input_val_idx}>{input_val.name}</option>
-                })
-              }
-              </select>
-            </div>
-            break
-          default:
-            throw new Error("unknown input type: " + input.type)
-        }
-      })}
-    </form>
+    return <GeneratorSettings
+      generator={g}
+      setGenerator={this.props.setGenerator} />
   }
 
   renderKeys() {
@@ -120,3 +98,70 @@ class SettingsPanel extends React.Component {
     })
   }
 }
+
+
+class GeneratorSettings extends React.Component {
+  static propTypes = {
+    generator: types.object.isRequired,
+    setGenerator: types.func.isRequired,
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      inputValues: this.getDefaultValues(),
+    }
+  }
+
+  getDefaultValues() {
+    let out = {}
+    for (let input of this.props.generator.inputs) {
+      out[input.name] = input.defaultValue || input.values[0].name
+    }
+
+    return out
+  }
+
+  render() {
+    let inputs = this.props.generator.inputs
+
+    return <div className="generator_inputs">{
+      inputs.map((input, idx) => {
+        switch (input.type) {
+          case "select":
+            return this.renderSelect(input, idx)
+        }
+      })
+    }</div>
+  }
+
+  updateInputValue(input, value) {
+    let values = Object.assign({}, this.state.inputValues, {
+      [input.name]: value
+    })
+
+    this.setState({ inputValues: values })
+    this.props.setGenerator(this.props.generator, values)
+  }
+
+  renderSelect(input, idx) {
+    let currentValue = this.state.inputValues[input.name]
+
+    return <div key={input.name} className="generator_input">
+      {input.name}
+      <select
+        onChange={e => this.updateInputValue(input, e.target.value)}
+        value={currentValue}>
+      {
+        input.values.map((input_val, input_val_idx) => {
+          return <option
+            key={input_val_idx}
+            value={input_val.name}>{input_val.name}</option>
+        })
+      }
+      </select>
+    </div>
+  }
+}
+
+

@@ -25,6 +25,7 @@ class Page extends React.Component {
       settingsOpen: false,
       currentStaff: N.STAVES[0],
       currentGenerator: N.GENERATORS[0],
+      currentGeneratorSettings: {},
       stats: new NoteStats(),
       keySignature: new KeySignature(0),
     };
@@ -43,9 +44,10 @@ class Page extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // transitioning to new staff or generator
+    // transitioning to new staff or generator or key signature
     if (prevState.currentStaff != this.state.currentStaff ||
         prevState.currentGenerator != this.state.currentGenerator ||
+        prevState.currentGeneratorSettings != this.state.currentGeneratorSettings ||
         prevState.keySignature != this.state.keySignature)
     {
       let notes = this.newNoteList();
@@ -58,8 +60,13 @@ class Page extends React.Component {
   }
 
   newNoteList() {
+    let generator = this.state.currentGenerator
+
     return new NoteList([], {
-      generator: this.state.currentGenerator.create.call(this, this.state.currentStaff),
+      generator: generator.create.call(generator,
+        this.state.currentStaff,
+        this.state.keySignature,
+        this.state.currentGeneratorSettings),
     });
   }
 
@@ -250,9 +257,13 @@ class Page extends React.Component {
       currentStaff={this.state.currentStaff}
       currentKey={this.state.keySignature}
 
-      setGenerator={(g) => this.setState({currentGenerator: g})}
-      setStaff={(s) => this.setState({currentStaff: s})}
-      setKeySignature={(k) => this.setState({keySignature: k})}
+      setGenerator={(g, settings) => this.setState({
+        currentGenerator: g,
+        currentGeneratorSettings: settings,
+      })}
+
+      setStaff={s => this.setState({currentStaff: s})}
+      setKeySignature={k => this.setState({keySignature: k})}
     />
   }
 
