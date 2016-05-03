@@ -1,4 +1,6 @@
-!babel = |> babel %f > %o |>
+TOP = $(TUP_CWD)
+
+!babel = |> $(TOP)/node_modules/.bin/babel %f > %o |>
 !scss = |> ^ scss %o^ sassc -I scss/ < %f > %o |>
 
 : foreach *.es6 |> !babel |> %B.js
