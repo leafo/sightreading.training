@@ -51,10 +51,43 @@ export const KEYBOARD_MAP = {
   "]": 12*2 + 7,
 }
 
+export const SYMBOL_MAP = {
+  106: "*",
+  107: "+",
+  109: "-",
+  110: ".",
+  111: "/",
+  186: ";",
+  187: "=",
+  188: ",",
+  189: "-",
+  190: ".",
+  191: "/",
+  192: "`",
+  219: "[",
+  220: "\\",
+  221: "]",
+  222: "\'",
+}
+
+export function keyCodeToChar(keyCode) {
+  const symbol = SYMBOL_MAP[keyCode]
+
+  if (symbol) {
+    return symbol
+  }
+
+  if (keyCode >= 32 || keyCode < 127) {
+    return String.fromCharCode(keyCode).toLowerCase()
+  }
+}
+
 export function noteForKey(root, key) {
   const offset = KEYBOARD_MAP[key]
-  if (!offset) {
-    throw `Invalid key: ${key}`
+  if (offset === undefined) {
+    return
   }
+
+  return noteName(parseNote(root) + offset)
 }
 

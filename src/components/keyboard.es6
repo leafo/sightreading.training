@@ -23,6 +23,35 @@ class Keyboard extends React.Component {
     return LETTER_OFFSETS[pitch % 12] === 0;
   }
 
+  componentDidMount() {
+    this.downListener = event => {
+      const key = keyCodeToChar(event.keyCode)
+      const note = noteForKey("C5", key)
+
+      if (note && this.props.onKeyDown) {
+        this.props.onKeyDown(note);
+      }
+    }
+
+    this.upListener = event => {
+      const key = keyCodeToChar(event.keyCode)
+      const note = noteForKey("C5", key)
+
+
+      if (note && this.props.onKeyUp) {
+        this.props.onKeyUp(note);
+      }
+    }
+
+    window.addEventListener("keydown", this.downListener)
+    window.addEventListener("keyup", this.upListener)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("keydown", this.downListener)
+    window.removeEventListener("keyup", this.upListener)
+  }
+
   onClickKey(e) {
     e.preventDefault();
     if (this.props.onClickKey) {

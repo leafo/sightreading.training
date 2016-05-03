@@ -33,7 +33,7 @@ class Page extends React.Component {
     this.state.notes = this.newNoteList();
 
     if (navigator.requestMIDIAccess) {
-      navigator.requestMIDIAccess().then((midi) => this.setState({midi: midi}));
+      navigator.requestMIDIAccess().then(midi => this.setState({midi: midi}));
     }
   }
 
