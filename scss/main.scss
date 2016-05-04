@@ -220,21 +220,32 @@ button {
 
     .speed_picker {
         border: 1px solid $border_color;
-        margin-right: 10px;
-        padding: 5px;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-left: 10px;
+        @include border_box;
+        height: 27px;
+        line-height: 25px;
+
         display: inline-flex;
         align-items: center;
+        background: rgba(white, 0.9);
 
-        input {
-            margin: 0;
-            margin-left: 10px;
-            &:disabled {
-                opacity: 0.5;
-            }
+        .speed_label {
+            font-size: 13px;
+            font-weight: bold;
+            padding: 0 4px;
+            opacity: 0.8;
         }
 
         .speed_value {
             font-family: monospace;
+            display: block;
+            height: 100%;
+            background: $border_color;
+            color: white;
+            min-width: 30px;
+            text-align: center;
         }
     }
 }

@@ -389,18 +389,6 @@ class Page extends React.Component {
 
 
     let modeToggle = <div className="tool">
-      <span className="speed_picker">
-        <span className="speed_value">{ this.state.scrollSpeed }</span>
-        <Slider
-          min={50}
-          max={300}
-          disabled={this.state.mode == "scroll"}
-          onChange={(value) => this.setState({
-            scrollSpeed: Math.round(value)
-          })}
-          value={+this.state.scrollSpeed} />
-      </span>
-
       <span className="label">Mode</span>
       <div
         onClick={this.toggleMode.bind(this)}
@@ -411,6 +399,19 @@ class Page extends React.Component {
         <span className="toggle_option">Wait</span>
         <span className="toggle_option">Scroll</span>
       </div>
+
+      <span className="speed_picker">
+        <span className="speed_label">Speed</span>
+        <Slider
+          min={50}
+          max={300}
+          disabled={this.state.mode == "scroll"}
+          onChange={(value) => this.setState({
+            scrollSpeed: Math.round(value)
+          })}
+          value={+this.state.scrollSpeed} />
+        <span className="speed_value">{ this.state.scrollSpeed }</span>
+      </span>
     </div>
 
     let staff = this.state.currentStaff && this.state.currentStaff.render.call(this);
