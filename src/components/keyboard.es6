@@ -13,6 +13,9 @@ class Keyboard extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      heldKeyboardKeys: {}
+    }
   }
 
   isBlack(pitch) {
@@ -25,10 +28,15 @@ class Keyboard extends React.Component {
 
   componentDidMount() {
     this.downListener = event => {
+      if (event.shiftKey || event.altKey || event.ctrlKey) {
+        return
+      }
+
       const key = keyCodeToChar(event.keyCode)
       const note = noteForKey("C5", key)
 
       if (note && this.props.onKeyDown) {
+        this.state.heldKeyboardKeys[note] = true
         this.props.onKeyDown(note);
       }
     }
@@ -37,9 +45,11 @@ class Keyboard extends React.Component {
       const key = keyCodeToChar(event.keyCode)
       const note = noteForKey("C5", key)
 
-
       if (note && this.props.onKeyUp) {
-        this.props.onKeyUp(note);
+        if (this.state.heldKeyboardKeys[note]) {
+          this.state.heldKeyboardKeys[note] = false
+          this.props.onKeyUp(note);
+        }
       }
     }
 
