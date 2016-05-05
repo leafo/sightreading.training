@@ -179,17 +179,13 @@ class GeneratorSettings extends React.Component {
 
   renderRange(input, idx) {
     let currentValue = this.state.inputValues[input.name]
-    console.warn("current value", currentValue, this.state.inputValues)
 
     return <div className="generator_input" key={input.name}>
       <span className="label">{input.name}</span>
       <Slider
         min={input.min}
         max={input.max}
-        onChange={(value) => {
-          console.log("setting to value", value)
-          this.updateInputValue(input, value)
-        }}
+        onChange={(value) => this.updateInputValue(input, value)}
         value={currentValue} />
       <span className="current_value">{currentValue}</span>
     </div>

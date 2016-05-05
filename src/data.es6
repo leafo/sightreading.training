@@ -40,12 +40,11 @@ N.GENERATORS = [
         max: 5,
       }
     ],
-    create: function(staff, keySignature) {
-
+    create: function(staff, keySignature, options) {
       let notes = new MajorScale(keySignature)
-        .getLooseRange(...staff.range);
+        .getLooseRange(...staff.range)
 
-      return new RandomNotes(notes);
+      return new RandomNotes(notes, options)
     }
   },
   {
@@ -64,18 +63,6 @@ N.GENERATORS = [
       let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
       return new MiniSteps(notes);
-    }
-  },
-  {
-    name: "dual",
-    create: function(staff, keySignature) {
-      let notes = new MajorScale(keySignature)
-        .getLooseRange(...staff.range);
-
-      let mid = Math.floor(notes.length / 2);
-
-      return new DualRandomNotes(notes.slice(0, mid), notes.slice(mid));
-
     }
   },
   {

@@ -1,12 +1,32 @@
 
 export class RandomNotes {
-  constructor(notes) {
+  constructor(notes, opts={}) {
     this.notes = notes;
     this.generator = new MersenneTwister();
+
+    const groupsCount = opts.notes || 3
+    this.groups = []
+
+    if (groupsCount == 1) {
+      this.groups.push(this.notes)
+    } else {
+      const groupSize = Math.floor(this.notes.length / groupsCount)
+      if (groupSize < 1) {
+        throw new Error("Invalid notes size for number of notes")
+      }
+
+      for (let i = 0; i < groupsCount; i++) {
+        if (i == groupsCount - 1) {
+          this.groups.push(this.notes.slice(i * groupSize))
+        } else {
+          this.groups.push(this.notes.slice(i * groupSize, (i + 1) * groupSize))
+        }
+      }
+    }
   }
 
   nextNote() {
-    return this.notes[this.generator.int() % this.notes.length];
+    return this.groups.map(g => g[this.generator.int() % g.length])
   }
 }
 
@@ -63,23 +83,6 @@ export class MiniSteps {
     return this.notes[position % this.notes.length];
   }
 }
-
-export class DualRandomNotes {
-  constructor(upper, lower) {
-    this.upperNotes = upper;
-    this.lowerNotes = lower;
-
-    this.generator = new MersenneTwister();
-  }
-
-  nextNote() {
-    return [
-      this.upperNotes[this.generator.int() % this.upperNotes.length],
-      this.lowerNotes[this.generator.int() % this.lowerNotes.length]
-    ];
-  }
-}
-
 
 export class ShapeGenerator {
   constructor() {
@@ -139,7 +142,7 @@ export class SevenOpenNotes extends ShapeGenerator {
     this.notes = notes;
     // some random inversions spaced apart
     this.shapes = [
-      // root on bottom 
+      // root on bottom
       [0, 4, 9, 13],
       [0, 6, 9, 11],
 
