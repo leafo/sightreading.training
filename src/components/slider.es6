@@ -15,9 +15,19 @@ class Slider extends React.Component {
   }
 
   onChange(value) {
+    value = Math.round(value)
+
     if (this.props.onChange) {
+      if (value == this.props.value) {
+        return
+      }
+
       this.props.onChange(value)
     } else {
+      if (value == this.state.value) {
+        return
+      }
+
       this.setState({value: value})
     }
   }

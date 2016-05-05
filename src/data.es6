@@ -32,6 +32,14 @@ N.STAVES = [
 N.GENERATORS = [
   {
     name: "random",
+    inputs: [
+      {
+        name: "notes",
+        type: "range",
+        min: 1,
+        max: 5,
+      }
+    ],
     create: function(staff, keySignature) {
 
       let notes = new MajorScale(keySignature)
