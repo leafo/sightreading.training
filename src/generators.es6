@@ -4,7 +4,7 @@ export class RandomNotes {
     this.notes = notes;
     this.generator = new MersenneTwister();
 
-    const groupsCount = opts.notes || 3
+    const groupsCount = opts.notes || 1
     this.groups = []
 
     if (groupsCount == 1) {
