@@ -118,7 +118,7 @@ class Staff extends React.Component {
       if (Array.isArray(note)) {
         return note.map((sub_note, col_idx) => {
           opts.key = `${idx}-${col_idx}`
-          opts.previous_note = note[col_idx - 1]
+          opts.previousNote = note[col_idx - 1]
           return this.renderNote(sub_note, opts)
         })
       } else {
@@ -196,11 +196,23 @@ class Staff extends React.Component {
       }
     }
 
-    let fromTop = letterOffset(this.props.upperLine) - letterOffset(pitch, !key.isFlat());
+    let row = letterOffset(pitch, !key.isFlat())
+    let fromTop = letterOffset(this.props.upperLine) - row;
+    let fromLeft = opts.offset || 0
+
+    if (opts.previousNote) {
+      let prevPitch = parseNote(opts.previousNote)
+      let prevRow = letterOffset(prevPitch, !key.isFlat())
+
+      if (Math.abs(row - prevRow) == 1) {
+        // TODO: should be made relative to note size
+        fromLeft += 24
+      }
+    }
 
     let style = {
       top: `${Math.floor(fromTop * 25/2)}%`,
-      left: `${opts.offset || 0}px`
+      left: `${fromLeft}px`
     }
 
     let outside = pitch > this.props.upperLine || pitch < this.props.lowerLine;
