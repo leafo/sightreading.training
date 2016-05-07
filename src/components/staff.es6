@@ -83,7 +83,7 @@ class Staff extends React.Component {
     let src = keySignature.isFlat() ? "svg/flat.svg" : "svg/sharp.svg";
 
     return <div className="key_signature">
-      {sigNotes.map(function(n, i) {
+      {sigNotes.map((n, i) => {
         let pitch = parseNote(n);
         let fromTop = topOffset - letterOffset(pitch);
         let style = {
@@ -97,7 +97,7 @@ class Staff extends React.Component {
           style={style}
           className={classNames("accidental", sigClass)}
           src={src} />;
-      }.bind(this))}
+      })}
     </div>;
   }
 
@@ -108,7 +108,7 @@ class Staff extends React.Component {
       keySignatureWidth = count > 0 ? count * 20 + 20 : 0;
     }
 
-    return this.props.notes.map(function(note, idx) {
+    return this.props.notes.map((note, idx) => {
       let opts = {
         goal: true,
         offset: keySignatureWidth + this.props.noteWidth * idx,
@@ -116,16 +116,17 @@ class Staff extends React.Component {
       }
 
       if (Array.isArray(note)) {
-        return note.map(function(sub_note, col_idx) {
-          opts.key = `${idx}-${col_idx}`;
-          return this.renderNote(sub_note, opts);
-        }.bind(this));
+        return note.map((sub_note, col_idx) => {
+          opts.key = `${idx}-${col_idx}`
+          opts.previous_note = note[col_idx - 1]
+          return this.renderNote(sub_note, opts)
+        })
       } else {
-        opts.key = idx;
-        return this.renderNote(note, opts);
+        opts.key = idx
+        return this.renderNote(note, opts)
       }
 
-    }.bind(this));
+    });
   }
 
   renderLedgerLines(note, opts={}) {
