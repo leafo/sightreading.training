@@ -11,6 +11,20 @@ class IntroLightbox extends React.Component {
     this.state = {}
   }
 
+  componentDidMount() {
+    this.closeListener = e => {
+      if (e.keyCode == 27) {
+        this.callClose()
+      }
+    }
+
+    document.body.addEventListener("keydown", this.closeListener)
+  }
+
+  componentWillUnmount() {
+    document.body.removeEventListener("keydown", this.closeListener)
+  }
+
   render() {
     let midiSetup
 
