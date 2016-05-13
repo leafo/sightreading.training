@@ -28,7 +28,7 @@ class Slider extends React.Component {
         return
       }
 
-      this.setState({value: value})
+      this.setState({value})
     }
   }
 

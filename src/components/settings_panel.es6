@@ -160,20 +160,19 @@ class GeneratorSettings extends React.Component {
 
   renderSelect(input, idx) {
     let currentValue = this.state.inputValues[input.name]
+    let options = input.values.map((input_val, input_val_idx) => {
+      return {
+        name: input_val.name,
+        value: input_val.name,
+      }
+    })
 
     return <div key={input.name} className="generator_input">
       {input.name}
-      <select
-        onChange={e => this.updateInputValue(input, e.target.value)}
-        value={currentValue}>
-      {
-        input.values.map((input_val, input_val_idx) => {
-          return <option
-            key={input_val_idx}
-            value={input_val.name}>{input_val.name}</option>
-        })
-      }
-      </select>
+      <Select
+        onChange={ value => this.updateInputValue(input, value) }
+        value={currentValue}
+        options={options} />
     </div>
   }
 
