@@ -168,11 +168,13 @@ class GeneratorSettings extends React.Component {
     })
 
     return <div key={input.name} className="generator_input">
-      {input.name}
-      <Select
-        onChange={ value => this.updateInputValue(input, value) }
-        value={currentValue}
-        options={options} />
+      <label>
+        <div className="input_label">{input.name}</div>
+        <Select
+          onChange={ value => this.updateInputValue(input, value) }
+          value={currentValue}
+          options={options} />
+      </label>
     </div>
   }
 
@@ -180,13 +182,15 @@ class GeneratorSettings extends React.Component {
     let currentValue = this.state.inputValues[input.name]
 
     return <div className="generator_input" key={input.name}>
-      <span className="label">{input.name}</span>
-      <Slider
-        min={input.min}
-        max={input.max}
-        onChange={(value) => this.updateInputValue(input, value)}
-        value={currentValue} />
-      <span className="current_value">{currentValue}</span>
+      <div className="input_label">{input.name}</div>
+      <div className="slider_row">
+        <Slider
+          min={input.min}
+          max={input.max}
+          onChange={(value) => this.updateInputValue(input, value)}
+          value={currentValue} />
+        <span className="current_value">{currentValue}</span>
+      </div>
     </div>
   }
 }

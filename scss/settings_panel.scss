@@ -49,6 +49,41 @@
         }
     }
 
+    .generator_inputs {
+        border: 1px solid $border_color;
+        padding: 10px;
+        background: rgba(white, 0.5);
+    }
+
+    .generator_input {
+        .input_label {
+            font-size: 13px;
+            color: #666;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .select_component {
+            display: block;
+        }
+
+        .slider_row {
+            height: 26px;
+            display: flex;
+            align-items: center;
+
+            .slider_component {
+                width: auto;
+                flex: 1;
+            }
+
+            .current_value {
+                width: 20px;
+                text-align: center;
+            }
+        }
+    }
+
     .settings_group {
         padding: 0 10px;
         margin-bottom: 20px;
