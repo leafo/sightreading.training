@@ -157,7 +157,7 @@ class Staff extends React.Component {
     for (let i = 0; i < numLines; i++) {
       let style = {
         left: `${(opts.offset || 0) - 10}px`,
-        width: `${40 + 20}`,
+        width: `${40 + 20}px`,
       }
 
       if (below) {
