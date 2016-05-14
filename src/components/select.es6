@@ -31,9 +31,19 @@ class Select extends React.Component {
   render() {
     let current = this.currentOption()
 
-    return <div className="select_component">
-      <div className="selected_option">{current.name}</div>
-      <select value={current.value} name={this.props.name} onChange={e => this.onChange(e)}>
+    return <div className={classNames("select_component", {
+      focused: this.state.focused
+    })}>
+      <div className="selected_option">
+        <span className="selected_option_name">{current.name}</span>
+        <IconDownArrow width={12} />
+      </div>
+      <select
+        value={current.value}
+        name={this.props.name}
+        onFocus={e => this.setState({ focused: true })}
+        onBlur={e => this.setState({ focused: false })}
+        onChange={e => this.onChange(e)}>
       {
         this.props.options.map((o, idx) => {
           return <option key={idx} value={o.value}>{o.name}</option>
@@ -54,7 +64,6 @@ class Select extends React.Component {
   // name of what's currently selected
   currentOption() {
     let searchValue = this.props.value || this.state.value
-    console.warn("search value", searchValue)
 
     if (searchValue != undefined) {
       return this.findOption(searchValue)

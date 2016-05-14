@@ -4,4 +4,60 @@
     display: inline-block;
     box-sizing: border-box;
     min-width: 30px;
+    position: relative;
+    border: 1px solid $border_color;
+    padding: 4px 16px;
+    background: white;
+    border-radius: 4px;
+
+    &:hover {
+        .selected_option {
+            color: #444;
+        }
+    }
+
+    &.focused {
+        border-color: darken($border_color, 20%);
+        box-shadow: 0 0 0 2px rgba($border_color, 0.4);
+
+        .select_component {
+            color: #444;
+        }
+    }
+
+    .svgicon {
+        margin-left: 10px;
+        fill: rgba($border_color, 0.8);
+    }
+
+    .selected_option {
+        font-size: 14px;
+        color: #666;
+        display: flex;
+        align-items: center;
+
+        .selected_option_name {
+            flex: 1
+        }
+
+        svg {
+            margin-top: 2px;
+        }
+    }
+
+    select {
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
 }
