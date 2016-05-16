@@ -1,6 +1,8 @@
 
 // TODO: add hand size
 export class RandomNotes {
+  handSize = 11
+
   constructor(notes, opts={}) {
     this.generator = new MersenneTwister()
     this.notes = notes
@@ -25,6 +27,18 @@ export class RandomNotes {
         }
       }
     }
+  }
+  
+  handGroups() {
+    let pitches = this.notes.map( n => parseNote(n))
+    pitches.sort((a, b) => a - b)
+    let start = pitches[0]
+    let relativePitches = pitches.map(p => p - start)
+
+    return [
+      [], // notes for left hand
+      [], // notes for right hand
+    ]
   }
 
   nextNote() {
