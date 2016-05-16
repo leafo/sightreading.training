@@ -1,6 +1,6 @@
 let {PropTypes: types} = React;
 
-class IntroLightbox extends React.Component {
+class IntroLightbox extends Lightbox {
   static propTypes = {
     midi: types.object,
     close: types.func.isRequired,
@@ -11,21 +11,13 @@ class IntroLightbox extends React.Component {
     this.state = {}
   }
 
-  componentDidMount() {
-    this.closeListener = e => {
-      if (e.keyCode == 27) {
-        this.callClose()
-      }
-    }
-
-    document.body.addEventListener("keydown", this.closeListener)
+  callClose() {
+    this.props.close({
+      input: this.state.selectedInput
+    })
   }
 
-  componentWillUnmount() {
-    document.body.removeEventListener("keydown", this.closeListener)
-  }
-
-  render() {
+  renderContent() {
     let midiSetup
 
     if (this.props.midi) {
@@ -41,7 +33,7 @@ class IntroLightbox extends React.Component {
       midiSetup = <p>MIDI support not detected on your computer. You'll only be able to use the on-srcreen keyboard.</p>
     }
 
-    return <div className="lightbox">
+    return <div>
       <h2>Sight reading trainer</h2>
       <p>This tool gives you a way to practice sight reading randomly
       generated notes. It works best with Chrome and a MIDI keyboard
@@ -58,12 +50,6 @@ class IntroLightbox extends React.Component {
     </div>
   }
 
-  // not called close so the auto-closing behavior of shroud is not inherited
-  callClose() {
-    this.props.close({
-      input: this.state.selectedInput
-    })
-  }
 }
 
 class MidiSelector extends React.Component {

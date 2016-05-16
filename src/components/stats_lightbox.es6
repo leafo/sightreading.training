@@ -1,21 +1,21 @@
 let {PropTypes: types} = React;
 
-class StatsLightbox extends React.Component {
+class StatsLightbox extends Lightbox {
+  static className = "stats_lightbox"
   static propTypes = {
     stats: types.object.isRequired,
     close: types.func.isRequired,
   }
 
-
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       tab: "ratios"
-    };
+    }
   }
 
-  render() {
+  renderContent() {
     let statsContent;
     let availableNotes = Object.keys(this.props.stats.noteHitStats);
     availableNotes.sort();
@@ -39,7 +39,7 @@ class StatsLightbox extends React.Component {
       </div>
     }
 
-    return <div className="lightbox stats_lightbox">
+    return <div>
       <h2>Session stats</h2>
       <button onClick={(e) => { this.setState({tab: "ratios"}) }}>Ratios</button>
       {" "}
@@ -48,7 +48,7 @@ class StatsLightbox extends React.Component {
       {statsContent}
       {hitTime}
       <p>
-        <button onClick={this.props.close}>Close</button>
+        <button onClick={this.close.bind(this)}>Close</button>
       </p>
     </div>
   }
