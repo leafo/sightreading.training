@@ -114,6 +114,39 @@ describe("scales", function() {
       "C5", "D5", "D#5", "F5", "G5", "G#5", "A#5", "C6"
     ]);
   });
+
+  describe("buildChordSteps", function() {
+    it("builds triad steps for major scale", function() {
+      let scale = new MajorScale("C")
+      expect(scale.buildChordSteps(1, 2)).toEqual(Chord.SHAPES.M)
+      expect(scale.buildChordSteps(2, 2)).toEqual(Chord.SHAPES.m)
+      expect(scale.buildChordSteps(3, 2)).toEqual(Chord.SHAPES.m)
+      expect(scale.buildChordSteps(4, 2)).toEqual(Chord.SHAPES.M)
+      expect(scale.buildChordSteps(5, 2)).toEqual(Chord.SHAPES.M)
+      expect(scale.buildChordSteps(6, 2)).toEqual(Chord.SHAPES.m)
+    })
+
+    it("builds seventh chord steps for major scale", function() {
+      let scale = new MajorScale("C")
+      expect(scale.buildChordSteps(1, 3)).toEqual(Chord.SHAPES.M7)
+      expect(scale.buildChordSteps(2, 3)).toEqual(Chord.SHAPES.m7)
+      expect(scale.buildChordSteps(3, 3)).toEqual(Chord.SHAPES.m7)
+      expect(scale.buildChordSteps(4, 3)).toEqual(Chord.SHAPES.M7)
+      expect(scale.buildChordSteps(5, 3)).toEqual(Chord.SHAPES["7"])
+      expect(scale.buildChordSteps(6, 3)).toEqual(Chord.SHAPES.m7)
+    })
+
+
+    it("builds triads chord steps for minor scale", function() {
+      let scale = new MinorScale("C")
+      expect(scale.buildChordSteps(1, 2)).toEqual(Chord.SHAPES.m)
+      expect(scale.buildChordSteps(3, 2)).toEqual(Chord.SHAPES.M)
+      expect(scale.buildChordSteps(4, 2)).toEqual(Chord.SHAPES.m)
+      expect(scale.buildChordSteps(5, 2)).toEqual(Chord.SHAPES.m)
+      expect(scale.buildChordSteps(6, 2)).toEqual(Chord.SHAPES.M)
+      expect(scale.buildChordSteps(7, 2)).toEqual(Chord.SHAPES.M)
+    })
+  })
 })
 
 describe("chords", function() {

@@ -397,6 +397,29 @@ export class Scale {
 
     throw new Error(`${note} is not in scale ${this.root}`)
   }
+
+  // degree is one index
+  // new MajorScale().buildChordSteps(1, 2) -> major chord
+  buildChordSteps(degree, count) {
+    let idx = degree - 1
+    let out = []
+
+    while (count > 0) {
+      let stride = 2
+      let step = 0
+
+      while (stride > 0) {
+        step += this.steps[idx % this.steps.length]
+        idx++
+        stride--
+      }
+
+      out.push(step)
+      count--
+    }
+
+    return out
+  }
 }
 
 export class MajorScale extends Scale {
