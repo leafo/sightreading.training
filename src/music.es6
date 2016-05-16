@@ -333,6 +333,34 @@ export class Scale {
     return range;
   }
 
+  containsNote(note) {
+    let pitch = parseNoteOffset(note)
+    let rootPitch = parseNoteOffset(this.root)
+
+    // move note within an octave of root
+    while (pitch < rootPitch) {
+      pitch += OCTAVE_SIZE
+    }
+
+    while (pitch >= rootPitch + OCTAVE_SIZE) {
+      pitch -= OCTAVE_SIZE
+    }
+
+    let currentPitch = rootPitch
+    let i = 0
+
+    // keep incrementing until we hit it, or pass it
+    while (currentPitch <= pitch) {
+      if (currentPitch == pitch) {
+        return true
+      }
+      currentPitch += this.steps[i % this.steps.length]
+      i++
+    }
+
+    return false
+  }
+
   // degrees are 1 indexed
   getDegree(note) {
     let pitch = parseNoteOffset(note)

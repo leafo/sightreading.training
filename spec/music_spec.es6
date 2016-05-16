@@ -194,6 +194,40 @@ describe("chords", function() {
       "C5", "D#5", "F#5", "A#5"
     ])
   })
+
+  describe("containsNote", function() {
+    it("checks notes in CM7", function () {
+      let chord = new Chord("C", "M7");
+
+      for (let octave of [4,5,6]) {
+        expect(chord.containsNote(`C${octave}`)).toBe(true)
+        expect(chord.containsNote(`E${octave}`)).toBe(true)
+        expect(chord.containsNote(`G${octave}`)).toBe(true)
+        expect(chord.containsNote(`B${octave}`)).toBe(true)
+
+        expect(chord.containsNote(`D${octave}`)).toBe(false)
+        expect(chord.containsNote(`F${octave}`)).toBe(false)
+        expect(chord.containsNote(`A${octave}`)).toBe(false)
+      }
+    })
+
+    it("checks notes in Cm", function () {
+      let chord = new Chord("C", "m");
+
+      for (let octave of [4,5,6]) {
+        expect(chord.containsNote(`C${octave}`)).toBe(true)
+        expect(chord.containsNote(`D#${octave}`)).toBe(true)
+        expect(chord.containsNote(`Eb${octave}`)).toBe(true)
+        expect(chord.containsNote(`G${octave}`)).toBe(true)
+
+        expect(chord.containsNote(`B${octave}`)).toBe(false)
+        expect(chord.containsNote(`D${octave}`)).toBe(false)
+        expect(chord.containsNote(`F${octave}`)).toBe(false)
+        expect(chord.containsNote(`A${octave}`)).toBe(false)
+      }
+    })
+
+  })
 })
 
 describe("key signature", function() {
