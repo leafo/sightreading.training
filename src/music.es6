@@ -362,6 +362,14 @@ export class Scale {
   }
 
   // degrees are 1 indexed
+  degreeToName(degree) {
+    let range = this.getRange(0, degree)
+    let note = range[range.length - 1]
+    let m = note.match(/^[^\d]+/)
+    return m[0]
+  }
+
+  // degrees are 1 indexed
   getDegree(note) {
     let pitch = parseNoteOffset(note)
     let rootPitch = parseNoteOffset(this.root)

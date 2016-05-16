@@ -100,6 +100,19 @@ describe("scales", function() {
     ])
   })
 
+  it("converts degree to note name", function() {
+    let scale = new MajorScale("G")
+    expect(scale.degreeToName(1)).toEqual("G")
+    expect(scale.degreeToName(2)).toEqual("A")
+    expect(scale.degreeToName(3)).toEqual("B")
+    expect(scale.degreeToName(4)).toEqual("C")
+    expect(scale.degreeToName(5)).toEqual("D")
+    expect(scale.degreeToName(6)).toEqual("E")
+    expect(scale.degreeToName(7)).toEqual("F#")
+    expect(scale.degreeToName(8)).toEqual("G")
+    expect(scale.degreeToName(9)).toEqual("A")
+  })
+
   it("gets notes in A MinorScale", function() {
     let scale = new MinorScale("A");
     expect(scale.getRange(5)).toEqual([
