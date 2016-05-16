@@ -41,8 +41,16 @@ N.GENERATORS = [
       }
     ],
     create: function(staff, keySignature, options) {
-      let notes = new MajorScale(keySignature)
-        .getLooseRange(...staff.range)
+      let scale = new MajorScale(keySignature)
+      let notes = scale.getLooseRange(...staff.range)
+      options.musical = true
+
+      // send the scale
+      if (options.musical) {
+        options = Object.assign({
+          scale
+        }, options)
+      }
 
       return new RandomNotes(notes, options)
     }

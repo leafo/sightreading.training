@@ -1,8 +1,14 @@
 
+// TODO: add hand size
 export class RandomNotes {
   constructor(notes, opts={}) {
     this.notes = notes;
     this.generator = new MersenneTwister();
+
+    if (opts.musical) {
+      // TODO: this api is a bit goofy that we pass both notes and scale
+      this.scale = opts.scale
+    }
 
     const groupsCount = opts.notes || 1
     this.groups = []
@@ -26,7 +32,18 @@ export class RandomNotes {
   }
 
   nextNote() {
-    return this.groups.map(g => g[this.generator.int() % g.length])
+    if (this.scale) {
+      let degree = 1 + this.generator.int() % this.scale.steps.length
+      let steps = this.scale.buildChordSteps(degree, 3) // seven chords
+      let chord = new Chord(this.scale.degreeToName(degree), steps)
+      return this.groups.map(g => {
+        let notes = g.filter(n => chord.containsNote(n))
+        return notes[this.generator.int() % notes.length]
+      })
+
+    } else {
+      return this.groups.map(g => g[this.generator.int() % g.length])
+    }
   }
 }
 

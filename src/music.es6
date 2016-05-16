@@ -363,6 +363,9 @@ export class Scale {
 
   // degrees are 1 indexed
   degreeToName(degree) {
+    // truncat to reasonable range
+    degree = (degree - 1) % this.steps.length + 1
+
     let range = this.getRange(0, degree)
     let note = range[range.length - 1]
     let m = note.match(/^[^\d]+/)
