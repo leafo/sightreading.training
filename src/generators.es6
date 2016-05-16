@@ -2,13 +2,9 @@
 // TODO: add hand size
 export class RandomNotes {
   constructor(notes, opts={}) {
-    this.notes = notes;
-    this.generator = new MersenneTwister();
-
-    if (opts.musical) {
-      // TODO: this api is a bit goofy that we pass both notes and scale
-      this.scale = opts.scale
-    }
+    this.generator = new MersenneTwister()
+    this.notes = notes
+    this.scale = opts.scale
 
     const groupsCount = opts.notes || 1
     this.groups = []
@@ -32,6 +28,8 @@ export class RandomNotes {
   }
 
   nextNote() {
+    // if we have a scale then we generate each column using notes from a
+    // random chord in the scale
     if (this.scale) {
       let degree = 1 + this.generator.int() % this.scale.steps.length
       let steps = this.scale.buildChordSteps(degree, 3) // seven chords

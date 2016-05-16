@@ -38,12 +38,17 @@ N.GENERATORS = [
         type: "range",
         min: 1,
         max: 5,
+      },
+      {
+        label: "chord based",
+        name: "musical",
+        type: "bool",
+        hint: "Column notes generated from random chord",
       }
     ],
     create: function(staff, keySignature, options) {
       let scale = new MajorScale(keySignature)
       let notes = scale.getLooseRange(...staff.range)
-      options.musical = true
 
       // send the scale
       if (options.musical) {

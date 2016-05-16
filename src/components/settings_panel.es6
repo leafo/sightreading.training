@@ -137,14 +137,28 @@ class GeneratorSettings extends React.Component {
 
     return <div className="generator_inputs">{
       inputs.map((input, idx) => {
+        let fn
         switch (input.type) {
           case "select":
-            return this.renderSelect(input, idx)
+            fn = this.renderSelect
+            break
           case "range":
-            return this.renderRange(input, idx)
+            fn = this.renderRange
+            break
+          case "bool":
+            fn = this.renderBool
+            break
           default:
             console.error(`No input renderer for ${input.type}`)
+            return
         }
+
+        return <div key={input.name} className="generator_input">
+          <label>
+            <div className="input_label">{input.label || input.name}</div>
+            {fn.call(this, input, idx)}
+          </label>
+        </div>
       })
     }</div>
   }
@@ -167,31 +181,36 @@ class GeneratorSettings extends React.Component {
       }
     })
 
-    return <div key={input.name} className="generator_input">
-      <label>
-        <div className="input_label">{input.name}</div>
-        <Select
-          onChange={ value => this.updateInputValue(input, value) }
-          value={currentValue}
-          options={options} />
-      </label>
-    </div>
+    return <Select
+      onChange={ value => this.updateInputValue(input, value) }
+      value={currentValue}
+      options={options} />
   }
 
   renderRange(input, idx) {
     let currentValue = this.state.inputValues[input.name]
 
-    return <div className="generator_input" key={input.name}>
-      <div className="input_label">{input.name}</div>
-      <div className="slider_row">
-        <Slider
-          min={input.min}
-          max={input.max}
-          onChange={(value) => this.updateInputValue(input, value)}
-          value={currentValue} />
-        <span className="current_value">{currentValue}</span>
-      </div>
+    return <div className="slider_row">
+      <Slider
+        min={input.min}
+        max={input.max}
+        onChange={(value) => this.updateInputValue(input, value)}
+        value={currentValue} />
+      <span className="current_value">{currentValue}</span>
     </div>
+  }
+
+  renderBool(input, idx) {
+    let currentValue = !!this.state.inputValues[input.name]
+
+    return <div className="bool_row">
+      <input
+        type="checkbox"
+        checked={currentValue}
+        onChange={e => this.updateInputValue(input, e.target.checked)} />
+      {input.hint}
+    </div>
+
   }
 }
 
