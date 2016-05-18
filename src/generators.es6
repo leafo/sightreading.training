@@ -1,4 +1,36 @@
 
+export function testRandomNotes() {
+  let scale = new MajorScale("C")
+  // let notes = scale.getLooseRange("A4", "C7")
+  let notes = scale.getLooseRange("C3", "C7")
+
+  let r = new RandomNotes(notes, {})
+
+  let total_count = 0
+  let counts = {}
+  for (let note of notes) {
+    counts[note] = 0
+  }
+
+  for (let i = 0; i < 10000; i++) {
+    for (let group of r.handGroups()) {
+      for (let n of group) {
+        counts[n] += 1
+      }
+    }
+    total_count += 1
+  }
+
+  console.log("total", total_count, counts)
+  let ratios = {}
+
+  for (let note of notes) {
+    ratios[note] = counts[note] / total_count * 100
+  }
+
+  console.log("ratios", ratios)
+}
+
 // TODO: add hand size
 export class RandomNotes {
   handSize = 11
@@ -27,17 +59,58 @@ export class RandomNotes {
         }
       }
     }
+
+    this.handGroups()
   }
-  
+
+
+  // divide up items into n groups, pick a item from each group
+  pickNDist(items, n) {
+  }
+
+  getNotesForHand(pitches, left) {
+    let start = pitches[0] + left
+    return pitches.map(p => p - start)
+      .filter(p => p >= 0 && p < this.handSize)
+      .map(p => p + start) // put it back
+  }
+
   handGroups() {
-    let pitches = this.notes.map( n => parseNote(n))
+    let pitches = this.notes.map(parseNote)
     pitches.sort((a, b) => a - b)
-    let start = pitches[0]
-    let relativePitches = pitches.map(p => p - start)
+
+    let range = pitches[pitches.length - 1] - pitches[0]
+
+    // how much space between hands if hands are at ends
+    let handSpace = range - 2 * this.handSize + 1
+    let firstHandMovement = handSpace > 0 ? this.generator.int() % handSpace : 0
+    let remainingSpace = handSpace - firstHandMovement
+    let secondHandMovement = remainingSpace > 0 ? this.generator.int() % remainingSpace : 0
+
+    let rightHandStart = range - this.handSize + 1
+    let moveLeftFirst = this.generator.int() % 2 == 0
+
+    let leftHand, rightHand
+
+    if (moveLeftFirst) {
+      leftHand = this.getNotesForHand(pitches, firstHandMovement)
+      rightHand = this.getNotesForHand(pitches, rightHandStart - secondHandMovement)
+    } else {
+      leftHand = this.getNotesForHand(pitches, secondHandMovement)
+      rightHand = this.getNotesForHand(pitches, rightHandStart - firstHandMovement)
+    }
+
+    // resolve overlaps
+    if (leftHand[leftHand.leftHand - 1] > rightHand[0]) {
+      console.warn("fixing overlap")
+      let mid = leftHand[leftHand.leftHand - 1] + rightHand[0] / 2
+      leftHand = leftHand.filter(n => n <= mid)
+      rightHand = rightHand.filter(n => n > mid)
+    }
 
     return [
-      [], // notes for left hand
-      [], // notes for right hand
+      leftHand.map(noteName),
+      rightHand.map(noteName),
     ]
   }
 
