@@ -6,7 +6,7 @@ export function testRandomNotes() {
 
   let r = new RandomNotes(notes, {})
 
-  let total_count = 0
+  let totalCount = 0
   let counts = {}
   for (let note of notes) {
     counts[note] = 0
@@ -18,18 +18,34 @@ export function testRandomNotes() {
         counts[n] += 1
       }
     }
-    total_count += 1
+    totalCount += 1
   }
 
-  console.log("total", total_count, counts)
+  console.log("total", totalCount, counts)
   let ratios = {}
 
   for (let note of notes) {
-    ratios[note] = counts[note] / total_count * 100
+    ratios[note] = counts[note] / totalCount * 100
   }
 
   console.log("ratios", ratios)
 }
+
+
+export function testSkewRand(iterations=1) {
+  let r = new RandomNotes([], {})
+  let counts = {}
+
+  let totalCount = 0
+  for (let i = 0; i < 10000; i++) {
+    let k = r.skewRand(5, iterations)
+    counts[k] = (counts[k] || 0) + 1
+    totalCount++
+  }
+
+  console.log(counts)
+}
+
 
 // TODO: add hand size
 export class RandomNotes {
@@ -66,6 +82,7 @@ export class RandomNotes {
 
   // divide up items into n groups, pick a item from each group
   pickNDist(items, n) {
+
   }
 
   getNotesForHand(pitches, left) {
@@ -73,6 +90,20 @@ export class RandomNotes {
     return pitches.map(p => p - start)
       .filter(p => p >= 0 && p < this.handSize)
       .map(p => p + start) // put it back
+  }
+
+  // generation random number [0,n[ with skew towards 0 based on normal dist
+  // iterations controls how normal the normal dist is, 1 is flat dist
+  skewRand(n, iterations=1) {
+    let r = 0
+
+    for (let i = 0; i < iterations; i++) {
+      r += this.generator.random()
+    }
+
+    // from 0 to 1 with bias towards 0
+    r = Math.abs((r / iterations - 0.5) * 2)
+    return Math.floor(n * r)
   }
 
   handGroups() {
@@ -83,9 +114,9 @@ export class RandomNotes {
 
     // how much space between hands if hands are at ends
     let handSpace = range - 2 * this.handSize + 1
-    let firstHandMovement = handSpace > 0 ? this.generator.int() % handSpace : 0
+    let firstHandMovement = handSpace > 0 ? this.skewRand(handSpace, 2) : 0
     let remainingSpace = handSpace - firstHandMovement
-    let secondHandMovement = remainingSpace > 0 ? this.generator.int() % remainingSpace : 0
+    let secondHandMovement = remainingSpace > 0 ? this.skewRand(remainingSpace, 2) : 0
 
     let rightHandStart = range - this.handSize + 1
     let moveLeftFirst = this.generator.int() % 2 == 0
