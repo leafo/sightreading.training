@@ -149,15 +149,21 @@ export class RandomNotes {
     let degree = 1 + this.generator.int() % this.scale.steps.length
     let steps = this.scale.buildChordSteps(degree, 3) // seven chords
     let chord = new Chord(this.scale.degreeToName(degree), steps)
+    this.lastChord = chord
     return this.notes.filter(n => chord.containsNote(n))
   }
 
   nextNote() {
+    this.lastChord = null
     let notes = this.scale ? this.notesInRandomChord() : this.notes
 
     if (this.notesPerColumn < 3) {
       // skip the hand stuff since it messes with the distribution
-      return this.pickNDist(notes, this.notesPerColumn)
+      let out = this.pickNDist(notes, this.notesPerColumn)
+      if (this.lastChord) {
+        out.annotation = this.lastChord.root
+      }
+      return out
     }
 
     let hands = this.handGroups(notes)
