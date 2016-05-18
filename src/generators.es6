@@ -54,35 +54,35 @@ export class RandomNotes {
   constructor(notes, opts={}) {
     this.generator = new MersenneTwister()
     this.notes = notes
+    this.notesPerColumn = opts.notes || 1
     this.scale = opts.scale
-
-    const groupsCount = opts.notes || 1
-    this.groups = []
-
-    if (groupsCount == 1) {
-      this.groups.push(this.notes)
-    } else {
-      const groupSize = Math.floor(this.notes.length / groupsCount)
-      if (groupSize < 1) {
-        throw new Error("Invalid notes size for number of notes")
-      }
-
-      for (let i = 0; i < groupsCount; i++) {
-        if (i == groupsCount - 1) {
-          this.groups.push(this.notes.slice(i * groupSize))
-        } else {
-          this.groups.push(this.notes.slice(i * groupSize, (i + 1) * groupSize))
-        }
-      }
-    }
-
-    this.handGroups()
   }
 
-
   // divide up items into n groups, pick a item from each group
+  // items: list of items
+  // n: number of groups (and items selected)
   pickNDist(items, n) {
+    if (n == 0) {
+      return []
+    }
 
+    if (n == 1) {
+      return [items[this.generator.int() % items.length]]
+    }
+
+    let groups = []
+
+    for (let k = 0; k < items.length; k++) {
+      let group = Math.min(n - 1, Math.floor(k / (items.length - 1) * n))
+
+      if (!groups[group]) {
+        groups[group] = []
+      }
+
+      groups[group].push(items[k])
+    }
+
+    return groups.map(g => g[this.generator.int() % g.length])
   }
 
   getNotesForHand(pitches, left) {
@@ -92,7 +92,7 @@ export class RandomNotes {
       .map(p => p + start) // put it back
   }
 
-  // generation random number [0,n[ with skew towards 0 based on normal dist
+  // generate random number [0,n[ with skew towards 0 based on normal dist
   // iterations controls how normal the normal dist is, 1 is flat dist
   skewRand(n, iterations=1) {
     let r = 0
@@ -106,8 +106,8 @@ export class RandomNotes {
     return Math.floor(n * r)
   }
 
-  handGroups() {
-    let pitches = this.notes.map(parseNote)
+  handGroups(notes=this.notes) {
+    let pitches = notes.map(parseNote)
     pitches.sort((a, b) => a - b)
 
     let range = pitches[pitches.length - 1] - pitches[0]
@@ -145,21 +145,36 @@ export class RandomNotes {
     ]
   }
 
-  nextNote() {
-    // if we have a scale then we generate each column using notes from a
-    // random chord in the scale
-    if (this.scale) {
-      let degree = 1 + this.generator.int() % this.scale.steps.length
-      let steps = this.scale.buildChordSteps(degree, 3) // seven chords
-      let chord = new Chord(this.scale.degreeToName(degree), steps)
-      return this.groups.map(g => {
-        let notes = g.filter(n => chord.containsNote(n))
-        return notes[this.generator.int() % notes.length]
-      })
+  notesInRandomChord() {
+    let degree = 1 + this.generator.int() % this.scale.steps.length
+    let steps = this.scale.buildChordSteps(degree, 3) // seven chords
+    let chord = new Chord(this.scale.degreeToName(degree), steps)
+    return this.notes.filter(n => chord.containsNote(n))
+  }
 
-    } else {
-      return this.groups.map(g => g[this.generator.int() % g.length])
+  nextNote() {
+    let notes = this.scale ? this.notesInRandomChord() : this.notes
+
+    if (this.notesPerColumn < 3) {
+      // skip the hand stuff since it messes with the distribution
+      return this.pickNDist(notes, this.notesPerColumn)
     }
+
+    let hands = this.handGroups(notes)
+    let notesForLeft = Math.floor(this.notesPerColumn / 2)
+    let notesForRight = Math.floor(this.notesPerColumn / 2)
+
+    // odd amount, randomly assign last note
+    if (this.notesPerColumn % 2 == 1) {
+      if (this.generator.int() % 2 == 0) {
+        notesForLeft += 1
+      } else {
+        notesForRight += 1
+      }
+    }
+
+    return this.pickNDist(hands[0], notesForLeft)
+      .concat(this.pickNDist(hands[1], notesForRight))
   }
 }
 
