@@ -118,11 +118,24 @@ class Staff extends React.Component {
       if (Array.isArray(note)) {
         opts.rowOffsets = {}
 
-        return note.map((sub_note, col_idx) => {
-          opts.row
+        let noteEls = note.map((sub_note, col_idx) => {
           opts.key = `${idx}-${col_idx}`
           return this.renderNote(sub_note, opts)
         })
+
+        if (note.annotation) {
+          let style = {
+            top: `-60%`,
+            left: `${opts.offset}px`
+          }
+
+          // TODO: this is being double rendered with two staves?
+          noteEls.push(<div style={style} className="annotation">
+            {note.annotation}
+          </div>)
+        }
+
+        return noteEls
       } else {
         opts.key = idx
         return this.renderNote(note, opts)

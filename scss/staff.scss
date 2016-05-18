@@ -102,6 +102,17 @@
         right: 0;
         bottom: 0;
 
+        .annotation {
+            background: gray;
+            color: white;
+            position: absolute;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            opacity: 0.5;
+        }
+
         .accidental {
             height: 100%;
             position: absolute;
