@@ -447,6 +447,23 @@ export class MinorScale extends Scale {
   }
 }
 
+
+export class MajorBluesScale extends Scale {
+  constructor(root) {
+    super(root)
+    //  C, D, D♯/E♭, E, G, A
+    this.steps = [2, 1, 1, 3, 2, 3]
+  }
+}
+
+export class MinorBluesScale extends Scale {
+  constructor(root) {
+    super(root)
+    // C, D♯/E♭, F, F♯/G♭, G, B♭
+    this.steps = [3, 2, 1, 1, 3, 2]
+  }
+}
+
 export class Chord extends Scale {
   static SHAPES = {
     "M": [4, 3],
