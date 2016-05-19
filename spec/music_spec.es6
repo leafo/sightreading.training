@@ -241,6 +241,39 @@ describe("chords", function() {
     ])
   })
 
+  describe("chordShapeName", function() {
+    it("gets the chord name of a M7 chord", function() {
+      let chord = new Chord("C", "M7");
+      expect(chord.chordShapeName()).toBe("M7")
+    })
+
+    it("gets the chord name of a M chord", function() {
+      let chord = new Chord("D", "M");
+      expect(chord.chordShapeName()).toBe("M")
+    })
+
+    it("gets the chord name of a m chord", function() {
+      let chord = new Chord("E", "m");
+      expect(chord.chordShapeName()).toBe("m")
+    })
+
+    it("gets the chord name of a 7 chord", function() {
+      let chord = new Chord("F", "7");
+      expect(chord.chordShapeName()).toBe("7")
+    })
+
+    it("gets the chord name of a m7 chord", function() {
+      let chord = new Chord("G", "m7");
+      expect(chord.chordShapeName()).toBe("m7")
+    })
+
+    it("gets the chord name of a m7b5 chord", function() {
+      let chord = new Chord("A", "m7b5");
+      expect(chord.chordShapeName()).toBe("m7b5")
+    })
+
+  })
+
   describe("containsNote", function() {
     it("checks notes in CM7", function () {
       let chord = new Chord("C", "M7");

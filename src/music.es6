@@ -498,6 +498,27 @@ export class Chord extends Scale {
 
     this.steps.push(rest)
   }
+
+  chordShapeName() {
+    for (let shape in Chord.SHAPES) {
+      let intervals = Chord.SHAPES[shape]
+      if (this.steps.length - 1 != intervals.length) {
+        continue
+      }
+
+      let match = true
+      for (let k = 0; k < intervals.length; k++) {
+        if (intervals[k] != this.steps[k]) {
+          match = false
+          break
+        }
+      }
+
+      if (match) {
+        return shape
+      }
+    }
+  }
 }
 
 
