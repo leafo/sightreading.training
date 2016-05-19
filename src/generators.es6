@@ -183,7 +183,7 @@ export class RandomNotes {
     let out = this.nextNoteWithoutAnnotation()
 
     if (this.lastChord) {
-      out.annotation = this.lastChord.root
+      out.annotation = this.lastChord.root + this.lastChord.chordShapeName()
     }
 
     return out

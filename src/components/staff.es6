@@ -125,7 +125,7 @@ class Staff extends React.Component {
 
         if (note.annotation) {
           let style = {
-            top: `-60%`,
+            top: `-66%`,
             left: `${opts.offset}px`
           }
 
