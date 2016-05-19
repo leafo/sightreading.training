@@ -129,15 +129,27 @@ N.GENERATORS = [
           },
 
           {
-            name: "basic",
+            name: "50s",
             value: [
-              [1, "M7"],
-              [4, "M7"],
-              [5, "7"],
-            ],
+              [1, "M"],
+              [6, "m"],
+              [4, "M"],
+              [5, "M"],
+            ]
           },
+
           {
-            name: "sub",
+            name: "circle",
+            value: [
+              [6, "m"],
+              [2, "m"],
+              [5, "M"],
+              [1, "M"],
+            ]
+          },
+
+          {
+            name: "basic substitution",
             value: [
               [1, "M7"],
               [2, "7"],
