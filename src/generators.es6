@@ -153,17 +153,13 @@ export class RandomNotes {
     return this.notes.filter(n => chord.containsNote(n))
   }
 
-  nextNote() {
+  nextNoteWithoutAnnotation() {
     this.lastChord = null
     let notes = this.scale ? this.notesInRandomChord() : this.notes
 
     if (this.notesPerColumn < 3) {
       // skip the hand stuff since it messes with the distribution
-      let out = this.pickNDist(notes, this.notesPerColumn)
-      if (this.lastChord) {
-        out.annotation = this.lastChord.root
-      }
-      return out
+      return this.pickNDist(notes, this.notesPerColumn)
     }
 
     let hands = this.handGroups(notes)
@@ -181,6 +177,16 @@ export class RandomNotes {
 
     return this.pickNDist(hands[0], notesForLeft)
       .concat(this.pickNDist(hands[1], notesForRight))
+  }
+
+  nextNote() {
+    let out = this.nextNoteWithoutAnnotation()
+
+    if (this.lastChord) {
+      out.annotation = this.lastChord.root
+    }
+
+    return out
   }
 }
 
