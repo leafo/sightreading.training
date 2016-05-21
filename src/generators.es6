@@ -344,7 +344,10 @@ export class ProgressionGenerator {
       throw new Error("chord doesn't fit in scale range")
     }
 
-    return Chord.notes(availableRoots[0], chord)
+    // console.log("availalbe roots", availableRoots)
+    // console.log(chord)
+
+    return Chord.notes(availableRoots[this.generator.int() % availableRoots.length], chord)
   }
 }
 
