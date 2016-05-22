@@ -323,6 +323,8 @@ export class ProgressionGenerator {
     this.position = 0
     this.progression = progression
     this.generator = new MersenneTwister()
+    this.scale = scale;
+    this.range = range;
 
     // calculate all the roots we can use to build chords on top of
     let roots = scale.getLooseRange(...range)
@@ -336,6 +338,22 @@ export class ProgressionGenerator {
   }
 
   nextNote() {
+    let [degree, shape] = this.progression[this.position % this.progression.length]
+    this.position += 1
+
+    let name = this.scale.degreeToName(degree)
+    let chord = new Chord(name, shape)
+    let notes = this.scale.getLooseRange(...this.range).filter(n => chord.containsNote(n))
+
+    let notesPerChord = 4
+    let starts = notes.length - notesPerChord
+
+    let p = this.generator.int() % starts
+
+    return notes.slice(p, p + notesPerChord)
+  }
+
+  nextNoteOld() {
     let [degree, chord] = this.progression[this.position % this.progression.length]
     let availableRoots = this.rootsByDegree[degree]
     this.position += 1
