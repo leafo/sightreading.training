@@ -56,12 +56,17 @@ export class RandomNotes {
     this.notes = notes
     this.notesPerColumn = opts.notes || 1
     this.scale = opts.scale
+    this.hands = opts.hands || 2
   }
 
   // divide up items into n groups, pick a item from each group
   // items: list of items
   // n: number of groups (and items selected)
   pickNDist(items, n) {
+    if (!items.length) {
+      return []
+    }
+
     if (n == 0) {
       return []
     }
@@ -112,6 +117,14 @@ export class RandomNotes {
 
     let range = pitches[pitches.length - 1] - pitches[0]
 
+    // rake a random hand if we only need one
+    if (this.hands == 1) {
+      let rootRange = range - this.handSize
+      return [
+        this.getNotesForHand(pitches, this.generator.int() % rootRange).map(noteName)
+      ]
+    }
+
     // how much space between hands if hands are at ends
     let handSpace = range - 2 * this.handSize + 1
     let firstHandMovement = handSpace > 0 ? this.skewRand(handSpace, 2) : 0
@@ -157,12 +170,18 @@ export class RandomNotes {
     this.lastChord = null
     let notes = this.scale ? this.notesInRandomChord() : this.notes
 
-    if (this.notesPerColumn < 3) {
+    if (this.notesPerColumn < (this.hands == 1 ? 2 : 3)) {
       // skip the hand stuff since it messes with the distribution
       return this.pickNDist(notes, this.notesPerColumn)
     }
 
     let hands = this.handGroups(notes)
+
+    if (hands.length == 1) {
+      return this.pickNDist(hands[0], this.notesPerColumn)
+    }
+
+    // take some notes from each hand group
     let notesForLeft = Math.floor(this.notesPerColumn / 2)
     let notesForRight = Math.floor(this.notesPerColumn / 2)
 

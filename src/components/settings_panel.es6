@@ -120,6 +120,10 @@ class GeneratorSettings extends React.Component {
         case "select":
           return input.values[0].name
         case "range":
+          if ("default" in input) {
+            return input.default
+          }
+
           return input.min
       }
     }

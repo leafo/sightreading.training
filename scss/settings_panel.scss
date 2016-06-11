@@ -56,11 +56,17 @@
     }
 
     .generator_input {
+        margin-bottom: 10px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
         .input_label {
             font-size: 13px;
             color: #666;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 2px;
         }
 
         .select_component {

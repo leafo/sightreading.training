@@ -40,6 +40,13 @@ N.GENERATORS = [
         max: 5,
       },
       {
+        name: "hands",
+        type: "range",
+        default: 2,
+        min: 1,
+        max: 2,
+      },
+      {
         label: "chord based",
         name: "musical",
         type: "bool",
