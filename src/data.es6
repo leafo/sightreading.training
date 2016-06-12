@@ -47,10 +47,17 @@ N.GENERATORS = [
         max: 2,
       },
       {
+        name: "smoothness",
+        type: "range",
+        default: 3,
+        min: 0,
+        max: 6,
+      },
+      {
         label: "chord based",
         name: "musical",
         type: "bool",
-        hint: "Column notes generated from random chord",
+        hint: "Column fits random chord",
       }
     ],
     create: function(staff, keySignature, options) {

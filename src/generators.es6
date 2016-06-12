@@ -47,16 +47,69 @@ export function testSkewRand(iterations=1) {
 }
 
 
-// TODO: add hand size
-export class RandomNotes {
+class Generator {
+  averagePitch(notes) {
+    if (notes.length == 0) {
+      throw new Error("trying to find average of empty note lis:")
+    }
+
+    let pitches = notes.map(parseNote)
+    return pitches.reduce((a, b) => a + b, 0) / pitches.length
+  }
+
+  nextNoteSmooth(iterations=1, nextNote) {
+    // not smoothing, don't care
+    if (iterations == 1) {
+      return nextNote()
+    }
+
+    if (!this.lastNotes) {
+      this.lastNotes = nextNote()
+      return this.lastNotes
+    }
+
+    let target = this.averagePitch(this.lastNotes)
+
+    let candidates = []
+    for (let i = 0; i < iterations; i++) {
+      let c = nextNote()
+      let avg = this.averagePitch(c)
+
+      candidates.push([
+        Math.abs(avg - target), c, avg, target
+      ])
+    }
+
+    candidates.sort(([a], [b]) => a - b)
+
+    let out = candidates[0][1] // abandon case
+
+    for (let [diff, notes] of candidates) {
+      // no repeats
+      if (diff == 0 && notes.sort().join("-") == this.lastNotes.sort().join("-")) {
+        continue
+      }
+
+      out = notes
+      break
+    }
+
+    this.lastNotes = out
+    return out
+  }
+}
+
+export class RandomNotes extends Generator {
   handSize = 11
 
   constructor(notes, opts={}) {
+    super()
     this.generator = new MersenneTwister()
     this.notes = notes
     this.notesPerColumn = opts.notes || 1
     this.scale = opts.scale
     this.hands = opts.hands || 2
+    this.smoothness = opts.smoothness || 1
   }
 
   // divide up items into n groups, pick a item from each group
@@ -199,7 +252,8 @@ export class RandomNotes {
   }
 
   nextNote() {
-    let out = this.nextNoteWithoutAnnotation()
+    let out = this.nextNoteSmooth(this.smoothness + 1,
+      this.nextNoteWithoutAnnotation.bind(this))
 
     // if (this.lastChord) {
     //   out.annotation = this.lastChord.root + this.lastChord.chordShapeName()
