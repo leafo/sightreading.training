@@ -176,9 +176,7 @@ N.GENERATORS = [
     create: function(staff, keySignature, options) {
       let scale = new MajorScale(keySignature)
       let progressionInputs = this.inputs.find(i => i.name == "progression")
-      let progressionName = options.progression || progressionInputs.values[0].name
-      let progression = progressionInputs.values.find(v => v.name == progressionName)
-
+      let progression = progressionInputs.values.find(v => v.name == options.progression)
       return new ProgressionGenerator(scale, staff.range, progression.value)
     }
   }

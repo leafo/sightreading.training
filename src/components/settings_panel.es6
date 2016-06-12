@@ -63,7 +63,7 @@ class SettingsPanel extends React.Component {
         key={generator.name}
         onClick={(e) => {
           e.preventDefault();
-          this.props.setGenerator(generator, {});
+          this.props.setGenerator(generator, GeneratorSettings.inputDefaults(generator));
         }}
 
         className={classNames("toggle_option", {
@@ -106,34 +106,38 @@ class GeneratorSettings extends React.Component {
     setGenerator: types.func.isRequired,
   }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      inputValues: this.getDefaultValues(),
-    }
-  }
-
-  getDefaultValues() {
+  static inputDefaults(generator) {
     let out = {}
+
+    if (!generator.inputs) {
+      return out
+    }
+
     let defaultValue = input => {
+      if ("default" in input) {
+        return input.default
+      }
+
       switch (input.type) {
         case "select":
           return input.values[0].name
         case "range":
-          if ("default" in input) {
-            return input.default
-          }
-
           return input.min
       }
     }
 
-
-    for (let input of this.props.generator.inputs) {
-      out[input.name] = input.defaultValue || defaultValue(input)
+    for (let input of generator.inputs) {
+      out[input.name] = defaultValue(input)
     }
 
     return out
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      inputValues: GeneratorSettings.inputDefaults(this.props.generator),
+    }
   }
 
   render() {

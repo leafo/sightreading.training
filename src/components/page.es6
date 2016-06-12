@@ -9,6 +9,8 @@ class Page extends React.Component {
   constructor(props) {
     super(props);
 
+    let defaultGenerator = N.GENERATORS[0]
+
     this.state = {
       midi: null,
       noteShaking: false,
@@ -24,23 +26,24 @@ class Page extends React.Component {
       keyboardOpen: true,
       settingsOpen: false,
       currentStaff: N.STAVES[0],
-      currentGenerator: N.GENERATORS[0],
-      currentGeneratorSettings: {},
+      currentGenerator: defaultGenerator,
+      currentGeneratorSettings: GeneratorSettings.inputDefaults(defaultGenerator),
       stats: new NoteStats(),
       keySignature: new KeySignature(0),
-    };
-
-    this.state.notes = this.newNoteList();
+    }
 
     if (navigator.requestMIDIAccess) {
-      navigator.requestMIDIAccess().then(midi => this.setState({midi: midi}));
+      navigator.requestMIDIAccess().then(midi => this.setState({midi: midi}))
     }
   }
 
-  componentDidMount() {
-    this.state.notes.fillBuffer(this.state.bufferSize)
+  componentWillMount() {
+    this.refreshNoteList()
     this.enterWaitMode()
     this.setState({introLightboxOpen: true})
+  }
+
+  componentDidMount() {
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -50,24 +53,26 @@ class Page extends React.Component {
         prevState.currentGeneratorSettings != this.state.currentGeneratorSettings ||
         prevState.keySignature != this.state.keySignature)
     {
-      let notes = this.newNoteList();
-      notes.fillBuffer(this.state.bufferSize);
-
-      this.setState({
-        notes: notes
-      });
+      this.refreshNoteList()
     }
   }
 
-  newNoteList() {
+  refreshNoteList() {
     let generator = this.state.currentGenerator
 
-    return new NoteList([], {
+    let notes = new NoteList([], {
       generator: generator.create.call(generator,
         this.state.currentStaff,
         this.state.keySignature,
         this.state.currentGeneratorSettings),
     });
+
+    notes.fillBuffer(this.state.bufferSize);
+
+    this.setState({
+      notes: notes
+    })
+
   }
 
   midiInputs() {
