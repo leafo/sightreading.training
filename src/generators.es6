@@ -115,7 +115,7 @@ export class RandomNotes extends Generator {
   handSize = 11
 
   constructor(notes, opts={}) {
-    super()
+    super(opts)
     this.generator = new MersenneTwister()
     this.notes = notes
     this.notesPerColumn = opts.notes || 1
