@@ -48,13 +48,25 @@ export function testSkewRand(iterations=1) {
 
 
 class Generator {
+  constructor(opts={}) {
+    this.smoothness = opts.smoothness || 0
+  }
+
   averagePitch(notes) {
     if (notes.length == 0) {
-      throw new Error("trying to find average of empty note lis:")
+      throw new Error("trying to find average of empty note list")
     }
 
     let pitches = notes.map(parseNote)
     return pitches.reduce((a, b) => a + b, 0) / pitches.length
+  }
+
+  _nextNote() {
+    throw new Error("missing _nextNote implementation")
+  }
+
+  nextNote() {
+    return this.nextNoteSmooth(this.smoothness + 1, this._nextNote.bind(this))
   }
 
   nextNoteSmooth(iterations=1, nextNote) {
@@ -251,10 +263,10 @@ export class RandomNotes extends Generator {
       .concat(this.pickNDist(hands[1], notesForRight))
   }
 
-  nextNote() {
-    let out = this.nextNoteSmooth(this.smoothness + 1,
-      this.nextNoteWithoutAnnotation.bind(this))
+  _nextNote() {
+    let out = this.nextNoteWithoutAnnotation()
 
+    // // how to annotate chords:
     // if (this.lastChord) {
     //   out.annotation = this.lastChord.root + this.lastChord.chordShapeName()
     // }
@@ -318,19 +330,12 @@ export class MiniSteps {
 }
 
 export class ShapeGenerator extends Generator {
-  constructor(opts={}) {
-    super()
+  constructor(opts) {
+    super(opts)
     this.generator = new MersenneTwister()
-    this.smoothness = opts.smoothness || 0
   }
 
-  nextNote() {
-    console.log("getting notes with smooth", this.smoothness)
-    return this.nextNoteSmooth(this.smoothness + 1,
-      this.nextNoteRaw.bind(this))
-  }
-
-  nextNoteRaw() {
+  _nextNote() {
     let shape = this.shapes[this.generator.int() % this.shapes.length]
     let shapeMax = Math.max(...shape)
 
