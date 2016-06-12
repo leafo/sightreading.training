@@ -1,4 +1,12 @@
 
+let smoothInput = {
+  name: "smoothness",
+  type: "range",
+  default: 3,
+  min: 0,
+  max: 6,
+}
+
 N.STAVES = [
   {
     name: "treble",
@@ -46,13 +54,7 @@ N.GENERATORS = [
         min: 1,
         max: 2,
       },
-      {
-        name: "smoothness",
-        type: "range",
-        default: 3,
-        min: 0,
-        max: 6,
-      },
+      smoothInput,
       {
         label: "chord based",
         name: "musical",
@@ -86,6 +88,7 @@ N.GENERATORS = [
   },
   {
     name: "steps",
+    debug: false, // not needed anymore with smoothness
     create: function(staff, keySignature) {
       let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
@@ -102,10 +105,13 @@ N.GENERATORS = [
   },
   {
     name: "sevens",
-    create: function(staff, keySignature) {
+    inputs: [
+      smoothInput
+    ],
+    create: function(staff, keySignature, options) {
       let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
-      return new SevenOpenNotes(notes);
+      return new SevenOpenNotes(notes, options);
     }
   },
   {

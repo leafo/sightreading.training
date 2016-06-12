@@ -109,7 +109,7 @@ export class RandomNotes extends Generator {
     this.notesPerColumn = opts.notes || 1
     this.scale = opts.scale
     this.hands = opts.hands || 2
-    this.smoothness = opts.smoothness || 1
+    this.smoothness = opts.smoothness || 0
   }
 
   // divide up items into n groups, pick a item from each group
@@ -317,12 +317,20 @@ export class MiniSteps {
   }
 }
 
-export class ShapeGenerator {
-  constructor() {
+export class ShapeGenerator extends Generator {
+  constructor(opts={}) {
+    super()
     this.generator = new MersenneTwister()
+    this.smoothness = opts.smoothness || 0
   }
 
   nextNote() {
+    console.log("getting notes with smooth", this.smoothness)
+    return this.nextNoteSmooth(this.smoothness + 1,
+      this.nextNoteRaw.bind(this))
+  }
+
+  nextNoteRaw() {
     let shape = this.shapes[this.generator.int() % this.shapes.length]
     let shapeMax = Math.max(...shape)
 
@@ -370,8 +378,9 @@ export class TriadNotes extends ShapeGenerator {
 }
 
 export class SevenOpenNotes extends ShapeGenerator {
-  constructor(notes) {
-    super()
+  constructor(notes, opts) {
+    super(opts)
+
     this.notes = notes;
     // some random inversions spaced apart
     this.shapes = [
