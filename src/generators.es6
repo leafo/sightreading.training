@@ -121,7 +121,6 @@ export class RandomNotes extends Generator {
     this.notesPerColumn = opts.notes || 1
     this.scale = opts.scale
     this.hands = opts.hands || 2
-    this.smoothness = opts.smoothness || 0
   }
 
   // divide up items into n groups, pick a item from each group
@@ -375,8 +374,8 @@ export class ShapeGenerator extends Generator {
 }
 
 export class TriadNotes extends ShapeGenerator {
-  constructor(notes) {
-    super()
+  constructor(notes, opts) {
+    super(opts)
     this.notes = notes
     this.shapes = this.inversions([0,2,4])
   }

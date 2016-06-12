@@ -97,10 +97,13 @@ N.GENERATORS = [
   },
   {
     name: "triads",
-    create: function(staff, keySignature) {
+    inputs: [
+      smoothInput
+    ],
+    create: function(staff, keySignature, options) {
       let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
-      return new TriadNotes(notes);
+      return new TriadNotes(notes, options);
     }
   },
   {
