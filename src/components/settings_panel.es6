@@ -77,6 +77,7 @@ class SettingsPanel extends React.Component {
     let g = this.props.currentGenerator
     if (!g.inputs) return
     return <GeneratorSettings
+      key={g.name}
       generator={g}
       setGenerator={this.props.setGenerator} />
   }
