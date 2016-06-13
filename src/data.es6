@@ -88,7 +88,7 @@ N.GENERATORS = [
   },
   {
     name: "steps",
-    debug: false, // not needed anymore with smoothness
+    debug: true, // not needed anymore with smoothness
     create: function(staff, keySignature) {
       let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
