@@ -69,6 +69,54 @@ class Generator {
     return this.nextNoteSmooth(this.smoothness + 1, this._nextNote.bind(this))
   }
 
+  // sort by minimizing min pitch difference
+  sortedCandidatesIndividual(iterations=1, nextNote) {
+    if (iterations == 1) {
+      return nextNote()
+    }
+
+    if (!this.lastNotes) {
+      this.lastNotes = nextNote()
+      return this.lastNotes
+    }
+
+    let pitches = this.lastNotes.map(parseNote)
+
+    let candidates = []
+    for (let i = 0; i < iterations; i++) {
+      let c = nextNote()
+      let score = 0
+
+      for (let n of c) {
+        let scores = pitches.map(p => Math.abs(p - parseNote(n)))
+        score += Math.min(...scores)
+      }
+
+      candidates.push([score, c])
+    }
+
+    candidates.sort(([a], [b]) => a - b)
+    return candidates
+  }
+
+  // sorts by minimizing average pitch
+  sortedCandidatesAverage(iterations, nextNote) {
+    let target = this.averagePitch(this.lastNotes)
+
+    let candidates = []
+    for (let i = 0; i < iterations; i++) {
+      let c = nextNote()
+      let avg = this.averagePitch(c)
+
+      candidates.push([
+        Math.abs(avg - target), c
+      ])
+    }
+
+    candidates.sort(([a], [b]) => a - b)
+    return candidates
+  }
+
   nextNoteSmooth(iterations=1, nextNote) {
     // not smoothing, don't care
     if (iterations == 1) {
@@ -80,20 +128,8 @@ class Generator {
       return this.lastNotes
     }
 
-    let target = this.averagePitch(this.lastNotes)
-
-    let candidates = []
-    for (let i = 0; i < iterations; i++) {
-      let c = nextNote()
-      let avg = this.averagePitch(c)
-
-      candidates.push([
-        Math.abs(avg - target), c, avg, target
-      ])
-    }
-
-    candidates.sort(([a], [b]) => a - b)
-
+    let candidates = this.sortedCandidatesIndividual(iterations, nextNote)
+    console.log(candidates)
     let out = candidates[0][1] // abandon case
 
     for (let [diff, notes] of candidates) {
