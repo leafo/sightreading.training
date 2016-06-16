@@ -129,7 +129,6 @@ class Generator {
     }
 
     let candidates = this.sortedCandidatesIndividual(iterations, nextNote)
-    console.log(candidates)
     let out = candidates[0][1] // abandon case
 
     for (let [diff, notes] of candidates) {

@@ -31,4 +31,25 @@ describe("generators", function() {
     })
 
   })
+
+  describe("smoothing", function() {
+    it("ranks notes using individual minimizer", function() {
+      let g = new Generator()
+      g.lastNotes = ["C3", "C6"]
+
+      let k = 0
+      let available = [
+        ["A2", "D6"],
+        ["D3", "D6"],
+      ]
+
+      let nextNote = () => available[(k++) % available.length]
+      let res = g.sortedCandidatesIndividual(2, nextNote)
+      expect(res).toEqual([
+        [4, available[1]],
+        [5, available[0]],
+      ])
+    })
+  })
 })
+
