@@ -40,7 +40,7 @@ class Page extends React.Component {
   componentWillMount() {
     this.refreshNoteList()
     this.enterWaitMode()
-    this.setState({introLightboxOpen: true})
+    // this.setState({introLightboxOpen: true})
   }
 
   componentDidMount() {
@@ -174,15 +174,7 @@ class Page extends React.Component {
   }
 
   render() {
-    let settingsToggleButton, currentLightbox
-
-    if (!this.state.settingsOpen) {
-      settingsToggleButton = <button
-        onClick={this.toggleSettings.bind(this)}
-        className="settings_toggle">
-        Settings
-      </button>;
-    }
+    let currentLightbox
 
     if (this.state.statsLightboxOpen) {
       currentLightbox = <StatsLightbox
@@ -224,17 +216,12 @@ class Page extends React.Component {
         scroll_mode: this.state.mode == "scroll",
         wait_mode: this.state.mode == "wait",
     })}>
+      {this.renderHeader()}
       {this.renderWorkspace()}
       {this.renderKeyboard()}
       <CSSTransitionGroup transitionName="slide_right" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
         {this.renderSettings()}
       </CSSTransitionGroup>
-
-      <a className="github_link" href="https://github.com/leafo/mursicjs">
-        <img src="img/github-icon.svg" alt="GitHub Repository" />
-      </a>
-
-      {settingsToggleButton}
 
       <button
         onClick={this.toggleKeyboard.bind(this)}
@@ -358,6 +345,28 @@ class Page extends React.Component {
     this.refs.workspace.style.height = "auto";
   }
 
+  renderHeader() {
+    let settingsToggleButton
+
+    if (!this.state.settingsOpen) {
+      settingsToggleButton = <button
+        onClick={this.toggleSettings.bind(this)}
+        className="settings_toggle">
+        Settings
+      </button>;
+    }
+
+    return <div className="header">
+      <h1>Sight reading trainer</h1>
+      {settingsToggleButton}
+      <div className="right_section">
+        <a className="github_link" href="https://github.com/leafo/mursicjs">
+          <img src="img/github-icon.svg" alt="GitHub Repository" />
+        </a>
+      </div>
+    </div>
+  }
+
   renderWorkspace() {
     if (this.state.stats.streak) {
       var streak = <div className="stat_container">
@@ -366,7 +375,7 @@ class Page extends React.Component {
       </div>;
     }
 
-    let header = <div className="header">
+    let header = <div className="workspace_header">
       <div className="stats" onClick={function() {
         this.setState({statsLightboxOpen: true});
       }.bind(this)}>
@@ -381,7 +390,6 @@ class Page extends React.Component {
           <div className="label">misses</div>
         </div>
       </div>
-      <h1>Sight reading trainer</h1>
     </div>;
 
     let debug = <div className="debug">
