@@ -347,18 +347,21 @@ class Page extends React.Component {
 
   renderHeader() {
     let settingsToggleButton
+    return <div className="header">
+      <img className="logo" src="img/logo.svg" height="40" alt="" />
 
-    if (!this.state.settingsOpen) {
-      settingsToggleButton = <button
+      <h1>Sight reading trainer</h1>
+
+      <button
         onClick={this.toggleSettings.bind(this)}
         className="settings_toggle">
         Settings
-      </button>;
-    }
+      </button>
 
-    return <div className="header">
-      <h1>Sight reading trainer</h1>
-      {settingsToggleButton}
+      <button onClick={() => this.setState({statsLightboxOpen: true})}>
+        Stats
+      </button>
+
       <div className="right_section">
         <a className="github_link" href="https://github.com/leafo/mursicjs">
           <img src="img/github-icon.svg" alt="GitHub Repository" />

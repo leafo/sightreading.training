@@ -30,6 +30,7 @@ button {
     }
 }
 
+
 .header {
     box-sizing: border-box;
     padding: 0 20px;
@@ -43,8 +44,20 @@ button {
         flex: 1;
     }
 
+    .logo {
+        opacity: 0.5;
+        margin-right: 10px;
+    }
+
+    .settings_open & {
+        button {
+            visibility: hidden;
+        }
+    }
+
     h1 {
         margin: 0 20px 0 0;
+        line-height: 15px;
         font-size: 16px;
         text-transform: uppercase;
     }
