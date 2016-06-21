@@ -70,6 +70,12 @@ export const SYMBOL_MAP = {
   222: "\'",
 }
 
+export const SYMBOL_MAP_INVERSE = {}
+
+for (let key in SYMBOL_MAP) {
+  SYMBOL_MAP_INVERSE[SYMBOL_MAP[key]] = key
+}
+
 export function keyCodeToChar(keyCode) {
   const symbol = SYMBOL_MAP[keyCode]
 
@@ -78,7 +84,13 @@ export function keyCodeToChar(keyCode) {
   }
 
   if (keyCode >= 32 || keyCode < 127) {
-    return String.fromCharCode(keyCode).toLowerCase()
+    let chr = String.fromCharCode(keyCode).toLowerCase()
+
+    if (SYMBOL_MAP_INVERSE[chr]) {
+      return // invalid symbol
+    }
+
+    return chr
   }
 }
 
