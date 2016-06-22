@@ -439,8 +439,9 @@ export class SevenOpenNotes extends ShapeGenerator {
   }
 }
 
-export class ProgressionGenerator {
-  constructor(scale, range, progression) {
+export class ProgressionGenerator extends Generator {
+  constructor(scale, range, progression, opts) {
+    super(opts)
     this.position = 0
     this.progression = progression
     this.generator = new MersenneTwister()
@@ -458,7 +459,7 @@ export class ProgressionGenerator {
     }
   }
 
-  nextNote() {
+  _nextNote() {
     let [degree, shape] = this.progression[this.position % this.progression.length]
     this.position += 1
 

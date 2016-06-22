@@ -120,6 +120,7 @@ N.GENERATORS = [
   {
     name: "progression",
     inputs: [
+      smoothInput,
       {
         name: "progression",
         type: "select",
@@ -186,7 +187,7 @@ N.GENERATORS = [
       let scale = new MajorScale(keySignature)
       let progressionInputs = this.inputs.find(i => i.name == "progression")
       let progression = progressionInputs.values.find(v => v.name == options.progression)
-      return new ProgressionGenerator(scale, staff.range, progression.value)
+      return new ProgressionGenerator(scale, staff.range, progression.value, options)
     }
   }
 
