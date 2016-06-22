@@ -40,7 +40,7 @@ class Page extends React.Component {
   componentWillMount() {
     this.refreshNoteList()
     this.enterWaitMode()
-    // this.setState({introLightboxOpen: true})
+    this.setState({introLightboxOpen: true})
   }
 
   componentDidMount() {
