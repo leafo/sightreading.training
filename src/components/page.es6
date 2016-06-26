@@ -378,17 +378,18 @@ class Page extends React.Component {
       </div>;
     }
 
+    let openStats = () => this.setState({statsLightboxOpen: true})
+
     let header = <div className="workspace_header">
-      <div className="stats" onClick={function() {
-        this.setState({statsLightboxOpen: true});
-      }.bind(this)}>
+      <div className="stats">
         {streak}
-        <div className="stat_container">
+
+        <div className="stat_container" onClick={openStats}>
           <div className="value">{this.state.stats.hits}</div>
           <div className="label">hits</div>
         </div>
 
-        <div className="stat_container">
+        <div className="stat_container" onClick={openStats}>
           <div className="value">{this.state.stats.misses}</div>
           <div className="label">misses</div>
         </div>
