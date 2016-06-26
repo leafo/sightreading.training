@@ -58,6 +58,15 @@
                 margin-bottom: 0;
             }
         }
+
+        .footer_buttons {
+            margin-top: 20px;
+
+            display: flex;
+            .spacer {
+                flex: 1;
+            }
+        }
     }
 }
 

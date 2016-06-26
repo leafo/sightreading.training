@@ -179,7 +179,8 @@ class Page extends React.Component {
     if (this.state.statsLightboxOpen) {
       currentLightbox = <StatsLightbox
         ref="currentLightbox"
-        close={function() { this.setState({statsLightboxOpen: false}); }.bind(this)}
+        resetStats={() => this.setState({stats: new NoteStats()})}
+        close={() => this.setState({statsLightboxOpen: false})}
         stats={this.state.stats} />;
     }
 

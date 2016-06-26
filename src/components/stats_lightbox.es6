@@ -29,7 +29,7 @@ class StatsLightbox extends Lightbox {
     } else {
       statsContent = <p className="empty_message">
         You don't have any stats yet. Try playing some notes first.
-      </p>;
+      </p>
     }
 
     if (this.props.stats.averageHitTime) {
@@ -39,6 +39,11 @@ class StatsLightbox extends Lightbox {
       </div>
     }
 
+    if (availableNotes.length) {
+      var clearButton = <button onClick={() => this.props.resetStats()}>Clear stats</button>
+    }
+
+
     return <div>
       <h2>Session stats</h2>
       <button onClick={(e) => { this.setState({tab: "ratios"}) }}>Ratios</button>
@@ -47,9 +52,11 @@ class StatsLightbox extends Lightbox {
 
       {statsContent}
       {hitTime}
-      <p>
+      <div className="footer_buttons">
         <button onClick={this.close.bind(this)}>Close</button>
-      </p>
+        <div className="spacer"></div>
+        {clearButton}
+      </div>
     </div>
   }
 
