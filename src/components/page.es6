@@ -14,6 +14,8 @@ class Page extends React.Component {
     this.state = {
       midi: null,
       noteShaking: false,
+      anyOctave: false,
+
       heldNotes: {},
       touchedNotes: {},
       scrollSpeed: 100,
@@ -102,7 +104,7 @@ class Page extends React.Component {
   // called on every noteOn
   checkForHit() {
     let touched = Object.keys(this.state.touchedNotes);
-    if (this.state.notes.matchesHead(touched)) {
+    if (this.state.notes.matchesHead(touched, this.state.anyOctave)) {
       N.event("sight_reading", "note", "hit");
 
       this.state.notes.shift();

@@ -48,15 +48,28 @@ export class NoteList extends Array {
   }
 
   // must be an array of notes
-  matchesHead(notes) {
-    let first = this[0];
+  matchesHead(notes, anyOctave=false) {
+    let first = this[0]
+    console.log("mathing with ", anyOctave)
+
     if (Array.isArray(first)) {
       if (first.length != notes.length) {
         return false;
       }
-      return first.every((n) => notes.indexOf(n) >= 0);
+      if (anyOctave) {
+        let noteSet = {}
+        notes.forEach((n) => noteSet[n.replace(/\d+$/, "")] = true)
+        return first.every((n) => noteSet[n.replace(/\d+$/, "")])
+      } else {
+        return first.every((n) => notes.indexOf(n) >= 0)
+      }
     } else {
-      return notes.length == 1 && notes[0] == first;
+      if (anyOctave) {
+        return notes.length == 1 && notesSame(notes[0], first)
+      } else {
+        return notes.length == 1 && notes[0] == first
+      }
+
     }
   }
 

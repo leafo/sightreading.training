@@ -117,6 +117,11 @@ export function letterOffset(pitch, sharp=true) {
   return offset + LETTER_OFFSETS[pitch]
 }
 
+// octaveless note comparison
+export function notesSame(a, b) {
+  return a.replace(/\d+$/, "") == b.replace(/\d+$/, "")
+}
+
 export function addInterval(note, halfSteps) {
   return noteName(parseNote(note) + halfSteps);
 }
