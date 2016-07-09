@@ -1,6 +1,7 @@
 
 let {PropTypes: types} = React
 let {CSSTransitionGroup} = React.addons || {}
+let {Link} = ReactRouter
 
 const DEFAULT_NOTE_WIDTH = 100
 const DEFAULT_SPEED = 400

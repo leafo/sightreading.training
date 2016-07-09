@@ -22,6 +22,6 @@ export function event(category, action, label, value, interactive=true) {
 };
 
 N.init = function() {
-  ReactDOM.render(<Page/>, document.getElementById("page"));
+  ReactDOM.render(<App/>, document.getElementById("page"));
 };
 
