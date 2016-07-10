@@ -36,7 +36,9 @@ class SightReadingPage extends React.Component {
     }
 
     if (navigator.requestMIDIAccess) {
-      navigator.requestMIDIAccess().then(midi => this.setState({midi: midi}))
+      navigator.requestMIDIAccess().then(
+        midi => this.setState({midi: midi}),
+        error => console.warn("failed to get MIDI"))
     }
   }
 
