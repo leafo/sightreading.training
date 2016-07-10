@@ -1,4 +1,6 @@
 
+let {Link} = ReactRouter
+
 class RegisterPage extends React.Component {
   submitHandler(e) {
     e.preventDefault()
@@ -8,6 +10,7 @@ class RegisterPage extends React.Component {
   render() {
     return <div className="register_page page_container">
       <h2>Register</h2>
+      <p>Create an account to keep track of your progress over time.</p>
 
       <form ref="form" action="/register.json" method="post" onSubmit={this.submitHandler.bind(this)}>
         <TextInputRow name="username" required={true}>Username</TextInputRow>

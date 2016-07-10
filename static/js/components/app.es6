@@ -31,9 +31,9 @@ class Layout extends React.Component {
       </h1>
 
       <div className="right_section">
-        <a className="github_link" href="https://github.com/leafo/mursicjs">
-          <img src="/static/img/github-icon.svg" alt="GitHub Repository" />
-        </a>
+        <Link to="/login" className="button">Log in</Link>
+        {" or "}
+        <Link to="/register" className="button">Register</Link>
       </div>
     </div>
   }

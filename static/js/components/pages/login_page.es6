@@ -1,4 +1,6 @@
 
+let {Link} = ReactRouter
+
 class LoginPage extends React.Component {
   submitHandler(e) {
     e.preventDefault()
