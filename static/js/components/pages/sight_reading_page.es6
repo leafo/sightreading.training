@@ -6,7 +6,7 @@ let {Link} = ReactRouter
 const DEFAULT_NOTE_WIDTH = 100
 const DEFAULT_SPEED = 400
 
-class Page extends React.Component {
+class SightReadingPage extends React.Component {
   constructor(props) {
     super(props);
 

@@ -1,7 +1,7 @@
 include_rules
 !join = |> ^ join %o^ cat %f > %o |>
 
-: js/_pre.js js/main.js js/*.js js/components/lightbox.js js/components/*.js |> !join |> main.js
+: js/_pre.js js/main.js js/*.js js/components/lightbox.js js/components/*.js js/components/pages/*.js |> !join |> main.js
 : scss/*.css |> !join |> style.css
 
 : $(TOP)/node_modules/classnames/index.js $(TOP)/node_modules/mersennetwister/src/MersenneTwister.js $(TOP)/node_modules/react/dist/react-with-addons.js $(TOP)/node_modules/react-dom/dist/react-dom.js $(TOP)/node_modules/react-router/umd/ReactRouter.js |> !join |> lib.js
