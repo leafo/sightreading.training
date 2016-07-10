@@ -21,7 +21,7 @@ class LoginFlow extends Flow
       { "password", exists: true }
     }
 
-    @current_user = assert_error Users\login trim(@params.username), trim(@params.login)
+    @current_user = assert_error Users\login trim(@params.username), trim(@params.password)
     @current_user\write_session @_
 
     true

@@ -22,6 +22,7 @@ export function event(category, action, label, value, interactive=true) {
 };
 
 N.init = function(session) {
-  ReactDOM.render(<App session={session} />, document.getElementById("page"));
+  N.session = session || {}
+  ReactDOM.render(<App />, document.getElementById("page"));
 };
 

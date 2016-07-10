@@ -1,5 +1,5 @@
 
-let {Router, Route, IndexRoute, Link, browserHistory} = ReactRouter
+let {Router, Route, IndexRoute, Link, browserHistory, withRouter} = ReactRouter
 
 class Layout extends React.Component {
   render() {
@@ -23,11 +23,9 @@ class Layout extends React.Component {
   }
 
   renderHeader() {
-    let session = this.props.route.session
-
-    if (session.currentUser) {
+    if (N.session.currentUser) {
       var userPanel = <div className="right_section">
-        {session.currentUser.username}
+        {N.session.currentUser.username}
         {" " }
         <a href="#" onClick={this.doLogout.bind(this)}>Log out</a>
       </div>
@@ -52,14 +50,19 @@ class Layout extends React.Component {
 }
 
 class App extends React.Component {
-  render() {
-    return <Router history={browserHistory}>
-      <Route path="/" component={Layout} {...this.props}>
-        <IndexRoute component={SightReadingPage}></IndexRoute>
-        <Route path="login" component={LoginPage} {...this.props}></Route>
-        <Route path="register" component={RegisterPage}></Route>
-        <Route path="about" component={AboutPage}></Route>
+  constructor() {
+    super()
+    this.state = {
+      routes: <Route path="/" component={withRouter(Layout)}>
+        <IndexRoute component={withRouter(SightReadingPage)}></IndexRoute>
+        <Route path="login" component={withRouter(LoginPage)}></Route>
+        <Route path="register" component={withRouter(RegisterPage)}></Route>
+        <Route path="about" component={withRouter(AboutPage)}></Route>
       </Route>
-    </Router>
+    }
+  }
+
+  render() {
+    return <Router history={browserHistory}>{this.state.routes}</Router>
   }
 }

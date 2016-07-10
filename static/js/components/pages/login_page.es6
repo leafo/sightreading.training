@@ -10,7 +10,8 @@ class LoginPage extends React.Component {
       return
     }
 
-    console.warn("submitted", res)
+    N.init(res)
+    this.props.router.replace("/")
   }
 
   constructor() {
