@@ -189,8 +189,14 @@ form, .form {
     }
 
     .workspace_header{
-        text-align: right;
         margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+
+        .stats {
+            text-align: right;
+            flex: 1
+        }
 
         @include on_narrow_width {
             padding-left: 20px;

@@ -359,6 +359,12 @@ class SightReadingPage extends React.Component {
     let openStats = () => this.setState({statsLightboxOpen: true})
 
     let header = <div className="workspace_header">
+      <button
+        onClick={this.toggleSettings.bind(this)}
+        className="settings_toggle">
+        Configure
+      </button>
+
       <div className="stats">
         {streak}
 
