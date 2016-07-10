@@ -3,6 +3,13 @@ lapis = require "lapis"
 import capture_errors_json from require "lapis.application"
 
 class extends lapis.Application
+  layout: require "views.layout"
+
+  cookie_attributes: =>
+    expires = date(true)\adddays(365)\fmt "${http}"
+    attr = "Expires=#{expires}; Path=/; HttpOnly"
+    attr
+
   @before_filter =>
     import Users from require "models"
     @current_user = Users\read_session @
@@ -13,15 +20,15 @@ class extends lapis.Application
   "/(*)": =>
     res = ngx.location.capture "/static/index.html"
     error "Failed to include SSI 'index.html' (#{res.status})" unless res.status == 200
-    res.body, layout: false
+    nil
 
   "/login.json": capture_errors_json =>
     -- TODO: add csrf
-    @flow("login_flow")\do_login!
+    @flow("login")\do_login!
     json: { success: true, params: @params }
 
   "/register.json": capture_errors_json =>
     -- TODO: add csrf
-    @flow("login_flow")\do_register!
+    @flow("login")\do_register!
     json: { success: true, params: @params }
 

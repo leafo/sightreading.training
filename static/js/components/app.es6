@@ -1,17 +1,6 @@
 
 let {Router, Route, IndexRoute, Link, browserHistory} = ReactRouter
 
-// <button
-//   onClick={this.toggleSettings.bind(this)}
-//   className="settings_toggle">
-//   Settings
-// </button>
-
-// <button onClick={() => this.setState({statsLightboxOpen: true})}>
-//   Stats
-// </button>
-
-
 class Layout extends React.Component {
   render() {
     return <div className="page_layout">
@@ -23,6 +12,22 @@ class Layout extends React.Component {
   }
 
   renderHeader() {
+    let session = this.props.route.session
+
+    if (session.currentUser) {
+      var userPanel = <div className="right_section">
+        {session.currentUser.username}
+        {" " }
+        <Link to="/">Logout</Link>
+      </div>
+    } else {
+      var userPanel = <div className="right_section">
+        <Link to="/login" className="button">Log in</Link>
+        {" or "}
+        <Link to="/register" className="button">Register</Link>
+      </div>
+    }
+
     return <div className="header">
       <img className="logo" src="/static/img/logo.svg" height="40" alt="" />
 
@@ -30,11 +35,7 @@ class Layout extends React.Component {
         <Link to="/">Sight reading trainer</Link>
       </h1>
 
-      <div className="right_section">
-        <Link to="/login" className="button">Log in</Link>
-        {" or "}
-        <Link to="/register" className="button">Register</Link>
-      </div>
+      {userPanel}
     </div>
   }
 }
@@ -42,9 +43,9 @@ class Layout extends React.Component {
 class App extends React.Component {
   render() {
     return <Router history={browserHistory}>
-      <Route path="/" component={Layout}>
+      <Route path="/" component={Layout} {...this.props}>
         <IndexRoute component={SightReadingPage}></IndexRoute>
-        <Route path="login" component={LoginPage}></Route>
+        <Route path="login" component={LoginPage} {...this.props}></Route>
         <Route path="register" component={RegisterPage}></Route>
         <Route path="about" component={AboutPage}></Route>
       </Route>
