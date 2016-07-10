@@ -12,7 +12,7 @@ class LoginFlow extends Flow
 
   do_logout: =>
     @session.user = false
-    redirect_to: "/"
+    true
 
   do_login: =>
     assert_error not @current_user, "You are already logged in"

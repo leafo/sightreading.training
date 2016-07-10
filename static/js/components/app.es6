@@ -11,6 +11,17 @@ class Layout extends React.Component {
     </div>
   }
 
+  doLogout() {
+    let request = new XMLHttpRequest()
+    request.open("POST", "/logout.json")
+    request.send(new FormData())
+
+    request.onload = (e) => {
+      let res = JSON.parse(request.responseText)
+      N.init(res)
+    }
+  }
+
   renderHeader() {
     let session = this.props.route.session
 
@@ -18,7 +29,7 @@ class Layout extends React.Component {
       var userPanel = <div className="right_section">
         {session.currentUser.username}
         {" " }
-        <Link to="/">Logout</Link>
+        <a href="#" onClick={this.doLogout.bind(this)}>Log out</a>
       </div>
     } else {
       var userPanel = <div className="right_section">

@@ -18,17 +18,19 @@ class extends lapis.Application
       @current_user\update_last_active!
 
   "/(*)": =>
-    res = ngx.location.capture "/static/index.html"
-    error "Failed to include SSI 'index.html' (#{res.status})" unless res.status == 200
-    nil
+
+  "/logout.json": capture_errors_json =>
+    -- TODO: add csrf
+    @flow("login")\do_logout!
+    json: { success: true }
 
   "/login.json": capture_errors_json =>
     -- TODO: add csrf
     @flow("login")\do_login!
-    json: { success: true, params: @params }
+    json: @flow("formatter")\session!
 
   "/register.json": capture_errors_json =>
     -- TODO: add csrf
     @flow("login")\do_register!
-    json: { success: true, params: @params }
+    json: @flow("formatter")\session!
 

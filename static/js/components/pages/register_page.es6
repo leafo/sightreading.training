@@ -3,7 +3,19 @@ let {Link} = ReactRouter
 
 class RegisterPage extends React.Component {
   afterSubmit(res) {
+    if (res.errors) {
+      this.setState({
+        errorMessage: res.errors[0]
+      })
+      return
+    }
+
     console.warn("submitted", res)
+  }
+
+  constructor() {
+    super()
+    this.state = {}
   }
 
   render() {
@@ -12,6 +24,7 @@ class RegisterPage extends React.Component {
       <p>Create an account to keep track of your progress over time.</p>
 
       <JsonForm action="/register.json" afterSubmit={this.afterSubmit.bind(this)}>
+        {this.state.errorMessage ? <div className="form_error">{this.state.errorMessage}</div> : null}
         <TextInputRow name="username" required={true}>Username</TextInputRow>
         <TextInputRow name="email" type="email" required={true}>Email address</TextInputRow>
         <TextInputRow name="password" type="password" required={true}>Password</TextInputRow>
