@@ -236,6 +236,7 @@ form, .form {
     }
 
     .current_input {
+        opacity: 0.5;
         position: absolute;
         bottom: 0;
         right: 0;
@@ -244,6 +245,10 @@ form, .form {
         font-size: 14px;
         display: flex;
         align-items: center;
+
+        &:hover {
+            opacity: 1.0;
+        }
 
         img {
             opacity: 0.6;

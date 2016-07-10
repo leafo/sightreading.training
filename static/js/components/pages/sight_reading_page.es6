@@ -130,8 +130,13 @@ class SightReadingPage extends React.Component {
   pickInput(idx) {
     let input = this.midiInputs()[idx]
     if (!input) { return; }
+    if (this.state.currentInput) {
+      console.log(`Unbinding: ${this.state.currentInput.name}`)
+      this.state.currentInput.onmidimessage = undefined
+    }
+
     console.log(`Binding to: ${input.name}`)
-    input.onmidimessage = this.onMidiMessage.bind(this);
+    input.onmidimessage = this.onMidiMessage.bind(this)
     this.setState({
       currentInput: input
     });
@@ -360,10 +365,14 @@ class SightReadingPage extends React.Component {
 
     let openStats = () => this.setState({statsLightboxOpen: true})
 
-    if (this.state.currentInput) {
-      var inputStatus = <div className="current_input">
+    if (this.state.midi) {
+      var inputStatus = <div
+        onClick={() => this.setState({introLightboxOpen: true})}
+        className="current_input">
         <img src="/static/svg/midi.svg" alt="MIDI" />
-        <span className="current_input_name">{this.state.currentInput.name}</span>
+        <span className="current_input_name">
+          {this.state.currentInput ? this.state.currentInput.name : "Select device"}
+        </span>
       </div>
     }
 

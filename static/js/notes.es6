@@ -50,7 +50,6 @@ export class NoteList extends Array {
   // must be an array of notes
   matchesHead(notes, anyOctave=false) {
     let first = this[0]
-    console.log("mathing with ", anyOctave)
 
     if (Array.isArray(first)) {
       if (first.length != notes.length) {
