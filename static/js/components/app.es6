@@ -12,9 +12,8 @@ class Layout extends React.Component {
 class App extends React.Component {
   render() {
     return <Router history={browserHistory}>
-      <Route path="/notes/" component={Layout}>
+      <Route path="/" component={Layout}>
         <IndexRoute component={Page}></IndexRoute>
-        <Route path="test" component={TestPage}></Route>
       </Route>
     </Router>
   }

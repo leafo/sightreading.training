@@ -87,7 +87,7 @@ class MidiSelector extends React.Component {
               }
             }}
             >
-            <img className="row_icon" src="img/notes_icon.svg" alt="MIDI Device" />
+            <img className="row_icon" src="/static/img/notes_icon.svg" alt="MIDI Device" />
             <div className="input_name">
               {input.name}
             </div>

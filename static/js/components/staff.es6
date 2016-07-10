@@ -80,7 +80,7 @@ class Staff extends React.Component {
 
     let sigClass = keySignature.isFlat() ? "flat" : "sharp";
 
-    let src = keySignature.isFlat() ? "svg/flat.svg" : "svg/sharp.svg";
+    let src = keySignature.isFlat() ? "/static/svg/flat.svg" : "/static/svg/sharp.svg";
 
     return <div className="key_signature">
       {sigNotes.map((n, i) => {
@@ -243,19 +243,19 @@ class Staff extends React.Component {
     }, opts.classes || {})
 
     let parts = [
-      <img className="primary" src="svg/noteheads.s0.svg" />
+      <img className="primary" src="/static/svg/noteheads.s0.svg" />
     ]
 
     if (accidentals == 0) {
-      parts.push(<img className="accidental natural" src="svg/natural.svg" />)
+      parts.push(<img className="accidental natural" src="/static/svg/natural.svg" />)
     }
 
     if (accidentals == -1) {
-      parts.push(<img className="accidental flat" src="svg/flat.svg" />)
+      parts.push(<img className="accidental flat" src="/static/svg/flat.svg" />)
     }
 
     if (accidentals == 1) {
-      parts.push(<img className="accidental sharp" src="svg/sharp.svg" />)
+      parts.push(<img className="accidental sharp" src="/static/svg/sharp.svg" />)
     }
 
     let noteEl = <div
@@ -283,7 +283,7 @@ class GStaff extends Staff {
     keySignatureCenter: "F6",
     upperLine: 77,
     lowerLine: 64,
-    cleffImage: "svg/clefs.G.svg",
+    cleffImage: "/static/svg/clefs.G.svg",
     staffClass: "g_staff",
   }
 }
@@ -293,7 +293,7 @@ class FStaff extends Staff {
     keySignatureCenter: "F4",
     upperLine: 57,
     lowerLine: 57 - 13,
-    cleffImage: "svg/clefs.F_change.svg",
+    cleffImage: "/static/svg/clefs.F_change.svg",
     staffClass: "f_staff",
   }
 }

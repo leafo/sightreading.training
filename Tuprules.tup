@@ -5,3 +5,4 @@ TOP = $(TUP_CWD)
 
 : foreach *.es6 |> !babel |> %B.js
 : foreach *.scss |> !scss |> %B.css
+: foreach *.moon |> moonc %f |> %B.lua

@@ -352,7 +352,7 @@ class Page extends React.Component {
   renderHeader() {
     let settingsToggleButton
     return <div className="header">
-      <img className="logo" src="img/logo.svg" height="40" alt="" />
+      <img className="logo" src="/static/img/logo.svg" height="40" alt="" />
 
       <h1>Sight reading trainer</h1>
 
@@ -368,7 +368,7 @@ class Page extends React.Component {
 
       <div className="right_section">
         <a className="github_link" href="https://github.com/leafo/mursicjs">
-          <img src="img/github-icon.svg" alt="GitHub Repository" />
+          <img src="/static/img/github-icon.svg" alt="GitHub Repository" />
         </a>
       </div>
     </div>
