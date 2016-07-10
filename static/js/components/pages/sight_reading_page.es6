@@ -214,13 +214,12 @@ class SightReadingPage extends React.Component {
     }
 
     return <div
-      className={classNames("page_container", {
+      className={classNames({
         keyboard_open: this.state.keyboardOpen,
         settings_open: this.state.settingsOpen,
         scroll_mode: this.state.mode == "scroll",
         wait_mode: this.state.mode == "wait",
     })}>
-      {this.renderHeader()}
       {this.renderWorkspace()}
       {this.renderKeyboard()}
       <CSSTransitionGroup transitionName="slide_right" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
@@ -347,31 +346,6 @@ class SightReadingPage extends React.Component {
     this.refs.workspace.style.height = "0px";
     this.refs.workspace.offsetHeight;
     this.refs.workspace.style.height = "auto";
-  }
-
-  renderHeader() {
-    let settingsToggleButton
-    return <div className="header">
-      <img className="logo" src="/static/img/logo.svg" height="40" alt="" />
-
-      <h1>Sight reading trainer</h1>
-
-      <button
-        onClick={this.toggleSettings.bind(this)}
-        className="settings_toggle">
-        Settings
-      </button>
-
-      <button onClick={() => this.setState({statsLightboxOpen: true})}>
-        Stats
-      </button>
-
-      <div className="right_section">
-        <a className="github_link" href="https://github.com/leafo/mursicjs">
-          <img src="/static/img/github-icon.svg" alt="GitHub Repository" />
-        </a>
-      </div>
-    </div>
   }
 
   renderWorkspace() {

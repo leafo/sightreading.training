@@ -6,7 +6,7 @@ class RegisterPage extends React.Component {
   }
 
   render() {
-    return <div className="register_page">
+    return <div className="register_page page_container">
       <h2>Register</h2>
 
       <form ref="form" action="/register.json" method="post" onSubmit={this.submitHandler.bind(this)}>
@@ -17,6 +17,8 @@ class RegisterPage extends React.Component {
 
         <div className="form_buttons">
           <button>Submit</button>
+          {" or "}
+          <Link to="/login">Log in to existing account</Link>
         </div>
       </form>
     </div>

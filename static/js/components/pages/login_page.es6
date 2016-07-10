@@ -6,8 +6,8 @@ class LoginPage extends React.Component {
   }
 
   render() {
-    return <div className="login_page">
-      <h2>Login</h2>
+    return <div className="login_page page_container">
+      <h2>Log in</h2>
 
       <form ref="form" action="/login.json" method="post" onSubmit={this.submitHandler.bind(this)}>
         <TextInputRow name="username" required={true}>Username</TextInputRow>
@@ -15,6 +15,8 @@ class LoginPage extends React.Component {
 
         <div className="form_buttons">
           <button>Submit</button>
+          {" or "}
+          <Link to="/register">Register</Link>
         </div>
       </form>
     </div>
