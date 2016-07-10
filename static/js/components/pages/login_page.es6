@@ -1,24 +1,20 @@
 
 class LoginPage extends React.Component {
+  submitHandler(e) {
+    e.preventDefault()
+    console.log("do login...")
+  }
+
   render() {
     return <div className="login_page">
-      <form action="/login.json" method="post">
-        <div className="input_row">
-          <label>
-            <div className="username">Username</div>
-            <input type="text" name="username" />
-          </label>
-        </div>
+      <h2>Login</h2>
 
-        <div className="input_row">
-          <label>
-            <div className="password">Password</div>
-            <input type="paassword" name="password" />
-          </label>
-        </div>
+      <form ref="form" action="/login.json" method="post" onSubmit={this.submitHandler.bind(this)}>
+        <TextInputRow name="username" required={true}>Username</TextInputRow>
+        <TextInputRow name="password" type="password" required={true}>Password</TextInputRow>
 
         <div className="form_buttons">
-          <button type="button">Submit</button>
+          <button>Submit</button>
         </div>
       </form>
     </div>
