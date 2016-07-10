@@ -1,5 +1,4 @@
 
-
 db = require "lapis.db"
 schema = require "lapis.db.schema"
 
@@ -32,4 +31,16 @@ package.loaded.migrations =
 
     create_index "users", db.raw("lower(email)"), unique: true
     create_index "users", db.raw("lower(username)"), unique: true
+
+  [1468248948]: =>
+    create_table "hourly_hits", {
+      {"user_id", foreign_key}
+      {"hour", time default: db.raw "date_trunc('hour', now() at time zone 'utc')"}
+      {"type", enum}
+      {"count", integer}
+
+      "PRIMARY KEY (user_id, hour, type)"
+    }
+
+
 
