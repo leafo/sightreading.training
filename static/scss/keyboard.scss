@@ -25,7 +25,7 @@
     display: flex;
     justify-content: center;
     overflow: hidden;
-    border-top: 2px solid $border_color;
+    border-top: 1px solid #bbb;
 
     .key_wrapper {
         position: relative;
@@ -75,7 +75,7 @@
         height: calc(100% - 10px);
         margin: 0 1px;
         border-radius: 0 0 8px 8px;
-        box-shadow: 0 0 0 2px #666, inset 0 -15px 0 rgba(0,0,0, 0.1), inset 0 5px 10px -5px rgba(0,0,0,0.2);
+        box-shadow: 0 0 0 2px #999, inset 0 -15px 0 rgba(0,0,0, 0.1), inset 0 5px 10px -5px rgba(0,0,0,0.2);
         z-index: 1;
 
         &:hover {
@@ -84,7 +84,7 @@
 
         &:active, &.held {
             background: darken(#f3f3f3, 5%);
-            box-shadow: 0 0 0 2px #666, inset 0 -10px 0 rgba(0,0,0, 0.1), inset 0 5px 10px -5px rgba(0,0,0,0.2);
+            box-shadow: 0 0 0 2px #999, inset 0 -10px 0 rgba(0,0,0, 0.1), inset 0 5px 10px -5px rgba(0,0,0,0.2);
         }
     }
 }

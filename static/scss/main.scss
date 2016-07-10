@@ -58,8 +58,9 @@ button {
     h1 {
         margin: 0 20px 0 0;
         line-height: 15px;
-        font-size: 16px;
+        font-size: 22px;
         text-transform: uppercase;
+        color: #444;
     }
 
     > * {
@@ -159,8 +160,6 @@ button {
 
 .staff_wrapper {
     background: white;
-    border-radius: 10px;
-    border: 2px solid $border_color;
     margin: 0 0 20px 0;
     padding: 15px 0 10px 40px;
     overflow: hidden;
