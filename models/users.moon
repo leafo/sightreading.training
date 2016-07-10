@@ -29,9 +29,9 @@ class Users extends Model
   @login: (username, password) =>
     username = username\lower!
 
-    user = Users\find { [db.raw("lower(username)")]: username }
+    user = @find_by_username username
     unless user
-      user = Users\find { [db.raw("lower(email)")]: username }
+      user = @find_by_email username
 
     if user and user\check_password password
       if user\is_deleted!
@@ -39,6 +39,12 @@ class Users extends Model
       user
     else
       nil, "Incorrect username or password"
+
+  @find_by_username: (username) =>
+    Users\find { [db.raw("lower(username)")]: username\lower! }
+
+  @find_by_email: (email) =>
+    Users\find { [db.raw("lower(email)")]: email\lower! }
 
   @create: (opts) =>
     assert opts.username, "missing username"

@@ -13,7 +13,7 @@ class RegisterPage extends React.Component {
 
       <JsonForm action="/register.json" afterSubmit={this.afterSubmit.bind(this)}>
         <TextInputRow name="username" required={true}>Username</TextInputRow>
-        <TextInputRow name="username" type="email" required={true}>Email address</TextInputRow>
+        <TextInputRow name="email" type="email" required={true}>Email address</TextInputRow>
         <TextInputRow name="password" type="password" required={true}>Password</TextInputRow>
         <TextInputRow name="password_repeat" type="password" required={true}>Confirm password</TextInputRow>
 
