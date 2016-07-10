@@ -2,9 +2,8 @@
 let {Link} = ReactRouter
 
 class RegisterPage extends React.Component {
-  submitHandler(e) {
-    e.preventDefault()
-    console.log("do register...")
+  afterSubmit(res) {
+    console.warn("submitted", res)
   }
 
   render() {
@@ -12,7 +11,7 @@ class RegisterPage extends React.Component {
       <h2>Register</h2>
       <p>Create an account to keep track of your progress over time.</p>
 
-      <form ref="form" action="/register.json" method="post" onSubmit={this.submitHandler.bind(this)}>
+      <JsonForm action="/register.json" afterSubmit={this.afterSubmit.bind(this)}>
         <TextInputRow name="username" required={true}>Username</TextInputRow>
         <TextInputRow name="username" type="email" required={true}>Email address</TextInputRow>
         <TextInputRow name="password" type="password" required={true}>Password</TextInputRow>
@@ -23,7 +22,7 @@ class RegisterPage extends React.Component {
           {" or "}
           <Link to="/login">Log in to existing account</Link>
         </div>
-      </form>
+      </JsonForm>
     </div>
   }
 }

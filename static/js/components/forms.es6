@@ -25,3 +25,55 @@ class TextInputRow extends React.Component {
     </div>
   }
 }
+
+class JsonForm extends React.Component {
+  static propTypes = {
+    action: types.string.isRequired,
+    validate: types.func,
+    beforeSubmit: types.func,
+    afterSubmit: types.func
+  }
+
+  constructor() {
+    super()
+    this.state = { loading: false }
+  }
+
+  submitHandler(e) {
+    e.preventDefault()
+
+    if (this.state.loading) { return }
+
+    if (this.props.beforeSubmit) {
+      this.props.beforeSubmit()
+    }
+
+    let formData = new FormData(this.refs.form)
+
+    if (this.props.validate && !this.props.validate(formData)) {
+      return
+    }
+
+    let url = this.refs.form.getAttribute("action")
+
+    var request = new XMLHttpRequest()
+    request.open("POST", url)
+    request.send(formData)
+    request.onload = (e) => {
+      this.setState({loading: false})
+      let res = JSON.parse(request.responseText)
+
+      if (this.props.afterSubmit) {
+        this.props.afterSubmit(res)
+      }
+    }
+
+    this.setState({loading: true})
+  }
+
+  render() {
+    return <form ref="form" action={this.props.action} method="post" onSubmit={this.submitHandler.bind(this)}>
+      {this.props.children}
+    </form>
+  }
+}
