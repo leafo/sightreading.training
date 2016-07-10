@@ -132,7 +132,9 @@ class SightReadingPage extends React.Component {
     if (!input) { return; }
     console.log(`Binding to: ${input.name}`)
     input.onmidimessage = this.onMidiMessage.bind(this);
-    this.setState({currentInput: input});
+    this.setState({
+      currentInput: input
+    });
   }
 
   pressNote(note) {
@@ -358,6 +360,13 @@ class SightReadingPage extends React.Component {
 
     let openStats = () => this.setState({statsLightboxOpen: true})
 
+    if (this.state.currentInput) {
+      var inputStatus = <div className="current_input">
+        <img src="/static/svg/midi.svg" alt="MIDI" />
+        <span className="current_input_name">{this.state.currentInput.name}</span>
+      </div>
+    }
+
     let header = <div className="workspace_header">
       <button
         onClick={this.toggleSettings.bind(this)}
@@ -429,6 +438,7 @@ class SightReadingPage extends React.Component {
           {modeToggle}
         </div>
       </div>
+      {inputStatus}
     </div>;
   }
 
