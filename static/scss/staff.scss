@@ -14,6 +14,10 @@
     border-left: 6px solid black;
     margin: $line_spacing*2 0 $line_spacing*2 0;
 
+    .cleff {
+        z-index: 1;
+    }
+
     &.g_staff {
         .cleff {
             position: absolute;
@@ -52,7 +56,7 @@
             top: 0;
             left: 0;
             right: 0;
-            background: black;
+            background: #666;
         }
 
         .line2 {
