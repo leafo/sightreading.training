@@ -19,7 +19,7 @@ package.loaded.migrations =
       {"email", varchar}
       {"slug", varchar}
 
-      {"last_active", time null: true}
+      {"last_active_at", time null: true}
       {"display_name", varchar null: true}
 
       {"created_at", time}

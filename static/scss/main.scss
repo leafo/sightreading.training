@@ -42,6 +42,13 @@ form, .form {
         margin-top: 32px;
     }
 
+    .form_error {
+        background: $error_color;
+        color: white;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+    }
+
     button {
         font-size: 18px;
         padding: 10px 18px;

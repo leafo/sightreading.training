@@ -3,6 +3,7 @@ import Model from require "lapis.db.model"
 import slugify, from_json from require "lapis.util"
 
 bcrypt = require "bcrypt"
+date = require "date"
 
 strip_non_ascii = do
   filter_chars = (c, ...) ->
@@ -18,6 +19,13 @@ strip_non_ascii = do
 class Users extends Model
   @timestamp: true
 
+  @read_session: (r) =>
+    if user_session = r.session.user
+      if user_session.id
+        user = @find user_session.id
+        if user and user\salt! == user_session.key
+          user
+
   @login: (username, password) =>
     username = username\lower!
 
@@ -32,7 +40,7 @@ class Users extends Model
     else
       nil, "Incorrect username or password"
 
-  @create: =>
+  @create: (opts) =>
     assert opts.username, "missing username"
     assert opts.password, "missing password"
     assert opts.email, "missing email"
@@ -64,3 +72,10 @@ class Users extends Model
     @encrypted_password\sub 1, 29
 
   is_deleted: => false
+
+  update_last_active: =>
+    span = if @last_active_at
+      date.diff(date(true), date(@last_active_at))\spandays!
+
+    if not span or span > 1
+      @update { last_active_at: db.format_date! }, timestamp: false

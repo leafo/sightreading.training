@@ -1,7 +1,11 @@
 db = require "lapis.db"
 import Flow from require "lapis.flow"
 
-import assert_valid from require "lapis.application"
+import assert_error from require "lapis.application"
+import assert_valid from require "lapis.validate"
+import trim from require "lapis.util"
+
+import Users from require "models"
 
 class LoginFlow extends Flow
   expose_assigns: true
@@ -15,6 +19,9 @@ class LoginFlow extends Flow
       { "username", exists: true }
       { "password", exists: true }
     }
+
+    @current_user = assert_error Users\login trim(@params.username), trim(@params.login)
+    @current_user\write_session @_
 
     true
 

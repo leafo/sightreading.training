@@ -18,6 +18,8 @@ $orange: #FB9175;
 $yellow: #FDBF6C;
 $purple: #A287C0;
 
+$error_color: #D14343;
+
 @mixin unselectable {
     -moz-user-select: none;
     -webkit-user-select: none;
