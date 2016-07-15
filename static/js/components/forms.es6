@@ -59,12 +59,21 @@ class JsonForm extends React.Component {
     var request = new XMLHttpRequest()
     request.open("POST", url)
     request.send(formData)
+
     request.onload = (e) => {
       this.setState({loading: false})
-      let res = JSON.parse(request.responseText)
+      try {
+        let res = JSON.parse(request.responseText)
 
-      if (this.props.afterSubmit) {
-        this.props.afterSubmit(res)
+        if (this.props.afterSubmit) {
+          this.props.afterSubmit(res)
+        }
+      } catch (e) {
+        if (this.props.afterSubmit) {
+          this.props.afterSubmit({
+            errors: ["Server error, please try again later"]
+          })
+        }
       }
     }
 
