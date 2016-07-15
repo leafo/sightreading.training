@@ -2,6 +2,8 @@ lapis = require "lapis"
 
 import capture_errors_json from require "lapis.application"
 
+date = require "date"
+
 class extends lapis.Application
   layout: require "views.layout"
 
