@@ -14,6 +14,12 @@ class extends lapis.Application
 
   @before_filter =>
     import Users from require "models"
+    unless @session.csrf_token
+      import generate_key from require "helpers.keys"
+      @session.csrf_token = generate_key 40
+
+    @csrf_token = @session.csrf_token
+
     @current_user = Users\read_session @
 
     if @current_user
