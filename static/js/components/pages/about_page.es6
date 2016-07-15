@@ -9,7 +9,7 @@ class AboutPage extends React.Component {
       <h3>This page should probably be async right?</h3>
       <p>Dynamic pages can preload assets when requested directly by their urls so there is no extra request necessary. That could be pretty cool.</p>
       <p>
-      <Link to="/">Return to sight reading trainer »</Link>
+      <Link className="return_link" to="/">Return to sight reading trainer</Link>
       </p>
     </div>
   }

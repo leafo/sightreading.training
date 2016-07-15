@@ -30,6 +30,15 @@ button {
     }
 }
 
+.return_link {
+    &:before {
+        content: "←";
+        display: inline-block;
+        margin-right: 5px;
+        text-decoration: none;
+    }
+}
+
 a {
     color: $button_color;
     &:hover {

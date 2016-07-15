@@ -7,6 +7,7 @@ class Layout extends Widget
   content: =>
     html_5 ->
       head ->
+        meta charset: "UTF-8"
         title "Sight Reading Trainer"
         link rel: "stylesheet", href: "/static/style.css"
         link rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Raleway"
