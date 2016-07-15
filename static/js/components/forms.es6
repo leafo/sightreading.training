@@ -49,6 +49,7 @@ class JsonForm extends React.Component {
     }
 
     let formData = new FormData(this.refs.form)
+    formData.append("csrf_token", N.csrf_token())
 
     if (this.props.validate && !this.props.validate(formData)) {
       return

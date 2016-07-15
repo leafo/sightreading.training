@@ -1,8 +1,19 @@
 lapis = require "lapis"
 
-import capture_errors_json from require "lapis.application"
+import respond_to from require "lapis.application"
+import set_csrf, assert_csrf from require "helpers.csrf"
 
 date = require "date"
+
+post = (fn) ->
+  respond_to {
+    on_error: =>
+      json: { errors: @errors }
+
+    POST: =>
+      assert_csrf @
+      fn @
+  }
 
 class extends lapis.Application
   layout: require "views.layout"
@@ -14,11 +25,7 @@ class extends lapis.Application
 
   @before_filter =>
     import Users from require "models"
-    unless @session.csrf_token
-      import generate_key from require "helpers.keys"
-      @session.csrf_token = generate_key 40
-
-    @csrf_token = @session.csrf_token
+    set_csrf @
 
     @current_user = Users\read_session @
 
@@ -27,17 +34,17 @@ class extends lapis.Application
 
   "/(*)": =>
 
-  "/logout.json": capture_errors_json =>
+  "/logout.json": post =>
     -- TODO: add csrf
     @flow("login")\do_logout!
     json: { success: true }
 
-  "/login.json": capture_errors_json =>
+  "/login.json": post =>
     -- TODO: add csrf
     @flow("login")\do_login!
     json: @flow("formatter")\session!
 
-  "/register.json": capture_errors_json =>
+  "/register.json": post =>
     -- TODO: add csrf
     @flow("login")\do_register!
     json: @flow("formatter")\session!

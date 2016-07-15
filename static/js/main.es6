@@ -24,5 +24,9 @@ export function event(category, action, label, value, interactive=true) {
 N.init = function(session) {
   N.session = session || {}
   ReactDOM.render(<App />, document.getElementById("page"));
-};
+}
+
+N.csrf_token = function() {
+  return document.getElementById("csrf_token").getAttribute("content")
+}
 

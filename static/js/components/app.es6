@@ -14,7 +14,9 @@ class Layout extends React.Component {
   doLogout() {
     let request = new XMLHttpRequest()
     request.open("POST", "/logout.json")
-    request.send(new FormData())
+    let data = new FormData()
+    data.append("csrf_token", N.csrf_token())
+    request.send(data)
 
     request.onload = (e) => {
       let res = JSON.parse(request.responseText)
