@@ -30,6 +30,26 @@ button {
     }
 }
 
+blockquote {
+    background: #f7f7f7;
+    padding: 1em;
+    margin: 1em 0;
+
+    > p {
+        margin: 0;
+        margin-bottom: 1em;
+        color: #666;
+
+        &:first-child {
+            margin-top: 0;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
 .return_link {
     &:before {
         content: "←";
