@@ -35,17 +35,19 @@ class extends lapis.Application
   "/(*)": =>
 
   "/logout.json": post =>
-    -- TODO: add csrf
     @flow("login")\do_logout!
     json: { success: true }
 
   "/login.json": post =>
-    -- TODO: add csrf
     @flow("login")\do_login!
     json: @flow("formatter")\session!
 
   "/register.json": post =>
-    -- TODO: add csrf
     @flow("login")\do_register!
     json: @flow("formatter")\session!
+
+  "/hits.jon": post =>
+    @flow("hits")\register_hits!
+    json: { success: true }
+
 
