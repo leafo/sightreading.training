@@ -7,6 +7,15 @@ export class NoteStats {
 
     this.lastHitTime = undefined;
     this.averageHitTime = 0;
+
+    this.resetBuffer()
+  }
+
+  resetBuffer() {
+    this.buffer = {
+      hits: 0,
+      misses: 0,
+    }
   }
 
   hitNotes(notes) {
@@ -32,6 +41,7 @@ export class NoteStats {
 
     this.streak += 1;
     this.hits += 1;
+    this.buffer.hits += 1;
   }
 
   missNotes(notes) {
@@ -41,6 +51,7 @@ export class NoteStats {
 
     this.streak = 0;
     this.misses += 1;
+    this.buffer.misses += 1;
   }
 
   incrementNote(note, val) {
@@ -54,6 +65,23 @@ export class NoteStats {
     }
   }
 
+  flushLater() {
+    this.flushLater = _.throttle(this.flush.bind(this), 2000, { leading: true })
+    window.addEventListener("beforeunload", () => {
+      this.flush()
+    })
+  }
+
+  flush() {
+    let d = new FormData()
+    d.append("csrf_token", N.csrf_token())
+    d.append("stats", JSON.stringify(this.buffer))
+
+    var request = new XMLHttpRequest()
+    request.open("POST", "/hits.json")
+    request.send(formData)
+    this.resetBuffer()
+  }
 
   isOutlierTime(timeTaken) {
     if (this.averageHitTime == 0) {
