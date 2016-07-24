@@ -65,8 +65,28 @@ export class NoteStats {
     }
   }
 
+  makeThrottle(fn, wait) {
+    let lead = true
+    let timer = null
+    return () => {
+      if (!timer) {
+        if (lead) {
+          fn.apply(arguments)
+        }
+        timer = setTimeout(() => {
+          timer = null
+          lead = false
+          fn.apply(arguments)
+          setTimeout(() => {
+            lead = true
+          }, wait)
+        }, wait)
+      }
+    }
+  }
+
   flushLater() {
-    this.flushLater = _.throttle(this.flush.bind(this), 2000, { leading: true })
+    this.flushLater = this.makeThrottle(this.flush.bind(this), 2000)
     window.addEventListener("beforeunload", () => {
       this.flush()
     })
