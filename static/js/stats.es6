@@ -69,21 +69,27 @@ export class NoteStats {
   }
 
   makeThrottle(fn, wait) {
-    let lead = true
+    let last = 0
     let timer = null
     return () => {
-      if (!timer) {
-        if (lead) {
-          fn.apply(arguments)
-        }
-        timer = setTimeout(() => {
-          timer = null
-          lead = false
-          fn.apply(arguments)
-          setTimeout(() => {
-            lead = true
-          }, wait)
-        }, wait)
+      let args = arguments
+      if (timer) {
+        return
+      }
+
+      let now = +new Date
+
+      // block future calls with timer
+      timer = setTimeout(() => {
+        timer = null
+        last = +new Date
+        fn.apply(args)
+      }, Math.min(now - last, wait))
+
+      // leading edge call
+      if (!last || now - last > wait) {
+        fn.apply(args)
+        last = now
       }
     }
   }
