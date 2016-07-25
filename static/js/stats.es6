@@ -42,6 +42,7 @@ export class NoteStats {
     this.streak += 1;
     this.hits += 1;
     this.buffer.hits += 1;
+    this.flushLater()
   }
 
   missNotes(notes) {
@@ -52,6 +53,7 @@ export class NoteStats {
     this.streak = 0;
     this.misses += 1;
     this.buffer.misses += 1;
+    this.flushLater()
   }
 
   incrementNote(note, val) {
@@ -99,7 +101,7 @@ export class NoteStats {
 
     var request = new XMLHttpRequest()
     request.open("POST", "/hits.json")
-    request.send(formData)
+    request.send(d)
     this.resetBuffer()
   }
 
