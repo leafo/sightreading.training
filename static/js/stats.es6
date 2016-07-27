@@ -1,12 +1,13 @@
 export class NoteStats {
-  constructor() {
-    this.noteHitStats = {};
-    this.streak = 0;
-    this.hits = 0;
-    this.misses = 0;
+  constructor(currentUser) {
+    this.currentUser = currentUser
+    this.noteHitStats = {}
+    this.streak = 0
+    this.hits = 0
+    this.misses = 0
 
-    this.lastHitTime = undefined;
-    this.averageHitTime = 0;
+    this.lastHitTime = undefined
+    this.averageHitTime = 0
 
     this.resetBuffer()
   }
@@ -88,10 +89,16 @@ export class NoteStats {
   }
 
   flushLater() {
+    if (!this.currentUser) {
+      return
+    }
+
     this.flushLater = this.makeThrottle(this.flush.bind(this), 2000)
     window.addEventListener("beforeunload", () => {
       this.flush()
     })
+
+    this.flushLater()
   }
 
   flush() {

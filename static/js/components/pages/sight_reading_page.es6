@@ -31,7 +31,7 @@ class SightReadingPage extends React.Component {
       currentStaff: N.STAVES[0],
       currentGenerator: defaultGenerator,
       currentGeneratorSettings: GeneratorSettings.inputDefaults(defaultGenerator),
-      stats: new NoteStats(),
+      stats: new NoteStats(N.session.currentUser),
       keySignature: new KeySignature(0),
     }
 
