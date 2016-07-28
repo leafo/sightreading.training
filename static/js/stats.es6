@@ -93,7 +93,7 @@ export class NoteStats {
       return
     }
 
-    this.flushLater = this.makeThrottle(this.flush.bind(this), 2000)
+    this.flushLater = this.makeThrottle(this.flush.bind(this), 5000)
     window.addEventListener("beforeunload", () => {
       this.flush()
     })
@@ -104,7 +104,9 @@ export class NoteStats {
   flush() {
     let d = new FormData()
     d.append("csrf_token", N.csrf_token())
-    d.append("stats", JSON.stringify(this.buffer))
+    for (let key in this.buffer) {
+      d.append(key, "" + this.buffer[key])
+    }
 
     var request = new XMLHttpRequest()
     request.open("POST", "/hits.json")

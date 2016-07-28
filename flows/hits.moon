@@ -1,6 +1,6 @@
 
 import assert_error from require "lapis.application"
-import assert_valid from require "lapis.validation"
+import assert_valid from require "lapis.validate"
 
 import HourlyHits from require "models"
 

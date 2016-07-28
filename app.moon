@@ -46,7 +46,7 @@ class extends lapis.Application
     @flow("login")\do_register!
     json: @flow("formatter")\session!
 
-  "/hits.jon": post =>
+  "/hits.json": post =>
     @flow("hits")\register_hits!
     json: { success: true }
 
