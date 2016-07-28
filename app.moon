@@ -15,6 +15,14 @@ post = (fn) ->
       fn @
   }
 
+get = (fn) ->
+  respond_to {
+    on_error: =>
+      json: { errors: @errors }
+
+    GET: fn
+  }
+
 class extends lapis.Application
   layout: require "views.layout"
 
@@ -49,5 +57,10 @@ class extends lapis.Application
   "/hits.json": post =>
     @flow("hits")\register_hits!
     json: { success: true }
+
+  "/stats.json": get =>
+    stats = @flow("hits")\get_stats!
+    json: { success: true, :stats }
+
 
 

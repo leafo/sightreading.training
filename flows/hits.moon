@@ -1,4 +1,6 @@
 
+db = require "lapis.db"
+
 import assert_error from require "lapis.application"
 import assert_valid from require "lapis.validate"
 
@@ -26,4 +28,15 @@ class HitsFlow extends Flow
 
     true
 
+  get_stats: (range='30 days') =>
+    HourlyHits\select "
+      where hour >= now() at time zone 'utc' - ?::interval
+      group by hour::date
+    ", range, {
+      fields: db.interpolate_query "
+        hour::date as date,
+        sum(count) filter (where type = ?) as hits,
+        sum(count) filter (where type = ?) as misses
+      ", HourlyHits.types.hit, HourlyHits.types.miss
+    }
 
