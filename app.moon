@@ -59,6 +59,7 @@ class extends lapis.Application
     json: { success: true }
 
   "/stats.json": get =>
+    assert_error @current_user, "must be logged in"
     stats = @flow("hits")\get_stats!
     json: { success: true, :stats }
 

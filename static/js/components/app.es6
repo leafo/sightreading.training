@@ -31,6 +31,8 @@ class Layout extends React.Component {
         {" " }
         <a href="#" onClick={this.doLogout.bind(this)}>Log out</a>
       </div>
+
+      var userLinks = <Link to="/stats">Your stats</Link>
     } else {
       var userPanel = <div className="right_section">
         <Link to="/login" className="button">Log in</Link>
@@ -38,7 +40,6 @@ class Layout extends React.Component {
         <Link to="/register" className="button">Register</Link>
       </div>
     }
-
     return <div className="header">
       <img className="logo" src="/static/img/logo.svg" height="40" alt="" />
 
@@ -46,6 +47,7 @@ class Layout extends React.Component {
         <Link to="/">Sight reading trainer</Link>
       </h1>
 
+      {userLinks}
       {userPanel}
     </div>
   }

@@ -7,7 +7,11 @@ class StatsPage extends React.Component {
   }
 
   componentDidMount() {
-    this.loadStats()
+    if (!N.session.currentUser) {
+      this.props.router.push("/")
+    } else {
+      this.loadStats()
+    }
   }
 
   loadStats() {
