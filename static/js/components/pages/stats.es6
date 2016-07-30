@@ -50,7 +50,7 @@ class StatsPage extends React.Component {
   renderStats() {
     let stops = this.dateStops()
     let statsByDate = {}
-    for (let stat of this.state.stats) {
+    for (let stat of this.state.stats || []) {
       statsByDate[stat.date] = stat
     }
 
