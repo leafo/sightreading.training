@@ -178,6 +178,15 @@ form, .form {
             margin-right: 0;
         }
     }
+
+    a {
+        padding: 3px 6px;
+        &.active {
+            font-weight: bold;
+            text-decoration: none;
+            background: #f6f6f6;
+        }
+    }
 }
 
 .workspace {

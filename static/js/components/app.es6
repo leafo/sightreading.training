@@ -32,7 +32,7 @@ class Layout extends React.Component {
         <a href="#" onClick={this.doLogout.bind(this)}>Log out</a>
       </div>
 
-      var userLinks = <Link to="/stats">Your stats</Link>
+      var userLinks = <Link to="/stats" activeClassName="active">Historical stats</Link>
     } else {
       var userPanel = <div className="right_section">
         <Link to="/login" className="button">Log in</Link>

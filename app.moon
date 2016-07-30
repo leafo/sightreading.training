@@ -1,6 +1,6 @@
 lapis = require "lapis"
 
-import respond_to from require "lapis.application"
+import respond_to, assert_error from require "lapis.application"
 import set_csrf, assert_csrf from require "helpers.csrf"
 
 date = require "date"
