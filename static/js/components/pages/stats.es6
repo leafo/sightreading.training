@@ -28,7 +28,7 @@ class StatsPage extends React.Component {
     request.onload = (e) => {
       try {
         let res = JSON.parse(request.responseText)
-        this.setState({loading: false, stats: res.stats})
+        this.setState({loading: false, stats: res.stats || []})
       } catch (e) {
         this.setState({loading: false, error_message: "Failed to fetch stats"})
       }
@@ -50,7 +50,7 @@ class StatsPage extends React.Component {
   renderStats() {
     let stops = this.dateStops()
     let statsByDate = {}
-    for (let stat of this.state.stats || []) {
+    for (let stat of this.state.stats) {
       statsByDate[stat.date] = stat
     }
 
