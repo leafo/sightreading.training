@@ -3,6 +3,8 @@ import Widget from require "lapis.html"
 
 import to_json from require "lapis.util"
 
+buster = require "cache_buster"
+
 class Layout extends Widget
   content: =>
     html_5 ->
@@ -18,8 +20,8 @@ class Layout extends Widget
 
       body ->
         div id: "page"
-        script type: "text/javascript", src: "/static/lib.js"
-        script type: "text/javascript", src: "/static/main.js"
+        script type: "text/javascript", src: "/static/lib.js?#{buster}"
+        script type: "text/javascript", src: "/static/main.js?#{buster}"
         script type: "text/javascript", ->
           raw "N.init(#{to_json @initial_state!})"
 
