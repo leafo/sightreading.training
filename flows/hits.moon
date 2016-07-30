@@ -29,10 +29,13 @@ class HitsFlow extends Flow
     true
 
   get_stats: (range='30 days') =>
+    assert_error @current_user
+
     HourlyHits\select "
       where hour >= now() at time zone 'utc' - ?::interval
+      and user_id = ?
       group by hour::date
-    ", range, {
+    ", range, @current_user.id, {
       fields: db.interpolate_query "
         hour::date as date,
         sum(count) filter (where type = ?) as hits,
