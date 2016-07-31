@@ -491,3 +491,15 @@ export class ProgressionGenerator extends Generator {
   }
 }
 
+// a generator that generates series of notes from positions
+export class PositionGenerator extends Generator {
+  constructor(notes, opts) {
+    super(opts)
+  }
+
+  _nextNote() {
+    return "C5"
+  }
+}
+
+

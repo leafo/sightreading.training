@@ -189,6 +189,13 @@ N.GENERATORS = [
       let progression = progressionInputs.values.find(v => v.name == options.progression)
       return new ProgressionGenerator(scale, staff.range, progression.value, options)
     }
+  },
+  {
+    name: "Position",
+    inputs: [],
+    create: function(staff, keySignature, options) {
+      let notes = new MajorScale(keySignature)
+        .getLooseRange(...staff.range);
+    }
   }
-
 ]
