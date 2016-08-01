@@ -196,6 +196,8 @@ N.GENERATORS = [
     create: function(staff, keySignature, options) {
       let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
+
+      return new PositionGenerator(notes, options)
     }
   }
 ]
