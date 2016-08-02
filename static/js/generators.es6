@@ -504,6 +504,7 @@ export class PositionGenerator extends Generator {
     // choose a finger
     let offset = this.generator.int() % (this.notes.length - 5)
     let out = []
+
     for (let k=0; k < 5; k++) {
       out.push(this.notes[offset + k])
     }
@@ -511,9 +512,12 @@ export class PositionGenerator extends Generator {
     return out
   }
 
-
   nextNote() {
-    return ["C5"]
+    if (!this.fingerSet || !this.fingerSet.length) {
+      this.fingerSet = this.getFingerSet()
+    }
+
+    return this.fingerSet.unshift()
   }
 }
 
