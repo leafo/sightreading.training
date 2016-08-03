@@ -517,7 +517,7 @@ export class PositionGenerator extends Generator {
       this.fingerSet = this.getFingerSet()
     }
 
-    return this.fingerSet.unshift()
+    return [this.fingerSet.shift()]
   }
 }
 
