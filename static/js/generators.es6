@@ -493,23 +493,23 @@ export class ProgressionGenerator extends Generator {
 
 // a generator that generates series of notes from positions
 export class PositionGenerator extends Generator {
+  static patterns = [
+    [0,1,2,3,4],
+  ]
+
   constructor(notes, opts) {
     super(opts)
     this.notes = notes
     this.generator = new MersenneTwister()
   }
 
-
   getFingerSet() {
     // choose a finger
     let offset = this.generator.int() % (this.notes.length - 5)
     let out = []
 
-    for (let k=0; k < 5; k++) {
-      out.push(this.notes[offset + k])
-    }
-
-    return out
+    let p = PositionGenerator.patterns[0]
+    return p.map(i => this.notes[offset + i])
   }
 
   nextNote() {
