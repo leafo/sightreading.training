@@ -493,9 +493,17 @@ export class ProgressionGenerator extends Generator {
 
 // a generator that generates series of notes from positions
 export class PositionGenerator extends Generator {
-  static patterns = [
-    [0,1,2,3,4],
-  ]
+  shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      let j = this.generator.int() % (i+1)
+      let a = array[j]
+      let b = array[i]
+      array[i] = a
+      array[j] = b
+    }
+
+    return array
+  }
 
   constructor(notes, opts) {
     super(opts)
@@ -507,9 +515,7 @@ export class PositionGenerator extends Generator {
     // choose a finger
     let offset = this.generator.int() % (this.notes.length - 5)
     let out = []
-
-    let p = PositionGenerator.patterns[0]
-    return p.map(i => this.notes[offset + i])
+    return [0].concat(this.shuffle([1,2,3,4])).map(i => this.notes[offset + i])
   }
 
   nextNote() {
