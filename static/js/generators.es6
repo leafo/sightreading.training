@@ -514,16 +514,23 @@ export class PositionGenerator extends Generator {
   getFingerSet() {
     // choose a finger
     let offset = this.generator.int() % (this.notes.length - 5)
-    let out = []
     return [0].concat(this.shuffle([1,2,3,4])).map(i => this.notes[offset + i])
   }
 
   nextNote() {
+    let first = false
+
     if (!this.fingerSet || !this.fingerSet.length) {
       this.fingerSet = this.getFingerSet()
+      first = true
     }
 
-    return [this.fingerSet.shift()]
+    let out = [this.fingerSet.shift()]
+    if (first) {
+      out.annotation = "1"
+    }
+
+    return out
   }
 }
 

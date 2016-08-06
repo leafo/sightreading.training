@@ -191,7 +191,7 @@ N.GENERATORS = [
     }
   },
   {
-    name: "Position",
+    name: "position",
     inputs: [],
     create: function(staff, keySignature, options) {
       let notes = new MajorScale(keySignature)
