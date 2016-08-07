@@ -41,13 +41,19 @@ class FlashCardPage extends React.Component {
 
     let note = notes[0] // hard code to C for now
     let offset = offsets[this.rand.int() % offsets.length]
+    let answer = notes[offset % notes.length]
+
+    if (this.state.currentCard && answer == this.state.currentCard.answer) {
+      // no repeats
+      return setupNext()
+    }
 
     this.setState({
       cardNumber: this.state.cardNumber + 1,
       currentCard: {
         type: "midi",
-        label: `${note} + ${offset} =`,
-        answer: notes[offset % notes.length],
+        label: `${offset + 1} of ${note} is`,
+        answer: answer,
         options: notes,
       }
     })
@@ -64,7 +70,7 @@ class FlashCardPage extends React.Component {
       let card = this.state.currentCard
       let cardNumber = this.state.cardNumber
 
-      card.chosen = {}
+      card.chosen = card.chosen || {}
       card.chosen[answer] = true
 
       this.setState({ cardError: true })
