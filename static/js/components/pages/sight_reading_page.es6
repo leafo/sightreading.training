@@ -51,6 +51,13 @@ class SightReadingPage extends React.Component {
   componentDidMount() {
   }
 
+  componentWillUnmount() {
+    if (this.state.currentInput) {
+      console.log(`Unbinding: ${this.state.currentInput.name}`)
+      this.state.currentInput.onmidimessage = undefined
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
     // transitioning to new staff or generator or key signature
     if (prevState.currentStaff != this.state.currentStaff ||
