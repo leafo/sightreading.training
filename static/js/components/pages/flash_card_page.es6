@@ -45,7 +45,7 @@ class FlashCardPage extends React.Component {
 
     if (this.state.currentCard && answer == this.state.currentCard.answer) {
       // no repeats
-      return setupNext()
+      return this.setupNext()
     }
 
     this.setState({
