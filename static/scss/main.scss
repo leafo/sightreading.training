@@ -20,6 +20,7 @@ button {
     box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
     cursor: pointer;
 
+
     &:focus {
         outline: none;
         box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2), 0 0 0 2px rgba(blue, 0.2);
@@ -27,6 +28,11 @@ button {
 
     &:hover {
         background: lighten(#727290, 2%);
+    }
+
+    &:disabled {
+        background: desaturate($button_color, 100%);
+        opacity: 0.8;
     }
 }
 
@@ -377,6 +383,25 @@ form, .form {
 
 .noteshake {
     animation-name: noteshake;
+    animation-duration: 0.5s;
+}
+
+@keyframes errorshake {
+    from, 100% {
+        transform: translate(0, 0);
+    }
+
+    10%, 30%, 50%, 70%, 90% {
+        transform: translate(-5%, 0);
+    }
+
+    20%, 40%, 60%, 80% {
+        transform: translate(5%, 0);
+    }
+}
+
+.errorshake {
+    animation-name: errorshake;
     animation-duration: 0.5s;
 }
 

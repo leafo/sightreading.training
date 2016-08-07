@@ -1,0 +1,29 @@
+
+.flash_card_page {
+    .card_holder {
+        text-align: center;
+        margin: 40px 0;
+    }
+
+    .flash_card {
+        background: white;
+        font-size: 80px;
+        display: inline-block;
+        padding: 80px 40px; 
+        font-weight: bold;
+    }
+
+    .card_options {
+        margin-top: 40px;
+
+        button {
+            margin-left: 15px;
+            font-size: 18px;
+            padding: 10px 20px;
+
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+    }
+}

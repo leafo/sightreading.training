@@ -63,6 +63,7 @@ class App extends React.Component {
         <Route path="register" component={withRouter(RegisterPage)}></Route>
         <Route path="about" component={withRouter(AboutPage)}></Route>
         <Route path="stats" component={withRouter(StatsPage)}></Route>
+        <Route path="flash-cards" component={withRouter(FlashCardPage)}></Route>
       </Route>
     }
   }
