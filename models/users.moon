@@ -16,6 +16,25 @@ strip_non_ascii = do
   (str) ->
     string.char filter_chars str\byte 1, -1
 
+-- Generated schema dump: (do not edit)
+--
+-- CREATE TABLE users (
+--   id integer NOT NULL,
+--   username character varying(255) NOT NULL,
+--   encrypted_password character varying(255) NOT NULL,
+--   email character varying(255) NOT NULL,
+--   slug character varying(255) NOT NULL,
+--   last_active_at timestamp without time zone,
+--   display_name character varying(255),
+--   created_at timestamp without time zone NOT NULL,
+--   updated_at timestamp without time zone NOT NULL
+-- );
+-- ALTER TABLE ONLY users
+--   ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+-- CREATE UNIQUE INDEX users_lower_email_idx ON users USING btree (lower((email)::text));
+-- CREATE UNIQUE INDEX users_lower_username_idx ON users USING btree (lower((username)::text));
+-- CREATE UNIQUE INDEX users_slug_idx ON users USING btree (slug);
+--
 class Users extends Model
   @timestamp: true
 
