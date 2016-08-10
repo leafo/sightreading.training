@@ -43,4 +43,16 @@ package.loaded.migrations =
     }
 
 
+  [1471017619]: =>
+    create_table "presets", {
+      {"id", serial}
+      {"user_id", foreign_key}
+
+      {"data", "jsonb not null"}
+
+      {"created_at", time}
+      {"updated_at", time}
+
+      "PRIMARY KEY (id)"
+    }
 
