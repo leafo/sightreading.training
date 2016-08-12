@@ -38,6 +38,10 @@ strip_non_ascii = do
 class Users extends Model
   @timestamp: true
 
+  @relations: {
+    {"presets", has_many: "Presets"}
+  }
+
   @read_session: (r) =>
     if user_session = r.session.user
       if user_session.id

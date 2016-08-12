@@ -49,5 +49,15 @@ class extends lapis.Application
 
     json: { success: true, :stats }
 
+  "/presets.json": get =>
+    assert_error @current_user, "must be logged in"
+
+    import Presets from require "models"
+    presets = @current_user\get_presets!
+
+    json: {
+      success: true
+      presets: [p.data for p in *presets]
+    }
 
 
