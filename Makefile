@@ -1,11 +1,5 @@
 
-.PHONY: deploy_targets deploy new_migration migrate init_schema test_db lint checkpoint restore_checkpoint annotate_models
-
-deploy_targets:
-	@find -L . -type f | grep -v node_modules | grep -P '\.(js|css|html|svg)$$'
-
-deploy:
-	rsync -RvuzL $$(make -s deploy_targets) leaf@leafo.net:www/sight-reading/
+.PHONY: new_migration migrate init_schema test_db lint checkpoint restore_checkpoint annotate_models
 
 new_migration:
 	(echo "  [$$(date +%s)]: =>"; echo) >> migrations.moon
