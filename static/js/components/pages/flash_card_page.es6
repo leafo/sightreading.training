@@ -8,6 +8,7 @@ class FlashCardPage extends React.Component {
 
     this.state = {
       cardNumber: 0,
+      enabledRoots: { "D": true },
     }
     this.rand = new MersenneTwister()
   }
@@ -95,7 +96,31 @@ class FlashCardPage extends React.Component {
   }
 
   render() {
-    return <div className="flash_card_page">{this.renderCurrentCard()}</div>
+    return <div className="flash_card_page">
+      {this.renderTestGroups()}
+      {this.renderCurrentCard()}
+    </div>
+  }
+
+  renderTestGroups() {
+    let notes = ["C", "D", "E", "F", "G", "A", "B"]
+
+    return <div className="test_groups">
+      {notes.map((note) => <div className={classNames("test_group", {selected: this.state.enabledRoots[note]})}>
+          <label>
+            <input
+              type="checkbox"
+              checked={this.state.enabledRoots[note] || false}
+              onChange={(e) => {
+                this.state.enabledRoots[note] = !this.state.enabledRoots[note]
+                this.forceUpdate()
+              }}
+              />
+            {note}
+          </label>
+        </div>
+      )}
+    </div>
   }
 
   renderCurrentCard() {

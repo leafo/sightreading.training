@@ -26,4 +26,29 @@
             }
         }
     }
+
+    .test_groups {
+        margin-top: 40px;
+        display: flex;
+        justify-content: center;
+
+        > .test_group {
+            margin: 0 10px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 1px solid rgba(black, 0.1);
+            padding: 2px 8px;
+            border-radius: 3px;
+            color: #666;
+
+            &.selected {
+                background: white;
+                border: 1px solid rgba(black, 0.3);
+            }
+
+            input {
+                margin-right: 8px;
+            }
+        }
+    }
 }
