@@ -1,6 +1,8 @@
 let {PropTypes: types} = React;
 
 class IntroLightbox extends Lightbox {
+  static className = "intro_lightbox"
+
   static propTypes = {
     midi: types.object,
     close: types.func.isRequired,

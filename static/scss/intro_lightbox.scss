@@ -1,0 +1,39 @@
+@import "include/common";
+
+.intro_lightbox {
+    .midi_selector {
+        border: 2px solid $light_border_color;
+        max-height: 200px;
+        overflow-y: auto;
+
+        .midi_input_row {
+            padding: 6px 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+
+            &:hover {
+                background: #f5f5f5;
+            }
+
+            &:active {
+                background: darken($button_color_highlight, 5%);
+            }
+
+            &.selected {
+                background: $button_color_highlight;
+            }
+
+            .row_icon {
+                width: 24px;
+                opacity: 0.7;
+                margin-right: 5px;
+            }
+
+            .input_name {
+                @include single_line;
+                flex: 1;
+            }
+        }
+    }
+}
