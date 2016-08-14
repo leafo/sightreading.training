@@ -3,6 +3,8 @@ let {PropTypes: types} = React
 let {Link} = ReactRouter
 
 class FlashCardPage extends React.Component {
+  static notes = ["C", "D", "E", "F", "G", "A", "B"]
+
   constructor(props) {
     super(props)
 
@@ -21,6 +23,10 @@ class FlashCardPage extends React.Component {
     this.upListener = event => {
       let key = keyCodeToChar(event.keyCode)
       if (key == null) {
+        return
+      }
+
+      if (!this.refs.cardOptions) {
         return
       }
 
@@ -47,10 +53,28 @@ class FlashCardPage extends React.Component {
   }
 
   setupNext() {
-    let notes = ["C", "D", "E", "F", "G", "A", "B"]
+    let notes = this.constructor.notes
     let offsets = [1,2,3,4,5,6]
 
-    let rootIdx = 1
+    let roots = []
+    for (let key in this.state.enabledRoots) {
+      if (this.state.enabledRoots[key]) {
+        let idx = notes.indexOf(key)
+        if (idx >= 0) {
+          roots.push(idx)
+        }
+      }
+    }
+
+    if (!roots.length) {
+      this.setState({
+        currentCard: null
+      })
+
+      return
+    }
+
+    let rootIdx = roots[this.rand.int() % roots.length]
     let note = notes[rootIdx] // hard code to C for now
     let offset = offsets[this.rand.int() % offsets.length]
     let answer = notes[(rootIdx + offset) % notes.length]
@@ -103,10 +127,15 @@ class FlashCardPage extends React.Component {
   }
 
   renderTestGroups() {
-    let notes = ["C", "D", "E", "F", "G", "A", "B"]
+    let notes = this.constructor.notes
 
     return <div className="test_groups">
-      {notes.map((note) => <div className={classNames("test_group", {selected: this.state.enabledRoots[note]})}>
+      {notes.map((note) =>
+        <div
+          key={note}
+          className={classNames("test_group", {
+            selected: this.state.enabledRoots[note]
+          })}>
           <label>
             <input
               type="checkbox"
@@ -114,6 +143,7 @@ class FlashCardPage extends React.Component {
               onChange={(e) => {
                 this.state.enabledRoots[note] = !this.state.enabledRoots[note]
                 this.forceUpdate()
+                this.setupNext()
               }}
               />
             {note}
@@ -125,7 +155,7 @@ class FlashCardPage extends React.Component {
 
   renderCurrentCard() {
     if (!this.state.currentCard) {
-      return;
+      return <div className="start_message">Select some roots to begin</div>
     }
 
     let card = this.state.currentCard
