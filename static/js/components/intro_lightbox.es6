@@ -5,7 +5,7 @@ class IntroLightbox extends Lightbox {
 
   static propTypes = {
     midi: types.object,
-    close: types.func.isRequired,
+    setInput: types.func.isRequired,
   }
 
   constructor(props) {
@@ -13,10 +13,12 @@ class IntroLightbox extends Lightbox {
     this.state = {}
   }
 
-  callClose() {
-    this.props.close({
-      input: this.state.selectedInput
-    })
+  close() {
+    if (this.state.selectedInput != null) {
+      this.props.setInput(this.state.selectedInput)
+    }
+
+    super.close()
   }
 
   renderContent() {
@@ -47,7 +49,7 @@ class IntroLightbox extends Lightbox {
       {midiSetup}
 
       <p>
-        <button onClick={this.callClose.bind(this)}>Continue</button>
+        <button onClick={this.close.bind(this)}>Continue</button>
       </p>
     </div>
   }

@@ -2,6 +2,7 @@ let {PropTypes: types} = React;
 
 class Lightbox extends React.Component {
   static className = null
+
   static propTypes = {
     close: types.func.isRequired,
   }
@@ -9,11 +10,7 @@ class Lightbox extends React.Component {
   componentDidMount() {
     this.closeListener = e => {
       if (e.keyCode == 27) {
-        if (this.callClose) {
-          this.callClose()
-        } else {
-          this.close()
-        }
+        this.close()
       }
     }
 
@@ -26,6 +23,15 @@ class Lightbox extends React.Component {
 
   renderContent() {
     throw new Error("override me")
+  }
+
+  close() {
+    if (!this.canClose()) { return }
+    N.trigger(this, "closeLightbox")
+  }
+
+  canClose() {
+    return true
   }
 
   render() {

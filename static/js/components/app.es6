@@ -2,13 +2,52 @@
 let {Router, Route, IndexRoute, Link, browserHistory, withRouter} = ReactRouter
 
 class Layout extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+
+  componentDidMount() {
+    N.dispatch(this, {
+      "closeLightbox": (e) => this.setState({currentLightbox: null}),
+      "showLightbox": (e, lb) => {
+        this.setState({
+          currentLightbox: lb
+        })
+      }
+    })
+  }
+
   render() {
     return <div className="page_layout">
       <div className="header_spacer">
         {this.renderHeader()}
       </div>
       {this.props.children}
+
+      <CSSTransitionGroup transitionName="show_lightbox" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
+        {this.renderCurrentLightbox()}
+      </CSSTransitionGroup>
     </div>
+  }
+
+  renderCurrentLightbox() {
+    if (!this.state.currentLightbox) { return }
+
+    // we clone to add ref
+    let lb = React.cloneElement(this.state.currentLightbox, {
+      ref: "currentLightbox"
+    })
+
+    return <div
+      className="lightbox_shroud"
+      onClick={(e) => {
+        if (e.target.classList.contains("lightbox_shroud")) {
+          this.refs.currentLightbox.close()
+          e.preventDefault();
+        }
+      }}
+      >{lb}</div>
   }
 
   doLogout() {

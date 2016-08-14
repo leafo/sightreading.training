@@ -4,7 +4,6 @@ class StatsLightbox extends Lightbox {
   static className = "stats_lightbox"
   static propTypes = {
     stats: types.object.isRequired,
-    close: types.func.isRequired,
   }
 
   constructor(props) {
@@ -139,9 +138,5 @@ class StatsLightbox extends Lightbox {
       </div>
       {statsContent}
     </div>;
-  }
-
-  close() {
-    this.props.close()
   }
 }

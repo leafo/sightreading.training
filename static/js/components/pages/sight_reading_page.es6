@@ -22,8 +22,6 @@ class SightReadingPage extends React.Component {
       scrollSpeed: 100,
 
       noteWidth: DEFAULT_NOTE_WIDTH,
-      statsLightboxOpen: false,
-      introLightboxOpen: false,
 
       bufferSize: 10,
       keyboardOpen: true,
@@ -45,10 +43,10 @@ class SightReadingPage extends React.Component {
   componentWillMount() {
     this.refreshNoteList()
     this.enterWaitMode()
-    this.setState({introLightboxOpen: true})
   }
 
   componentDidMount() {
+    // setTimeout(() => this.openIntroLightbox(), 10)
   }
 
   componentWillUnmount() {
@@ -193,42 +191,6 @@ class SightReadingPage extends React.Component {
   }
 
   render() {
-    let currentLightbox
-
-    if (this.state.statsLightboxOpen) {
-      currentLightbox = <StatsLightbox
-        ref="currentLightbox"
-        resetStats={() => this.setState({stats: new NoteStats()})}
-        close={() => this.setState({statsLightboxOpen: false})}
-        stats={this.state.stats} />;
-    }
-
-    if (this.state.introLightboxOpen) {
-      currentLightbox = <IntroLightbox
-        ref="currentLightbox"
-        midi={this.state.midi}
-        close={(opts) => {
-          this.setState({introLightboxOpen: false})
-          if (opts.input != null) {
-            this.pickInput(opts.input);
-          }
-        }} />;
-    }
-
-    if (currentLightbox) {
-      currentLightbox = <div
-        className="lightbox_shroud"
-        onClick={function(e) {
-          if (e.target.classList.contains("lightbox_shroud")) {
-            if (this.refs.currentLightbox.close) {
-              this.refs.currentLightbox.close()
-            }
-            e.preventDefault();
-          }
-        }.bind(this)}
-        >{currentLightbox}</div>
-    }
-
     return <div
       className={classNames({
         keyboard_open: this.state.keyboardOpen,
@@ -248,9 +210,6 @@ class SightReadingPage extends React.Component {
         {this.state.keyboardOpen ? "Hide Keyboard" : "Show Keyboard"}
       </button>
 
-      <CSSTransitionGroup transitionName="show_lightbox" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
-        {currentLightbox}
-      </CSSTransitionGroup>
     </div>;
   }
 
@@ -364,19 +323,32 @@ class SightReadingPage extends React.Component {
     this.refs.workspace.style.height = "auto";
   }
 
+  openIntroLightbox() {
+    N.trigger(this, "showLightbox",
+      <IntroLightbox
+        setInput={(input) => this.pickInput(input)}
+        midi={this.state.midi} />)
+  }
+
+  openStatsLightbox() {
+    N.trigger(this, "showLightbox",
+      <StatsLightbox
+        resetStats={() => this.setState({stats: new NoteStats()})}
+        close={() => alert("close the lightbox") }
+        stats={this.state.stats} />)
+  }
+
   renderWorkspace() {
     if (this.state.stats.streak) {
       var streak = <div className="stat_container">
         <div className="value">{this.state.stats.streak}</div>
         <div className="label">streak</div>
-      </div>;
+      </div>
     }
-
-    let openStats = () => this.setState({statsLightboxOpen: true})
 
     if (this.state.midi) {
       var inputStatus = <div
-        onClick={() => this.setState({introLightboxOpen: true})}
+        onClick={this.openIntroLightbox.bind(this)}
         className="current_input">
         <img src="/static/svg/midi.svg" alt="MIDI" />
         <span className="current_input_name">
@@ -395,17 +367,17 @@ class SightReadingPage extends React.Component {
       <div className="stats">
         {streak}
 
-        <div className="stat_container" onClick={openStats}>
+        <div className="stat_container" onClick={this.openStatsLightbox.bind(this)}>
           <div className="value">{this.state.stats.hits}</div>
           <div className="label">hits</div>
         </div>
 
-        <div className="stat_container" onClick={openStats}>
+        <div className="stat_container" onClick={this.openStatsLightbox.bind(this)}>
           <div className="value">{this.state.stats.misses}</div>
           <div className="label">misses</div>
         </div>
       </div>
-    </div>;
+    </div>
 
     let debug = <div className="debug">
       <pre>
@@ -413,8 +385,7 @@ class SightReadingPage extends React.Component {
         {" "}
         pressed: {JSON.stringify(this.state.touchedNotes)}
       </pre>
-    </div>;
-
+    </div>
 
     let modeToggle = <div className="tool">
       <span className="label">Mode</span>
