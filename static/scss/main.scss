@@ -187,10 +187,18 @@ form, .form {
 
     a {
         padding: 3px 6px;
+
+        &:hover {
+            color: $button_color;
+        }
+
         &.active {
             font-weight: bold;
             text-decoration: none;
             background: #f6f6f6;
+            color: darken($button_color, 8%);
+            border-radius: 2px;
+            box-shadow: 0 0 0 2px rgba(black, 0.1);
         }
     }
 }

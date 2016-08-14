@@ -25,6 +25,11 @@ class Layout extends React.Component {
   }
 
   renderHeader() {
+    let userLinks = [
+      <Link key="root" onlyActiveOnIndex to="/" activeClassName="active">Staff</Link>,
+      <Link key="flash-cards" to="/flash-cards" activeClassName="active">Flash cards</Link>
+    ]
+
     if (N.session.currentUser) {
       var userPanel = <div className="right_section">
         {N.session.currentUser.username}
@@ -32,12 +37,16 @@ class Layout extends React.Component {
         <a href="#" onClick={this.doLogout.bind(this)}>Log out</a>
       </div>
 
-      var userLinks = <Link to="/stats" activeClassName="active">Historical stats</Link>
+      userLinks.push(<Link
+          key="stats"
+          to="/stats"
+          activeClassName="active">Stats</Link>)
+
     } else {
       var userPanel = <div className="right_section">
-        <Link to="/login" className="button">Log in</Link>
+        <Link to="/login" activeClassName="active">Log in</Link>
         {" or "}
-        <Link to="/register" className="button">Register</Link>
+        <Link to="/register" activeClassName="active">Register</Link>
       </div>
     }
     return <div className="header">
