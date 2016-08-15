@@ -89,23 +89,62 @@ class FlashCardPage extends React.Component {
     this.setState({ cards }, fn)
   }
 
+  normalizeScores() {
+    let minScore = Math.min(...this.state.cards.map((c) => c.score))
+    minScore -= 1
+    if (minScore == 0) {
+      return
+    }
+
+    for (let card of this.state.cards) {
+      card.score -= minScore
+    }
+  }
+
   setupNext() {
     if (!this.state.cards) {
       this.setState({ currentCard: null })
       return
     }
 
-    let cardIdx = this.rand.int() % this.state.cards.length
-    let card = this.state.cards[cardIdx]
+    for (let card of this.state.cards) {
+      card.mistakes = null
+    }
 
-    if (card == this.state.currentCard) {
-      return this.setupNext()
+    // card weights
+    let divScore = 0
+
+    let cardsWithWeights = this.state.cards.filter((card) => {
+      return true
+      // return card != this.state.currentCard
+    }).map((card) => {
+      let score = 1 / Math.pow(card.score, 2)
+      divScore += score
+      return [score, card]
+    })
+
+    let incr = 0
+    let r = this.rand.random() * divScore
+
+    console.warn("Rolled", r)
+    for (let [weight, card] of cardsWithWeights) {
+      console.log(weight, card.label, card.score)
+    }
+
+    let chosenCard = null
+    for (let [weight, card] of cardsWithWeights) {
+      incr += weight
+
+      if (r < incr) {
+        chosenCard = card
+        break
+      }
     }
 
     this.setState({
       cardError: false,
       cardNumber: this.state.cardNumber + 1,
-      currentCard: card
+      currentCard: chosenCard
     })
   }
 
@@ -115,13 +154,22 @@ class FlashCardPage extends React.Component {
     }
 
     if (answer == this.state.currentCard.answer) {
+      if (!this.card.mistakes) {
+        this.state.currentCard.score += 1
+        this.normalizeScores()
+      }
+
       this.setupNext()
     } else {
+
       let card = this.state.currentCard
       let cardNumber = this.state.cardNumber
 
-      card.chosen = card.chosen || {}
-      card.chosen[answer] = true
+      card.score -= 1
+      this.normalizeScores()
+
+      card.mistakes = card.mistakes || {}
+      card.mistakes[answer] = true
 
       this.setState({ cardError: true })
 
@@ -177,7 +225,7 @@ class FlashCardPage extends React.Component {
     let options = card.options.map(a => 
       <button
         key={a}
-        disabled={card.chosen && card.chosen[a]}
+        disabled={card.mistakes && card.mistakes[a]}
         onClick={(e) => {
           e.preventDefault()
           this.checkAnswer(a)
