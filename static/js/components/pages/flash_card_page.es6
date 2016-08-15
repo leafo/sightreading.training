@@ -131,6 +131,11 @@ class FlashCardPage extends React.Component {
       }
     }
 
+    // no cards to pick, use first
+    if (!chosenCard) {
+      chosenCard = this.cards[0]
+    }
+
     this.setState({
       cardMistakes: null,
       cardError: false,
@@ -200,8 +205,9 @@ class FlashCardPage extends React.Component {
               checked={this.state.enabledRoots[note] || false}
               onChange={(e) => {
                 this.state.enabledRoots[note] = !this.state.enabledRoots[note]
-                this.forceUpdate()
-                this.setupNext()
+                this.refreshCards(() => {
+                  this.setupNext()
+                })
               }}
               />
             {note}
