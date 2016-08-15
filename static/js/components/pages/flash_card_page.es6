@@ -16,10 +16,6 @@ class FlashCardPage extends React.Component {
     this.rand = new MersenneTwister()
   }
 
-  componentWillMount() {
-    this.setupNext()
-  }
-
   componentDidMount() {
     this.upListener = event => {
       let key = keyCodeToChar(event.keyCode)
@@ -49,11 +45,19 @@ class FlashCardPage extends React.Component {
     window.addEventListener("keyup", this.upListener)
   }
 
+  componentWillMount() {
+    this.refreshCards(() => {
+      this.setupNext()
+    })
+  }
+
   componentWillUnmount() {
     window.removeEventListener("keyup", this.upListener)
   }
 
-  setupNext() {
+  refreshCards(fn) {
+    let cards = []
+
     let notes = this.constructor.notes
     let offsets = [1,2,3,4,5,6]
 
@@ -67,33 +71,41 @@ class FlashCardPage extends React.Component {
       }
     }
 
-    if (!roots.length) {
-      this.setState({
-        currentCard: null
-      })
+    for (let rootIdx of roots) {
+      let note = notes[rootIdx]
+      for (let offset of offsets) {
+        let answer = notes[(rootIdx + offset) % notes.length]
 
+        cards.push({
+          score: 1,
+          label: `${offset + 1} of ${note} is`,
+          answer: answer,
+          options: notes,
+        })
+
+      }
+    }
+
+    this.setState({ cards }, fn)
+  }
+
+  setupNext() {
+    if (!this.state.cards) {
+      this.setState({ currentCard: null })
       return
     }
 
-    let rootIdx = roots[this.rand.int() % roots.length]
-    let note = notes[rootIdx] // hard code to C for now
-    let offset = offsets[this.rand.int() % offsets.length]
-    let answer = notes[(rootIdx + offset) % notes.length]
+    let cardIdx = this.rand.int() % this.state.cards.length
+    let card = this.state.cards[cardIdx]
 
-    if (this.state.currentCard && answer == this.state.currentCard.answer) {
-      // no repeats
+    if (card == this.state.currentCard) {
       return this.setupNext()
     }
 
     this.setState({
       cardError: false,
       cardNumber: this.state.cardNumber + 1,
-      currentCard: {
-        type: "midi",
-        label: `${offset + 1} of ${note} is`,
-        answer: answer,
-        options: notes,
-      }
+      currentCard: card
     })
   }
 
