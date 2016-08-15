@@ -111,8 +111,7 @@ class FlashCardPage extends React.Component {
     let divScore = 0
 
     let cardsWithWeights = this.state.cards.filter((card) => {
-      return true
-      // return card != this.state.currentCard
+      return card != this.state.currentCard
     }).map((card) => {
       let score = 1 / Math.pow(card.score, 2)
       divScore += score
@@ -121,11 +120,6 @@ class FlashCardPage extends React.Component {
 
     let incr = 0
     let r = this.rand.random() * divScore
-
-    console.warn("Rolled", r)
-    for (let [weight, card] of cardsWithWeights) {
-      console.log(weight, card.label, card.score)
-    }
 
     let chosenCard = null
     for (let [weight, card] of cardsWithWeights) {
