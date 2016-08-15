@@ -294,32 +294,6 @@ form, .form {
         }
     }
 
-    .current_input {
-        opacity: 0.5;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        margin: 0 20px 10px 0;
-        color: #666;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-
-        &:hover {
-            opacity: 1.0;
-        }
-
-        img {
-            opacity: 0.6;
-            margin-right: 4px;
-        }
-
-        .current_input_name {
-            color: #444;
-            font-weight: bold;
-        }
-    }
 }
 
 .staff_wrapper {
@@ -538,5 +512,33 @@ form, .form {
     }
 }
 
+.midi_button {
+    background: transparent;
+
+    padding: 6px 8px;
+    color: #666;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 1.0;
+    }
+
+    img {
+        opacity: 0.6;
+        margin-right: 4px;
+    }
+
+    .current_input_name {
+        color: #444;
+        font-weight: bold;
+    }
+
+    &:hover {
+        background: lighten(#e7e7e7, 5%);
+    }
+}
 
 
