@@ -1,6 +1,7 @@
 
 let {PropTypes: types} = React
 let {Link} = ReactRouter
+let {CSSTransitionGroup} = React.addons || {}
 
 class FlashCardPage extends React.Component {
   static notes = ["C", "D", "E", "F", "G", "A", "B"]
@@ -85,6 +86,7 @@ class FlashCardPage extends React.Component {
     }
 
     this.setState({
+      cardError: false,
       cardNumber: this.state.cardNumber + 1,
       currentCard: {
         type: "midi",
@@ -172,9 +174,18 @@ class FlashCardPage extends React.Component {
     )
 
     return <div className="card_holder">
-      <div className={classNames("flash_card", {errorshake: this.state.cardError})}>
-        {card.label}
-      </div>
+      <CSSTransitionGroup
+        component="div"
+        className="transition_group"
+        transitionName="show_card"
+        transitionEnterTimeout={400}
+        transitionLeaveTimeout={400}>
+          <div key={this.state.cardNumber} className="card_row">
+            <div className={classNames("flash_card", {errorshake: this.state.cardError})}>
+              {card.label}
+            </div>
+          </div>
+      </CSSTransitionGroup>
       <div className="card_options" ref="cardOptions">{options}</div>
     </div>
   }

@@ -5,12 +5,77 @@
         margin: 40px 0;
     }
 
+    .transition_group {
+        position: relative;
+
+        > .card_row {
+            &:first-child {
+                position: static;
+            }
+
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+    }
+
     .flash_card {
         background: white;
         font-size: 80px;
         display: inline-block;
         padding: 80px 40px; 
         font-weight: bold;
+        position: relative;
+
+    }
+
+    .card_row {
+        $speed: 0.4s;
+        &.show_card-enter {
+            .flash_card {
+                opacity: 0.5;
+                transition: opacity $speed ease, transform $speed ease-out;
+                transform: scale(0.8, 0.8);
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    background: black;
+                    opacity: 0.5;
+                    transition: opacity $speed ease;
+                }
+            }
+
+            &.show_card-enter-active {
+                .flash_card {
+                    transform: scale(1,1);
+                    opacity: 1;
+                    &:before {
+                        opacity: 0;
+                    }
+                }
+            }
+        }
+
+        &.show_card-leave {
+            .flash_card {
+                transform: rotate(0);
+                transition: all $speed ease-out;
+                opacity: 1;
+            }
+
+            &.show_card-leave-active {
+                .flash_card {
+                    transform: translate(-100px, 50px) rotate(-40deg);
+                    opacity: 0;
+                }
+            }
+        }
     }
 
     .start_message {
@@ -60,4 +125,6 @@
             }
         }
     }
+
+
 }
