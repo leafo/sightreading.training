@@ -107,10 +107,6 @@ class FlashCardPage extends React.Component {
       return
     }
 
-    for (let card of this.state.cards) {
-      card.mistakes = null
-    }
-
     // card weights
     let divScore = 0
 
@@ -142,6 +138,7 @@ class FlashCardPage extends React.Component {
     }
 
     this.setState({
+      cardMistakes: null,
       cardError: false,
       cardNumber: this.state.cardNumber + 1,
       currentCard: chosenCard
@@ -154,7 +151,7 @@ class FlashCardPage extends React.Component {
     }
 
     if (answer == this.state.currentCard.answer) {
-      if (!this.card.mistakes) {
+      if (!this.state.cardMistakes) {
         this.state.currentCard.score += 1
         this.normalizeScores()
       }
@@ -165,13 +162,18 @@ class FlashCardPage extends React.Component {
       let card = this.state.currentCard
       let cardNumber = this.state.cardNumber
 
-      card.score -= 1
-      this.normalizeScores()
+      if (!this.state.cardMistakes) {
+        card.score -= 1
+        this.normalizeScores()
+      }
 
-      card.mistakes = card.mistakes || {}
-      card.mistakes[answer] = true
+      let mistakes = this.state.cardMistakes || {}
+      mistakes[answer] = true
 
-      this.setState({ cardError: true })
+      this.setState({
+        cardMistakes: mistakes,
+        cardError: true
+      })
 
       window.setTimeout(() => {
         if (this.state.cardNumber == cardNumber) {
@@ -225,7 +227,7 @@ class FlashCardPage extends React.Component {
     let options = card.options.map(a => 
       <button
         key={a}
-        disabled={card.mistakes && card.mistakes[a]}
+        disabled={this.state.cardMistakes && this.state.cardMistakes[a]}
         onClick={(e) => {
           e.preventDefault()
           this.checkAnswer(a)
