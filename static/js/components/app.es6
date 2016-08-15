@@ -1,10 +1,31 @@
 
 let {Router, Route, IndexRoute, Link, browserHistory, withRouter} = ReactRouter
+let {CSSTransitionGroup} = React.addons || {}
+
+
+let MidiButton = (props) =>
+  <button
+    onClick={(e) => {
+      e.preventDefault()
+      props.pickMidi()
+    }}
+    className="midi_button">
+      <img src="/static/svg/midi.svg" alt="MIDI" />
+      <span className="current_input_name">
+        {props.midiInput ? props.midiInput.name : "Select device"}
+      </span>
+  </button>
 
 class Layout extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
+
+    if (navigator.requestMIDIAccess) {
+      navigator.requestMIDIAccess().then(
+        midi => this.setState({midi: midi}),
+        error => console.warn("failed to get MIDI"))
+    }
   }
 
   componentDidMount() {
@@ -14,16 +35,41 @@ class Layout extends React.Component {
         this.setState({
           currentLightbox: lb
         })
+      },
+      "pickMidi": (e) => {
+        this.setState({
+          currentLightbox: <IntroLightbox
+            setInput={this.setInput.bind(this)} />
+        })
       }
     })
   }
 
+  componentWillUnmount() {
+    if (this.state.midiInput) {
+      console.log(`Unbinding: ${this.state.midiInput.name}`)
+      this.state.midiInput.onmidimessage = undefined
+    }
+  }
+
+  // these are mixed into all children's props (lightboxes included)
+  childProps() {
+    return {
+      midi: this.state.midi,
+      midiInput: this.state.midiInput
+    }
+  }
+
   render() {
+    let children = React.cloneElement(this.props.children, Object.assign({
+      ref: "currentPage"
+    }, this.childProps()))
+
     return <div className="page_layout">
       <div className="header_spacer">
         {this.renderHeader()}
       </div>
-      {this.props.children}
+      {children}
 
       <CSSTransitionGroup transitionName="show_lightbox" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
         {this.renderCurrentLightbox()}
@@ -34,10 +80,9 @@ class Layout extends React.Component {
   renderCurrentLightbox() {
     if (!this.state.currentLightbox) { return }
 
-    // we clone to add ref
-    let lb = React.cloneElement(this.state.currentLightbox, {
+    let lb = React.cloneElement(this.state.currentLightbox, Object.assign({
       ref: "currentLightbox"
-    })
+    }, this.childProps()))
 
     return <div
       className="lightbox_shroud"
@@ -97,7 +142,36 @@ class Layout extends React.Component {
 
       {userLinks}
       {userPanel}
+      <MidiButton {...this.childProps()} pickMidi={() => N.trigger(this, "pickMidi")} />
     </div>
+  }
+
+  midiInputs() {
+    if (!this.state.midi) return;
+    return [...this.state.midi.inputs.values()];
+  }
+
+  setInput(idx) {
+    let input = this.midiInputs()[idx]
+    if (!input) { return; }
+    if (this.state.midiInput) {
+      console.log(`Unbinding: ${this.state.midiInput.name}`)
+      this.state.midiInput.onmidimessage = undefined
+    }
+
+    console.log(`Binding to: ${input.name}`)
+    input.onmidimessage = this.onMidiMessage.bind(this)
+
+    this.setState({
+      midiInput: input
+    });
+  }
+
+  onMidiMessage(message) {
+    // proxy message to the current page
+    if (this.refs.currentPage.onMidiMessage) {
+      this.refs.currentPage.onMidiMessage(message)
+    }
   }
 }
 
@@ -106,12 +180,12 @@ class App extends React.Component {
     super()
     this.state = {
       routes: <Route path="/" component={withRouter(Layout)}>
-        <IndexRoute component={withRouter(SightReadingPage)}></IndexRoute>
+        <IndexRoute component={SightReadingPage}></IndexRoute>
         <Route path="login" component={withRouter(LoginPage)}></Route>
         <Route path="register" component={withRouter(RegisterPage)}></Route>
         <Route path="about" component={withRouter(AboutPage)}></Route>
         <Route path="stats" component={withRouter(StatsPage)}></Route>
-        <Route path="flash-cards" component={withRouter(FlashCardPage)}></Route>
+        <Route path="flash-cards" component={FlashCardPage}></Route>
       </Route>
     }
   }

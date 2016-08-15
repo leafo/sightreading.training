@@ -32,28 +32,11 @@ class SightReadingPage extends React.Component {
       stats: new NoteStats(N.session.currentUser),
       keySignature: new KeySignature(0),
     }
-
-    if (navigator.requestMIDIAccess) {
-      navigator.requestMIDIAccess().then(
-        midi => this.setState({midi: midi}),
-        error => console.warn("failed to get MIDI"))
-    }
   }
 
   componentWillMount() {
     this.refreshNoteList()
     this.enterWaitMode()
-  }
-
-  componentDidMount() {
-    // setTimeout(() => this.openIntroLightbox(), 10)
-  }
-
-  componentWillUnmount() {
-    if (this.state.currentInput) {
-      console.log(`Unbinding: ${this.state.currentInput.name}`)
-      this.state.currentInput.onmidimessage = undefined
-    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -82,12 +65,6 @@ class SightReadingPage extends React.Component {
     this.setState({
       notes: notes
     })
-
-  }
-
-  midiInputs() {
-    if (!this.state.midi) return;
-    return [...this.state.midi.inputs.values()];
   }
 
   // called when held notes reaches 0
@@ -132,21 +109,6 @@ class SightReadingPage extends React.Component {
     } else {
       return false;
     }
-  }
-
-  pickInput(idx) {
-    let input = this.midiInputs()[idx]
-    if (!input) { return; }
-    if (this.state.currentInput) {
-      console.log(`Unbinding: ${this.state.currentInput.name}`)
-      this.state.currentInput.onmidimessage = undefined
-    }
-
-    console.log(`Binding to: ${input.name}`)
-    input.onmidimessage = this.onMidiMessage.bind(this)
-    this.setState({
-      currentInput: input
-    });
   }
 
   pressNote(note) {
@@ -323,13 +285,6 @@ class SightReadingPage extends React.Component {
     this.refs.workspace.style.height = "auto";
   }
 
-  openIntroLightbox() {
-    N.trigger(this, "showLightbox",
-      <IntroLightbox
-        setInput={(input) => this.pickInput(input)}
-        midi={this.state.midi} />)
-  }
-
   openStatsLightbox() {
     N.trigger(this, "showLightbox",
       <StatsLightbox
@@ -343,17 +298,6 @@ class SightReadingPage extends React.Component {
       var streak = <div className="stat_container">
         <div className="value">{this.state.stats.streak}</div>
         <div className="label">streak</div>
-      </div>
-    }
-
-    if (this.state.midi) {
-      var inputStatus = <div
-        onClick={this.openIntroLightbox.bind(this)}
-        className="current_input">
-        <img src="/static/svg/midi.svg" alt="MIDI" />
-        <span className="current_input_name">
-          {this.state.currentInput ? this.state.currentInput.name : "Select device"}
-        </span>
       </div>
     }
 
@@ -427,7 +371,6 @@ class SightReadingPage extends React.Component {
           {modeToggle}
         </div>
       </div>
-      {inputStatus}
     </div>;
   }
 
