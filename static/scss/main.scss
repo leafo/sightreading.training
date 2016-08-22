@@ -532,6 +532,8 @@ form, .form {
     }
 
     .current_input_name {
+        @include single_line;
+        max-width: 150px;
         color: #444;
         font-weight: bold;
     }
