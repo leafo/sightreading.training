@@ -18,6 +18,12 @@ class SettingsPanel extends React.Component {
       </div>
 
       <div className="settings_group">
+        <button
+          disabled={this.props.savePreset || false}
+          onClick={this.savePreset.bind(this)}>Save preset</button>
+      </div>
+
+      <div className="settings_group">
         <h4>Staff</h4>
         {this.renderStaves()}
       </div>
@@ -36,6 +42,10 @@ class SettingsPanel extends React.Component {
         {this.renderKeys()}
       </div>
     </div>
+  }
+
+  savePreset() {
+    N.trigger(this, "saveGeneratorPreset")
   }
 
   renderStaves() {

@@ -50,6 +50,37 @@ class SightReadingPage extends React.Component {
     }
   }
 
+  componentDidMount() {
+    N.dispatch(this, {
+      saveGeneratorPreset: (e) => {
+        if (this.state.savingPreset) {
+          return;
+        }
+
+        let preset = JSON.stringify({
+          type: "notes",
+          name: this.state.currentGenerator.name,
+          settings: this.state.currentGeneratorSettings,
+        })
+
+        this.setState({savingPreset: true})
+
+        let request = new XMLHttpRequest()
+        request.open("POST", "/new-preset.json")
+        let data = new FormData()
+        data.append("csrf_token", N.csrf_token())
+        data.append("preset", preset)
+        request.send(data)
+
+        request.onload = (e) => {
+          let res = JSON.parse(request.responseText)
+          this.setState({savingPreset: false})
+        }
+      }
+    })
+
+  }
+
   refreshNoteList() {
     let generator = this.state.currentGenerator
 
@@ -184,6 +215,7 @@ class SightReadingPage extends React.Component {
       close={this.toggleSettings.bind(this)}
       staves={N.STAVES}
       generators={N.GENERATORS}
+      saveGeneratorPreset={this.state.savingPreset}
 
       currentGenerator={this.state.currentGenerator}
       currentStaff={this.state.currentStaff}

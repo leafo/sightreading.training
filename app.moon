@@ -51,13 +51,7 @@ class extends lapis.Application
 
   "/presets.json": get =>
     assert_error @current_user, "must be logged in"
+    @flow("presets")\list_presets!
 
-    import Presets from require "models"
-    presets = @current_user\get_presets!
-
-    json: {
-      success: true
-      presets: [p.data for p in *presets]
-    }
-
-
+  "/new-preset.json": post =>
+    @flow("presets")\create_preset!

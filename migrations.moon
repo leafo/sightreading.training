@@ -42,7 +42,6 @@ package.loaded.migrations =
       "PRIMARY KEY (user_id, hour, type)"
     }
 
-
   [1471017619]: =>
     create_table "presets", {
       {"id", serial}
