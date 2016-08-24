@@ -55,3 +55,6 @@ package.loaded.migrations =
       "PRIMARY KEY (id)"
     }
 
+  [1472141760]: =>
+    add_column "presets", "name", varchar
+

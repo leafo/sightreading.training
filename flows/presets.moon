@@ -1,5 +1,6 @@
 db = require "lapis.db"
 
+import trim_filter from require "lapis.util"
 import assert_valid from require "lapis.validate"
 
 import Presets from require "models"
@@ -15,14 +16,21 @@ class HitsFlow extends Flow
     }
 
   create_preset: =>
+    trim_filter @params
     assert_valid @params, {
       {"preset", type: "string"}
+      {"name", type: "string"}
     }
 
     import from_json from require "lapis.util"
     preset = from_json @params.preset
+    out = Presets\create {
+      user_id: @current_user.id
+      name: @params.name
+      data: preset
+    }
 
     json: {
       success: true
-      :preset
+      preset_id: out.id
     }
