@@ -32,6 +32,10 @@ class Keyboard extends React.Component {
         return
       }
 
+      if (event.target.matches("input")) {
+        return
+      }
+
       const key = keyCodeToChar(event.keyCode)
       const note = noteForKey("C5", key)
 
