@@ -52,7 +52,7 @@ class SightReadingPage extends React.Component {
 
   componentDidMount() {
     N.dispatch(this, {
-      saveGeneratorPreset: (e) => {
+      saveGeneratorPreset: (e, form) => {
         if (this.state.savingPreset) {
           return;
         }
@@ -67,7 +67,7 @@ class SightReadingPage extends React.Component {
 
         let request = new XMLHttpRequest()
         request.open("POST", "/new-preset.json")
-        let data = new FormData()
+        let data = new FormData(form)
         data.append("csrf_token", N.csrf_token())
         data.append("preset", preset)
         request.send(data)
@@ -78,7 +78,6 @@ class SightReadingPage extends React.Component {
         }
       }
     })
-
   }
 
   refreshNoteList() {

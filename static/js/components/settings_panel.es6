@@ -17,11 +17,7 @@ class SettingsPanel extends React.Component {
         <h3>Settings</h3>
       </div>
 
-      <div className="settings_group">
-        <button
-          disabled={this.props.savePreset || false}
-          onClick={this.savePreset.bind(this)}>Save preset</button>
-      </div>
+      {this.renderPresets()}
 
       <div className="settings_group">
         <h4>Staff</h4>
@@ -44,8 +40,21 @@ class SettingsPanel extends React.Component {
     </div>
   }
 
-  savePreset() {
-    N.trigger(this, "saveGeneratorPreset")
+  savePreset(e) {
+    e.preventDefault()
+    N.trigger(this, "saveGeneratorPreset", this.refs.presetForm)
+  }
+
+  renderPresets() {
+    return <div className="settings_group">
+      <form onSubmit={this.savePreset.bind(this)} ref="presetForm">
+        <label>
+          Name
+          <input type="text" name="name" />
+        </label>
+        <button disabled={this.props.savePreset || false}>Save preset</button>
+      </form>
+    </div>
   }
 
   renderStaves() {
