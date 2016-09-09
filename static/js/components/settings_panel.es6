@@ -10,6 +10,15 @@ class SettingsPanel extends React.Component {
     setGenerator: types.func.isRequired,
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+
+  componentDidMount() {
+    this.loadPresets()
+  }
+
   render() {
     return <div className="settings_panel">
       <div className="settings_header">
@@ -43,6 +52,32 @@ class SettingsPanel extends React.Component {
   savePreset(e) {
     e.preventDefault()
     N.trigger(this, "saveGeneratorPreset", this.refs.presetForm)
+  }
+
+  loadPresets() {
+    if (!N.session.currentUser) {
+      return
+    }
+
+    this.setState({
+      loadingPresets: true
+    })
+
+    let request = new XMLHttpRequest()
+    request.open("GET", "/presets.json")
+    request.send()
+    request.onload = (e) => {
+      try {
+        let res = JSON.parse(request.responseText)
+        this.setState({
+          loadingPresets: false,
+          presets: res.presets
+        })
+      } catch (e) {
+        this.setState({loadingPresets: false})
+      }
+    }
+
   }
 
   renderPresets() {
