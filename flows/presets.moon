@@ -9,10 +9,15 @@ import Flow from require "lapis.flow"
 class HitsFlow extends Flow
   list_presets: =>
     presets = @current_user\get_presets!
+    presets_formattted = for p in *presets
+      out = { id: p.id }
+      for k,v in pairs p.data
+        out[k] = v
+      out
 
     json: {
       success: true
-      presets: [p.data for p in *presets]
+      presets: presets_formattted
     }
 
   create_preset: =>

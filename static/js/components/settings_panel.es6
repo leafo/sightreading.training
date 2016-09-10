@@ -81,7 +81,21 @@ class SettingsPanel extends React.Component {
   }
 
   renderPresets() {
+    var presetsPicker
+
+    if (this.state.presets && this.state.presets.length) {
+      console.log(this.state.presets)
+      presetsPicker = <div className="presetsPicker">
+        <select>
+        {this.state.presets.map(p =>
+          <option key={p.id}>{p.name}</option>)}
+        </select>
+      </div>
+    }
+
+
     return <div className="settings_group">
+      {presetsPicker}
       <form onSubmit={this.savePreset.bind(this)} ref="presetForm">
         <label>
           Name
