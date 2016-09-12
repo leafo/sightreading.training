@@ -86,10 +86,14 @@ class SettingsPanel extends React.Component {
     if (this.state.presets && this.state.presets.length) {
       console.log(this.state.presets)
       presetsPicker = <div className="presetsPicker">
-        <select>
-        {this.state.presets.map(p =>
-          <option key={p.id}>{p.name}</option>)}
-        </select>
+        <Select
+          name="preset"
+          options={this.state.presets.map(p => ({
+              name: p.name,
+              value: p.name
+            }))
+          }
+        />
       </div>
     }
 
