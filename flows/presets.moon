@@ -10,10 +10,11 @@ class HitsFlow extends Flow
   list_presets: =>
     presets = @current_user\get_presets!
     presets_formattted = for p in *presets
-      out = { id: p.id }
-      for k,v in pairs p.data
-        out[k] = v
-      out
+      {
+        id: p.id
+        name: p.name
+        data: p.data
+      }
 
     json: {
       success: true
