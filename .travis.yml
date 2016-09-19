@@ -1,0 +1,13 @@
+language: c
+sudo: required
+
+services:
+  - docker
+
+install:
+  - docker build -t mursic-test .
+
+script:
+  - docker run mursic-test
+
+
