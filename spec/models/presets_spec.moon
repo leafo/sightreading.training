@@ -10,6 +10,7 @@ describe "models.presets", ->
 
   it "creates a preset", ->
     p = Presets\create {
+      name: "my preset"
       user_id: -1
       data: {
         type: "cool"
