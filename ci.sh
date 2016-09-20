@@ -8,9 +8,6 @@ luarocks-5.1 remove --force lapis
 luarocks-5.1 install https://luarocks.org/manifests/leafo/lapis-dev-1.rockspec
 eval $(luarocks-5.1 path)
 
-# prepare secrets
-rm -r secret
-cp -r secret_example secret
 echo "config 'test', -> logging false" >> config.moon
 
 # build
