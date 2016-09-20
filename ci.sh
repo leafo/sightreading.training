@@ -8,6 +8,9 @@ luarocks-5.1 remove --force lapis
 luarocks-5.1 install https://luarocks.org/manifests/leafo/lapis-dev-1.rockspec
 eval $(luarocks-5.1 path)
 
+# js
+npm install
+
 echo "config 'test', -> logging false" >> config.moon
 
 # build
