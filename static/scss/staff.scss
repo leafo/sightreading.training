@@ -161,3 +161,16 @@
 
 }
 
+
+.chord_staff {
+    .chord_scrolling {
+        margin-left: 120px;
+    }
+
+    .chord {
+        font-size: 24px;
+        font-weight: bold;
+        display: inline-block;
+        width: 100px;
+    }
+}

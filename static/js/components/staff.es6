@@ -24,10 +24,6 @@ class Staff extends React.Component {
     this.refs.notes.style.transform = `translate3d(${amount}px, 0, 0)`;
   }
 
-  componentDidUpdate() {
-    this.setOffset(this.props.slider.value);
-  }
-
   render() {
     return <div className={classNames("staff", this.props.staffClass)}>
       <img className="cleff" src={this.props.cleffImage} />
@@ -301,25 +297,48 @@ class FStaff extends Staff {
 class GrandStaff extends React.Component {
   // skips react for performance
   setOffset(amount) {
-    if (!this.gstaff) {
+    if (!this.staves) {
       return;
     }
 
-    this.gstaff.setOffset(amount);
-    this.fstaff.setOffset(amount);
+    this.staves.forEach(s => {
+      if (s) {
+        s.setOffset(amount)
+      }
+    })
   }
 
   render() {
+    this.staves = []
+
     return <div className="grand_staff">
       <GStaff
-        ref={(s) => this.gstaff = s}
+        ref={(s) => this.staves.push(s)}
         inGrand={true}
         {...this.props} />
       <FStaff
-        ref={(s) => this.fstaff = s}
+        ref={(s) => this.staves.push(s)}
         inGrand={true}
         {...this.props} />
     </div>;
+  }
+}
+
+class ChordStaff extends React.Component {
+  static propTypes = {
+    chords: types.array,
+  }
+
+  setOffset(amount) {
+    this.refs.chordScrolling.style.transform = `translate3d(${amount}px, 0, 0)`;
+  }
+
+  render() {
+    return <div className="chord_staff">
+      <div className="chord_scrolling" ref="chordScrolling">
+        {this.props.chords.map((c, i) => <span key={`${c}-${i}`} className="chord">{c}</span>)}
+      </div>
+    </div>
   }
 }
 
