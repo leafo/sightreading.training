@@ -81,6 +81,8 @@ class SettingsPanel extends React.Component {
   }
 
   renderPresets() {
+    if (!N.session.currentUser) { return }
+
     var presetsPicker
 
     if (this.state.presets && this.state.presets.length) {
@@ -96,7 +98,6 @@ class SettingsPanel extends React.Component {
         />
       </div>
     }
-
 
     return <div className="settings_group">
       {presetsPicker}
