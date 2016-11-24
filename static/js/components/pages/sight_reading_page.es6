@@ -192,17 +192,23 @@ class SightReadingPage extends React.Component {
     })}>
       {this.renderWorkspace()}
       {this.renderKeyboard()}
+
       <CSSTransitionGroup transitionName="slide_right" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
         {this.renderSettings()}
       </CSSTransitionGroup>
 
-      <button
-        onClick={this.toggleKeyboard.bind(this)}
-        className="keyboard_toggle">
-        {this.state.keyboardOpen ? "Hide Keyboard" : "Show Keyboard"}
-      </button>
-
+      {this.renderKeyboardToggle()}
     </div>;
+  }
+
+  renderKeyboardToggle() {
+    if (this.state.currentStaff.mode != "notes") { return }
+
+    return <button
+      onClick={this.toggleKeyboard.bind(this)}
+      className="keyboard_toggle">
+      {this.state.keyboardOpen ? "Hide Keyboard" : "Show Keyboard"}
+    </button>
   }
 
   renderSettings() {
@@ -231,9 +237,10 @@ class SightReadingPage extends React.Component {
   }
 
   renderKeyboard() {
-    if (!this.state.keyboardOpen) {
-      return;
-    }
+    console.log(this.state.currentStaff)
+
+    if (this.state.currentStaff.mode != "notes") { return }
+    if (!this.state.keyboardOpen) { return }
 
     let [lower, upper] = this.state.currentStaff.range;
 

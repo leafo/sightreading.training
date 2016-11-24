@@ -9,6 +9,7 @@ let smoothInput = {
 
 N.STAVES = [
   {
+    mode: "notes",
     name: "treble",
     range: ["A4", "C7"],
     render: function() {
@@ -18,6 +19,7 @@ N.STAVES = [
     },
   },
   {
+    mode: "notes",
     name: "bass",
     range: ["C3", "E5"],
     render: function() {
@@ -27,6 +29,7 @@ N.STAVES = [
     },
   },
   {
+    mode: "notes",
     name: "grand",
     range: ["C3", "C7"],
     render: function() {
@@ -36,6 +39,7 @@ N.STAVES = [
     },
   },
   {
+    mode: "chords",
     name: "chord",
     range: ["B7", "C8"],
     render: function() {
