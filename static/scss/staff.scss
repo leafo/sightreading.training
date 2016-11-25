@@ -162,17 +162,19 @@
 }
 
 
+
 .chord_staff {
+    padding: 40px 0;
+
     .chord_scrolling {
-        padding-left: 120px;
         white-space: nowrap;
         overflow: hidden;
     }
 
     .chord {
-        font-size: 24px;
+        font-size: 30px;
         font-weight: bold;
         display: inline-block;
-        width: 100px;
+        width: 170px;
     }
 }
