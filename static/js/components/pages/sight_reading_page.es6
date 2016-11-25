@@ -112,7 +112,6 @@ class SightReadingPage extends React.Component {
 
   // called when held notes reaches 0
   checkRelease() {
-
     switch (this.state.currentGenerator.mode) {
       case "notes":
         let missed = this.state.notes.currentColumn()
@@ -150,9 +149,12 @@ class SightReadingPage extends React.Component {
           N.event("sight_reading", "chord", "miss");
 
           this.setState({
+            noteShaking: true,
             heldNotes: {},
             touchedNotes: {},
           })
+
+          setTimeout(() => this.setState({noteShaking: false}), 500);
         }
         break
     }

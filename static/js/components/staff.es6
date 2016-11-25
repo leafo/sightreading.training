@@ -336,7 +336,10 @@ class ChordStaff extends React.Component {
   render() {
     return <div className="chord_staff">
       <div className="chord_scrolling" ref="chordScrolling">
-        {this.props.chords.map((c, i) => <span key={`${c}-${i}`} className="chord">{c.toString()}</span>)}
+        {this.props.chords.map((c, i) =>
+          <span key={`${c}-${i}`} className={classNames("chord", {
+            errorshake: this.props.noteShaking && i == 0,
+          })}>{c.toString()}</span>)}
       </div>
     </div>
   }

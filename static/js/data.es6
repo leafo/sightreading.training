@@ -45,6 +45,7 @@ N.STAVES = [
     render: function() {
       return <ChordStaff 
         chords={this.state.notes}
+        noteShaking={this.state.noteShaking}
         ref={(staff) => this.staff = staff} />
     }
   }
