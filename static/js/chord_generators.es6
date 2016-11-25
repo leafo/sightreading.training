@@ -4,12 +4,16 @@ class ChordGenerator {
     this.noteCount = opts.notes
 
     this.generator = new MersenneTwister()
+
     switch (opts.scale) {
       case "major":
         this.scale = new MajorScale(keySignature.name())
         break
       case "minor":
         this.scale = new MinorScale(keySignature.name())
+        break
+      case "major blues":
+        this.scale = new MajorBluesScale(keySignature.name())
         break
     }
 

@@ -229,8 +229,9 @@ N.GENERATORS = [
         name: "scale",
         type: "select",
         values: [
-          { name: "major", value: "major" },
-          { name: "minor", value: "minor" }
+          { name: "major" },
+          { name: "minor" },
+          { name: "major blues"},
         ]
       },
       {
