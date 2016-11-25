@@ -16,7 +16,17 @@ class ChordGenerator {
   }
 
   nextChord() {
-    let degree = (this.generator.int() % this.scale.steps.length) + 1
+    let degree
+
+    while (true) {
+      degree = (this.generator.int() % this.scale.steps.length) + 1
+      if (degree != this.lastDegree) {
+        break
+      }
+    }
+
+    this.lastDegree = degree
+
     let steps = this.scale.buildChordSteps(degree, this.noteCount - 1)
     let root = this.scale.degreeToName(degree)
 
