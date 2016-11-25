@@ -91,8 +91,6 @@ class SightReadingPage extends React.Component {
       this.state.keySignature,
       this.state.currentGeneratorSettings)
 
-    console.warn("instance", generatorInstance);
-
     var notes
 
     switch (generator.mode) {
