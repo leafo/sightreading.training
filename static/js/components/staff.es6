@@ -25,6 +25,10 @@ class Staff extends React.Component {
   }
 
   render() {
+    if (!(this.props.notes instanceof NoteList)) {
+      return <div />
+    }
+
     return <div className={classNames("staff", this.props.staffClass)}>
       <img className="cleff" src={this.props.cleffImage} />
 
@@ -334,6 +338,10 @@ class ChordStaff extends React.Component {
   }
 
   render() {
+    if (!(this.props.chords instanceof ChordList)) {
+      return <div />
+    }
+
     return <div className="chord_staff">
       <div className="chord_scrolling" ref="chordScrolling">
         {this.props.chords.map((c, i) =>
