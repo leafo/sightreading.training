@@ -154,7 +154,7 @@ class SettingsPanel extends React.Component {
     if (!g.inputs || !g.inputs.length) return
     return <div className="settings_group">
       <GeneratorSettings
-        key={g.name}
+        key={`${g.name}-${g.mode}`}
         generator={g}
         setGenerator={this.props.setGenerator} />
     </div>

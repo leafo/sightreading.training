@@ -222,7 +222,7 @@ N.GENERATORS = [
     }
   },
   {
-    name: "basic",
+    name: "random",
     mode: "chords",
     inputs: [
       {
