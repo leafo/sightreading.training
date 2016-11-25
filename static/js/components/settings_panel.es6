@@ -16,7 +16,9 @@ class SettingsPanel extends React.Component {
   }
 
   componentDidMount() {
-    this.loadPresets()
+    if (N.enable_presets) {
+      this.loadPresets()
+    }
   }
 
   render() {
@@ -53,9 +55,7 @@ class SettingsPanel extends React.Component {
   }
 
   loadPresets() {
-    if (!N.session.currentUser) {
-      return
-    }
+    if (!N.session.currentUser) { return }
 
     this.setState({
       loadingPresets: true
@@ -79,6 +79,7 @@ class SettingsPanel extends React.Component {
   }
 
   renderPresets() {
+    if (!N.enable_presets) { return }
     if (!N.session.currentUser) { return }
 
     var presetsPicker
