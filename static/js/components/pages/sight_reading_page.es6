@@ -182,6 +182,89 @@ class SightReadingPage extends React.Component {
     }
   }
 
+  toggleMode() {
+    if (this.state.mode == "wait") {
+      this.enterScrollMode();
+    } else {
+      this.enterWaitMode();
+    }
+  }
+
+  enterWaitMode() {
+    if (this.state.slider) {
+      this.state.slider.cancel();
+    }
+
+    this.setState({
+      mode: "wait",
+      noteWidth: DEFAULT_NOTE_WIDTH,
+      slider: new SlideToZero({
+        speed: DEFAULT_SPEED,
+        onUpdate: this.setOffset.bind(this)
+      })
+    })
+  }
+
+  enterScrollMode() {
+    let noteWidth = DEFAULT_NOTE_WIDTH * 2;
+
+    if (this.state.slider) {
+      this.state.slider.cancel();
+    }
+
+    this.setState({
+      mode: "scroll",
+      noteWidth: noteWidth,
+      slider: new SlideToZero({
+        speed: this.state.scrollSpeed,
+        loopPhase: noteWidth,
+        initialValue: noteWidth * 3,
+        onUpdate: this.setOffset.bind(this),
+        onLoop: function() {
+          this.state.stats.missNotes(this.state.notes.currentColumn());
+          this.state.notes.shift();
+          this.state.notes.pushRandom();
+          this.forceUpdate();
+        }.bind(this)
+      })
+    });
+  }
+
+
+
+
+
+  setOffset(value) {
+    if (!this.staff) { return; }
+    this.staff.setOffset(value);
+  }
+
+  toggleSettings() {
+    this.setState({
+      settingsOpen: !this.state.settingsOpen
+    });
+    this.recalcFlex();
+  }
+
+  toggleKeyboard() {
+    this.setState({keyboardOpen: !this.state.keyboardOpen});
+    this.recalcFlex();
+  }
+
+  recalcFlex() {
+    this.refs.workspace.style.height = "0px";
+    this.refs.workspace.offsetHeight;
+    this.refs.workspace.style.height = "auto";
+  }
+
+  openStatsLightbox() {
+    N.trigger(this, "showLightbox",
+      <StatsLightbox
+        resetStats={() => this.setState({stats: new NoteStats()})}
+        close={() => alert("close the lightbox") }
+        stats={this.state.stats} />)
+  }
+
   render() {
     return <div
       className={classNames({
@@ -263,85 +346,6 @@ class SightReadingPage extends React.Component {
       heldNotes={this.state.heldNotes}
       onKeyDown={this.pressNote.bind(this)}
       onKeyUp={this.releaseNote.bind(this)} />;
-  }
-
-  toggleMode() {
-    if (this.state.mode == "wait") {
-      this.enterScrollMode();
-    } else {
-      this.enterWaitMode();
-    }
-  }
-
-  enterScrollMode() {
-    let noteWidth = DEFAULT_NOTE_WIDTH * 2;
-
-    if (this.state.slider) {
-      this.state.slider.cancel();
-    }
-
-    this.setState({
-      mode: "scroll",
-      noteWidth: noteWidth,
-      slider: new SlideToZero({
-        speed: this.state.scrollSpeed,
-        loopPhase: noteWidth,
-        initialValue: noteWidth * 3,
-        onUpdate: this.setOffset.bind(this),
-        onLoop: function() {
-          this.state.stats.missNotes(this.state.notes.currentColumn());
-          this.state.notes.shift();
-          this.state.notes.pushRandom();
-          this.forceUpdate();
-        }.bind(this)
-      })
-    });
-  }
-
-  enterWaitMode() {
-    if (this.state.slider) {
-      this.state.slider.cancel();
-    }
-
-    this.setState({
-      mode: "wait",
-      noteWidth: DEFAULT_NOTE_WIDTH,
-      slider: new SlideToZero({
-        speed: DEFAULT_SPEED,
-        onUpdate: this.setOffset.bind(this)
-      })
-    })
-  }
-
-  setOffset(value) {
-    if (!this.staff) { return; }
-    this.staff.setOffset(value);
-  }
-
-  toggleSettings() {
-    this.setState({
-      settingsOpen: !this.state.settingsOpen
-    });
-    this.recalcFlex();
-  }
-
-  toggleKeyboard() {
-    this.setState({keyboardOpen: !this.state.keyboardOpen});
-    this.recalcFlex();
-  }
-
-  recalcFlex() {
-    this.refs.workspace.style.height = "0px";
-    this.refs.workspace.offsetHeight;
-    this.refs.workspace.style.height = "auto";
-  }
-
-  openStatsLightbox() {
-    N.trigger(this, "showLightbox",
-      <StatsLightbox
-        resetStats={() => this.setState({stats: new NoteStats()})}
-        close={() => alert("close the lightbox") }
-        stats={this.state.stats} />)
   }
 
   renderWorkspace() {
