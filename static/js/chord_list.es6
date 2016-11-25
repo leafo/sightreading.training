@@ -26,11 +26,7 @@ export class ChordList extends Array {
   }
 
   matchesHead(notes) {
-    console.warn("matches head", notes)
-  }
-
-  currentColumn() {
-    return []
+    return this[0].containsNotes(notes)
   }
 }
 

@@ -112,13 +112,13 @@ class SightReadingPage extends React.Component {
 
   // called when held notes reaches 0
   checkRelease() {
-    N.event("sight_reading", "note", "miss");
 
     switch (this.state.currentGenerator.mode) {
       case "notes":
         let missed = this.state.notes.currentColumn()
           .filter((n) => !this.state.heldNotes[n]);
 
+        N.event("sight_reading", "note", "miss");
         this.state.stats.missNotes(missed);
 
         this.setState({
@@ -131,14 +131,35 @@ class SightReadingPage extends React.Component {
         break
 
       case "chords":
-        console.warn("check for chord completion", this.state.heldNotes)
+        let touched = Object.keys(this.state.touchedNotes);
+
+        if (this.state.notes.matchesHead(touched) && touched.length > 2) {
+          N.event("sight_reading", "chord", "hit");
+          this.state.notes.shift()
+          this.state.notes.pushRandom()
+
+          this.setState({
+            notes: this.state.notes,
+            noteShaking: false,
+            heldNotes: {},
+            touchedNotes: {},
+          })
+
+          this.state.slider.add(this.state.noteWidth)
+        } else {
+          N.event("sight_reading", "chord", "miss");
+
+          this.setState({
+            heldNotes: {},
+            touchedNotes: {},
+          })
+        }
         break
     }
-
-    return true;
   }
 
   // called on every noteOn
+  // return true to trigger redraw
   checkPress() {
     switch (this.state.currentGenerator.mode) {
       case "notes":
@@ -159,9 +180,9 @@ class SightReadingPage extends React.Component {
 
           this.state.slider.add(this.state.noteWidth);
 
-          return true;
+          return true
         } else {
-          return false;
+          return false
         }
 
       case "chords":

@@ -548,6 +548,27 @@ export class Chord extends Scale {
       }
     }
   }
+
+  // do all the notes fit this chord
+  containsNotes(notes) {
+    if (!notes.length) {
+      return false
+    }
+
+    for (let note of notes) {
+      if (!this.containsNote(note)) {
+        return false
+      }
+    }
+
+    return true
+  }
+
+  toString() {
+    let name = this.chordShapeName()
+    if (name == "M") { name = "" }
+    return `${this.root}${name}`
+  }
 }
 
 

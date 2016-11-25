@@ -4,6 +4,6 @@ class ChordGenerator {
   }
 
   nextChord() {
-    return "Em"
+    return new Chord("E", "M")
   }
 }
