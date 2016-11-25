@@ -231,7 +231,7 @@ N.GENERATORS = [
         values: [
           { name: "major" },
           { name: "minor" },
-          { name: "major blues"},
+          // { name: "major blues"},
         ]
       },
       {

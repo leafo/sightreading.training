@@ -485,6 +485,10 @@ export class Chord extends Scale {
     "7": [4, 3, 3],
     "m7": [3, 4, 3],
     "m7b5": [3, 3, 4],
+
+    // exotic
+    "Q": [5, 5], // quartal
+    "Qb4": [4, 5],
   }
 
   // Chord.notes("C5", "M", 1) -> first inversion C major chord
@@ -566,6 +570,10 @@ export class Chord extends Scale {
 
   toString() {
     let name = this.chordShapeName()
+    if (!name) {
+      console.warn("don't know name of chord", this.root, this.steps, this.getRange(5, 3))
+    }
+
     if (name == "M") { name = "" }
     return `${this.root}${name}`
   }
