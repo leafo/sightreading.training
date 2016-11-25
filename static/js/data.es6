@@ -44,7 +44,7 @@ N.STAVES = [
     range: ["B7", "C8"],
     render: function() {
       return <ChordStaff 
-        chords={["Em", "Am", "D", "F#m", "Em"]}
+        chords={this.state.notes}
         ref={(staff) => this.staff = staff} />
     }
   }
