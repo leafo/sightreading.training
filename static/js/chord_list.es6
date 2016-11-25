@@ -24,6 +24,14 @@ export class ChordList extends Array {
       this.pushRandom();
     }
   }
+
+  matchesHead(notes) {
+    console.warn("matches head", notes)
+  }
+
+  currentColumn() {
+    return []
+  }
 }
 
 

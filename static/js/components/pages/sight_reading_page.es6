@@ -111,46 +111,62 @@ class SightReadingPage extends React.Component {
   }
 
   // called when held notes reaches 0
-  checkForMiss() {
+  checkRelease() {
     N.event("sight_reading", "note", "miss");
 
-    let missed = this.state.notes.currentColumn()
-      .filter((n) => !this.state.heldNotes[n]);
+    switch (this.state.currentGenerator.mode) {
+      case "notes":
+        let missed = this.state.notes.currentColumn()
+          .filter((n) => !this.state.heldNotes[n]);
 
-    this.state.stats.missNotes(missed);
+        this.state.stats.missNotes(missed);
 
-    this.setState({
-      noteShaking: true,
-      heldNotes: {},
-      touchedNotes: {},
-    });
+        this.setState({
+          noteShaking: true,
+          heldNotes: {},
+          touchedNotes: {},
+        });
 
-    setTimeout(() => this.setState({noteShaking: false}), 500);
+        setTimeout(() => this.setState({noteShaking: false}), 500);
+        break
+
+      case "chords":
+        console.warn("check for chord completion", this.state.heldNotes)
+        break
+    }
+
     return true;
   }
 
   // called on every noteOn
-  checkForHit() {
-    let touched = Object.keys(this.state.touchedNotes);
-    if (this.state.notes.matchesHead(touched, this.state.anyOctave)) {
-      N.event("sight_reading", "note", "hit");
+  checkPress() {
+    switch (this.state.currentGenerator.mode) {
+      case "notes":
+        let touched = Object.keys(this.state.touchedNotes);
+        if (this.state.notes.matchesHead(touched, this.state.anyOctave)) {
+          N.event("sight_reading", "note", "hit");
 
-      this.state.notes.shift();
-      this.state.notes.pushRandom();
-      this.state.stats.hitNotes(touched);
+          this.state.notes.shift();
+          this.state.notes.pushRandom();
+          this.state.stats.hitNotes(touched);
 
-      this.setState({
-        notes: this.state.notes,
-        noteShaking: false,
-        heldNotes: {},
-        touchedNotes: {},
-      });
+          this.setState({
+            notes: this.state.notes,
+            noteShaking: false,
+            heldNotes: {},
+            touchedNotes: {},
+          });
 
-      this.state.slider.add(this.state.noteWidth);
+          this.state.slider.add(this.state.noteWidth);
 
-      return true;
-    } else {
-      return false;
+          return true;
+        } else {
+          return false;
+        }
+
+      case "chords":
+        // chords only check on release
+        return false
     }
   }
 
@@ -158,7 +174,7 @@ class SightReadingPage extends React.Component {
     this.state.heldNotes[note] = true;
     this.state.touchedNotes[note] = true;
 
-    if (!this.checkForHit()) {
+    if (!this.checkPress()) {
       this.forceUpdate();
     }
   }
@@ -168,7 +184,7 @@ class SightReadingPage extends React.Component {
     if (this.state.heldNotes[note]) {
       delete this.state.heldNotes[note];
       if (Object.keys(this.state.heldNotes).length == 0) {
-        this.checkForMiss();
+        this.checkRelease();
       }
     }
   }
