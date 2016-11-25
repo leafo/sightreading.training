@@ -35,7 +35,6 @@ class SightReadingPage extends React.Component {
 
     // manually copy state because set state hasn't applied yet
     for (let key in state) {
-      console.warn(key, state[key])
       this.state[key] = state[key]
     }
 
@@ -87,18 +86,30 @@ class SightReadingPage extends React.Component {
   refreshNoteList() {
     let generator = this.state.currentGenerator
 
-    let notes = new NoteList([], {
-      generator: generator.create.call(generator,
-        this.state.currentStaff,
-        this.state.keySignature,
-        this.state.currentGeneratorSettings),
-    });
+    let generatorInstance = generator.create.call(generator,
+      this.state.currentStaff,
+      this.state.keySignature,
+      this.state.currentGeneratorSettings)
 
-    notes.fillBuffer(this.state.bufferSize);
+    console.warn("instance", generatorInstance);
 
-    this.setState({
-      notes: notes
-    })
+    var notes
+
+    switch (generator.mode) {
+      case "notes":
+        notes = new NoteList([], { generator: generatorInstance })
+        break
+      case "chords":
+        notes = new ChordList([], { generator: generatorInstance })
+        break
+    }
+
+    if (!notes) {
+      throw new Error(`unknown generator mode: ${generator.mode}`)
+    }
+
+    notes.fillBuffer(this.state.bufferSize)
+    return this.setState({ notes: notes })
   }
 
   // called when held notes reaches 0

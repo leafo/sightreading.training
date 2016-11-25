@@ -225,7 +225,7 @@ N.GENERATORS = [
     mode: "chords",
     inputs: [],
     create: function(staff, keySignature, options) {
-      return {}
+      return new ChordGenerator(KeySignature, options)
     }
   }
 ]
