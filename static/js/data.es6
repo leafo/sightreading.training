@@ -224,7 +224,23 @@ N.GENERATORS = [
   {
     name: "basic",
     mode: "chords",
-    inputs: [],
+    inputs: [
+      {
+        name: "scale",
+        type: "select",
+        values: [
+          { name: "major", value: "major" },
+          { name: "minor", value: "minor" }
+        ]
+      },
+      {
+        name: "notes",
+        type: "range",
+        default: 3,
+        min: 3,
+        max: 4,
+      }
+    ],
     create: function(staff, keySignature, options) {
       return new ChordGenerator(keySignature, options)
     }
