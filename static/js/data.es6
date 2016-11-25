@@ -53,6 +53,7 @@ N.STAVES = [
 N.GENERATORS = [
   {
     name: "random",
+    mode: "notes",
     inputs: [
       {
         name: "notes",
@@ -91,6 +92,7 @@ N.GENERATORS = [
   },
   {
     name: "sweep",
+    mode: "notes",
     debug: true,
     create: function(staff, keySignature) {
       let notes = new MajorScale(keySignature)
@@ -101,6 +103,7 @@ N.GENERATORS = [
   },
   {
     name: "steps",
+    mode: "notes",
     debug: true, // not needed anymore with smoothness
     create: function(staff, keySignature) {
       let notes = new MajorScale(keySignature)
@@ -110,6 +113,7 @@ N.GENERATORS = [
   },
   {
     name: "triads",
+    mode: "notes",
     inputs: [
       smoothInput
     ],
@@ -121,6 +125,7 @@ N.GENERATORS = [
   },
   {
     name: "sevens",
+    mode: "notes",
     inputs: [
       smoothInput
     ],
@@ -132,6 +137,7 @@ N.GENERATORS = [
   },
   {
     name: "progression",
+    mode: "notes",
     inputs: [
       smoothInput,
       {
@@ -205,12 +211,21 @@ N.GENERATORS = [
   },
   {
     name: "position",
+    mode: "notes",
     inputs: [],
     create: function(staff, keySignature, options) {
       let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
 
       return new PositionGenerator(notes, options)
+    }
+  },
+  {
+    name: "basic",
+    mode: "chords",
+    inputs: [],
+    create: function(staff, keySignature, options) {
+      return {}
     }
   }
 ]

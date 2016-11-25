@@ -231,14 +231,27 @@ class SightReadingPage extends React.Component {
         currentGeneratorSettings: settings,
       })}
 
-      setStaff={s => this.setState({currentStaff: s})}
+      setStaff={s => {
+        let update = {currentStaff: s}
+
+        // if the current generator is not compatible with new staff change it
+        if (this.state.currentGenerator.mode != s.mode) {
+          let newGenerator = N.GENERATORS.find(g => s.mode == g.mode)
+          if (!newGenerator) {
+            console.warn("failed to find new generator for staff")
+          }
+
+          update.currentGenerator = newGenerator
+          update.currentGeneratorSettings = GeneratorSettings.inputDefaults(newGenerator)
+        }
+
+        this.setState(update)
+      }}
       setKeySignature={k => this.setState({keySignature: k})}
     />
   }
 
   renderKeyboard() {
-    console.log(this.state.currentStaff)
-
     if (this.state.currentStaff.mode != "notes") { return }
     if (!this.state.keyboardOpen) { return }
 

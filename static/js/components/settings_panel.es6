@@ -38,9 +38,7 @@ class SettingsPanel extends React.Component {
         {this.renderGenerators()}
       </div>
 
-      <div className="settings_group">
-        {this.renderGeneratorInputs()}
-      </div>
+      {this.renderGeneratorInputs()}
 
       <div className="settings_group">
         <h4>Key</h4>
@@ -129,7 +127,11 @@ class SettingsPanel extends React.Component {
   renderGenerators() {
     return this.props.generators.map((generator, i) => {
       if (generator.debug) {
-        return;
+        return
+      }
+
+      if (generator.mode != this.props.currentStaff.mode) {
+        return
       }
 
       return <div
@@ -149,10 +151,12 @@ class SettingsPanel extends React.Component {
   renderGeneratorInputs() {
     let g = this.props.currentGenerator
     if (!g.inputs) return
-    return <GeneratorSettings
-      key={g.name}
-      generator={g}
-      setGenerator={this.props.setGenerator} />
+    return <div className="settings_group">
+      <GeneratorSettings
+        key={g.name}
+        generator={g}
+        setGenerator={this.props.setGenerator} />
+    </div>
   }
 
   renderKeys() {
