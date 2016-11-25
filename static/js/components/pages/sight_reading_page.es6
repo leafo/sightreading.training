@@ -10,8 +10,6 @@ class SightReadingPage extends React.Component {
   constructor(props) {
     super(props);
 
-    let defaultGenerator = N.GENERATORS[0]
-
     this.state = {
       midi: null,
       noteShaking: false,
@@ -26,15 +24,21 @@ class SightReadingPage extends React.Component {
       bufferSize: 10,
       keyboardOpen: true,
       settingsOpen: false,
-      currentStaff: N.STAVES[0],
-      currentGenerator: defaultGenerator,
-      currentGeneratorSettings: GeneratorSettings.inputDefaults(defaultGenerator),
+
       stats: new NoteStats(N.session.currentUser),
       keySignature: new KeySignature(0),
     }
   }
 
   componentWillMount() {
+    let state = this.setStaff(N.STAVES[0])
+
+    // manually copy state because set state hasn't applied yet
+    for (let key in state) {
+      console.warn(key, state[key])
+      this.state[key] = state[key]
+    }
+
     this.refreshNoteList()
     this.enterWaitMode()
   }
@@ -230,9 +234,23 @@ class SightReadingPage extends React.Component {
     });
   }
 
+  setStaff(staff) {
+    let update = {currentStaff: staff}
 
+    // if the current generator is not compatible with new staff change it
+    if (!this.currentGenerator || (this.state.currentGenerator.mode != staff.mode)) {
+      let newGenerator = N.GENERATORS.find(g => staff.mode == g.mode)
+      if (!newGenerator) {
+        console.warn("failed to find new generator for staff")
+      }
 
+      update.currentGenerator = newGenerator
+      update.currentGeneratorSettings = GeneratorSettings.inputDefaults(newGenerator)
+    }
 
+    this.setState(update)
+    return update
+  }
 
   setOffset(value) {
     if (!this.staff) { return; }
@@ -314,22 +332,7 @@ class SightReadingPage extends React.Component {
         currentGeneratorSettings: settings,
       })}
 
-      setStaff={s => {
-        let update = {currentStaff: s}
-
-        // if the current generator is not compatible with new staff change it
-        if (this.state.currentGenerator.mode != s.mode) {
-          let newGenerator = N.GENERATORS.find(g => s.mode == g.mode)
-          if (!newGenerator) {
-            console.warn("failed to find new generator for staff")
-          }
-
-          update.currentGenerator = newGenerator
-          update.currentGeneratorSettings = GeneratorSettings.inputDefaults(newGenerator)
-        }
-
-        this.setState(update)
-      }}
+      setStaff={this.setStaff.bind(this)}
       setKeySignature={k => this.setState({keySignature: k})}
     />
   }
