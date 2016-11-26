@@ -180,7 +180,7 @@ class SightReadingPage extends React.Component {
             touchedNotes: {},
           });
 
-          this.state.slider.add(this.state.noteWidth);
+          this.state.slider.add(this.state.noteWidth)
 
           return true
         } else {
@@ -271,7 +271,14 @@ class SightReadingPage extends React.Component {
         speed: this.state.scrollSpeed,
         loopPhase: noteWidth,
         initialValue: noteWidth * 3,
-        onUpdate: this.setOffset.bind(this),
+        onUpdate: value => {
+          if (value < 220) {
+            this.state.slider.value = 220
+            this.state.slider.cancel()
+          }
+
+          this.setOffset(value)
+        },
         onLoop: function() {
           this.state.stats.missNotes(this.state.notes.currentColumn());
           this.state.notes.shift();

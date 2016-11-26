@@ -32,14 +32,16 @@ class SlideToZero {
     }
 
     let lastFrame = performance.now();
-    this.animating = true;
+    this.animating = true
+    this.canceled = false
     this.onStart();
 
-    let frameUpdate = function(time) {
+    let frameUpdate = time => {
       let dt = (time - lastFrame) / 1000;
       lastFrame = time;
 
       if (this.canceled) {
+        this.animating = false;
         return;
       }
 
@@ -66,7 +68,7 @@ class SlideToZero {
         this.animating = false;
         this.onStop();
       }
-    }.bind(this);
+    }
 
     window.requestAnimationFrame(frameUpdate);
   }
