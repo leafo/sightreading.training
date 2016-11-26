@@ -158,9 +158,7 @@
             }
         }
     }
-
 }
-
 
 
 .chord_staff {
@@ -168,13 +166,30 @@
 
     .chord_scrolling {
         white-space: nowrap;
-        overflow: hidden;
     }
 
     .chord {
         font-size: 30px;
         font-weight: bold;
-        display: inline-block;
         width: 160px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .touched {
+        margin-left: 5px;
+        font-weight: normal;
+        display: flex;
+        height: 35px;
+        align-items: center;
+
+        .right {
+            color: $green;
+        }
+
+        .wrong {
+            color: $red;
+        }
+
     }
 }

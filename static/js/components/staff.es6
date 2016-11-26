@@ -342,12 +342,32 @@ class ChordStaff extends React.Component {
       return <div />
     }
 
+    let touchedNotes = Object.keys(this.props.touchedNotes)
+
     return <div className="chord_staff">
       <div className="chord_scrolling" ref="chordScrolling">
-        {this.props.chords.map((c, i) =>
-          <span key={`${c}-${i}`} className={classNames("chord", {
+        {this.props.chords.map((c, i) => {
+          let pressedIndicator
+
+          if (i == 0 && touchedNotes.length) {
+            pressedIndicator = <span className="touched">
+              {touchedNotes.map(n => {
+                if (c.containsNote(n)) {
+                  return <span key={`right-${n}`} className="right">•</span>
+                } else {
+                  return <span key={`wrong-${n}`} className="wrong">×</span>
+                }
+              })}
+            </span>
+          }
+
+          return <div key={`${c}-${i}`} className={classNames("chord", {
             errorshake: this.props.noteShaking && i == 0,
-          })}>{c.toString()}</span>)}
+          })}>
+            {c.toString()}
+            {pressedIndicator}
+          </div>
+        })}
       </div>
     </div>
   }

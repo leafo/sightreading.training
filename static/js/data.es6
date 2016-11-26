@@ -46,6 +46,7 @@ N.STAVES = [
       return <ChordStaff 
         chords={this.state.notes}
         noteShaking={this.state.noteShaking}
+        touchedNotes={this.state.touchedNotes}
         ref={(staff) => this.staff = staff} />
     }
   }
