@@ -168,9 +168,6 @@ class Layout extends React.Component {
   }
 
   onMidiMessage(message) {
-    // ignore midi events when the browser tab isn't active
-    if (document.hidden) return;
-    
     // proxy message to the current page
     if (this.refs.currentPage.onMidiMessage) {
       this.refs.currentPage.onMidiMessage(message)

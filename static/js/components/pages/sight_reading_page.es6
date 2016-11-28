@@ -224,7 +224,7 @@ class SightReadingPage extends React.Component {
     if (NOTE_EVENTS[type] == "noteOn") {
       if (velocity == 0) {
         this.releaseNote(n);
-      } else {
+      } else if (!document.hidden) { // ignore when the browser tab isn't active
         this.pressNote(n);
       }
     }
