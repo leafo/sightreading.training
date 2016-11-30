@@ -156,6 +156,7 @@ class SettingsPanel extends React.Component {
       <GeneratorSettings
         key={`${g.name}-${g.mode}`}
         generator={g}
+        currentSettings={this.props.currentGeneratorSettings}
         setGenerator={this.props.setGenerator} />
     </div>
   }
@@ -214,8 +215,11 @@ class GeneratorSettings extends React.Component {
 
   constructor(props) {
     super(props)
+
     this.state = {
-      inputValues: GeneratorSettings.inputDefaults(this.props.generator),
+      inputValues: Object.assign({},
+        GeneratorSettings.inputDefaults(this.props.generator),
+        this.props.currentSettings || {})
     }
   }
 

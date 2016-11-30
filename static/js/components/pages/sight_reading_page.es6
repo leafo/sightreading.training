@@ -379,6 +379,7 @@ class SightReadingPage extends React.Component {
       saveGeneratorPreset={this.state.savingPreset}
 
       currentGenerator={this.state.currentGenerator}
+      currentGeneratorSettings={this.state.currentGeneratorSettings}
       currentStaff={this.state.currentStaff}
       currentKey={this.state.keySignature}
 
