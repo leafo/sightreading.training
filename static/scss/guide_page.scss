@@ -1,0 +1,33 @@
+
+.guide_page {
+    display: flex;
+    justify-content: center;
+    margin: 60px auto;
+
+    .page_container {
+        margin: 0;
+    }
+
+    .page_navigation {
+        width: 150px;
+
+        .nav_header {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        ul {
+            list-style: none;
+            margin: 10px 0;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}

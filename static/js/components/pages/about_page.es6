@@ -1,9 +1,36 @@
 
 let {Link} = ReactRouter
 
-class AboutPage extends React.Component {
+
+class BaseGuidePage extends React.Component {
   render() {
-    return <div className="about_page page_container">
+    const link = (url, label) =>
+      <Link activeClassName="active" to={url}>{label}</Link>
+
+    return <div className="guide_page">
+      <div className="page_navigation">
+        <section>
+          <div className="nav_header">Guides</div>
+          <ul>
+            <li>{link("/about", "About")}</li>
+            <li>{link("/guide/generators", "Generators")}</li>
+          </ul>
+        </section>
+      </div>
+      {this.renderContents()}
+    </div>
+  }
+
+  renderContents() {
+    console.error("Fill me out")
+  }
+}
+
+
+class AboutPage extends BaseGuidePage {
+
+  renderContents() {
+    return <div className="page_container">
       <h2>About Sight Reading Trainer</h2>
 
       <p>This site is a way for you to practice <a
