@@ -111,7 +111,8 @@ class Layout extends React.Component {
   renderHeader() {
     let userLinks = [
       <Link key="root" onlyActiveOnIndex to="/" activeClassName="active">Staff</Link>,
-      <Link key="flash-cards" to="/flash-cards" activeClassName="active">Flash cards</Link>
+      <Link key="flash-cards" to="/flash-cards" activeClassName="active">Flash cards</Link>,
+      <Link key="about" to="/about" activeClassName="active">About</Link>
     ]
 
     if (N.session.currentUser) {
