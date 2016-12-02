@@ -1,9 +1,10 @@
 
 import Widget from require "lapis.html"
-
 import to_json from require "lapis.util"
 
 buster = require "cache_buster"
+
+config = require("lapis.config").get!
 
 class Layout extends Widget
   content: =>
@@ -20,8 +21,7 @@ class Layout extends Widget
 
       body ->
         div id: "page"
-        script type: "text/javascript", src: "/static/lib.js?#{buster}"
-        script type: "text/javascript", src: "/static/main.js?#{buster}"
+        @include_js "lib", "main"
         script type: "text/javascript", ->
           raw "N.init(#{to_json @initial_state!})"
 
@@ -31,6 +31,13 @@ class Layout extends Widget
       out.currentUser = @flow("formatter")\user @current_user
 
     out
+
+  include_js: (...) =>
+    for lib in *{...}
+      if config._name == "production"
+        script type: "text/javascript", src: "/static/#{lib}.min.js?#{buster}"
+      else
+        script type: "text/javascript", src: "/static/#{lib}.js?#{buster}"
 
   google_analytics: =>
     script type: "text/javascript", ->
