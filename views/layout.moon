@@ -12,7 +12,7 @@ class Layout extends Widget
       head ->
         meta charset: "UTF-8"
         title "Sight Reading Trainer"
-        link rel: "stylesheet", href: "/static/style.css"
+        link rel: "stylesheet", href: "/static/style.css?#{buster}"
         link rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Raleway"
         meta name: "viewport", content: "width=device-width, initial-scale=1"
         meta id: "csrf_token", name: "csrf_token", content: @csrf_token
