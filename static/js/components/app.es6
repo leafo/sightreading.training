@@ -187,6 +187,8 @@ class App extends React.Component {
         <Route path="about" component={withRouter(AboutPage)}></Route>
         <Route path="stats" component={withRouter(StatsPage)}></Route>
         <Route path="flash-cards" component={FlashCardPage}></Route>
+
+        <Route path="guide/generators" component={withRouter(GuideGeneratorsPage)}></Route>
       </Route>
     }
   }

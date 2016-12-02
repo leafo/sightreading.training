@@ -130,6 +130,17 @@ form, .form {
         font-size: 16px;
         line-height: 1.5;
     }
+
+    > ul {
+        font-size: 16px;
+        line-height: 1.5;
+        > li {
+            margin-bottom: 8px;
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
 }
 
 .header_spacer {

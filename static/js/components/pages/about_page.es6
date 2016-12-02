@@ -1,7 +1,6 @@
 
 let {Link} = ReactRouter
 
-
 class BaseGuidePage extends React.Component {
   render() {
     const link = (url, label) =>
@@ -28,7 +27,6 @@ class BaseGuidePage extends React.Component {
 
 
 class AboutPage extends BaseGuidePage {
-
   renderContents() {
     return <div className="page_container">
       <h2>About Sight Reading Trainer</h2>
@@ -104,6 +102,78 @@ class AboutPage extends BaseGuidePage {
       <p>
         <Link className="return_link" to="/">Return to sight reading trainer</Link>
       </p>
+    </div>
+  }
+}
+
+class GuideGeneratorsPage extends BaseGuidePage {
+  renderContents() {
+    return <div className="page_container generators_guide_page">
+      <h2>Generators</h2>
+      <p>In order to provide unique sheet music to read, Sight Reading Trainer
+      uses a random music generator. You can customize the generator to control
+      the difficulty, and the types of things you want to practice.</p>
+
+      <p>Access the generator settings by clicking the <strong>Configure</strong> button on the main screen.</p>
+
+      <h3>Choosing a staff</h3>
+      <p>The staff you choose configures the range of notes that are available
+      to be read. The on-screen keyboard will display only the valid notes that
+      can be played. Any notes generated will fall within the range of the staff chosen.</p>
+
+      <p>You can choose from the following:</p>
+      <ul>
+        <li><img src="/static/svg/clefs.G.svg" height="25" width="25" alt="g cleff" /> Treble</li>
+        <li><img src="/static/svg/clefs.F_change.svg" height="20" width="25" alt="f cleff" /> Bass</li>
+        <li>Grand — A combination of treble and bass at the same time</li>
+      </ul>
+
+      <h3>Choosing a generator type</h3>
+      <p>Sight Reading Trainer tries to generate something musical based on the
+      parameters you've provided. The <strong>generator type</strong> is the
+      function that picks which notes to show next. Each generator type can be
+      customized using a series of parameters.</p>
+
+      <p>The available generator types:</p>
+      <ul>
+        <li><strong>Random</strong> — Chooses 1 to 5 random notes within the chosen key to be played in each column</li>
+        <li><strong>Triads</strong> — Chooses a <a href="https://en.wikipedia.org/wiki/Triad_(music)">triad</a> of notes in a random inversion in close voicing within the key signature</li>
+        <li><strong>Sevens</strong> — Chooses a random <a href="https://en.wikipedia.org/wiki/Seventh_chord">seventh chord</a> with open voicing (this one sounds the most pleasant)</li>
+        <li><strong>Progression</strong> — Chooses a random chord from a popular progression within the key signature</li>
+        <li><strong>Position</strong> — Generates notes in a way that encourages you to use all of your fingers. See below for more information</li>
+      </ul>
+
+      <h3>The smoothness parameter</h3>
+      <p>Every generator has a <strong>smoothness</strong> setting. The
+      smoothness setting makes the randomness less apparent by minimizing the
+      movements of notes for each column of the generated notes. (It is never
+      possible to get the sames notes repeated though).</p>
+
+      <p>If there are multiple notes, then it will minimize the average
+      position of the notes in the column.</p>
+
+      <p>The higher you set the smoothnesss, the more iterations the generator
+      will perform to find a next set of notes, the smoother the movements will be.</p>
+
+      <h3>The Random generator</h3>
+      <p>The following parameters are available for the <strong>Random</strong> generator:</p>
+
+      <ul>
+        <li><strong>Notes</strong> — How many notes to generate at a time</li>
+        <li><strong>Hands</strong> — How many hands should be used to play all
+          the notes. For example, if you wanted to practice playing 5 chord notes in
+          one hand, set notes to 5 and hands to 1</li>
+        <li><strong>Chord based</strong> — The column of notes will be limited
+          to notes that can be formed from stacked thirds</li>
+      </ul>
+
+      <h3>The Position Generator</h3>
+      <p>The <strong>Position Generator</strong> is designed to have you
+      utilize all of your fingers while sight reading. You'll be given notes in
+      sets of 5, the first note will contain a fingering. All subsequent notes
+      should be played without moving your hand, and with using each of your
+      fingers.</p>
+
     </div>
   }
 }
