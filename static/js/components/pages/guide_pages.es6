@@ -25,7 +25,6 @@ class BaseGuidePage extends React.Component {
   }
 }
 
-
 class AboutPage extends BaseGuidePage {
   renderContents() {
     return <div className="page_container">
@@ -177,3 +176,17 @@ class GuideGeneratorsPage extends BaseGuidePage {
     </div>
   }
 }
+
+
+class GuideChordsPage extends BaseGuidePage {
+  renderContents() {
+    return <div className="page_container chords_guide_page">
+      <h2>Chord mode</h2>
+      <p>In addition to sight reading notes on sheet music, you can use the
+      chord staff to sight read chords by name. Chords are generated in the
+      desired key, and you'll need to press the minimum number of notes to
+      continue to the next chord</p>
+    </div>
+  }
+}
+
