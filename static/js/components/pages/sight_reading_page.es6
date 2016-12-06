@@ -54,6 +54,7 @@ class SightReadingPage extends React.Component {
   }
 
   componentDidMount() {
+    N.setTitle()
     N.dispatch(this, {
       saveGeneratorPreset: (e, form) => {
         if (this.state.savingPreset) {

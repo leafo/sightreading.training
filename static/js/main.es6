@@ -30,15 +30,23 @@ N.csrf_token = function() {
   return document.getElementById("csrf_token").getAttribute("content")
 }
 
-N.scope_event = (name) => `notes:${name}`
+N.scopeEvent = (name) => `notes:${name}`
 
 N.trigger = function(component, name, ...args) {
   const node = ReactDOM.findDOMNode(component)
-  let ev = new CustomEvent(N.scope_event(name), {
+  let ev = new CustomEvent(N.scopeEvent(name), {
     detail: args,
     bubbles: true
   })
   return node.dispatchEvent(ev)
+}
+
+N.setTitle = function(title) {
+  if (title) {
+    document.title = `${title} | Sight Reading Trainer`
+  } else {
+    document.title = "Sight Reading Trainer"
+  }
 }
 
 N.dispatch = function(component, event_table) {
@@ -50,7 +58,7 @@ N.dispatch = function(component, event_table) {
     }
 
     (function(name, fn) {
-      node.addEventListener(N.scope_event(key), function(e) {
+      node.addEventListener(N.scopeEvent(key), function(e) {
         fn(e, ...e.detail)
       })
     })(key, event_table[key])

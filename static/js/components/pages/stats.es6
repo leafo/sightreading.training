@@ -8,6 +8,8 @@ class StatsPage extends React.Component {
   }
 
   componentDidMount() {
+    N.setTitle("Stats")
+
     if (!N.session.currentUser) {
       this.props.router.push("/")
     } else {

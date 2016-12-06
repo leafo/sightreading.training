@@ -13,6 +13,7 @@ class BaseGuidePage extends React.Component {
           <ul>
             <li>{link("/about", "About")}</li>
             <li>{link("/guide/generators", "Generators")}</li>
+            <li>{link("/guide/chords", "Chords")}</li>
           </ul>
         </section>
       </div>
@@ -26,6 +27,10 @@ class BaseGuidePage extends React.Component {
 }
 
 class AboutPage extends BaseGuidePage {
+  componentDidMount() {
+    N.setTitle("About Sight Reading Trainer")
+  }
+
   renderContents() {
     return <div className="page_container">
       <h2>About Sight Reading Trainer</h2>
@@ -106,9 +111,13 @@ class AboutPage extends BaseGuidePage {
 }
 
 class GuideGeneratorsPage extends BaseGuidePage {
+  componentDidMount() {
+    N.setTitle("Sight Reading Random Notes")
+  }
+
   renderContents() {
     return <div className="page_container generators_guide_page">
-      <h2>Generators</h2>
+      <h2>Note Generators</h2>
       <p>In order to provide unique sheet music to read, Sight Reading Trainer
       uses a random music generator. You can customize the generator to control
       the difficulty, and the types of things you want to practice.</p>
@@ -179,9 +188,13 @@ class GuideGeneratorsPage extends BaseGuidePage {
 
 
 class GuideChordsPage extends BaseGuidePage {
+  componentDidMount() {
+    N.setTitle("Sight Reading Random Chords")
+  }
+
   renderContents() {
     return <div className="page_container chords_guide_page">
-      <h2>Chord mode</h2>
+      <h2>Chord Mode</h2>
       <p>In addition to sight reading notes on sheet music, you can use the
       chord staff to sight read chords by name. Chords are generated in the
       desired key, and you'll need to press the minimum number of notes to

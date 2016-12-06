@@ -17,6 +17,7 @@ class FlashCardPage extends React.Component {
   }
 
   componentDidMount() {
+    N.setTitle("Flash Cards")
     this.upListener = event => {
       let key = keyCodeToChar(event.keyCode)
       if (key == null) {

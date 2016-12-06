@@ -2,6 +2,10 @@
 let {Link} = ReactRouter
 
 class RegisterPage extends React.Component {
+  componentDidMount() {
+    N.setTitle("Register Account")
+  }
+
   afterSubmit(res) {
     if (res.errors) {
       this.setState({
