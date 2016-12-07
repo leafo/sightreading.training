@@ -5,6 +5,28 @@ export const NOTE_EVENTS = {
   [128]: "noteOff"
 }
 
+function parseMidiMessage(message) {
+  let [raw, pitch, velocity] = message.data
+
+  let channel = raw & 0xf
+  let type = raw & 0xf0
+
+  let n = noteName(pitch)
+
+  if (NOTE_EVENTS[type] == "noteOn") {
+    if (velocity == 0) {
+      return ["noteOff", n]
+    } else {
+      return ["noteOn", n, channel, velocity]
+    }
+  }
+
+  if (NOTE_EVENTS[type] == "noteOff") {
+    return ["noteOff", n]
+  }
+}
+
+
 export class MidiChannel {
   constructor(output, channel) {
     this.output = output
@@ -50,7 +72,6 @@ export class MidiChannel {
 
     playNextColumn()
   }
-
 
   testNote() {
     // play middle C for 1 second

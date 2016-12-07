@@ -18,6 +18,10 @@ class EarTrainingPage extends React.Component {
     return [...this.props.midi.outputs.values()]
   }
 
+  onMidiMessage(message) {
+    console.warn("got message", parseMidiMessage(message))
+  }
+
   render() {
     return <div className="ear_training_page">
       {this.renderMidiPicker()}
