@@ -16,6 +16,13 @@ export class MidiChannel {
     this.channel = channel
   }
 
+  setInstrument(programNumber) {
+    this.output.send([
+      12 << 4 + this.channel,
+      programNumber
+    ])
+  }
+
   testNote() {
     // play middle C for 1 second
     console.log("playing test note")

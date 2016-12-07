@@ -34,8 +34,10 @@ class EarTrainingPage extends React.Component {
       <MidiSelector
         selectedInput={(idx) => {
           let output = this.midiOutputs()[idx]
-          new MidiChannel(output, 0).testNote()
+          let channel = new MidiChannel(output, 0)
 
+          channel.setInstrument(56) // trumpet
+          channel.testNote()
         }}
         midiOptions={this.midiOutputs()} />
     </div>
