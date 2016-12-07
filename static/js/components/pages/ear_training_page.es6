@@ -36,8 +36,19 @@ class EarTrainingPage extends React.Component {
           let output = this.midiOutputs()[idx]
           let channel = new MidiChannel(output, 0)
 
-          channel.setInstrument(56) // trumpet
-          channel.testNote()
+          channel.setInstrument(0)
+          // channel.setInstrument(56) // trumpet
+          // channel.testNote()
+
+          let generator = new RandomNotes(new MajorScale("C").getRange(5), {
+            smoothness: 3
+          })
+
+          // create a test melody
+          let list = new NoteList([], { generator })
+          list.fillBuffer(8)
+          console.log(list.map((n) => n.join(" ")).join(", "))
+          channel.playNoteList(list)
         }}
         midiOptions={this.midiOutputs()} />
     </div>

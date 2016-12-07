@@ -23,6 +23,35 @@ export class MidiChannel {
     ])
   }
 
+  playNoteList(list, delay=500) {
+    list = [...list] // copy to avoid edits
+    let idx = 0
+    let playNextColumn = () => {
+      if (idx >= list.length) {
+        this.playing = false
+        return
+      }
+
+      this.playing = true
+      let col = list[idx]
+      for (let note of col) {
+        this.noteOn(parseNote(note), 100)
+      }
+
+      setTimeout(() => {
+        let col = list[idx]
+        for (let note of col) {
+          this.noteOff(parseNote(note))
+        }
+        idx += 1
+        playNextColumn()
+      }, delay)
+    }
+
+    playNextColumn()
+  }
+
+
   testNote() {
     // play middle C for 1 second
     console.log("playing test note")
