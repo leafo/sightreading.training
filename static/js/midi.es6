@@ -48,29 +48,29 @@ export class MidiChannel {
   playNoteList(list, delay=500) {
     list = [...list] // copy to avoid edits
     let idx = 0
-    let playNextColumn = () => {
-      if (idx >= list.length) {
-        this.playing = false
-        return
-      }
+    return new Promise((resolve, reject) => {
+      let playNextColumn = () => {
+        if (idx >= list.length) {
+          resolve()
+          return
+        }
 
-      this.playing = true
-      let col = list[idx]
-      for (let note of col) {
-        this.noteOn(parseNote(note), 100)
-      }
-
-      setTimeout(() => {
         let col = list[idx]
         for (let note of col) {
-          this.noteOff(parseNote(note))
+          this.noteOn(parseNote(note), 100)
         }
-        idx += 1
-        playNextColumn()
-      }, delay)
-    }
 
-    playNextColumn()
+        setTimeout(() => {
+          let col = list[idx]
+          for (let note of col) {
+            this.noteOff(parseNote(note))
+          }
+          idx += 1
+          playNextColumn()
+        }, delay)
+      }
+      playNextColumn()
+    })
   }
 
   testNote() {
