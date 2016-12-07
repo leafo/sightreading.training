@@ -1,39 +1,42 @@
 @import "include/common";
 
 .intro_lightbox {
-    .midi_selector {
-        border: 2px solid $light_border_color;
-        max-height: 200px;
-        overflow-y: auto;
+}
 
-        .midi_input_row {
-            padding: 6px 10px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
+.midi_selector {
+    background: white;
+    border: 2px solid $light_border_color;
+    max-height: 200px;
+    overflow-y: auto;
 
-            &:hover {
-                background: #f5f5f5;
-            }
+    .midi_input_row {
+        padding: 6px 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
 
-            &:active {
-                background: darken($button_color_highlight, 5%);
-            }
+        &:hover {
+            background: #f5f5f5;
+        }
 
-            &.selected {
-                background: $button_color_highlight;
-            }
+        &:active {
+            background: darken($button_color_highlight, 5%);
+        }
 
-            .row_icon {
-                width: 24px;
-                opacity: 0.7;
-                margin-right: 5px;
-            }
+        &.selected {
+            background: $button_color_highlight;
+        }
 
-            .input_name {
-                @include single_line;
-                flex: 1;
-            }
+        .row_icon {
+            width: 24px;
+            opacity: 0.7;
+            margin-right: 5px;
+        }
+
+        .input_name {
+            @include single_line;
+            flex: 1;
         }
     }
 }
+
