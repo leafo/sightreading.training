@@ -90,5 +90,9 @@ export class NoteList extends Array {
       return note == first
     }
   }
+
+  toString() {
+    return this.map((n) => n.join(" ")).join(", ")
+  }
 }
 

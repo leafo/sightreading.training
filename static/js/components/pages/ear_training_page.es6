@@ -50,7 +50,7 @@ class EarTrainingPage extends React.Component {
     // create a test melody
     let list = new NoteList([], { generator })
     list.fillBuffer(8)
-    console.log("Playing", list.map((n) => n.join(" ")).join(", "))
+    console.log("Playing", list.toString())
 
     this.state.midiChannel.playNoteList(list).then(() => {
       this.setState({ playing: false })
