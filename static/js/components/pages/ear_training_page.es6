@@ -2,7 +2,7 @@ let {Link} = ReactRouter
 
 class EarTrainingPage extends React.Component {
   componentDidMount() {
-    N.setTitle("Register Account")
+    N.setTitle("Ear Training")
   }
 
   constructor(props) {
@@ -10,6 +10,7 @@ class EarTrainingPage extends React.Component {
 
     this.state = {
       midiChannel: null,
+      noteHistory: new NoteList([]),
       touchedNotes: {},
     }
   }
@@ -20,12 +21,44 @@ class EarTrainingPage extends React.Component {
   }
 
   onMidiMessage(message) {
-    console.warn("got message", parseMidiMessage(message))
+    let parsed = parseMidiMessage(message)
+    if (!parsed) { return }
+
+    let [e, note] = parsed
+
+    if (e == "noteOn") {
+      this.pressedNotes = this.pressedNotes || {}
+
+      let newColumn = Object.keys(this.pressedNotes) == 0
+
+      if (newColumn) {
+        this.state.noteHistory.push([note])
+      } else {
+        this.state.noteHistory[this.state.noteHistory.length - 1].push(note)
+      }
+
+      this.pressedNotes[note] = this.pressedNotes[note] || 0
+      this.pressedNotes[note] += 1
+    }
+
+    if (e == "noteOff") {
+      if (!this.pressedNotes) { return }
+      if (!this.pressedNotes[note]) { return }
+      this.pressedNotes[note] -= 1
+
+      if (this.pressedNotes[note] < 1) {
+        delete this.pressedNotes[note]
+      }
+
+      if (Object.keys(this.pressedNotes).length == 0) {
+        this.checkForMatch()
+      }
+    }
   }
 
   // see if the pressed notes buffer matches the melody
   checkForMatch() {
-    console.log("todo")
+    console.log("todo", this.state.noteHistory.toString())
   }
 
   playMelody(notes=this.state.currentNotes) {
