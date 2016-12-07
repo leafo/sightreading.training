@@ -111,7 +111,8 @@ class Layout extends React.Component {
   renderHeader() {
     let userLinks = [
       <Link key="root" onlyActiveOnIndex to="/" activeClassName="active">Staff</Link>,
-      <Link key="flash-cards" to="/flash-cards" activeClassName="active">Flash cards</Link>,
+      <Link key="ear-training" to="/ear-training" activeClassName="active">Ear Training</Link>,
+      <Link key="flash-cards" to="/flash-cards" activeClassName="active">Flash Cards</Link>,
       <Link key="about" to="/about" activeClassName="active">About</Link>
     ]
 
@@ -187,6 +188,7 @@ class App extends React.Component {
         <Route path="about" component={withRouter(AboutPage)}></Route>
         <Route path="stats" component={withRouter(StatsPage)}></Route>
         <Route path="flash-cards" component={FlashCardPage}></Route>
+        <Route path="ear-training" component={EarTrainingPage}></Route>
 
         <Route path="guide/generators" component={withRouter(GuideGeneratorsPage)}></Route>
         <Route path="guide/chords" component={withRouter(GuideChordsPage)}></Route>
