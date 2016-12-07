@@ -34,13 +34,8 @@ class EarTrainingPage extends React.Component {
       <MidiSelector
         selectedInput={(idx) => {
           let output = this.midiOutputs()[idx]
-          console.log("playing")
-          output.send(this.midiNoteOn(0, MIDDLE_C_PITCH, 100))
+          new MidiChannel(output, 0).testNote()
 
-          setTimeout(() => {
-            console.log("stopping")
-            output.send(this.midiNoteOff(0, MIDDLE_C_PITCH))
-          }, 1000)
         }}
         midiOptions={this.midiOutputs()} />
     </div>

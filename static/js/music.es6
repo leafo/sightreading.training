@@ -1,10 +1,4 @@
-export const MIDDLE_C_PITCH = 60
 export const OCTAVE_SIZE = 12
-
-export const NOTE_EVENTS = {
-  [144]: "noteOn",
-  [128]: "noteOff"
-}
 
 export const OFFSETS = {
   [0]: "C",
