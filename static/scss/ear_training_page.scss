@@ -1,0 +1,13 @@
+@import "include/common";
+
+.ear_training_page {
+    .choose_device {
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid $border_color;
+
+        h3 {
+            margin-top: 0;
+        }
+    }
+}
