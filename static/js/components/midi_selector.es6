@@ -2,7 +2,7 @@ let {PropTypes: types} = React;
 
 class MidiSelector extends React.Component {
   static propTypes = {
-    midi: types.object.isRequired,
+    midiOptions: types.array.isRequired,
     selectedInput: types.func,
   }
 
@@ -15,14 +15,15 @@ class MidiSelector extends React.Component {
   }
 
   render() {
-    let midiInputs = this.midiInputs()
-    if (!midiInputs.length) {
+    let midiOptions = this.props.midiOptions
+
+    if (!midiOptions.length) {
       return <p>No MIDI devices connected</p>
     }
 
     return <div className="midi_selector">
       {
-        this.midiInputs().map((input, i) => {
+        midiOptions.map((option, i) => {
           return <div
             key={i}
             className={classNames("midi_input_row", {
@@ -37,7 +38,7 @@ class MidiSelector extends React.Component {
             >
             <img className="row_icon" src="/static/img/notes_icon.svg" alt="MIDI Device" />
             <div className="input_name">
-              {input.name}
+              {option.name}
             </div>
           </div>
         })
@@ -45,8 +46,4 @@ class MidiSelector extends React.Component {
     </div>
   }
 
-  midiInputs() {
-    if (!this.props.midi) return;
-    return [...this.props.midi.inputs.values()];
-  }
 }

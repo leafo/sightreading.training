@@ -21,6 +21,11 @@ class IntroLightbox extends Lightbox {
     super.close()
   }
 
+  midiInputs() {
+    if (!this.props.midi) return []
+    return [...this.props.midi.inputs.values()]
+  }
+
   renderContent() {
     let midiSetup
 
@@ -31,7 +36,7 @@ class IntroLightbox extends Lightbox {
           selectedInput={(idx) => {
             this.setState({selectedInput: idx})
           }}
-          midi={this.props.midi} />
+          midiOptions={this.midiInputs()} />
       </div>
     } else {
       midiSetup = <p>MIDI support not detected on your computer. You'll only be able to use the on-srcreen keyboard.</p>
