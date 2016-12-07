@@ -28,6 +28,20 @@ class EarTrainingPage extends React.Component {
     console.log("todo")
   }
 
+  playMelody(notes=this.state.currentNotes) {
+    // need to add cancel
+    if (this.state.playing) {
+      console.warn("aborting playing, something is already playing")
+      return
+    }
+
+    this.setState({ playing: true })
+    this.state.midiChannel.playNoteList(notes).then(() => {
+      this.setState({ playing: false })
+      console.log("done playing")
+    })
+  }
+
   pushMelody() {
     let generator = new RandomNotes(new MajorScale("C").getRange(5), {
       smoothness: 3
@@ -37,9 +51,14 @@ class EarTrainingPage extends React.Component {
     let list = new NoteList([], { generator })
     list.fillBuffer(8)
     console.log("Playing", list.map((n) => n.join(" ")).join(", "))
-    this.state.midiChannel.playNoteList(list)
+
+    this.state.midiChannel.playNoteList(list).then(() => {
+      this.setState({ playing: false })
+      console.log("done playing")
+    })
 
     this.setState({
+      playing: true,
       currentNotes: list
     })
   }
@@ -60,14 +79,14 @@ class EarTrainingPage extends React.Component {
   renderMeldoyGenerator() {
     let repeatButton
     if (this.state.currentNotes) {
-      repeatButton = <button onClick={(e) => {
+      repeatButton = <button disabled={this.state.playing || false} onClick={(e) => {
         e.preventDefault()
-        this.state.midiChannel.playNoteList(this.state.currentNotes)
+        this.playMelody()
       }}>Repeat melody</button>
     }
 
     return <div>
-      <button onClick={(e) => {
+      <button disabled={this.state.playing || false} onClick={(e) => {
         e.preventDefault()
         this.pushMelody()
       }}>New melody</button>
