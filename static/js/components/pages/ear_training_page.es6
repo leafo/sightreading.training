@@ -58,7 +58,28 @@ class EarTrainingPage extends React.Component {
 
   // see if the pressed notes buffer matches the melody
   checkForMatch() {
-    console.log("todo", this.state.noteHistory.toString())
+    if (!this.state.currentNotes || !this.state.noteHistory) {
+      return
+    }
+
+    if (this.state.noteHistory.length < this.state.currentNotes.length) {
+      return
+    }
+
+    while (this.state.noteHistory.length > this.state.currentNotes.length) {
+      this.state.noteHistory.shift()
+    }
+
+    if (this.state.noteHistory.toString() == this.state.currentNotes.toString()) {
+      this.setState({
+        noteHistory: new NoteList([]),
+        locked: true
+      })
+      setTimeout(() => {
+        this.setState({ locked: false })
+        this.pushMelody()
+      }, 1000)
+    }
   }
 
   playMelody(notes=this.state.currentNotes) {
@@ -71,7 +92,6 @@ class EarTrainingPage extends React.Component {
     this.setState({ playing: true })
     this.state.midiChannel.playNoteList(notes).then(() => {
       this.setState({ playing: false })
-      console.log("done playing")
     })
   }
 
@@ -82,12 +102,10 @@ class EarTrainingPage extends React.Component {
 
     // create a test melody
     let list = new NoteList([], { generator })
-    list.fillBuffer(8)
-    console.log("Playing", list.toString())
+    list.fillBuffer(3)
 
     this.state.midiChannel.playNoteList(list).then(() => {
       this.setState({ playing: false })
-      console.log("done playing")
     })
 
     this.setState({
@@ -110,16 +128,18 @@ class EarTrainingPage extends React.Component {
   }
 
   renderMeldoyGenerator() {
+    let locked = this.state.playing || this.state.locked || false
+
     let repeatButton
     if (this.state.currentNotes) {
-      repeatButton = <button disabled={this.state.playing || false} onClick={(e) => {
+      repeatButton = <button disabled={locked} onClick={(e) => {
         e.preventDefault()
         this.playMelody()
       }}>Repeat melody</button>
     }
 
     return <div>
-      <button disabled={this.state.playing || false} onClick={(e) => {
+      <button disabled={locked} onClick={(e) => {
         e.preventDefault()
         this.pushMelody()
       }}>New melody</button>
