@@ -9,7 +9,8 @@ class EarTrainingPage extends React.Component {
     super(props)
 
     this.state = {
-      midiOut: null
+      midiChannel: null,
+      touchedNotes: {},
     }
   }
 
@@ -22,9 +23,56 @@ class EarTrainingPage extends React.Component {
     console.warn("got message", parseMidiMessage(message))
   }
 
+  // see if the pressed notes buffer matches the melody
+  checkForMatch() {
+    console.log("todo")
+  }
+
+  pushMelody() {
+    let generator = new RandomNotes(new MajorScale("C").getRange(5), {
+      smoothness: 3
+    })
+
+    // create a test melody
+    let list = new NoteList([], { generator })
+    list.fillBuffer(8)
+    console.log("Playing", list.map((n) => n.join(" ")).join(", "))
+    this.state.midiChannel.playNoteList(list)
+
+    this.setState({
+      currentNotes: list
+    })
+  }
+
   render() {
+    let contents
+    if (this.state.midiChannel) {
+      contents = this.renderMeldoyGenerator()
+    } else {
+      contents = this.renderMidiPicker()
+    }
+
     return <div className="ear_training_page">
-      {this.renderMidiPicker()}
+      {contents}
+    </div>
+  }
+
+  renderMeldoyGenerator() {
+    let repeatButton
+    if (this.state.currentNotes) {
+      repeatButton = <button onClick={(e) => {
+        e.preventDefault()
+        this.state.midiChannel.playNoteList(this.state.currentNotes)
+      }}>Repeat melody</button>
+    }
+
+    return <div>
+      <button onClick={(e) => {
+        e.preventDefault()
+        this.pushMelody()
+      }}>New melody</button>
+      {" "}
+      {repeatButton}
     </div>
   }
 
@@ -35,50 +83,19 @@ class EarTrainingPage extends React.Component {
 
     return <div className="choose_device">
       <h3>Choose a MIDI output device</h3>
+      <p>This tool requires a MIDI device to play notes to.</p>
       <MidiSelector
         selectedInput={(idx) => {
           let output = this.midiOutputs()[idx]
           let channel = new MidiChannel(output, 0)
-
           channel.setInstrument(0)
+          channel.testNote()
           // channel.setInstrument(56) // trumpet
-          // channel.testNote()
-
-          let generator = new RandomNotes(new MajorScale("C").getRange(5), {
-            smoothness: 3
+          this.setState({
+            midiChannel: channel
           })
-
-          // create a test melody
-          let list = new NoteList([], { generator })
-          list.fillBuffer(8)
-          console.log(list.map((n) => n.join(" ")).join(", "))
-          channel.playNoteList(list)
         }}
         midiOptions={this.midiOutputs()} />
     </div>
-  }
-
-  midiNoteOn(channel, pitch, velocity) {
-    if (channel > 15) {
-      throw "channel too big"
-    }
-
-    return [
-      9 << 4 + channel,
-      pitch,
-      velocity
-    ]
-  }
-
-  midiNoteOff(channel, pitch) {
-    if (channel > 15) {
-      throw "channel too big"
-    }
-
-    return [
-      8 << 4 + channel,
-      pitch,
-      0
-    ]
   }
 }
