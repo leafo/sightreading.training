@@ -12,6 +12,9 @@ class EarTrainingPage extends React.Component {
       midiChannel: null,
       noteHistory: new NoteList([]),
       touchedNotes: {},
+      notesPerMelody: 3,
+      melodyRange: ["A4", "C7"],
+      rand: new MersenneTwister()
     }
   }
 
@@ -96,13 +99,17 @@ class EarTrainingPage extends React.Component {
   }
 
   pushMelody() {
-    let generator = new RandomNotes(new MajorScale("C").getRange(5), {
+    let keys = ["C", "D", "Bb", "E"]
+    let key = keys[this.state.rand.int() % keys.length]
+
+    let notes = new MajorScale(key).getLooseRange(...this.state.melodyRange)
+    let generator = new RandomNotes(notes, {
       smoothness: 3
     })
 
     // create a test melody
     let list = new NoteList([], { generator })
-    list.fillBuffer(3)
+    list.fillBuffer(this.state.notesPerMelody)
 
     this.state.midiChannel.playNoteList(list).then(() => {
       this.setState({ playing: false })
@@ -138,13 +145,44 @@ class EarTrainingPage extends React.Component {
       }}>Repeat melody</button>
     }
 
-    return <div>
+    let ranges = N.STAVES.filter(s => s.mode == "notes")
+
+    return <div className="melody_generator">
       <button disabled={locked} onClick={(e) => {
         e.preventDefault()
         this.pushMelody()
       }}>New melody</button>
       {" "}
       {repeatButton}
+
+      <fieldset>
+        <legend>Notes per melody</legend>
+        <Slider
+          min={2}
+          max={8}
+          onChange={(value) => {
+            this.setState({ notesPerMelody: value })
+          }}
+          value={this.state.notesPerMelody} />
+        <span>{this.state.notesPerMelody}</span>
+      </fieldset>
+
+      <fieldset className="range_picker">
+        <legend>Range</legend>
+        {ranges.map(r => {
+          return <button
+            className={classNames({
+              active: r.range.join(",") == this.state.melodyRange.join(",")
+            })}
+            onClick={e => {
+              e.preventDefault();
+              this.setState({
+                melodyRange: r.range
+              })
+            }}
+            key={r.name}>{r.name}</button>
+        })}
+      </fieldset>
     </div>
   }
 

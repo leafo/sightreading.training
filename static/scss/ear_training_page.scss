@@ -10,4 +10,30 @@
             margin-top: 0;
         }
     }
+
+    .melody_generator {
+        background: white;
+        margin: 20px auto;
+        max-width: 400px;
+        padding: 20px;
+
+        fieldset {
+            margin-top: 20px;
+        }
+    }
+
+    .range_picker {
+        button  {
+            margin-right: 10px;
+
+            &.active {
+                background-color: lighten($button_color, 10%);
+                box-shadow: 0 0 0 2px darken($border_color, 20%);
+            }
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
 }
