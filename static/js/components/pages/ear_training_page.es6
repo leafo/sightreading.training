@@ -14,7 +14,8 @@ class EarTrainingPage extends React.Component {
       touchedNotes: {},
       notesPerMelody: 3,
       melodyRange: ["A4", "C7"],
-      rand: new MersenneTwister()
+      rand: new MersenneTwister(),
+      successes: 0,
     }
   }
 
@@ -76,10 +77,16 @@ class EarTrainingPage extends React.Component {
     if (this.state.noteHistory.toString() == this.state.currentNotes.toString()) {
       this.setState({
         noteHistory: new NoteList([]),
-        locked: true
+        locked: true,
+        successes: this.state.successes + 1,
+        statusMessage: "You got it"
       })
+
       setTimeout(() => {
-        this.setState({ locked: false })
+        this.setState({
+          locked: false,
+          statusMessage: null
+        })
         this.pushMelody()
       }, 1000)
     }
@@ -148,12 +155,16 @@ class EarTrainingPage extends React.Component {
     let ranges = N.STAVES.filter(s => s.mode == "notes")
 
     return <div className="melody_generator">
+      <div>
       <button disabled={locked} onClick={(e) => {
         e.preventDefault()
         this.pushMelody()
       }}>New melody</button>
       {" "}
       {repeatButton}
+      {" "}
+      <span>{this.state.statusMessage}</span>
+      </div>
 
       <fieldset>
         <legend>Notes per melody</legend>
@@ -183,6 +194,11 @@ class EarTrainingPage extends React.Component {
             key={r.name}>{r.name}</button>
         })}
       </fieldset>
+      <p>
+        Successful reads:
+        {" "}
+        <strong>{this.state.successes}</strong>
+      </p>
     </div>
   }
 
