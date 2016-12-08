@@ -26,6 +26,16 @@ class EarTrainingPage extends React.Component {
 
   onMidiMessage(message) {
     let parsed = parseMidiMessage(message)
+
+    if (message.data[0] == 176 && !this.state.playing) {
+      // use the pitch wheel to trigger new melody or replay
+      if (this.state.currentNotes) {
+        this.playMelody()
+      } else {
+        this.pushMelody()
+      }
+    }
+
     if (!parsed) { return }
 
     let [e, note] = parsed
