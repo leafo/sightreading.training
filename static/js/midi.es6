@@ -40,7 +40,7 @@ export class MidiChannel {
 
   setInstrument(programNumber) {
     this.output.send([
-      12 << 4 + this.channel,
+      (12 << 4) + this.channel,
       programNumber
     ])
   }
@@ -85,7 +85,7 @@ export class MidiChannel {
 
   noteOn(pitch, velocity) {
     this.output.send([
-      9 << 4 + this.channel,
+      (9 << 4) + this.channel,
       pitch,
       velocity
     ])
@@ -93,7 +93,7 @@ export class MidiChannel {
 
   noteOff(pitch) {
     this.output.send([
-      8 << 4 + this.channel,
+      (8 << 4) + this.channel,
       pitch,
       0
     ])
