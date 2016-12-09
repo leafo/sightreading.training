@@ -9,6 +9,32 @@
         h3 {
             margin-top: 0;
         }
+
+        .midi_options {
+            margin-bottom: 10px;
+            display: flex;
+
+            .slider_component {
+                margin: 0 10px;
+                width: 200px;
+            }
+
+            .select_component {
+                margin-left: 10px;
+            }
+
+            > * {
+                margin-left: 30px;
+                height: 26px;
+                display: flex;
+                align-items: center;
+
+                &:first-child {
+                    margin-left: 0;
+                }
+            }
+
+        }
     }
 
     .melody_generator {

@@ -16,6 +16,8 @@ class EarTrainingPage extends React.Component {
       melodyRange: ["A4", "C7"],
       rand: new MersenneTwister(),
       successes: 0,
+      outChannel: 0,
+      outInstrument: 0,
     }
   }
 
@@ -220,11 +222,36 @@ class EarTrainingPage extends React.Component {
     return <div className="choose_device">
       <h3>Choose a MIDI output device</h3>
       <p>This tool requires a MIDI device to play notes to.</p>
+
+      <div className="midi_options">
+        <label>
+          <span>Channel</span>
+          <Slider
+            min={1}
+            max={16}
+            onChange={(value) => {
+              this.setState({outChannel: value - 1})
+            }}
+            value={this.state.outChannel + 1} />
+          <span>{this.state.outChannel + 1}</span>
+        </label>
+        <label>
+          <span>Instrument</span>
+          <Select
+            value={this.state.outInstrument}
+            onChange={v => this.setState({ outInstrument: v})}
+            options={[
+              { name: "Piano", value: 0 },
+              { name: "Trumpet", value: 56 }
+            ]}/>
+        </label>
+      </div>
+
       <MidiSelector
         selectedInput={(idx) => {
           let output = this.midiOutputs()[idx]
-          let channel = new MidiChannel(output, 0)
-          channel.setInstrument(0)
+          let channel = new MidiChannel(output, this.state.outChannel)
+          channel.setInstrument(this.state.outInstrument)
           channel.testNote()
           // channel.setInstrument(56) // trumpet
           this.setState({
