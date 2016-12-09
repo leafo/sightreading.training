@@ -23,8 +23,24 @@ class Layout extends React.Component {
 
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then(
-        midi => this.setState({midi: midi}),
+        midi => {
+          this.setState({midi: midi})
+          this.loadDefaultSettings()
+        },
         error => console.warn("failed to get MIDI"))
+    }
+  }
+
+  loadDefaultSettings() {
+    let defaultMidiInput = N.readConfig("defaults:midiIn")
+    if (defaultMidiInput) {
+      let idx = 0
+      for (let input of this.midiInputs()) {
+        if (input.name == defaultMidiInput) {
+          this.setInput(idx)
+        }
+        idx++
+      }
     }
   }
 
@@ -39,7 +55,10 @@ class Layout extends React.Component {
       "pickMidi": (e) => {
         this.setState({
           currentLightbox: <IntroLightbox
-            setInput={this.setInput.bind(this)} />
+            setInput={idx => {
+              let input = this.setInput(idx)
+              N.writeConfig("defaults:midiIn", input.name)
+            }} />
         })
       }
     })
@@ -155,7 +174,7 @@ class Layout extends React.Component {
 
   setInput(idx) {
     let input = this.midiInputs()[idx]
-    if (!input) { return; }
+    if (!input) { return }
     if (this.state.midiInput) {
       console.log(`Unbinding: ${this.state.midiInput.name}`)
       this.state.midiInput.onmidimessage = undefined
@@ -166,7 +185,9 @@ class Layout extends React.Component {
 
     this.setState({
       midiInput: input
-    });
+    })
+
+    return input
   }
 
   onMidiMessage(message) {

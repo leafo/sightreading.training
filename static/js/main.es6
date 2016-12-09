@@ -83,12 +83,14 @@ N.writeConfig = function(name, value) {
       value = JSON.stringify(value)
     }
 
+    console.warn("Writing config", name, value)
     return window.localStorage.setItem(name, value)
   }
 }
 
 N.readConfig = function(name, defaultValue=undefined) {
   if (N.storageAvailable("localStorage")) {
+    console.warn("Reading config", name)
     let ret = window.localStorage.getItem(name)
     if (ret == undefined) {
       ret = defaultValue
