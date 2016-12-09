@@ -2,7 +2,8 @@ export const MIDDLE_C_PITCH = 60
 
 export const NOTE_EVENTS = {
   [144]: "noteOn",
-  [128]: "noteOff"
+  [128]: "noteOff",
+  [176]: "dataEntry"
 }
 
 function parseMidiMessage(message) {
@@ -12,6 +13,10 @@ function parseMidiMessage(message) {
   let type = raw & 0xf0
 
   let n = noteName(pitch)
+
+  if (NOTE_EVENTS[type] == "dataEntry") {
+    return ["dataEntry"]
+  }
 
   if (NOTE_EVENTS[type] == "noteOn") {
     if (velocity == 0) {
