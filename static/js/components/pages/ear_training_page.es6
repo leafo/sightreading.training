@@ -242,6 +242,7 @@ class EarTrainingPage extends React.Component {
             onChange={v => this.setState({ outInstrument: v})}
             options={[
               { name: "Piano", value: 0 },
+              { name: "Guitar", value: 24 },
               { name: "Trumpet", value: 56 }
             ]}/>
         </label>

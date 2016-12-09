@@ -63,5 +63,44 @@ N.dispatch = function(component, event_table) {
       })
     })(key, event_table[key])
   }
-
 }
+
+N.storageAvailable = function(type) {
+  try {
+    let storage = window[type]
+    let x = "__test";
+    storage.setItem(x, x)
+    storage.removeItem(x)
+    return true
+  } catch(e) {
+    return false
+  }
+}
+
+N.writeConfig = function(name, value) {
+  if (N.storageAvailable("localStorage")) {
+    if (typeof value != "string") {
+      value = JSON.stringify(value)
+    }
+
+    return window.localStorage.setItem(name, value)
+  }
+}
+
+N.readConfig = function(name, defaultValue=undefined) {
+  if (N.storageAvailable("localStorage")) {
+    let ret = window.localStorage.getItem(name)
+    if (ret == undefined) {
+      ret = defaultValue
+    } else {
+      try {
+        ret = JSON.parse(ret)
+      } catch (e) {}
+    }
+
+    return ret
+  } else {
+    return defaultValue
+  }
+}
+
