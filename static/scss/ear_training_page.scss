@@ -48,6 +48,16 @@
         }
     }
 
+    fieldset {
+        border: 1px solid #ddd;
+        legend {
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #666;
+        }
+    }
+
     .range_picker {
         button  {
             margin-right: 10px;
