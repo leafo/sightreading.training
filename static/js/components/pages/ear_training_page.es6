@@ -13,7 +13,7 @@ class EarTrainingPage extends React.Component {
       noteHistory: new NoteList([]),
       touchedNotes: {},
       notesPerMelody: 3,
-      melodyRange: ["A4", "C7"],
+      melodyRange: ["C4", "C6"],
       rand: new MersenneTwister(),
       successes: 0,
       outChannel: 0,
@@ -125,7 +125,7 @@ class EarTrainingPage extends React.Component {
 
     let notes = new MajorScale(key).getLooseRange(...this.state.melodyRange)
     let generator = new RandomNotes(notes, {
-      smoothness: 3
+      smoothness: 6
     })
 
     // create a test melody
@@ -166,16 +166,22 @@ class EarTrainingPage extends React.Component {
       }}>Repeat melody</button>
     }
 
-    let ranges = N.STAVES.filter(s => s.mode == "notes")
+    let ranges = [
+      {
+        name: "singing",
+        range: ["C4", "C6"]
+      },
+      ...N.STAVES.filter(s => s.mode == "notes")
+    ]
 
     return <div className="melody_generator">
       <div>
+      {repeatButton}
+      {" "}
       <button disabled={locked} onClick={(e) => {
         e.preventDefault()
         this.pushMelody()
       }}>New melody</button>
-      {" "}
-      {repeatButton}
       {" "}
       <span>{this.state.statusMessage}</span>
       </div>
@@ -244,8 +250,18 @@ class EarTrainingPage extends React.Component {
             onChange={v => this.setState({ outInstrument: v})}
             options={[
               { name: "Piano", value: 0 },
+              { name: "Celesta", value: 8 },
+              { name: "Organ", value: 16 },
               { name: "Guitar", value: 24 },
-              { name: "Trumpet", value: 56 }
+              { name: "Acoustic Bass", value: 32 },
+              { name: "Violin", value: 40 },
+              { name: "String Ensamble", value: 48 },
+              { name: "Trumpet", value: 56 },
+              { name: "Sax", value: 64 },
+              { name: "Piccolo", value: 72 },
+              { name: "Square Synth", value: 80 },
+              { name: "Pad", value: 88 },
+              { name: "Brightness", value: 100 },
             ]}/>
         </label>
       </div>
