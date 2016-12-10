@@ -224,7 +224,9 @@ class EarTrainingPage extends React.Component {
 
   renderMidiPicker() {
     if (!this.props.midi) {
-      return
+      return <div className="choose_device">
+        <strong>No MIDI support detected in your browser, ensure you're using Chrome</strong>
+      </div>
     }
 
     return <div className="choose_device">

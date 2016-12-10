@@ -431,6 +431,7 @@ form, .form {
         @include border_box;
         height: 27px;
         line-height: 25px;
+        vertical-align: top;
 
         display: inline-flex;
         align-items: center;
@@ -525,13 +526,15 @@ form, .form {
 
 .midi_button {
     background: transparent;
-
     padding: 6px 8px;
     color: #666;
     font-size: 14px;
-    display: flex;
-    align-items: center;
     cursor: pointer;
+
+    > div {
+        display: flex;
+        align-items: center;
+    }
 
     &:hover {
         opacity: 1.0;
@@ -544,6 +547,9 @@ form, .form {
 
     .current_input_name {
         @include single_line;
+        flex: 1;
+        min-width: 0;
+        box-sizing: border-box;
         max-width: 150px;
         color: #444;
         font-weight: bold;

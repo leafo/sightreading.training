@@ -10,10 +10,12 @@ let MidiButton = (props) =>
       props.pickMidi()
     }}
     className="midi_button">
-      <img src="/static/svg/midi.svg" alt="MIDI" />
-      <span className="current_input_name">
-        {props.midiInput ? props.midiInput.name : "Select device"}
-      </span>
+      <div>
+        <img src="/static/svg/midi.svg" alt="MIDI" />
+        <span className="current_input_name">
+          {props.midiInput ? props.midiInput.name : "Select device"}
+        </span>
+      </div>
   </button>
 
 class Layout extends React.Component {
