@@ -44,6 +44,10 @@
 
         fieldset {
             margin-top: 20px;
+            display: flex;
+            > .spacer {
+                flex: 1;
+            }
         }
 
         > :last-child {

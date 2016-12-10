@@ -13,6 +13,8 @@ class EarTrainingPage extends React.Component {
       noteHistory: new NoteList([]),
       touchedNotes: {},
       notesPerMelody: 3,
+      continuousMelody: false,
+
       melodyRange: ["C4", "C6"],
       rand: new MersenneTwister(),
       successes: 0,
@@ -204,6 +206,20 @@ class EarTrainingPage extends React.Component {
           }}
           value={this.state.notesPerMelody} />
         <span>{this.state.notesPerMelody}</span>
+
+        <span className="spacer"></span>
+
+        <label>
+          <input
+            type="checkbox"
+            checked={this.state.continuousMelody}
+            onChange={e => {
+              this.setState({continuousMelody: e.target.checked})
+            }} />
+
+          <span className="label">Continuous melody</span>
+        </label>
+
       </fieldset>
 
       <fieldset className="range_picker">

@@ -301,7 +301,6 @@ class GeneratorSettings extends React.Component {
         onChange={e => this.updateInputValue(input, e.target.checked)} />
       {input.hint}
     </div>
-
   }
 }
 
