@@ -1,17 +1,19 @@
 @import "include/common";
 
 .ear_training_page {
-    .choose_device {
-        margin: 20px;
-        padding: 20px;
-        border: 1px solid $border_color;
+    .warning {
+        color: $error_color;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
 
+    .choose_device {
         h3 {
             margin-top: 0;
         }
 
         .midi_options {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             display: flex;
 
             .slider_component {
@@ -38,13 +40,14 @@
     }
 
     .melody_generator {
-        background: white;
-        margin: 20px auto;
         max-width: 400px;
-        padding: 20px;
 
         fieldset {
             margin-top: 20px;
+        }
+
+        > :last-child {
+            margin-bottom: 0;
         }
     }
 
@@ -70,6 +73,15 @@
             &:last-child {
                 margin-right: 0;
             }
+        }
+    }
+
+    .confirm_buttons {
+        display: flex;
+        margin-top: 20px;
+
+        .spacer {
+            flex: 1;
         }
     }
 }

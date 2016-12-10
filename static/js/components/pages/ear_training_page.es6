@@ -16,6 +16,8 @@ class EarTrainingPage extends React.Component {
       melodyRange: ["C4", "C6"],
       rand: new MersenneTwister(),
       successes: 0,
+
+      outInputIdx: null,
       outChannel: 0,
       outInstrument: 0,
     }
@@ -174,16 +176,22 @@ class EarTrainingPage extends React.Component {
       ...N.STAVES.filter(s => s.mode == "notes")
     ]
 
-    return <div className="melody_generator">
+    let warning
+    if (!this.props.midiInput) {
+      warning = <div className="warning">Select a MIDI input in the toolbar to enter notes.</div>
+    }
+
+    return <div className="page_container melody_generator">
+      {warning}
       <div>
-      {repeatButton}
-      {" "}
-      <button disabled={locked} onClick={(e) => {
-        e.preventDefault()
-        this.pushMelody()
-      }}>New melody</button>
-      {" "}
-      <span>{this.state.statusMessage}</span>
+        {repeatButton}
+        {" "}
+        <button disabled={locked} onClick={(e) => {
+          e.preventDefault()
+          this.pushMelody()
+        }}>New melody</button>
+        {" "}
+        <span>{this.state.statusMessage}</span>
       </div>
 
       <fieldset>
@@ -229,9 +237,12 @@ class EarTrainingPage extends React.Component {
       </div>
     }
 
-    return <div className="choose_device">
-      <h3>Choose a MIDI output device</h3>
-      <p>This tool requires a MIDI device to play notes to.</p>
+    return <div className="page_container choose_device">
+      <h3>Choose a MIDI output device for ear training</h3>
+      <p>This tool requires a MIDI device to play notes to. It will play you a
+      melody, then you'll need to replay it. Once you play the correct melody the
+      next melody will automatically play. You can trigger the melody to reply by
+      interacting with any of the sliders or pedals on your MIDI controller.</p>
 
       <div className="midi_options">
         <label>
@@ -269,17 +280,34 @@ class EarTrainingPage extends React.Component {
       </div>
 
       <MidiSelector
-        selectedInput={(idx) => {
-          let output = this.midiOutputs()[idx]
-          let channel = new MidiChannel(output, this.state.outChannel)
-          channel.setInstrument(this.state.outInstrument)
-          channel.testNote()
-          // channel.setInstrument(56) // trumpet
-          this.setState({
-            midiChannel: channel
-          })
-        }}
+        selectedInput={idx => this.setState({ outInputIdx: idx })}
         midiOptions={this.midiOutputs()} />
+
+      <div className="confirm_buttons">
+        <button
+          onClick={e => {
+            e.preventDefault()
+
+            let output = this.midiOutputs()[this.state.outInputIdx]
+            let channel = new MidiChannel(output, this.state.outChannel)
+            channel.setInstrument(this.state.outInstrument)
+            this.setState({ midiChannel: channel })
+          }}
+          disabled={this.state.outInputIdx == null}>
+            {this.state.outInputIdx == null ? "Select a device to continue" : "Continue to ear training" }
+          </button>
+        <span className="spacer"></span>
+        <button
+          onClick={e => {
+            e.preventDefault()
+
+            let output = this.midiOutputs()[this.state.outInputIdx]
+            let channel = new MidiChannel(output, this.state.outChannel)
+            channel.setInstrument(this.state.outInstrument)
+            channel.testNote()
+          }}
+          disabled={this.state.outInputIdx == null}>Play test note</button>
+      </div>
     </div>
   }
 }
