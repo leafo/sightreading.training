@@ -40,7 +40,18 @@
     }
 
     .melody_generator {
-        max-width: 400px;
+        max-width: 600px;
+        margin: 60px auto;
+
+        > .page_container {
+            margin: 0;
+            width: auto;
+        }
+
+        .stats_row {
+            text-align: right;
+            margin-bottom: 10px;
+        }
 
         fieldset {
             margin-top: 20px;

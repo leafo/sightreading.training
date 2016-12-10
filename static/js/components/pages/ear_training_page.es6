@@ -187,11 +187,12 @@ class EarTrainingPage extends React.Component {
     ]
 
     let warning
+
     if (!this.props.midiInput) {
       warning = <div className="warning">Select a MIDI input in the toolbar to enter notes.</div>
     }
 
-    return <div className="page_container melody_generator">
+    let page = <div className="page_container">
       {warning}
       <div>
         {repeatButton}
@@ -246,11 +247,16 @@ class EarTrainingPage extends React.Component {
             key={r.name}>{r.name}</button>
         })}
       </fieldset>
-      <p>
-        Successful reads:
-        {" "}
-        <strong>{this.state.successes}</strong>
-      </p>
+    </div>
+
+    return <div className="melody_generator">
+      <div className="stats_row">
+        <div className="stat_container">
+          <div className="value">{this.state.successes}</div>
+          <div className="label">Plays</div>
+        </div>
+      </div>
+      {page}
     </div>
   }
 
