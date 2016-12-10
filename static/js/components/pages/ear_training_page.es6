@@ -124,13 +124,21 @@ class EarTrainingPage extends React.Component {
   }
 
   pushMelody() {
-    let keys = ["C", "D", "Bb", "E"]
+    let keys = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
     let key = keys[this.state.rand.int() % keys.length]
 
     let notes = new MajorScale(key).getLooseRange(...this.state.melodyRange)
-    let generator = new RandomNotes(notes, {
-      smoothness: 6
-    })
+
+    let generator
+    if (this.state.continuousMelody && this.currentNotes) {
+      // reuse the same generator so the melody is smooth
+      generator = this.state.currentNotes.generator
+      generator.notes = notes // replace notes with the new set generated
+    } else {
+      generator = new RandomNotes(notes, {
+        smoothness: 6
+      })
+    }
 
     // create a test melody
     let list = new NoteList([], { generator })
