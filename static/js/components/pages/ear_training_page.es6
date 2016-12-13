@@ -13,6 +13,7 @@ class EarTrainingPage extends React.Component {
       noteHistory: new NoteList([]),
       touchedNotes: {},
       notesPerMelody: 3,
+      notesPerColumn: 1,
       continuousMelody: false,
 
       melodyRange: ["C4", "C6"],
@@ -134,9 +135,12 @@ class EarTrainingPage extends React.Component {
       // reuse the same generator so the melody is smooth
       generator = this.state.currentNotes.generator
       generator.notes = notes // replace notes with the new set generated
+      generator.notesPerColumn = this.state.notesPerColumn
     } else {
       generator = new RandomNotes(notes, {
-        smoothness: 6
+        smoothness: 6,
+        notes: this.state.notesPerColumn,
+        hands: 1,
       })
     }
 
@@ -229,6 +233,18 @@ class EarTrainingPage extends React.Component {
           <span className="label">Continuous melody</span>
         </label>
 
+      </fieldset>
+
+      <fieldset>
+        <legend>Notes per column</legend>
+        <Slider
+          min={1}
+          max={4}
+          onChange={(value) => {
+            this.setState({ notesPerColumn: value })
+          }}
+          value={this.state.notesPerColumn} />
+        <span>{this.state.notesPerColumn}</span>
       </fieldset>
 
       <fieldset className="range_picker">
