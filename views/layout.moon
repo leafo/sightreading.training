@@ -22,6 +22,12 @@ class Layout extends Widget
       body ->
         div id: "page"
         @include_js "lib", "main"
+
+        if config.sentry_url
+          script src: "https://cdn.ravenjs.com/3.9.1/raven.min.js"
+          script ->
+            raw "Raven.config(#{to_json config.sentry_url}).install()"
+
         script type: "text/javascript", ->
           raw "N.init(#{to_json @initial_state!})"
 
