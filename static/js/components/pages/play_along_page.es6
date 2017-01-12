@@ -1,17 +1,29 @@
 let {Link} = ReactRouter
 
 // like note list but notes in time
-class SongNotes extends Array {
+class SongNoteList extends Array {
   constructor(bpm=100) {
     super()
     this.bpm = bpm
-    Object.setPrototypeOf(this, SongNotes.prototype)
+    Object.setPrototypeOf(this, SongNoteList.prototype)
+  }
+
+  static newSong(noteTuples, bpm=100) {
+    let notes = noteTuples.map(([note, start, duration]) =>
+      new SongNote(note, start, duration))
+
+    let song = new SongNoteList(bpm)
+    for (let note of notes) {
+      song.push(note)
+    }
+
+    return song
   }
 
   // find the notes that fall in the time range
   notesInRange(start, stop) {
     // TODO: this is slow
-    return this.filter((n) => n.inRange(start, stop))
+    return [...this.filter((n) => n.inRange(start, stop))]
   }
 
   getStopInBeats() {
@@ -50,6 +62,10 @@ class SongNote {
 
   getStop() {
     return this.start + this.duration
+  }
+
+  toString() {
+    return `${this.note},${this.start},${this.duration}`
   }
 }
 
