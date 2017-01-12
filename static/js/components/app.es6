@@ -134,7 +134,8 @@ class Layout extends React.Component {
       <Link key="root" onlyActiveOnIndex to="/" activeClassName="active">Staff</Link>,
       <Link key="ear-training" to="/ear-training" activeClassName="active">Ear Training</Link>,
       <Link key="flash-cards" to="/flash-cards" activeClassName="active">Flash Cards</Link>,
-      <Link key="about" to="/about" activeClassName="active">About</Link>
+      <Link key="about" to="/about" activeClassName="active">About</Link>,
+      <Link key="play-along" to="/play-along" activeClassName="active">Play Along</Link>
     ]
 
     if (N.session.currentUser) {
@@ -212,6 +213,7 @@ class App extends React.Component {
         <Route path="stats" component={withRouter(StatsPage)}></Route>
         <Route path="flash-cards" component={FlashCardPage}></Route>
         <Route path="ear-training" component={EarTrainingPage}></Route>
+        <Route path="play-along" component={PlayAlongPage}></Route>
 
         <Route path="guide/generators" component={withRouter(GuideGeneratorsPage)}></Route>
         <Route path="guide/chords" component={withRouter(GuideChordsPage)}></Route>
