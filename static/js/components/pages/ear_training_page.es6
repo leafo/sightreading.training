@@ -1,8 +1,20 @@
 let {Link} = ReactRouter
 
+import NoteList from "st/note_list"
+
+import Slider from "st/components/slider"
+import Select from "st/components/select"
+import MidiSelector from "st/components/midi_selector"
+
+import {parseMidiMessage, MidiChannel} from "st/midi"
+import {setTitle} from "st/globals"
+import {MajorScale} from "st/music"
+import {RandomNotes} from "st/generators"
+import {STAVES} from "st/data"
+
 export default class EarTrainingPage extends React.Component {
   componentDidMount() {
-    N.setTitle("Ear Training")
+    setTitle("Ear Training")
   }
 
   constructor(props) {
@@ -187,7 +199,7 @@ export default class EarTrainingPage extends React.Component {
         name: "singing",
         range: ["C4", "C6"]
       },
-      ...N.STAVES.filter(s => s.mode == "notes")
+      ...STAVES.filter(s => s.mode == "notes")
     ]
 
     let warning

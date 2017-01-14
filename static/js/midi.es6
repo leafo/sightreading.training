@@ -1,4 +1,5 @@
-export const MIDDLE_C_PITCH = 60
+
+import {MIDDLE_C_PITCH, parseNote} from "st/music"
 
 export const NOTE_EVENTS = {
   [144]: "noteOn",
@@ -6,7 +7,7 @@ export const NOTE_EVENTS = {
   [176]: "dataEntry"
 }
 
-function parseMidiMessage(message) {
+export function parseMidiMessage(message) {
   let [raw, pitch, velocity] = message.data
 
   let channel = raw & 0xf

@@ -1,6 +1,6 @@
-let {PropTypes: types} = React;
+let {PropTypes: types} = React
 
-class MidiSelector extends React.Component {
+export default class MidiSelector extends React.Component {
   static propTypes = {
     midiOptions: types.array.isRequired,
     selectedInput: types.func,
