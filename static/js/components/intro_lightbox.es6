@@ -1,6 +1,9 @@
 let {PropTypes: types} = React;
 
-class IntroLightbox extends Lightbox {
+import Lightbox from "st/components/lightbox"
+import MidiSelector from "st/components/midi_selector"
+
+export default class IntroLightbox extends Lightbox {
   static className = "intro_lightbox"
 
   static propTypes = {

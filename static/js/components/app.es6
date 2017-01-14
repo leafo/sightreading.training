@@ -8,7 +8,9 @@ import FlashCardPage from "st/components/pages/flash_card_page"
 import EarTrainingPage from "st/components/pages/ear_training_page"
 import PlayAlongPage from "st/components/pages/play_along_page"
 
-import {dispatch} from "st/events"
+import IntroLightbox from "st/components/intro_lightbox"
+
+import {dispatch, trigger} from "st/events"
 import {readConfig, writeConfig} from "st/config"
 import {csrfToken} from "st/globals"
 
@@ -178,7 +180,7 @@ class Layout extends React.Component {
 
       {userLinks}
       {userPanel}
-      <MidiButton {...this.childProps()} pickMidi={() => N.trigger(this, "pickMidi")} />
+      <MidiButton {...this.childProps()} pickMidi={() => trigger(this, "pickMidi")} />
     </div>
   }
 

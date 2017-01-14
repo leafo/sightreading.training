@@ -1,6 +1,8 @@
-let {PropTypes: types} = React;
+let {PropTypes: types} = React
 
-class Lightbox extends React.Component {
+import {trigger} from "st/events"
+
+export default class Lightbox extends React.Component {
   static className = null
 
   static propTypes = {
@@ -27,7 +29,7 @@ class Lightbox extends React.Component {
 
   close() {
     if (!this.canClose()) { return }
-    N.trigger(this, "closeLightbox")
+    trigger(this, "closeLightbox")
   }
 
   canClose() {
