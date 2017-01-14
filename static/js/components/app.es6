@@ -1,3 +1,4 @@
+/*global N*/
 
 import SightReadingPage from "st/components/pages/sight_reading_page"
 import LoginPage from "st/components/pages/login_page"
@@ -14,7 +15,9 @@ import {dispatch, trigger} from "st/events"
 import {readConfig, writeConfig} from "st/config"
 import {csrfToken} from "st/globals"
 
-let {Router, Route, IndexRoute, Link, browserHistory, withRouter} = ReactRouter
+import * as React from "react"
+import {Router, Route, IndexRoute, Link, browserHistory, withRouter} from "react-router"
+
 let {CSSTransitionGroup} = React.addons || {}
 
 let MidiButton = (props) =>
@@ -152,8 +155,10 @@ class Layout extends React.Component {
       <Link key="play-along" to="/play-along" activeClassName="active">Play Along</Link>
     ]
 
+    let userPanel = null
+
     if (N.session.currentUser) {
-      var userPanel = <div className="right_section">
+      userPanel = <div className="right_section">
         {N.session.currentUser.username}
         {" " }
         <a href="#" onClick={this.doLogout.bind(this)}>Log out</a>
@@ -165,7 +170,7 @@ class Layout extends React.Component {
           activeClassName="active">Stats</Link>)
 
     } else {
-      var userPanel = <div className="right_section">
+      userPanel = <div className="right_section">
         <Link to="/login" activeClassName="active">Log in</Link>
         {" or "}
         <Link to="/register" activeClassName="active">Register</Link>

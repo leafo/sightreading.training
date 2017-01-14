@@ -1,5 +1,5 @@
 
-import {MIDDLE_C_PITCH, parseNote} from "st/music"
+import {MIDDLE_C_PITCH, parseNote, noteName} from "st/music"
 
 export const NOTE_EVENTS = {
   [144]: "noteOn",
@@ -54,7 +54,7 @@ export class MidiChannel {
   playNoteList(list, delay=500) {
     list = [...list] // copy to avoid edits
     let idx = 0
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let playNextColumn = () => {
         if (idx >= list.length) {
           resolve()

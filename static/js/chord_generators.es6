@@ -1,5 +1,5 @@
-
 import {Chord, MajorScale, MinorScale, MajorBluesScale} from "st/music"
+import {MersenneTwister} from "window"
 
 export class ChordGenerator {
   constructor(keySignature, opts={}) {
@@ -22,9 +22,9 @@ export class ChordGenerator {
   }
 
   nextChord() {
-    let degree
+    let degree = null
 
-    while (true) {
+    for (;;) {
       degree = (this.generator.int() % this.scale.steps.length) + 1
       if (degree != this.lastDegree) {
         break

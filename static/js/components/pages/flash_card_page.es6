@@ -1,6 +1,5 @@
 
 let {PropTypes: types} = React
-let {Link} = ReactRouter
 let {CSSTransitionGroup} = React.addons || {}
 
 import {setTitle} from "st/globals"

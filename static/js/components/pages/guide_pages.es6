@@ -1,6 +1,4 @@
-
-let {Link} = ReactRouter
-
+import {Link} from "react-router"
 import {setTitle} from "st/globals"
 
 class BaseGuidePage extends React.Component {

@@ -1,3 +1,6 @@
+/*global N*/
+/*global ReactDOM*/
+
 import App from "st/components/app"
 
 window.N = window.N || {};

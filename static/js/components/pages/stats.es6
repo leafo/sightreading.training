@@ -1,4 +1,6 @@
-let {Link} = ReactRouter
+/*global moment*/
+/*global N*/
+
 let LineChart = window["react-chartjs"].Line;
 
 import {setTitle} from "st/globals"

@@ -31,10 +31,8 @@ class Layout extends Widget
         script type: "text/javascript", ->
           raw [[define("window", window);]]
           raw [[define("react", React);]]
-          raw [[define("mersenne-twister", MersenneTwister);]]
-          raw [[define("react", React);]]
-          -- raw "requirejs(['st/main'], function(m) { m.init(#{to_json @initial_state!}) });"
-          raw "requirejs(['st/test'], function(m) { m.hello() });"
+          raw [[define("react-router", ReactRouter);]]
+          raw "requirejs(['st/main'], function(m) { m.init(#{to_json @initial_state!}) });"
 
   initial_state: =>
     out = { }

@@ -1,5 +1,5 @@
 
-.PHONY: new_migration migrate init_schema test_db lint checkpoint restore_checkpoint annotate_models
+.PHONY: new_migration migrate init_schema test_db lint lint_js checkpoint restore_checkpoint annotate_models
 
 new_migration:
 	(echo "  [$$(date +%s)]: =>"; echo) >> migrations.moon
@@ -22,9 +22,11 @@ test_db:
 	pg_dump -s -U postgres sightreading | psql -U postgres sightreading_test
 	pg_dump -a -t lapis_migrations -U postgres sightreading | psql -U postgres sightreading_test
 
-
 lint:
 	git ls-files | grep '\.moon$$' | grep -v config.moon | xargs -n 100 moonc -l
+
+lint_js:
+	node_modules/.bin/eslint $$(git ls-files | grep \.es6$$ | grep -v spec)
 
 checkpoint:
 	mkdir -p dev_backup

@@ -1,3 +1,5 @@
+/*global ReactDOM*/
+
 export function scopeEvent(name) {
   return `notes:${name}`
 }

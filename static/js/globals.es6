@@ -1,3 +1,5 @@
+/*global ga*/
+
 export function setTitle(title) {
   if (title) {
     document.title = `${title} | Sight Reading Trainer`
@@ -25,10 +27,10 @@ export function gaEvent(category, action, label, value, interactive=true) {
 
   try {
     if (window.ga) {
-      ga('send', opts);
+      ga('send', opts)
     } else {
-      console.debug("event:", opts);
+      console.debug("event:", opts)
     }
   } catch (e) {}
-};
+}
 

@@ -1,5 +1,5 @@
 
-import {notesLessThan} from "st/music"
+import {notesLessThan, notesSame, MajorScale} from "st/music"
 
 export default class NoteList extends Array {
   constructor(notes, opts={}) {

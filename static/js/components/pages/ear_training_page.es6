@@ -1,5 +1,3 @@
-let {Link} = ReactRouter
-
 import NoteList from "st/note_list"
 
 import Slider from "st/components/slider"

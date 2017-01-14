@@ -1,3 +1,4 @@
+/*global N*/
 
 import NoteList from "st/note_list"
 import ChordList from "st/chord_list"
@@ -7,15 +8,17 @@ import Slider from "st/components/slider"
 import Keyboard from "st/components/keyboard"
 import StatsLightbox from "st/components/stats_lightbox"
 
-import {KeySignature} from "st/music"
+import {KeySignature, noteName} from "st/music"
 import {STAVES, GENERATORS} from "st/data"
 import {GeneratorSettings, SettingsPanel} from "st/components/settings_panel"
 import {setTitle, gaEvent, csrfToken} from "st/globals"
 import {dispatch, trigger} from "st/events"
+import {NOTE_EVENTS} from "st/midi"
+
+import * as React from "react"
 
 let {PropTypes: types} = React
 let {CSSTransitionGroup} = React.addons || {}
-let {Link} = ReactRouter
 
 const DEFAULT_NOTE_WIDTH = 100
 const DEFAULT_SPEED = 400

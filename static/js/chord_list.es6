@@ -1,5 +1,5 @@
-export default class ChordList extends Array {
 
+export default class ChordList extends Array {
   constructor(chords, opts={}) {
     super()
     Object.setPrototypeOf(this, ChordList.prototype);

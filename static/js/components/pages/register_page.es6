@@ -1,6 +1,5 @@
 
-let {Link} = ReactRouter
-
+import {Link} from "react-router"
 import {setTitle} from "st/globals"
 import {JsonForm, TextInputRow} from "st/components/forms"
 
