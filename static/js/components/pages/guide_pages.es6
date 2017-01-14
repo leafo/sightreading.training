@@ -1,6 +1,8 @@
 
 let {Link} = ReactRouter
 
+import {setTitle} from "st/globals"
+
 class BaseGuidePage extends React.Component {
   render() {
     const link = (url, label) =>
@@ -28,7 +30,7 @@ class BaseGuidePage extends React.Component {
 
 export class AboutPage extends BaseGuidePage {
   componentDidMount() {
-    N.setTitle("About Sight Reading Trainer")
+    setTitle("About Sight Reading Trainer")
   }
 
   renderContents() {
@@ -112,7 +114,7 @@ export class AboutPage extends BaseGuidePage {
 
 export class GuideGeneratorsPage extends BaseGuidePage {
   componentDidMount() {
-    N.setTitle("Sight Reading Random Notes")
+    setTitle("Sight Reading Random Notes")
   }
 
   renderContents() {
@@ -189,7 +191,7 @@ export class GuideGeneratorsPage extends BaseGuidePage {
 
 export class GuideChordsPage extends BaseGuidePage {
   componentDidMount() {
-    N.setTitle("Sight Reading Random Chords")
+    setTitle("Sight Reading Random Chords")
   }
 
   renderContents() {

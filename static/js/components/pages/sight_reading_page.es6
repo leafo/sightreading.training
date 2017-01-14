@@ -5,12 +5,13 @@ import NoteStats from "st/note_stats"
 import SlideToZero from "st/slide_to_zero"
 import Slider from "st/components/slider"
 import Keyboard from "st/components/keyboard"
+import StatsLightbox from "st/components/stats_lightbox"
 
 import {KeySignature} from "st/music"
 import {STAVES, GENERATORS} from "st/data"
 import {GeneratorSettings, SettingsPanel} from "st/components/settings_panel"
 import {setTitle, gaEvent, csrfToken} from "st/globals"
-import {dispatch} from "st/events"
+import {dispatch, trigger} from "st/events"
 
 let {PropTypes: types} = React
 let {CSSTransitionGroup} = React.addons || {}
@@ -345,7 +346,7 @@ export default class SightReadingPage extends React.Component {
   }
 
   openStatsLightbox() {
-    N.trigger(this, "showLightbox",
+    trigger(this, "showLightbox",
       <StatsLightbox
         resetStats={() => this.setState({stats: new NoteStats()})}
         close={() => alert("close the lightbox") }

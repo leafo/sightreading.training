@@ -1,6 +1,8 @@
-let {PropTypes: types} = React;
+let {PropTypes: types} = React
 
-class StatsLightbox extends Lightbox {
+import Lightbox from "st/components/lightbox"
+
+export default class StatsLightbox extends Lightbox {
   static className = "stats_lightbox"
   static propTypes = {
     stats: types.object.isRequired,
@@ -137,6 +139,6 @@ class StatsLightbox extends Lightbox {
         <div className="average_line"></div>
       </div>
       {statsContent}
-    </div>;
+    </div>
   }
 }
