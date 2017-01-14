@@ -1,9 +1,8 @@
 TOP = $(TUP_CWD)
 
-!babel = |> $(TOP)/node_modules/.bin/babel --module-root 'st' -M %f > %o |>
+!babel_amd = |> $(TOP)/node_modules/.bin/babel --module-root 'st' -M %f > %o |>
 !scss = |> ^ scss %o^ sassc -I scss/ < %f > %o |>
 !join = |> ^ join %o^ cat %f > %o |>
 
-: foreach *.es6 |> !babel |> %B.js
 : foreach *.scss |> !scss |> %B.css
 : foreach *.moon |> moonc %f |> %B.lua

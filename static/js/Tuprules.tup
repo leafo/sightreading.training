@@ -1,0 +1,1 @@
+: foreach *.es6 |> !babel_amd |> %B.js

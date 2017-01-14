@@ -1,9 +1,9 @@
 include_rules
 
-: foreach components/*.es6 |> !babel |> components/%B.js
+: foreach components/*.es6 |> !babel_amd |> components/%B.js
 : components/*.js |> !join |> components.js
 
-: foreach components/pages/*.es6 |> !babel |> components/pages/%B.js
+: foreach components/pages/*.es6 |> !babel_amd |> components/pages/%B.js
 : components/pages/*.js |> !join |> components_pages.js
 
 
