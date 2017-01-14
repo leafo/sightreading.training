@@ -34,6 +34,7 @@ class Layout extends Widget
             classNames: classNames,
             moment: moment,
             MersenneTwister: MersenneTwister,
+            chartjs: window["react-chartjs"]
           });]]
           raw [[define("react", React);]]
           raw [[define("react-router", ReactRouter);]]

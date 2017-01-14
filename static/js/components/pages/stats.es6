@@ -1,11 +1,10 @@
 /*global N*/
 
 import * as React from "react"
-import {moment} from "lib"
-
-let LineChart = window["react-chartjs"].Line;
-
+import {moment, chartjs} from "lib"
 import {setTitle} from "st/globals"
+
+let {Line: LineChart} = chartjs
 
 export default class StatsPage extends React.Component {
   constructor(props) {
