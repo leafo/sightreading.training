@@ -1,9 +1,12 @@
 
 let {Link} = ReactRouter
 
+import {setTitle} from "st/globals"
+import {JsonForm, TextInputRow} from "st/components/forms"
+
 export default class RegisterPage extends React.Component {
   componentDidMount() {
-    N.setTitle("Register Account")
+    setTitle("Register Account")
   }
 
   afterSubmit(res) {

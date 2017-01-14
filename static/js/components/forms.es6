@@ -2,7 +2,7 @@ let {PropTypes: types} = React
 
 import {csrfToken} from "st/globals"
 
-class TextInputRow extends React.Component {
+export class TextInputRow extends React.Component {
   static propTypes = {
     name: types.string.isRequired,
   }
@@ -28,7 +28,7 @@ class TextInputRow extends React.Component {
   }
 }
 
-class JsonForm extends React.Component {
+export class JsonForm extends React.Component {
   static propTypes = {
     action: types.string.isRequired,
     validate: types.func,

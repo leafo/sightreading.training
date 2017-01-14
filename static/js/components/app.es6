@@ -1,7 +1,7 @@
 
 import SightReadingPage from "st/components/pages/sight_reading_page"
 import LoginPage from "st/components/pages/login_page"
-import RegisterPage from "st/components/pages/login_page"
+import RegisterPage from "st/components/pages/register_page"
 import {AboutPage, GuideGeneratorsPage, GuideChordsPage} from "st/components/pages/guide_pages"
 import StatsPage from "st/components/pages/stats"
 import FlashCardPage from "st/components/pages/flash_card_page"

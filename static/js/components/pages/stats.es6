@@ -1,6 +1,8 @@
 let {Link} = ReactRouter
 let LineChart = window["react-chartjs"].Line;
 
+import {setTitle} from "st/globals"
+
 export default class StatsPage extends React.Component {
   constructor(props) {
     super(props)
@@ -8,7 +10,7 @@ export default class StatsPage extends React.Component {
   }
 
   componentDidMount() {
-    N.setTitle("Stats")
+    setTitle("Stats")
 
     if (!N.session.currentUser) {
       this.props.router.push("/")
