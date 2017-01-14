@@ -1,3 +1,6 @@
+/*global N*/
+
+import * as React from "react"
 
 import {Link} from "react-router"
 import {setTitle} from "st/globals"
@@ -17,7 +20,7 @@ export default class RegisterPage extends React.Component {
     }
 
     N.init(res)
-    this.props.router.replace('/')
+    this.props.router.replace("/")
   }
 
   constructor() {

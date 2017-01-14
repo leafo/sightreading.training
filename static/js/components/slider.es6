@@ -1,3 +1,5 @@
+import * as React from "react"
+import {classNames} from "window"
 let {PropTypes: types} = React;
 
 export default class Slider extends React.Component {

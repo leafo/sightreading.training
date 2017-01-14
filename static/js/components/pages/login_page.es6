@@ -1,5 +1,6 @@
 /*global N*/
 
+import * as React from "react"
 import {Link} from "react-router"
 
 import {setTitle} from "st/globals"

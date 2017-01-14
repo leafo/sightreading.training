@@ -1,3 +1,7 @@
+
+import * as React from "react"
+import {classNames} from "window"
+
 let {PropTypes: types} = React;
 
 import NoteList from "st/note_list"
@@ -35,7 +39,7 @@ export class NoteListRenderer {
 
         if (note.annotation) {
           let style = {
-            top: `-66%`,
+            top: "-66%",
             left: `${opts.offset}px`
           }
 

@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.8.0",
+    "babel-eslint": "^7.1.1",
     "babel-plugin-transform-es2015-modules-amd": "^6.18.0",
     "babel-plugin-transform-runtime": "^6.15.0",
     "babel-plugin-undeclared-variables-check": "^6.8.0",

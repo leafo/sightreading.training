@@ -1,3 +1,6 @@
+import * as React from "react"
+import {classNames} from "window"
+
 let {PropTypes: types} = React
 
 export default class MidiSelector extends React.Component {

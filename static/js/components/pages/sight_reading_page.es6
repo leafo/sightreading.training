@@ -16,6 +16,7 @@ import {dispatch, trigger} from "st/events"
 import {NOTE_EVENTS} from "st/midi"
 
 import * as React from "react"
+import {classNames} from "window"
 
 let {PropTypes: types} = React
 let {CSSTransitionGroup} = React.addons || {}
@@ -131,7 +132,7 @@ export default class SightReadingPage extends React.Component {
   // called when held notes reaches 0
   checkRelease() {
     switch (this.state.currentGenerator.mode) {
-      case "notes":
+      case "notes": {
         let missed = this.state.notes.currentColumn()
           .filter((n) => !this.state.heldNotes[n]);
 
@@ -146,8 +147,9 @@ export default class SightReadingPage extends React.Component {
 
         setTimeout(() => this.setState({noteShaking: false}), 500);
         break
+      }
 
-      case "chords":
+      case "chords": {
         let touched = Object.keys(this.state.touchedNotes);
 
         if (this.state.notes.matchesHead(touched) && touched.length > 2) {
@@ -175,6 +177,7 @@ export default class SightReadingPage extends React.Component {
           setTimeout(() => this.setState({noteShaking: false}), 500);
         }
         break
+      }
     }
   }
 
@@ -182,7 +185,7 @@ export default class SightReadingPage extends React.Component {
   // return true to trigger redraw
   checkPress() {
     switch (this.state.currentGenerator.mode) {
-      case "notes":
+      case "notes": {
         let touched = Object.keys(this.state.touchedNotes);
         if (this.state.notes.matchesHead(touched, this.state.anyOctave)) {
           gaEvent("sight_reading", "note", "hit");
@@ -204,10 +207,12 @@ export default class SightReadingPage extends React.Component {
         } else {
           return false
         }
+      }
 
-      case "chords":
+      case "chords": {
         // chords only check on release
         return false
+      }
     }
   }
 

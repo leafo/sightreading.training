@@ -256,10 +256,11 @@ export class KeySignature {
     }
 
     let octave = 5; // TODO: pick something close to min/max
+    let notes = null
 
     if (this.count > 0) {
       let count = this.count
-      var notes = [parseNote(`F${octave}`)]
+      notes = [parseNote(`F${octave}`)]
       while (count > 1) {
         count -= 1;
         notes.push(notes[notes.length - 1] + 7)
@@ -268,8 +269,7 @@ export class KeySignature {
 
     if (this.count < 0) {
       let count = -1 * this.count
-
-      var notes = [parseNote(`B${octave}`)]
+      notes = [parseNote(`B${octave}`)]
       while (count > 1) {
         count -= 1
         notes.push(notes[notes.length - 1] - 7)

@@ -1,7 +1,7 @@
 
 import * as React from "react"
 import {csrfToken} from "st/globals"
-import {FormData, XMLHttpRequest} from "window"
+import {FormData, XMLHttpRequest, classNames} from "window"
 
 let {PropTypes: types} = React
 

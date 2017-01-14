@@ -1,3 +1,4 @@
+import * as React from "react"
 let {PropTypes: types} = React;
 
 export class IconBase extends React.Component {

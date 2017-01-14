@@ -1,4 +1,7 @@
 
+import * as React from "react"
+import {classNames} from "window"
+
 import {parseNote, noteName, LETTER_OFFSETS} from "st/music"
 import {keyCodeToChar, noteForKey} from "st/keyboard_input"
 

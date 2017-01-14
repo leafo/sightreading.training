@@ -1,3 +1,6 @@
+import * as React from "react"
+import {classNames, MersenneTwister} from "window"
+
 import NoteList from "st/note_list"
 
 import Slider from "st/components/slider"

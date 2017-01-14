@@ -1,3 +1,4 @@
+import * as React from "react"
 let {PropTypes: types} = React;
 
 import Lightbox from "st/components/lightbox"

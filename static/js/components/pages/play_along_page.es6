@@ -1,3 +1,5 @@
+import * as React from "react"
+
 // like note list but notes in time
 class SongNoteList extends Array {
   constructor(bpm=100) {

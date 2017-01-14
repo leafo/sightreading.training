@@ -1,6 +1,8 @@
 /*global moment*/
 /*global N*/
 
+import * as React from "react"
+
 let LineChart = window["react-chartjs"].Line;
 
 import {setTitle} from "st/globals"

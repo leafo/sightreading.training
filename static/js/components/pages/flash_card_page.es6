@@ -1,8 +1,12 @@
 
+import * as React from "react"
+import {classNames, MersenneTwister} from "window"
+
 let {PropTypes: types} = React
 let {CSSTransitionGroup} = React.addons || {}
 
 import {setTitle} from "st/globals"
+import {keyCodeToChar} from "st/keyboard_input"
 
 export default class FlashCardPage extends React.Component {
   static notes = ["C", "D", "E", "F", "G", "A", "B"]

@@ -1,6 +1,10 @@
+/*global N*/
 
+import * as React from "react"
+import {classNames} from "window"
 import Slider from "st/components/slider"
 import Select from "st/components/select"
+import {trigger} from "st/events"
 
 import {KeySignature} from "st/music"
 
@@ -56,7 +60,7 @@ export class SettingsPanel extends React.Component {
 
   savePreset(e) {
     e.preventDefault()
-    N.trigger(this, "saveGeneratorPreset", this.refs.presetForm)
+    trigger(this, "saveGeneratorPreset", this.refs.presetForm)
   }
 
   loadPresets() {
@@ -168,7 +172,7 @@ export class SettingsPanel extends React.Component {
 
   renderKeys() {
     return [0, 1, 2, 3, 4, 5, -1, -2, -3, -4, -5, -6].map((key) => {
-      var key = new KeySignature(key)
+      key = new KeySignature(key)
 
       return <div
         onClick={(e) => {
