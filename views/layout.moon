@@ -29,7 +29,12 @@ class Layout extends Widget
             raw "Raven.config(#{to_json config.sentry_url}).install()"
 
         script type: "text/javascript", ->
-          raw "requirejs(['st/main'], function(m) { m.init(#{to_json @initial_state!}) });"
+          raw [[define("window", window);]]
+          raw [[define("react", React);]]
+          raw [[define("mersenne-twister", MersenneTwister);]]
+          raw [[define("react", React);]]
+          -- raw "requirejs(['st/main'], function(m) { m.init(#{to_json @initial_state!}) });"
+          raw "requirejs(['st/test'], function(m) { m.hello() });"
 
   initial_state: =>
     out = { }
