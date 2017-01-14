@@ -1,7 +1,7 @@
-/*global moment*/
 /*global N*/
 
 import * as React from "react"
+import {moment} from "lib"
 
 let LineChart = window["react-chartjs"].Line;
 

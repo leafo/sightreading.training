@@ -1,5 +1,5 @@
 import * as React from "react"
-import {classNames, MersenneTwister} from "window"
+import {classNames, MersenneTwister} from "lib"
 
 import NoteList from "st/note_list"
 

@@ -1,6 +1,6 @@
 
 import {parseNote, noteName, MajorScale, Chord} from "st/music"
-import {MersenneTwister} from "window"
+import {MersenneTwister} from "lib"
 
 export function testRandomNotes() {
   let scale = new MajorScale("C")

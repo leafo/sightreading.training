@@ -16,7 +16,7 @@ import {dispatch, trigger} from "st/events"
 import {NOTE_EVENTS} from "st/midi"
 
 import * as React from "react"
-import {classNames} from "window"
+import {classNames} from "lib"
 
 let {PropTypes: types} = React
 let {CSSTransitionGroup} = React.addons || {}

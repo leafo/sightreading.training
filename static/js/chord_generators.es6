@@ -1,5 +1,5 @@
 import {Chord, MajorScale, MinorScale, MajorBluesScale} from "st/music"
-import {MersenneTwister} from "window"
+import {MersenneTwister} from "lib"
 
 export class ChordGenerator {
   constructor(keySignature, opts={}) {

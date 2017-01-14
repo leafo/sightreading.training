@@ -1,5 +1,5 @@
 import * as React from "react"
-import {classNames} from "window"
+import {classNames} from "lib"
 
 let {PropTypes: types} = React
 

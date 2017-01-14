@@ -1,7 +1,7 @@
 /*global N*/
 
 import * as React from "react"
-import {classNames} from "window"
+import {classNames} from "lib"
 import Slider from "st/components/slider"
 import Select from "st/components/select"
 import {trigger} from "st/events"
