@@ -1,7 +1,9 @@
 let {PropTypes: types} = React;
 
 import NoteList from "st/note_list"
-import {parseNote, letterOffset} from "st/music"
+import ChordList from "st/chord_list"
+
+import {parseNote, letterOffset, MIDDLE_C_PITCH} from "st/music"
 
 export class NoteListRenderer {
   constructor() {

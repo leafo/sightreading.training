@@ -1,5 +1,5 @@
 
-import {parseNote} from "st/music"
+import {parseNote, noteName, Chord} from "st/music"
 
 export function testRandomNotes() {
   let scale = new MajorScale("C")

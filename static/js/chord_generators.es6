@@ -1,5 +1,7 @@
 
-export default class ChordGenerator {
+import {Chord, MajorScale, MinorScale, MajorBluesScale} from "st/music"
+
+export class ChordGenerator {
   constructor(keySignature, opts={}) {
     this.noteCount = opts.notes
 

@@ -1,5 +1,6 @@
 
 import NoteList from "st/note_list"
+import ChordList from "st/chord_list"
 import NoteStats from "st/note_stats"
 import SlideToZero from "st/slide_to_zero"
 import Slider from "st/components/slider"

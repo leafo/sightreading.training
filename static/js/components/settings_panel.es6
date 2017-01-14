@@ -1,4 +1,9 @@
 
+import Slider from "st/components/slider"
+import Select from "st/components/select"
+
+import {KeySignature} from "st/music"
+
 let {PropTypes: types} = React;
 
 export class SettingsPanel extends React.Component {

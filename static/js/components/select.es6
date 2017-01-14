@@ -1,6 +1,8 @@
-let {PropTypes: types} = React;
+let {PropTypes: types} = React
 
-class Select extends React.Component {
+import {IconDownArrow} from "st/components/icons"
+
+export default class Select extends React.Component {
   static propTypes = {
     options: types.array.isRequired,
     name: types.string,

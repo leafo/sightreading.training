@@ -1,7 +1,13 @@
 
 import {MajorScale} from "st/music"
-import {RandomNotes} from "st/generators"
-import {GStaff} from "st/components/staves"
+
+import {
+  RandomNotes, SweepRangeNotes, MiniSteps, TriadNotes, SevenOpenNotes,
+  ProgressionGenerator, PositionGenerator
+} from "st/generators"
+
+import {ChordGenerator} from "st/chord_generators"
+import {GStaff, FStaff, GrandStaff, ChordStaff} from "st/components/staves"
 
 let smoothInput = {
   name: "smoothness",

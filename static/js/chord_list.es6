@@ -1,4 +1,4 @@
-export class ChordList extends Array {
+export default class ChordList extends Array {
 
   constructor(chords, opts={}) {
     super()
