@@ -50,7 +50,7 @@ export function testSkewRand(iterations=1) {
 }
 
 
-class Generator {
+export class Generator {
   constructor(opts={}) {
     this.smoothness = opts.smoothness || 0
   }

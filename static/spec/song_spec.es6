@@ -1,3 +1,7 @@
+import "jasmine_boot"
+
+import {SongNoteList, SongNote} from "st/song_note_list"
+
 describe("song", function() {
   it("creates an empty song notes", function() {
     let song = new SongNoteList()

@@ -1,4 +1,7 @@
 
+import "jasmine_boot"
+import {ShapeGenerator, Generator} from "st/generators"
+
 describe("generators", function() {
   describe("shape generators", function() {
     it("gets inversions of triad", function() {

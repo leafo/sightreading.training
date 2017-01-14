@@ -7,14 +7,19 @@
   <link rel="stylesheet" href="/static/spec.css">
   <script type="text/javascript" src="/static/spec.js"></script>
 
-  <!-- include source files here... -->
   <script type="text/javascript" src="/static/lib.js"></script>
   <script type="text/javascript" src="/static/main.js"></script>
 
-  <!-- include spec files here... -->
-  <script src="/static/spec/music_spec.js"></script>
-  <script src="/static/spec/generators_spec.js"></script>
-  <script src="/static/spec/song_spec.js"></script>
+  <script type="text/javascript">
+    require([
+      "spec/generators_spec",
+      "spec/music_spec",
+      "spec/song_spec",
+    ], function(m) {
+      window.onload() // thanks jasmine
+    })
+  </script>
+
 </head>
 
 <body>

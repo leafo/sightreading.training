@@ -1,3 +1,9 @@
+import "jasmine_boot"
+
+import {
+  notesLessThan, notesGreaterThan, compareNotes, noteName, parseNote,
+  MajorScale, MinorScale, Chord, KeySignature
+} from "st/music"
 
 describe("notes", function() {
   it("less than", function() {
