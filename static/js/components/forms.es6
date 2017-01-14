@@ -1,6 +1,10 @@
-let {PropTypes: types} = React
 
+import * as React from "react"
+import {PropTypes as types } from "react"
 import {csrfToken} from "st/globals"
+import classNames from "classNames"
+
+let {FormData, XMLHttpRequest} = this
 
 export class TextInputRow extends React.Component {
   static propTypes = {
