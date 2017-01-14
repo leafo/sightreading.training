@@ -1,4 +1,8 @@
 
+import {MajorScale} from "st/music"
+import {RandomNotes} from "st/generators"
+import {GStaff} from "st/components/staves"
+
 let smoothInput = {
   name: "smoothness",
   type: "range",
@@ -7,7 +11,7 @@ let smoothInput = {
   max: 6,
 }
 
-N.STAVES = [
+export const STAVES = [
   {
     mode: "notes",
     name: "treble",
@@ -52,7 +56,7 @@ N.STAVES = [
   }
 ]
 
-N.GENERATORS = [
+export const GENERATORS = [
   {
     name: "random",
     mode: "notes",

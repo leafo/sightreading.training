@@ -1,7 +1,19 @@
 
+import SightReadingPage from "st/components/pages/sight_reading_page"
+import LoginPage from "st/components/pages/login_page"
+import RegisterPage from "st/components/pages/login_page"
+import {AboutPage, GuideGeneratorsPage, GuideChordsPage} from "st/components/pages/guide_pages"
+import StatsPage from "st/components/pages/stats"
+import FlashCardPage from "st/components/pages/flash_card_page"
+import EarTrainingPage from "st/components/pages/ear_training_page"
+import PlayAlongPage from "st/components/pages/play_along_page"
+
+import {dispatch} from "st/events"
+import {readConfig, writeConfig} from "st/config"
+import {csrfToken} from "st/globals"
+
 let {Router, Route, IndexRoute, Link, browserHistory, withRouter} = ReactRouter
 let {CSSTransitionGroup} = React.addons || {}
-
 
 let MidiButton = (props) =>
   <button
@@ -34,7 +46,7 @@ class Layout extends React.Component {
   }
 
   loadDefaultSettings() {
-    let defaultMidiInput = N.readConfig("defaults:midiIn")
+    let defaultMidiInput = readConfig("defaults:midiIn")
     if (defaultMidiInput) {
       let idx = 0
       for (let input of this.midiInputs()) {
@@ -47,7 +59,7 @@ class Layout extends React.Component {
   }
 
   componentDidMount() {
-    N.dispatch(this, {
+    dispatch(this, {
       "closeLightbox": (e) => this.setState({currentLightbox: null}),
       "showLightbox": (e, lb) => {
         this.setState({
@@ -59,7 +71,7 @@ class Layout extends React.Component {
           currentLightbox: <IntroLightbox
             setInput={idx => {
               let input = this.setInput(idx)
-              N.writeConfig("defaults:midiIn", input.name)
+              writeConfig("defaults:midiIn", input.name)
             }} />
         })
       }
@@ -120,7 +132,7 @@ class Layout extends React.Component {
     let request = new XMLHttpRequest()
     request.open("POST", "/logout.json")
     let data = new FormData()
-    data.append("csrf_token", N.csrf_token())
+    data.append("csrf_token", csrfToken())
     request.send(data)
 
     request.onload = (e) => {
@@ -201,7 +213,7 @@ class Layout extends React.Component {
   }
 }
 
-class App extends React.Component {
+export default class App extends React.Component {
   constructor() {
     super()
     this.state = {

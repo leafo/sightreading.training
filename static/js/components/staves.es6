@@ -1,7 +1,9 @@
 let {PropTypes: types} = React;
 
+import NoteList from "st/note_list"
+import {parseNote, letterOffset} from "st/music"
 
-class NoteListRenderer {
+export class NoteListRenderer {
   constructor() {
   }
 
@@ -192,7 +194,7 @@ class NoteListRenderer {
   }
 }
 
-class Staff extends React.Component {
+export class Staff extends React.Component {
   static propTypes = {
     // rendering props
     upperLine: types.number.isRequired,
@@ -298,7 +300,7 @@ class Staff extends React.Component {
   }
 }
 
-class GStaff extends Staff {
+export class GStaff extends Staff {
   static defaultProps = {
     // where the key signature is centered around
     keySignatureCenter: "F6",
@@ -309,7 +311,7 @@ class GStaff extends Staff {
   }
 }
 
-class FStaff extends Staff {
+export class FStaff extends Staff {
   static defaultProps = {
     keySignatureCenter: "F4",
     upperLine: 57,
@@ -319,7 +321,7 @@ class FStaff extends Staff {
   }
 }
 
-class GrandStaff extends React.Component {
+export class GrandStaff extends React.Component {
   // skips react for performance
   setOffset(amount) {
     if (!this.staves) {
@@ -349,7 +351,7 @@ class GrandStaff extends React.Component {
   }
 }
 
-class ChordStaff extends React.Component {
+export class ChordStaff extends React.Component {
   static propTypes = {
     chords: types.array,
   }

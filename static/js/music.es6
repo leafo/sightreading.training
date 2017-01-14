@@ -1,3 +1,7 @@
+
+import "st/note_list"
+import require from "require"
+
 export const OCTAVE_SIZE = 12
 
 export const OFFSETS = {
@@ -308,6 +312,8 @@ export class Scale {
 
   getRange(octave, count=this.steps.length+1, offset=0) {
     let current = parseNote(`${this.root}${octave}`)
+    const NoteList = require("st/note_list").default
+
     let range = new NoteList
 
     let k = 0;

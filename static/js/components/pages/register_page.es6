@@ -1,7 +1,7 @@
 
 let {Link} = ReactRouter
 
-class RegisterPage extends React.Component {
+export default class RegisterPage extends React.Component {
   componentDidMount() {
     N.setTitle("Register Account")
   }

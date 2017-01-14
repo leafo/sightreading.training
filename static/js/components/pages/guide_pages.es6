@@ -26,7 +26,7 @@ class BaseGuidePage extends React.Component {
   }
 }
 
-class AboutPage extends BaseGuidePage {
+export class AboutPage extends BaseGuidePage {
   componentDidMount() {
     N.setTitle("About Sight Reading Trainer")
   }
@@ -110,7 +110,7 @@ class AboutPage extends BaseGuidePage {
   }
 }
 
-class GuideGeneratorsPage extends BaseGuidePage {
+export class GuideGeneratorsPage extends BaseGuidePage {
   componentDidMount() {
     N.setTitle("Sight Reading Random Notes")
   }
@@ -187,7 +187,7 @@ class GuideGeneratorsPage extends BaseGuidePage {
 }
 
 
-class GuideChordsPage extends BaseGuidePage {
+export class GuideChordsPage extends BaseGuidePage {
   componentDidMount() {
     N.setTitle("Sight Reading Random Chords")
   }

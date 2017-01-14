@@ -69,7 +69,7 @@ class SongNote {
   }
 }
 
-class PlayAlongPage extends React.Component {
+export default class PlayAlongPage extends React.Component {
   render() {
     return <div>Hello world</div>
   }

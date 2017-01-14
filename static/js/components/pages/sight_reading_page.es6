@@ -1,4 +1,16 @@
 
+import NoteList from "st/note_list"
+import NoteStats from "st/note_stats"
+import SlideToZero from "st/slide_to_zero"
+import Slider from "st/components/slider"
+import Keyboard from "st/components/keyboard"
+
+import {KeySignature} from "st/music"
+import {STAVES, GENERATORS} from "st/data"
+import {GeneratorSettings, SettingsPanel} from "st/components/settings_panel"
+import {setTitle, gaEvent, csrfToken} from "st/globals"
+import {dispatch} from "st/events"
+
 let {PropTypes: types} = React
 let {CSSTransitionGroup} = React.addons || {}
 let {Link} = ReactRouter
@@ -6,7 +18,7 @@ let {Link} = ReactRouter
 const DEFAULT_NOTE_WIDTH = 100
 const DEFAULT_SPEED = 400
 
-class SightReadingPage extends React.Component {
+export default class SightReadingPage extends React.Component {
   constructor(props) {
     super(props);
 
@@ -31,7 +43,7 @@ class SightReadingPage extends React.Component {
   }
 
   componentWillMount() {
-    let state = this.setStaff(N.STAVES[0])
+    let state = this.setStaff(STAVES[0])
 
     // manually copy state because set state hasn't applied yet
     for (let key in state) {
@@ -54,8 +66,8 @@ class SightReadingPage extends React.Component {
   }
 
   componentDidMount() {
-    N.setTitle()
-    N.dispatch(this, {
+    setTitle()
+    dispatch(this, {
       saveGeneratorPreset: (e, form) => {
         if (this.state.savingPreset) {
           return;
@@ -72,7 +84,7 @@ class SightReadingPage extends React.Component {
         let request = new XMLHttpRequest()
         request.open("POST", "/new-preset.json")
         let data = new FormData(form)
-        data.append("csrf_token", N.csrf_token())
+        data.append("csrf_token", csrfToken())
         data.append("preset", preset)
         request.send(data)
 
@@ -118,7 +130,7 @@ class SightReadingPage extends React.Component {
         let missed = this.state.notes.currentColumn()
           .filter((n) => !this.state.heldNotes[n]);
 
-        N.event("sight_reading", "note", "miss");
+        gaEvent("sight_reading", "note", "miss");
         this.state.stats.missNotes(missed);
 
         this.setState({
@@ -134,7 +146,7 @@ class SightReadingPage extends React.Component {
         let touched = Object.keys(this.state.touchedNotes);
 
         if (this.state.notes.matchesHead(touched) && touched.length > 2) {
-          N.event("sight_reading", "chord", "hit");
+          gaEvent("sight_reading", "chord", "hit");
           this.state.notes.shift()
           this.state.notes.pushRandom()
 
@@ -147,7 +159,7 @@ class SightReadingPage extends React.Component {
 
           this.state.slider.add(this.state.noteWidth)
         } else {
-          N.event("sight_reading", "chord", "miss");
+          gaEvent("sight_reading", "chord", "miss");
 
           this.setState({
             noteShaking: true,
@@ -168,7 +180,7 @@ class SightReadingPage extends React.Component {
       case "notes":
         let touched = Object.keys(this.state.touchedNotes);
         if (this.state.notes.matchesHead(touched, this.state.anyOctave)) {
-          N.event("sight_reading", "note", "hit");
+          gaEvent("sight_reading", "note", "hit");
 
           this.state.notes.shift();
           this.state.notes.pushRandom();
@@ -295,7 +307,7 @@ class SightReadingPage extends React.Component {
 
     // if the current generator is not compatible with new staff change it
     if (!this.currentGenerator || (this.state.currentGenerator.mode != staff.mode)) {
-      let newGenerator = N.GENERATORS.find(g => staff.mode == g.mode)
+      let newGenerator = GENERATORS.find(g => staff.mode == g.mode)
       if (!newGenerator) {
         console.warn("failed to find new generator for staff")
       }
@@ -375,8 +387,8 @@ class SightReadingPage extends React.Component {
 
     return <SettingsPanel
       close={this.toggleSettings.bind(this)}
-      staves={N.STAVES}
-      generators={N.GENERATORS}
+      staves={STAVES}
+      generators={GENERATORS}
       saveGeneratorPreset={this.state.savingPreset}
 
       currentGenerator={this.state.currentGenerator}

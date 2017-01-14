@@ -1,7 +1,7 @@
 
 let {PropTypes: types} = React;
 
-class SettingsPanel extends React.Component {
+export class SettingsPanel extends React.Component {
   static propTypes = {
     close: types.func.isRequired,
     staves: types.array.isRequired,
@@ -179,8 +179,7 @@ class SettingsPanel extends React.Component {
   }
 }
 
-
-class GeneratorSettings extends React.Component {
+export class GeneratorSettings extends React.Component {
   static propTypes = {
     generator: types.object.isRequired,
     setGenerator: types.func.isRequired,

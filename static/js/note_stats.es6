@@ -1,4 +1,7 @@
-export class NoteStats {
+
+import {csrfToken} from "st/globals"
+
+export default class NoteStats {
   constructor(currentUser) {
     this.currentUser = currentUser
     this.noteHitStats = {}
@@ -109,7 +112,7 @@ export class NoteStats {
 
   flush() {
     let d = new FormData()
-    d.append("csrf_token", N.csrf_token())
+    d.append("csrf_token", csrfToken())
     for (let key in this.buffer) {
       d.append(key, "" + this.buffer[key])
     }

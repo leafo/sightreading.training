@@ -1,4 +1,6 @@
-let {PropTypes: types} = React;
+let {PropTypes: types} = React
+
+import {csrfToken} from "st/globals"
 
 class TextInputRow extends React.Component {
   static propTypes = {
@@ -49,7 +51,7 @@ class JsonForm extends React.Component {
     }
 
     let formData = new FormData(this.refs.form)
-    formData.append("csrf_token", N.csrf_token())
+    formData.append("csrf_token", csrfToken())
 
     if (this.props.validate && !this.props.validate(formData)) {
       return

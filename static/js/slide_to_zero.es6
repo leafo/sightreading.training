@@ -1,5 +1,5 @@
 // used to control animation outside of react
-class SlideToZero {
+export default class SlideToZero {
   constructor(opts={}) {
     this.value = 0;
     this.speed = opts.speed || 100; // 100 pixels a second

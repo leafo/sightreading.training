@@ -1,7 +1,7 @@
 let {Link} = ReactRouter
 let LineChart = window["react-chartjs"].Line;
 
-class StatsPage extends React.Component {
+export default class StatsPage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}

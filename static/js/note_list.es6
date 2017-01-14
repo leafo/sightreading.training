@@ -1,4 +1,7 @@
-export class NoteList extends Array {
+
+import {notesLessThan} from "st/music"
+
+export default class NoteList extends Array {
   constructor(notes, opts={}) {
     super();
     Object.setPrototypeOf(this, NoteList.prototype);

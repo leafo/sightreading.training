@@ -1,4 +1,6 @@
 
+import {noteName, parseNote} from "st/music"
+
 // based off mapping here
 // http://tutorials.renoise.com/w//images/d/d6/2.8_renoisekeyboard.png
 

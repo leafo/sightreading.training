@@ -1,6 +1,6 @@
 let {PropTypes: types} = React;
 
-class Slider extends React.Component {
+export default class Slider extends React.Component {
   static propTypes = {
     min: types.number,
     max: types.number,

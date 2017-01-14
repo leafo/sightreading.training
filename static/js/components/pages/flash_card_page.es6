@@ -3,7 +3,7 @@ let {PropTypes: types} = React
 let {Link} = ReactRouter
 let {CSSTransitionGroup} = React.addons || {}
 
-class FlashCardPage extends React.Component {
+export default class FlashCardPage extends React.Component {
   static notes = ["C", "D", "E", "F", "G", "A", "B"]
 
   constructor(props) {

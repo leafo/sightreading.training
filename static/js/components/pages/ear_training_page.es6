@@ -1,6 +1,6 @@
 let {Link} = ReactRouter
 
-class EarTrainingPage extends React.Component {
+export default class EarTrainingPage extends React.Component {
   componentDidMount() {
     N.setTitle("Ear Training")
   }

@@ -1,7 +1,10 @@
 
-let {PropTypes: types} = React;
+import {parseNote, noteName, LETTER_OFFSETS} from "st/music"
+import {keyCodeToChar, noteForKey} from "st/keyboard_input"
 
-class Keyboard extends React.Component {
+let {PropTypes: types} = React
+
+export default class Keyboard extends React.Component {
   static propTypes = {
     lower: types.oneOfType([types.string, types.number]),
     upper: types.oneOfType([types.string, types.number]),

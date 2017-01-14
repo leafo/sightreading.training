@@ -1,7 +1,7 @@
 
 let {Link} = ReactRouter
 
-class LoginPage extends React.Component {
+export default class LoginPage extends React.Component {
   componentDidMount() {
     N.setTitle("Log In")
   }
