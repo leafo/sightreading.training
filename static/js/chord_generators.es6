@@ -1,5 +1,5 @@
 
-class ChordGenerator {
+export default class ChordGenerator {
   constructor(keySignature, opts={}) {
     this.noteCount = opts.notes
 

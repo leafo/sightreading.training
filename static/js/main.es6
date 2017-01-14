@@ -21,18 +21,23 @@ export function event(category, action, label, value, interactive=true) {
   } catch (e) {}
 };
 
-N.init = function(session) {
+export function init(session) {
+  window.N = window.N || {};
+  N.enable_presets = false
   N.session = session || {}
+
   ReactDOM.render(<App />, document.getElementById("page"));
 }
 
-N.csrf_token = function() {
+export function csrf_token() {
   return document.getElementById("csrf_token").getAttribute("content")
 }
 
-N.scopeEvent = (name) => `notes:${name}`
+export function scopeEvent(name) {
+  return `notes:${name}`
+}
 
-N.trigger = function(component, name, ...args) {
+export function trigger(component, name, ...args) {
   const node = ReactDOM.findDOMNode(component)
   let ev = new CustomEvent(N.scopeEvent(name), {
     detail: args,
@@ -41,7 +46,7 @@ N.trigger = function(component, name, ...args) {
   return node.dispatchEvent(ev)
 }
 
-N.setTitle = function(title) {
+export function setTitle(title) {
   if (title) {
     document.title = `${title} | Sight Reading Trainer`
   } else {
@@ -49,7 +54,7 @@ N.setTitle = function(title) {
   }
 }
 
-N.dispatch = function(component, event_table) {
+export function dispatch(component, event_table) {
   const node = ReactDOM.findDOMNode(component)
 
   for (let key in event_table) {
@@ -65,7 +70,7 @@ N.dispatch = function(component, event_table) {
   }
 }
 
-N.storageAvailable = function(type) {
+export function storageAvailable(type) {
   try {
     let storage = window[type]
     let x = "__test";
@@ -77,7 +82,7 @@ N.storageAvailable = function(type) {
   }
 }
 
-N.writeConfig = function(name, value) {
+export function writeConfig(name, value) {
   if (N.storageAvailable("localStorage")) {
     if (typeof value != "string") {
       value = JSON.stringify(value)
@@ -88,7 +93,7 @@ N.writeConfig = function(name, value) {
   }
 }
 
-N.readConfig = function(name, defaultValue=undefined) {
+export function readConfig(name, defaultValue=undefined) {
   if (N.storageAvailable("localStorage")) {
     console.warn("Reading config", name)
     let ret = window.localStorage.getItem(name)

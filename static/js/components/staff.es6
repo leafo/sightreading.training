@@ -1,5 +1,6 @@
 let {PropTypes: types} = React;
 
+
 class NoteListRenderer {
   constructor() {
   }
