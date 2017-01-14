@@ -37,6 +37,7 @@ class Layout extends Widget
             chartjs: window["react-chartjs"]
           });]]
           raw [[define("react", React);]]
+          raw [[define("react-dom", ReactDOM);]]
           raw [[define("react-router", ReactRouter);]]
           raw "requirejs(['st/main'], function(m) { m.init(#{to_json @initial_state!}) });"
 

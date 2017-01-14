@@ -1,4 +1,4 @@
-/*global ReactDOM*/
+import * as ReactDOM from "react-dom"
 
 export function scopeEvent(name) {
   return `notes:${name}`
