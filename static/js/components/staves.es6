@@ -5,14 +5,12 @@ import {classNames} from "lib"
 let {PropTypes: types} = React;
 
 import NoteList from "st/note_list"
+import {SongNoteList} from "st/song_note_list"
 import ChordList from "st/chord_list"
 
 import {parseNote, letterOffset, MIDDLE_C_PITCH} from "st/music"
 
 export class NoteListRenderer {
-  constructor() {
-  }
-
   renderNotes(component) {
     const props = component.props
     let keySignatureWidth = 0
@@ -200,6 +198,12 @@ export class NoteListRenderer {
   }
 }
 
+export class SongNoteListRenderer extends NoteListRenderer {
+  renderNote(component, note, opts={}) {
+    return <div key={opts.key}>{note.toString()}</div>
+  }
+}
+
 export class Staff extends React.Component {
   static propTypes = {
     // rendering props
@@ -210,14 +214,21 @@ export class Staff extends React.Component {
     keySignature: types.object,
 
     // state props
-    notes: types.array,
-    heldNotes: types.object,
+    notes: types.array.isRequired,
+    heldNotes: types.object.isRequired,
     inGrand: types.bool,
   }
 
   constructor(props) {
     super(props);
-    this.noteRenderer = new NoteListRenderer()
+
+    if (this.props.notes instanceof NoteList) {
+      this.noteRenderer = new NoteListRenderer()
+    }
+
+    if (this.props.notes instanceof SongNoteList) {
+      this.noteRenderer = new SongNoteListRenderer()
+    }
   }
 
   // skips react for performance
@@ -226,7 +237,7 @@ export class Staff extends React.Component {
   }
 
   render() {
-    if (!(this.props.notes instanceof NoteList)) {
+    if (!this.noteRenderer) {
       return <div />
     }
 
