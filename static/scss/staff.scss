@@ -99,6 +99,19 @@
         }
     }
 
+    .staff_song_notes {
+        .note_bar {
+            position: absolute;
+            top: 0;
+            left: 120px;
+            height: 20%;
+            transform: translate(0, -47%);
+            transition: 0.1s ease transform;
+            background: green;
+            box-shadow: 0 0 0 2px blue;
+        }
+    }
+
     .staff_notes {
         position: absolute;
         top: 0;

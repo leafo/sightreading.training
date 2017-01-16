@@ -6,10 +6,14 @@ import {parseNote, letterOffset, MIDDLE_C_PITCH} from "st/music"
 
 export default class StaffNotes extends React.Component {
   render() {
-    return <div ref="notes" className="staff_notes">
+    return <div ref="notes" className={this.classNames()}>
       {this.renderNotes()}
       {this.renderHeldNotes()}
     </div>
+  }
+
+  classNames()  {
+    return "staff_notes"
   }
 
   setOffset(amount) {

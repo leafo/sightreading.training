@@ -4,6 +4,8 @@ import {GStaff} from "st/components/staves"
 import {SongNoteList} from "st/song_note_list"
 import SongTimer from "st/song_timer"
 
+import {KeySignature} from "st/music"
+
 export default class PlayAlongPage extends React.Component {
   constructor(props) {
     super(props)
@@ -27,7 +29,7 @@ export default class PlayAlongPage extends React.Component {
     let heldNotes = {}
 
     return <div className="play_along_page">
-      <GStaff notes={song} heldNotes={heldNotes}></GStaff>
+      <GStaff notes={song} heldNotes={heldNotes} keySignature={new KeySignature(0)}></GStaff>
       <button onClick={e => this.state.songTimer.start() }>
         Start Timer
       </button>
