@@ -11,12 +11,7 @@ import ChordList from "st/chord_list"
 import {parseNote, letterOffset} from "st/music"
 
 import StaffNotes from "st/components/staff_notes"
-
-// export class SongNoteListRenderer extends NoteListRenderer {
-//   renderNote(component, note, opts={}) {
-//     return <div key={opts.key}>{note.toString()}</div>
-//   }
-// }
+import StaffSongNotes from "st/components/staff_song_notes"
 
 export class Staff extends React.Component {
   static propTypes = {
@@ -51,8 +46,7 @@ export class Staff extends React.Component {
     }
 
     if (this.props.notes instanceof SongNoteList) {
-      // this.noteRenderer = new SongNoteListRenderer()
-      console.error("not yet")
+      staffNotes = <StaffSongNotes {...this.props}></StaffSongNotes>
     }
 
     if (!staffNotes) {
