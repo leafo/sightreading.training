@@ -35,18 +35,18 @@ export class Staff extends React.Component {
 
   // skips react for performance
   setOffset(amount) {
-    this.refs.notes.style.transform = `translate3d(${amount}px, 0, 0)`;
+    this.refs.notes.setOffset(amount)
   }
 
   render() {
     let staffNotes = null
 
     if (this.props.notes instanceof NoteList) {
-      staffNotes = <StaffNotes {...this.props}></StaffNotes>
+      staffNotes = <StaffNotes ref="notes" {...this.props}></StaffNotes>
     }
 
     if (this.props.notes instanceof SongNoteList) {
-      staffNotes = <StaffSongNotes {...this.props}></StaffSongNotes>
+      staffNotes = <StaffSongNotes ref="notes" {...this.props}></StaffSongNotes>
     }
 
     if (!staffNotes) {
