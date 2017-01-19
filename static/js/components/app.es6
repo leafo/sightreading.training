@@ -228,7 +228,7 @@ class BlankLayout extends React.Component {
   render() {
     return <div>
       this is blank layout
-      {this.props.children}
+      <AboutPage />
       end of blank layout
     </div>
   }
