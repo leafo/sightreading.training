@@ -220,11 +220,23 @@ class Layout extends React.Component {
   }
 }
 
+class BlankPage extends React.Component {
+  render() {
+    return <div>
+      this page is blank but with stuff
+      <Link to="/login" activeClassName="active">Log in</Link>
+    </div>
+  }
+}
+
 export default class App extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+
+    let layout = props.layout || Layout
+
     this.state = {
-      routes: <Route path="/" component={withRouter(Layout)}>
+      routes: <Route path="/" component={withRouter(layout)}>
         <IndexRoute component={SightReadingPage}></IndexRoute>
         <Route path="login" component={withRouter(LoginPage)}></Route>
         <Route path="register" component={withRouter(RegisterPage)}></Route>
@@ -236,6 +248,7 @@ export default class App extends React.Component {
 
         <Route path="guide/generators" component={withRouter(GuideGeneratorsPage)}></Route>
         <Route path="guide/chords" component={withRouter(GuideChordsPage)}></Route>
+        <Route path="test" component={withRouter(BlankPage)}></Route>
       </Route>
     }
   }

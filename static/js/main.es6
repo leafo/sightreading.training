@@ -14,12 +14,17 @@ export function init(session) {
   ReactDOM.render(<App />, document.getElementById("page"));
 }
 
-class TestComponent extends React.Component {
+class BlankLayout extends React.Component {
   render() {
-    return <div>does this page render for google?</div>
+    return <div>
+      this is blank layout
+      {this.props.children}
+      end of blank layout
+    </div>
   }
 }
 
 export function test_page(session) {
-  ReactDOM.render(<TestComponent />, document.getElementById("page"));
+  N.session = session || {}
+  ReactDOM.render(<App layout={BlankLayout} />, document.getElementById("page"));
 }
