@@ -94,9 +94,10 @@ export const GENERATORS = [
 
       // send the scale
       if (options.musical) {
-        options = Object.assign({
-          scale
-        }, options)
+        options = {
+          scale,
+          ...options
+        }
       }
 
       return new RandomNotes(notes, options)

@@ -225,9 +225,10 @@ export class GeneratorSettings extends React.Component {
     super(props)
 
     this.state = {
-      inputValues: Object.assign({},
-        GeneratorSettings.inputDefaults(this.props.generator),
-        this.props.currentSettings || {})
+      inputValues: {
+        ...GeneratorSettings.inputDefaults(this.props.generator),
+        ...this.props.currentSettings
+      }
     }
   }
 
@@ -263,9 +264,10 @@ export class GeneratorSettings extends React.Component {
   }
 
   updateInputValue(input, value) {
-    let values = Object.assign({}, this.state.inputValues, {
+    let values = {
+      ...this.state.inputValues,
       [input.name]: value
-    })
+    }
 
     this.setState({ inputValues: values })
     this.props.setGenerator(this.props.generator, values)

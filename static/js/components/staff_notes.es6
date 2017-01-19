@@ -71,10 +71,11 @@ export default class StaffNotes extends React.Component {
 
     // notes that are held down but aren't correct
     return Object.keys(this.props.heldNotes).map((note, idx) =>
-      !this.props.notes.inHead(note) && this.renderNote(note, Object.assign(opts, {
+      !this.props.notes.inHead(note) && this.renderNote(note, {
+        ...opts,
         key: `held-${idx}`,
         classes: { held: true }
-      }))
+      })
     )
   }
 

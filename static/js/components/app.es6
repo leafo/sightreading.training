@@ -98,10 +98,11 @@ class Layout extends React.Component {
     }
   }
 
-  getChildren() {
-    return React.cloneElement(this.props.children, Object.assign({
-      ref: "currentPage"
-    }, this.childProps()))
+  renderChildren() {
+    return React.cloneElement(this.props.children, {
+      ref: "currentPage",
+      ...this.childProps()
+    });
   }
 
   render() {
@@ -109,7 +110,7 @@ class Layout extends React.Component {
       <div className="header_spacer">
         {this.renderHeader()}
       </div>
-      {this.getChildren()}
+      {this.renderChildren()}
 
       <CSSTransitionGroup transitionName="show_lightbox" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
         {this.renderCurrentLightbox()}
@@ -120,9 +121,10 @@ class Layout extends React.Component {
   renderCurrentLightbox() {
     if (!this.state.currentLightbox) { return }
 
-    let lb = React.cloneElement(this.state.currentLightbox, Object.assign({
-      ref: "currentLightbox"
-    }, this.childProps()))
+    let lb = React.cloneElement(this.state.currentLightbox, {
+      ref: "currentLightbox",
+      ...this.childProps()
+    })
 
     return <div
       className="lightbox_shroud"
@@ -222,23 +224,14 @@ class Layout extends React.Component {
   }
 }
 
-class BlankLayout extends Layout {
-  getChildren() {
-    return <AboutPage />
-  }
-}
-
 export default class App extends React.Component {
   static Layout = Layout
-  static BlankLayout = BlankLayout
 
   constructor(props) {
     super(props)
 
-    let layout = props.layout || Layout
-
     this.state = {
-      routes: <Route path="/" component={withRouter(layout)}>
+      routes: <Route path="/" component={withRouter(Layout)}>
         <IndexRoute component={SightReadingPage}></IndexRoute>
         <Route path="login" component={withRouter(LoginPage)}></Route>
         <Route path="register" component={withRouter(RegisterPage)}></Route>
