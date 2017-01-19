@@ -98,16 +98,18 @@ class Layout extends React.Component {
     }
   }
 
-  render() {
-    let children = React.cloneElement(this.props.children, Object.assign({
+  getChildren() {
+    return React.cloneElement(this.props.children, Object.assign({
       ref: "currentPage"
     }, this.childProps()))
+  }
 
+  render() {
     return <div className="page_layout">
       <div className="header_spacer">
         {this.renderHeader()}
       </div>
-      {children}
+      {this.getChildren()}
 
       <CSSTransitionGroup transitionName="show_lightbox" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
         {this.renderCurrentLightbox()}
@@ -220,27 +222,9 @@ class Layout extends React.Component {
   }
 }
 
-// class BlankLayout extends Layout {
-// }
-
-
-class BlankLayout extends React.Component {
-  render() {
-    return <div>
-      this is blank layout
-      <AboutPage />
-      end of blank layout
-    </div>
-  }
-}
-
-
-class BlankPage extends React.Component {
-  render() {
-    return <div>
-      this page is blank but with stuff
-      <Link to="/login" activeClassName="active">Log in</Link>
-    </div>
+class BlankLayout extends Layout {
+  getChildren() {
+    return <AboutPage />
   }
 }
 
