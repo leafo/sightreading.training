@@ -4,6 +4,7 @@
   "description": "sight reading trainer",
   "main": "test.js",
   "dependencies": {
+    "babel-polyfill": "^6.20.0",
     "babel-runtime": "^6.20.0",
     "chart.js": "^1.1.1",
     "classnames": "^2.2.1",
