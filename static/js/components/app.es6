@@ -220,6 +220,21 @@ class Layout extends React.Component {
   }
 }
 
+// class BlankLayout extends Layout {
+// }
+
+
+class BlankLayout extends React.Component {
+  render() {
+    return <div>
+      this is blank layout
+      {this.props.children}
+      end of blank layout
+    </div>
+  }
+}
+
+
 class BlankPage extends React.Component {
   render() {
     return <div>
@@ -230,6 +245,9 @@ class BlankPage extends React.Component {
 }
 
 export default class App extends React.Component {
+  static Layout = Layout
+  static BlankLayout = BlankLayout
+
   constructor(props) {
     super(props)
 
@@ -248,7 +266,7 @@ export default class App extends React.Component {
 
         <Route path="guide/generators" component={withRouter(GuideGeneratorsPage)}></Route>
         <Route path="guide/chords" component={withRouter(GuideChordsPage)}></Route>
-        <Route path="test" component={withRouter(BlankPage)}></Route>
+        <Route path="test" component={SightReadingPage}></Route>
       </Route>
     }
   }

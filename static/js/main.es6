@@ -14,17 +14,7 @@ export function init(session) {
   ReactDOM.render(<App />, document.getElementById("page"));
 }
 
-class BlankLayout extends React.Component {
-  render() {
-    return <div>
-      this is blank layout
-      {this.props.children}
-      end of blank layout
-    </div>
-  }
-}
-
 export function test_page(session) {
   N.session = session || {}
-  ReactDOM.render(<App layout={BlankLayout} />, document.getElementById("page"));
+  ReactDOM.render(<App layout={App.BlankLayout} />, document.getElementById("page"));
 }
