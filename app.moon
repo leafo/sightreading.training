@@ -24,6 +24,9 @@ class extends lapis.Application
     if @current_user
       @current_user\update_last_active!
 
+  "/test": =>
+    "hello world", layout: "test_layout"
+
   "/(*)": =>
 
   "/logout.json": post =>

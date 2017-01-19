@@ -152,7 +152,7 @@ class Layout extends React.Component {
       <Link key="ear-training" to="/ear-training" activeClassName="active">Ear Training</Link>,
       <Link key="flash-cards" to="/flash-cards" activeClassName="active">Flash Cards</Link>,
       <Link key="about" to="/about" activeClassName="active">About</Link>,
-      <Link key="play-along" to="/play-along" activeClassName="active">Play Along</Link>
+      // <Link key="play-along" to="/play-along" activeClassName="active">Play Along</Link>
     ]
 
     let userPanel = null
