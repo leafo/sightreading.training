@@ -243,7 +243,6 @@ export default class App extends React.Component {
 
         <Route path="guide/generators" component={withRouter(GuideGeneratorsPage)}></Route>
         <Route path="guide/chords" component={withRouter(GuideChordsPage)}></Route>
-        <Route path="test" component={SightReadingPage}></Route>
       </Route>
     }
   }
