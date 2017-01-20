@@ -17,6 +17,14 @@ class Layout extends Widget
         meta name: "viewport", content: "width=device-width, initial-scale=1"
         meta id: "csrf_token", name: "csrf_token", content: @csrf_token
 
+        meta_description = "Practice sight reading right with your MIDI
+        keyboard directly in your browser. Customizable note generation to
+        always give you a challenge. Completely free."
+
+        if @meta_description
+          meta property: "og:description", content: meta_description
+          meta name: "description", content: meta_description
+
         @google_analytics!
 
       body ->
