@@ -13,6 +13,8 @@ import {MajorScale} from "st/music"
 import {RandomNotes} from "st/generators"
 import {STAVES} from "st/data"
 
+let ROOTS = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
+
 export default class EarTrainingPage extends React.Component {
   componentDidMount() {
     setTitle("Ear Training")
@@ -30,6 +32,8 @@ export default class EarTrainingPage extends React.Component {
       continuousMelody: false,
 
       melodyRange: ["C4", "C6"],
+      meldoyScale: "random",
+
       rand: new MersenneTwister(),
       successes: 0,
 
@@ -138,8 +142,7 @@ export default class EarTrainingPage extends React.Component {
   }
 
   pushMelody() {
-    let keys = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
-    let key = keys[this.state.rand.int() % keys.length]
+    let key = ROOTS[this.state.rand.int() % keys.length]
 
     let notes = new MajorScale(key).getLooseRange(...this.state.melodyRange)
 
@@ -276,6 +279,11 @@ export default class EarTrainingPage extends React.Component {
             key={r.name}>{r.name}</button>
         })}
       </fieldset>
+
+      <fieldset>
+        <legend>Scale</legend>
+        {this.renderScalPicker()}
+      </fieldset>
     </div>
 
     return <div className="melody_generator">
@@ -287,6 +295,23 @@ export default class EarTrainingPage extends React.Component {
       </div>
       {page}
     </div>
+  }
+
+  renderScalPicker() {
+    if (!this.props.midi) {
+      return;
+    }
+
+    return <label>
+      <span>Instrument</span>
+      <Select
+        value={this.state.meldoyScale}
+        onChange={(val) => this.setState({ meldoyScale: val})}
+        options={[
+          { name: "Random", value: "random"},
+          ...ROOTS.map((r) => ({ name: `${r} major`, value: r }))
+        ]}/>
+    </label>
   }
 
   renderMidiPicker() {
