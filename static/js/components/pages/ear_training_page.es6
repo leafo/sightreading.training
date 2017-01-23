@@ -32,7 +32,7 @@ export default class EarTrainingPage extends React.Component {
       continuousMelody: false,
 
       melodyRange: ["C4", "C6"],
-      meldoyScale: "random",
+      meldoyScaleRoot: "random",
 
       rand: new MersenneTwister(),
       successes: 0,
@@ -142,9 +142,15 @@ export default class EarTrainingPage extends React.Component {
   }
 
   pushMelody() {
-    let key = ROOTS[this.state.rand.int() % keys.length]
+    let scaleRoot = null
 
-    let notes = new MajorScale(key).getLooseRange(...this.state.melodyRange)
+    if (this.state.meldoyScaleRoot == "random") {
+      scaleRoot = ROOTS[this.state.rand.int() % ROOTS.length]
+    } else {
+      scaleRoot = this.state.meldoyScaleRoot
+    }
+
+    let notes = new MajorScale(scaleRoot).getLooseRange(...this.state.melodyRange)
 
     let generator
     if (this.state.continuousMelody && this.currentNotes) {
@@ -303,10 +309,9 @@ export default class EarTrainingPage extends React.Component {
     }
 
     return <label>
-      <span>Instrument</span>
       <Select
-        value={this.state.meldoyScale}
-        onChange={(val) => this.setState({ meldoyScale: val})}
+        value={this.state.meldoyScaleRoot}
+        onChange={(val) => this.setState({ meldoyScaleRoot: val})}
         options={[
           { name: "Random", value: "random"},
           ...ROOTS.map((r) => ({ name: `${r} major`, value: r }))
