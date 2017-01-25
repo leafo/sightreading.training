@@ -10,17 +10,19 @@ export default class StaffSongNotes extends StaffNotes {
     return "staff_notes staff_song_notes"
   }
 
+  static pixelsPerBeat = 100
+
   renderNote(songNote, opts) {
     const key = this.props.keySignature
 
     let pitch = parseNote(songNote.note)
 
-    let pixelsPerBpm = 100
+    let pixelsPerBeat = this.constructor.pixelsPerBeat
 
     let row = letterOffset(pitch, !key.isFlat())
     let fromTop = letterOffset(this.props.upperLine) - row;
-    let fromLeft = songNote.start * pixelsPerBpm
-    let width = songNote.duration * pixelsPerBpm
+    let fromLeft = songNote.start * pixelsPerBeat
+    let width = songNote.duration * pixelsPerBeat
 
     let style = {
       top: `${Math.floor(fromTop * 25/2)}%`,
