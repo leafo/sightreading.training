@@ -18,6 +18,10 @@ export default class SongTimer {
     this.beat = 0
   }
 
+  restart() {
+    this.beat = 0
+  }
+
   start() {
     if (!this.stopped) { this.reset() }
 

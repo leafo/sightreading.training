@@ -30,7 +30,7 @@ export default class PlayAlongPage extends React.Component {
 
   updateBeats(beat) {
     if (beat > this.state.song.getStopInBeats()) {
-      this.state.songTimer.reset()
+      this.state.songTimer.restart()
     }
 
     this.refs.staff.setOffset(-beat * StaffSongNotes.pixelsPerBeat)
