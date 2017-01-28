@@ -3,7 +3,7 @@ export default class SongTimer {
   constructor(opts={}) {
     this.beat = 0
     this.bpm = opts.bpm || 1
-    this.stopped = true
+    this.running = false
 
     if (opts.onUpdate) {
       this.onUpdate = opts.onUpdate
@@ -14,7 +14,7 @@ export default class SongTimer {
   }
 
   reset() {
-    this.stopped = true
+    this.running = false
     this.beat = 0
   }
 
@@ -23,16 +23,15 @@ export default class SongTimer {
   }
 
   start() {
-    if (!this.stopped) { this.reset() }
+    if (this.running) { this.reset() }
 
     let lastFrame = performance.now();
-    this.stopped = false
 
     let frameUpdate = time => {
       let dt = (time - lastFrame) / 1000
       lastFrame = time
 
-      if (this.stopped) { return }
+      if (!this.running) { return }
       if (dt == 0) { return }
 
       this.beat += this.bpm * dt / 60
@@ -40,6 +39,7 @@ export default class SongTimer {
       window.requestAnimationFrame(frameUpdate);
     }
 
+    this.running = true
     window.requestAnimationFrame(frameUpdate);
   }
 }
