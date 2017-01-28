@@ -1,10 +1,11 @@
 import * as React from "react"
 
 import {GStaff} from "st/components/staves"
-import {SongNoteList} from "st/song_note_list"
-import SongTimer from "st/song_timer"
+import Keyboard from "st/components/keyboard"
 import StaffSongNotes from "st/components/staff_song_notes"
 
+import {SongNoteList} from "st/song_note_list"
+import SongTimer from "st/song_timer"
 import {KeySignature} from "st/music"
 
 export default class PlayAlongPage extends React.Component {
@@ -52,6 +53,24 @@ export default class PlayAlongPage extends React.Component {
       }}>
        Toggle timer
       </button>
+      {this.renderKeyboard()}
     </div>
+  }
+
+  pressNote() {
+    console.log("press", arguments);
+  }
+
+  releaseNote() {
+    console.log("release", arguments);
+  }
+
+  renderKeyboard() {
+    return <Keyboard
+      lower={"C3"}
+      upper={"C7"}
+      heldNotes={{}}
+      onKeyDown={this.pressNote.bind(this)}
+      onKeyUp={this.releaseNote.bind(this)} />;
   }
 }
