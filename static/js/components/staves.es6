@@ -28,11 +28,6 @@ export class Staff extends React.Component {
     inGrand: types.bool,
   }
 
-  constructor(props) {
-    super(props);
-
-  }
-
   // skips react for performance
   setOffset(amount) {
     this.refs.notes.setOffset(amount)
@@ -66,6 +61,7 @@ export class Staff extends React.Component {
 
       {this.renderKeySignature()}
       {staffNotes}
+      {this.props.children}
     </div>
   }
 

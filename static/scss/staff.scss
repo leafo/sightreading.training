@@ -110,6 +110,7 @@
             background: green;
             box-shadow: 0 0 0 2px blue;
         }
+
     }
 
     .staff_notes {
@@ -171,6 +172,16 @@
             }
         }
     }
+
+    .time_bar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: red;
+        left: 120 + 100px;
+    }
+
 }
 
 

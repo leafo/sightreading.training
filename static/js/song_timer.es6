@@ -16,6 +16,7 @@ export default class SongTimer {
   reset() {
     this.running = false
     this.beat = 0
+    this.onUpdate(this.beat);
   }
 
   restart() {

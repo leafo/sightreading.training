@@ -25,7 +25,7 @@ export default class PlayAlongPage extends React.Component {
   }
 
   componentDidMount() {
-    this.state.songTimer.start()
+    this.updateBeats(0)
   }
 
   updateBeats(beat) {
@@ -33,16 +33,24 @@ export default class PlayAlongPage extends React.Component {
       this.state.songTimer.restart()
     }
 
-    this.refs.staff.setOffset(-beat * StaffSongNotes.pixelsPerBeat)
+    this.refs.staff.setOffset(-beat * StaffSongNotes.pixelsPerBeat + 100)
   }
 
   render() {
     let heldNotes = {}
 
     return <div className="play_along_page">
-      <GStaff ref="staff" notes={this.state.song} heldNotes={heldNotes} keySignature={new KeySignature(0)}></GStaff>
-      <button onClick={e => this.state.songTimer.start() }>
-        Start Timer
+      <GStaff ref="staff" notes={this.state.song} heldNotes={heldNotes} keySignature={new KeySignature(0)}>
+        <div className="time_bar"></div>
+      </GStaff>
+      <button onClick={e => {
+        if (this.state.songTimer.running) {
+          this.state.songTimer.reset()
+        } else {
+          this.state.songTimer.start()
+        }
+      }}>
+       Toggle timer
       </button>
     </div>
   }
