@@ -90,6 +90,8 @@ export default class PlayAlongPage extends React.Component {
 
     this.currentBeat = beat
     this.refs.staff.setOffset(-beat * this.state.pixelsPerBeat + 100)
+    this.refs.currentBeat.innerText = `${this.currentBeat.toFixed(1)}`
+
   }
 
   render() {
@@ -186,7 +188,7 @@ export default class PlayAlongPage extends React.Component {
   renderTransportControls() {
     return <div className="transport_controls">
       <button onClick={e => this.togglePlay()}>
-        {this.state.songTimer.running ? "Stop" : "Play"}
+        {this.state.songTimer.running ? "Pause" : "Play"}
       </button>
       <span ref="currentBeat">-</span>
 
