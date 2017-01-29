@@ -33,7 +33,7 @@ export default class PlayAlongPage extends React.Component {
   }
 
   componentWillUnmount() {
-    this.songTimer.reset()
+    this.state.songTimer.reset()
   }
 
   componentDidUpdate(prepProps, prevState) {
@@ -127,7 +127,9 @@ export default class PlayAlongPage extends React.Component {
         {this.state.songTimer.running ? "Stop" : "Play"}
       </button>
 
-      <span className="bpm_picker transport_slider">
+      <div className="spacer"></div>
+
+      <span className="slider_input transport_slider">
         <span className="slider_label">BPM</span>
         <Slider
           min={10}
@@ -137,7 +139,7 @@ export default class PlayAlongPage extends React.Component {
         <span className="slider_value">{ this.state.bpm }</span>
       </span>
 
-      <span className="pixel_beat_picker transport_slider">
+      <span className="slider_input transport_slider">
         <span className="slider_label">PPB</span>
         <Slider
           min={50}

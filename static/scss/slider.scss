@@ -40,3 +40,40 @@
         }
     }
 }
+
+.slider_input {
+    border: 1px solid $border_color;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-left: 10px;
+    @include border_box;
+    height: 27px;
+    line-height: 25px;
+    vertical-align: top;
+
+    display: inline-flex;
+    align-items: center;
+    background: rgba(white, 0.9);
+
+    .slider_component {
+        flex: 1;
+    }
+
+    .slider_label {
+        font-size: 13px;
+        font-weight: bold;
+        padding: 0 4px;
+        opacity: 0.8;
+    }
+
+    .slider_value {
+        font-family: monospace;
+        display: block;
+        height: 100%;
+        background: $border_color;
+        color: white;
+        min-width: 30px;
+        text-align: center;
+    }
+
+}

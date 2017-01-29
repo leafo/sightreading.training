@@ -480,8 +480,8 @@ export default class SightReadingPage extends React.Component {
         <span className="toggle_option">Scroll</span>
       </div>
 
-      <span className="speed_picker">
-        <span className="speed_label">Speed</span>
+      <span className="speed_picker slider_input">
+        <span className="slider_label">Speed</span>
         <Slider
           min={50}
           max={300}
@@ -490,7 +490,7 @@ export default class SightReadingPage extends React.Component {
             scrollSpeed: Math.round(value)
           })}
           value={+this.state.scrollSpeed} />
-        <span className="speed_value">{ this.state.scrollSpeed }</span>
+        <span className="slider_value">{ this.state.scrollSpeed }</span>
       </span>
     </div>
 

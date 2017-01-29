@@ -1,3 +1,18 @@
 .play_along_page {
     overflow: hidden;
+
+
+    .transport_controls {
+        display: flex;
+        align-items: center;
+        padding-right: 40px;
+
+        .spacer {
+            flex: 1
+        }
+
+        .transport_slider {
+            width: 240px;
+        }
+    }
 }
