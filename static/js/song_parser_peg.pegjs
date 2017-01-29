@@ -4,7 +4,13 @@ start
   }
 
 command
-  = note / rest
+  = note / rest / keySignature
+
+keySignature
+  = "ks" mod:$( "-"? [0-9]+) {
+    console.log(mod)
+    return ["keySignature", +mod]
+  }
 
 note
   = name:[a-gA-G] octave:[0-9] timing:("." t:noteTiming { return t }) ? {
@@ -21,7 +27,7 @@ rest
   }
 
 noteTiming
-  = duration:($ [0-9]+) start:( "." s:($ [0-9]+) { return s } ) ?  {
+  = duration:$([0-9]+) start:( "." s:$([0-9]+) { return s } ) ?  {
     let timing = {}
 
     if (duration) {

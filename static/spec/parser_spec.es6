@@ -17,11 +17,17 @@ describe("song parser", function() {
     ])
   })
 
-
   it("parses notes with timing information", function() {
     expect(new SongParser().parse(`
       g4 a5.1 b2 f3.1.2
     `)).toEqual([
+      expect(new SongParser().parse("g4.1 r2 a4.3 r b2")).toEqual([
+        ["note", "G4", {duration: 1}],
+        ["rest", {duration: 2}],
+        ["note", "A4", {duration: 3}],
+        ["rest"],
+        ["note", "B2"],
+      ])
       ["note", "G4"],
       ["note", "A5", { duration: 1 }],
       ["note", "B2"],
@@ -36,6 +42,15 @@ describe("song parser", function() {
       ["note", "A4", {duration: 3}],
       ["rest"],
       ["note", "B2"],
+    ])
+  })
+
+  it("parses key signature", function() {
+    expect(new SongParser().parse("ks-4 g5 ks2 d6")).toEqual([
+      ["keySignature", -4],
+      ["note", "G5"],
+      ["keySignature", 2],
+      ["note", "D6"],
     ])
   })
 
