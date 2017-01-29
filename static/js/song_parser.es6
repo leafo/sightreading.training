@@ -34,6 +34,7 @@ export default class SongParser {
       position: 0,
       keySignature: 0,
       beatsPerNote: 1,
+      beatsPerMeasure: 4,
     }
 
     let song = new SongNoteList()
@@ -41,6 +42,19 @@ export default class SongParser {
     for (let command of ast) {
       let t = command[0]
       switch (t) {
+        case "halfTime": {
+          state.beatsPerNote *= 2
+          break
+        }
+        case "doubleTime": {
+          state.beatsPerNote *= 0.5
+          break
+        }
+        case "measure": {
+          let [, measure] = command
+          state.position =  measure * state.beatsPerMeasure
+          break
+        }
         case "note": {
           let [, noteName, noteTiming] = command
           let duration = state.beatsPerNote
@@ -48,7 +62,7 @@ export default class SongParser {
 
           if (noteTiming) {
             if (noteTiming.duration) {
-              duration = noteTiming.duration
+              duration *= noteTiming.duration
             }
 
             start = noteTiming.start
@@ -73,7 +87,7 @@ export default class SongParser {
             }
 
             if (restTiming.duration) {
-              duration = restTiming.duration
+              duration *= restTiming.duration
             }
           }
 
@@ -85,7 +99,6 @@ export default class SongParser {
           break
         }
       }
-
     }
 
     return song

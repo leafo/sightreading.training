@@ -47,6 +47,18 @@ describe("song parser", function() {
       ["note", "D6"],
     ])
   })
+
+  it("parses time adjustments", function() {
+    expect(new SongParser().parse("ht ht dt dt m1 m2 ht")).toEqual([
+      ["halfTime"],
+      ["halfTime"],
+      ["doubleTime"],
+      ["doubleTime"],
+      ["measure", 1],
+      ["measure", 2],
+      ["halfTime"],
+    ])
+  })
 })
 
 describe("load song", function() {
@@ -89,8 +101,58 @@ describe("load song", function() {
       new SongNote("A5", 4, 1),
       new SongNote("F6", 8, 1),
     ])
-
   })
+
+  it("loads notes with timing", function() {
+    let song = SongParser.load(`
+      dt
+      m0 c5 c5 c5
+      m0 g5 a5 g5
+      ht
+      m1 c6
+    `)
+
+    expect(song).toEqual([
+      // first measure
+      new SongNote("C5", 0, 0.5),
+      new SongNote("C5", 0.5, 0.5),
+      new SongNote("C5", 1.0, 0.5),
+
+      new SongNote("G5", 0, 0.5),
+      new SongNote("A5", 0.5, 0.5),
+      new SongNote("G5", 1.0, 0.5),
+
+      // second measure
+      new SongNote("C6", 4, 1),
+    ])
+  })
+
+  it("sets position and time correctly when using half and double time", function() {
+    let song = SongParser.load(`
+      ht
+      a5.2
+      dt
+      b5.2
+      dt
+      c5.2
+      c5
+      dt
+      g5
+
+      m2
+      a5
+    `)
+
+    expect(song).toEqual([
+      new SongNote("A5", 0, 4),
+      new SongNote("B5", 4, 2),
+      new SongNote("C5", 6, 1),
+      new SongNote("C5", 7, 0.5),
+      new SongNote("G5", 7.5, 0.25),
+      new SongNote("A5", 8, 0.25),
+    ])
+  })
+
 
 })
 

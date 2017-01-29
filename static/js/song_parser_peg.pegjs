@@ -4,7 +4,7 @@ start
   }
 
 command
-  = note / rest / keySignature
+  = note / rest / keySignature / halfTime / doubleTime / measure
 
 keySignature
   = "ks" mod:$( "-"? [0-9]+) {
@@ -38,6 +38,17 @@ noteTiming
     }
 
     return timing
+  }
+
+halfTime
+  = "ht" { return ["halfTime"] }
+
+doubleTime
+  = "dt" { return ["doubleTime"] }
+
+measure
+  = "m" measure:$([0-9]+) {
+    return ["measure", +measure]
   }
 
 white
