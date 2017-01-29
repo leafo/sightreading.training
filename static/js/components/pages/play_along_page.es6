@@ -79,6 +79,8 @@ export default class PlayAlongPage extends React.Component {
     this.keyMap = {
       " ": e => this.togglePlay(),
       "esc": e => {
+        if (!this.state.songTimer) return
+
         if (this.state.songTimer.running) {
           this.state.songTimer.pause()
         } else {
@@ -86,8 +88,16 @@ export default class PlayAlongPage extends React.Component {
         }
       },
 
-      "left": e => this.state.songTimer.scrub(-1),
-      "right": e => this.state.songTimer.scrub(1),
+      "left": e => {
+        if (!this.state.songTimer) return
+        this.state.songTimer.scrub(-1)
+      },
+      "right": e => {
+        if (!this.state.songTimer) return
+        this.state.songTimer.scrub(1)
+      },
+    }
+  }
     }
   }
 
@@ -96,22 +106,29 @@ export default class PlayAlongPage extends React.Component {
   }
 
   componentWillUnmount() {
-    this.state.songTimer.reset()
+    if (this.state.songTimer) {
+      this.state.songTimer.reset()
+    }
   }
 
   componentDidUpdate(prepProps, prevState) {
     if (prevState.bpm != this.state.bpm) {
-      this.state.songTimer.setBpm(this.state.bpm)
+      if (this.state.songTimer) {
+        this.state.songTimer.setBpm(this.state.bpm)
+      }
     }
   }
 
   updateBeats(beat) {
-    if (beat > this.state.song.getStopInBeats()) {
-      this.state.songTimer.restart()
+    if (this.state.song) {
+      if (beat > this.state.song.getStopInBeats()) {
+        this.state.songTimer.restart()
+      }
+
+      this.refs.staff.setOffset(-beat * this.state.pixelsPerBeat + 100)
     }
 
     this.currentBeat = beat
-    this.refs.staff.setOffset(-beat * this.state.pixelsPerBeat + 100)
     this.refs.currentBeat.innerText = `${this.currentBeat.toFixed(1)}`
   }
 
@@ -122,7 +139,7 @@ export default class PlayAlongPage extends React.Component {
       <div className="staff_wrapper">
         <GStaff
           ref="staff"
-          notes={this.state.song}
+          notes={this.state.song || []}
           heldNotes={heldNotes}
           pixelsPerBeat={this.state.pixelsPerBeat}
           keySignature={new KeySignature(0)}>
@@ -136,6 +153,8 @@ export default class PlayAlongPage extends React.Component {
   }
 
   togglePlay() {
+    if (!this.state.songTimer) return
+
     if (this.state.songTimer.running) {
       this.state.songTimer.pause()
     } else {
@@ -146,6 +165,8 @@ export default class PlayAlongPage extends React.Component {
   }
 
   pressNote(note) {
+    if (!this.state.song) return
+
     let songNote = this.state.song.matchNote(note, this.currentBeat)
 
     if (songNote) {
@@ -208,9 +229,14 @@ export default class PlayAlongPage extends React.Component {
 
   renderTransportControls() {
     return <div className="transport_controls">
-      <button onClick={e => this.togglePlay()}>
-        {this.state.songTimer.running ? "Pause" : "Play"}
-      </button>
+      {
+        this.state.songTimer
+        ? <button onClick={e => this.togglePlay()}>
+            {this.state.songTimer.running ? "Pause" : "Play"}
+          </button>
+        : null
+      }
+
       <span ref="currentBeat">-</span>
 
       <div className="spacer"></div>
