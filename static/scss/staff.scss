@@ -109,6 +109,10 @@
             transition: 0.1s ease transform;
             background: green;
             box-shadow: 0 0 0 2px blue;
+
+            &.held {
+                background: lighten(green, 20%);
+            }
         }
 
     }

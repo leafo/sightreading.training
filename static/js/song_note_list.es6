@@ -33,6 +33,28 @@ export class SongNoteList extends Array {
     if (this.length == 0) { return 0 }
     return Math.min.apply(null, this.map((n) => n.getStart()))
   }
+
+  // see if we're hitting a valid note
+  // TODO: this is very slow
+  matchNote(findNote, beat) {
+    let found = null
+
+    for (let note of this) {
+      if (note.note != findNote) {
+        continue
+      }
+
+      if (found) {
+        if (Math.abs(found.start - beat) > Math.abs(note.start - beat)) {
+          found = note
+        }
+      } else {
+        found = note
+      }
+    }
+
+    return found
+  }
 }
 
 // note: C4, D#5, etc...

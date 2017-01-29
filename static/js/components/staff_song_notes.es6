@@ -31,7 +31,7 @@ export default class StaffSongNotes extends StaffNotes {
     }
 
     return <div
-      className="note_bar"
+      className={classNames("note_bar", {held: songNote.held})}
       style={style}
       key={opts.key}>{songNote.toString()}</div>
   }

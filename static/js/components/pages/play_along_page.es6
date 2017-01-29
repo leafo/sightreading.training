@@ -12,6 +12,7 @@ export default class PlayAlongPage extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      heldNotes: {},
       song: SongNoteList.newSong([
         ["C5", 0, 1],
         ["D5", 1, 1],
@@ -34,6 +35,7 @@ export default class PlayAlongPage extends React.Component {
       this.state.songTimer.restart()
     }
 
+    this.currentBeat = beat
     this.refs.staff.setOffset(-beat * StaffSongNotes.pixelsPerBeat + 100)
   }
 
@@ -57,12 +59,33 @@ export default class PlayAlongPage extends React.Component {
     </div>
   }
 
-  pressNote() {
-    console.log("press", arguments);
+  pressNote(note) {
+    let songNote = this.state.song.matchNote(note, this.currentBeat)
+
+    if (songNote) {
+      songNote.held = true
+    }
+
+    let heldNotes = {
+      ...this.state.heldNotes,
+      [note]: { songNote }
+    }
+
+    this.setState({ heldNotes })
   }
 
-  releaseNote() {
-    console.log("release", arguments);
+  releaseNote(note) {
+    let held = this.state.heldNotes[note]
+    let songNote = held.songNote
+
+    if (songNote) {
+      songNote.held = false
+    }
+
+    let heldNotes = {...this.state.heldNotes}
+    delete heldNotes[note]
+
+    this.setState({ heldNotes })
   }
 
   renderKeyboard() {
