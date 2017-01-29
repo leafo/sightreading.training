@@ -2,7 +2,6 @@
 export default class SongTimer {
   constructor(opts={}) {
     this.beat = 0
-    this.bpm = opts.bpm || 1
     this.running = false
 
     if (opts.onUpdate) {
@@ -11,6 +10,10 @@ export default class SongTimer {
   }
 
   onUpdate(beat) {
+  }
+
+  setBpm(bpm) {
+    this.bpm = bpm
   }
 
   reset() {
@@ -23,8 +26,12 @@ export default class SongTimer {
     this.beat = 0
   }
 
-  start() {
+  start(bpm=60) {
     if (this.running) { this.reset() }
+
+    if (bpm) {
+      this.bpm = bpm
+    }
 
     let lastFrame = performance.now();
 

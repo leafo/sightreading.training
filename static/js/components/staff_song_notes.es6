@@ -10,14 +10,14 @@ export default class StaffSongNotes extends StaffNotes {
     return "staff_notes staff_song_notes"
   }
 
-  static pixelsPerBeat = 100
+  static defaultPixelsPerBeat = 100
 
   renderNote(songNote, opts) {
     const key = this.props.keySignature
 
     let pitch = parseNote(songNote.note)
 
-    let pixelsPerBeat = this.constructor.pixelsPerBeat
+    let pixelsPerBeat = this.props.pixelsPerBeat || this.constructor.defaultPixelsPerBeat
 
     let row = letterOffset(pitch, !key.isFlat())
     let fromTop = letterOffset(this.props.upperLine) - row;
