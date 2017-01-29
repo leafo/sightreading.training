@@ -7,7 +7,8 @@ import Slider from "st/components/slider"
 
 import SongParser from "st/song_parser"
 import SongTimer from "st/song_timer"
-import {KeySignature} from "st/music"
+import {KeySignature, noteName} from "st/music"
+import {NOTE_EVENTS} from "st/midi"
 
 export default class PlayAlongPage extends React.Component {
   constructor(props) {
@@ -18,10 +19,11 @@ export default class PlayAlongPage extends React.Component {
       pixelsPerBeat: StaffSongNotes.defaultPixelsPerBeat,
       song: SongParser.load(`
         ks1
-        r
+        r4
         b5 a5 g5 a5
         b5 b5 b5.2
         a5 a5 a5.2
+        r4
       `),
       songTimer: new SongTimer({
         onUpdate: (beat) => this.updateBeats(beat)
@@ -110,6 +112,28 @@ export default class PlayAlongPage extends React.Component {
     delete heldNotes[note]
 
     this.setState({ heldNotes })
+  }
+
+  onMidiMessage(message) {
+    let [raw, pitch, velocity] = message.data;
+
+    let cmd = raw >> 4,
+      channel = raw & 0xf,
+      type = raw & 0xf0;
+
+    let n = noteName(pitch)
+
+    if (NOTE_EVENTS[type] == "noteOn") {
+      if (velocity == 0) {
+        this.releaseNote(n);
+      } else if (!document.hidden) { // ignore when the browser tab isn't active
+        this.pressNote(n);
+      }
+    }
+
+    if (NOTE_EVENTS[type] == "noteOff") {
+      this.releaseNote(n);
+    }
   }
 
   renderKeyboard() {
