@@ -106,12 +106,25 @@
             left: 120px;
             height: 20%;
             transform: translate(0, -47%);
-            transition: 0.1s ease transform;
-            background: green;
-            box-shadow: 0 0 0 2px blue;
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: 4px;
+                right: 0;
+                bottom: 4px;
+                left: 0;
+
+                background: green;
+                box-shadow: 0 0 0 2px blue;
+                border-radius: 12px;
+
+            }
 
             &.held {
-                background: lighten(green, 20%);
+                &:before {
+                    background: lighten(green, 20%);
+                }
             }
         }
 
