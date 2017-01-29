@@ -70,6 +70,12 @@ export const SYMBOL_MAP = {
   220: "\\",
   221: "]",
   222: "\'",
+
+  37: "left",
+  38: "up",
+  39: "right",
+  40: "down",
+  27: "esc",
 }
 
 export const SYMBOL_MAP_INVERSE = {}
