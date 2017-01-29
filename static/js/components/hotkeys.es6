@@ -6,7 +6,8 @@ let {PropTypes: types} = React
 export default class Hotkeys extends React.Component {
   static propTypes = {
     onDown: types.func,
-    onUp: types.func
+    onUp: types.func,
+    keyMap: types.object,
   }
 
   constructor(props) {
@@ -29,6 +30,8 @@ export default class Hotkeys extends React.Component {
 
       this.state.heldKeys[event.keyCode] = true
       const key = keyCodeToChar(event.keyCode)
+
+      this.triggerKeyMap(key, event)
 
       if (this.props.onDown) {
         this.props.onDown(key, event)
@@ -56,6 +59,20 @@ export default class Hotkeys extends React.Component {
   componentWillUnmount() {
     window.removeEventListener("keydown", this.downListener)
     window.removeEventListener("keyup", this.upListener)
+  }
+
+  triggerKeyMap(key, event) {
+    if (!this.props.keyMap) {
+      return
+    }
+
+    let fn = this.props.keyMap[key]
+    if (fn) {
+      fn(event)
+      return true
+    }
+
+    return false
   }
 
   render() {
