@@ -77,7 +77,7 @@ export default class SongParser {
             }
           }
 
-          this.state.position += duration
+          state.position += duration
           break
         }
         case "keySignature": {

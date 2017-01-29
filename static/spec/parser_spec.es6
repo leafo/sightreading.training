@@ -78,5 +78,19 @@ describe("load song", function() {
       new SongNote("A6", 10, 2),
     ])
   })
+
+  it("loads some notes with rests", function() {
+    let song = SongParser.load(`
+      r1 g5 r2 a5 r3 r1.1 f6
+    `)
+
+    expect(song).toEqual([
+      new SongNote("G5", 1, 1),
+      new SongNote("A5", 4, 1),
+      new SongNote("F6", 8, 1),
+    ])
+
+  })
+
 })
 
