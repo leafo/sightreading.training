@@ -65,7 +65,8 @@ class Layout extends React.Component {
 
   componentDidMount() {
     dispatch(this, {
-      "closeLightbox": (e) => this.setState({currentLightbox: null}),
+      "lightboxClosed": e => this.setState({currentLightbox: null}),
+      "closeLightbox": e => this.refs.currentLightbox.close(),
       "showLightbox": (e, lb) => {
         this.setState({
           currentLightbox: lb

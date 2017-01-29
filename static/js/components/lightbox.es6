@@ -9,7 +9,7 @@ export default class Lightbox extends React.Component {
   static className = null
 
   static propTypes = {
-    close: types.func.isRequired,
+    onClose: types.func,
   }
 
   componentDidMount() {
@@ -27,12 +27,15 @@ export default class Lightbox extends React.Component {
   }
 
   renderContent() {
-    throw new Error("override me")
+    return this.props.children
   }
 
   close() {
     if (!this.canClose()) { return }
-    trigger(this, "closeLightbox")
+    trigger(this, "lightboxClosed")
+    if (this.props.onClose) {
+      this.props.onClose()
+    }
   }
 
   canClose() {
