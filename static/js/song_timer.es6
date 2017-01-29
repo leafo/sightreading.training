@@ -4,6 +4,7 @@ export default class SongTimer {
     this.beat = 0
     this.running = false
     this.song = opts.song
+    this.playingNotes = []
 
     for (let cb of ["onUpdate", "onNoteStart", "onNoteStop"]) {
       if (opts[cb]) {
@@ -64,10 +65,12 @@ export default class SongTimer {
 
   pause() {
     this.running = false
+    this.clearPlayingNotes()
   }
 
   reset() {
     this.running = false
+    this.clearPlayingNotes()
     this.beat = 0
     this.onUpdate(this.beat);
   }
@@ -75,14 +78,27 @@ export default class SongTimer {
   scrub(amount) {
     this.beat += amount
     this.beat = Math.max(0, this.beat)
+    this.clearPlayingNotes()
     this.onUpdate(this.beat);
   }
 
   restart() {
     this.beat = 0
+    this.clearPlayingNotes()
+  }
+
+  // should be called whenever we stop or scrub
+  clearPlayingNotes() {
+    if (this.playingNotes.length) {
+      for (let note of this.playingNotes) {
+        this.onNoteStop(note)
+      }
+      this.playingNotes = []
+    }
   }
 
   start(bpm=60) {
+    // TODO: calling start on a running thing will cause double timers
     if (this.running) { this.reset() }
 
     if (bpm) {
@@ -109,6 +125,24 @@ export default class SongTimer {
       this.beat += this.bpm * dt / 60
       lastBeat = this.beat
 
+      // see if any notes have stopped
+      if (this.song && this.playingNotes.length) {
+        let stopped = 0
+        for (let i = 0; i < this.playingNotes.length; i++) {
+          let note = this.playingNotes[i]
+          if (this.beat >= note.start + note.duration) {
+            this.playingNotes[i] = null
+            stopped += 1
+            console.log("note stopped", note.toString())
+            this.onNoteStop(note)
+          }
+        }
+
+        if (stopped > 0) {
+          this.playingNotes = this.playingNotes.filter(n => n)
+        }
+      }
+
       // see if any new notes have turned on
       if (searchOffset != null) {
         let sortedNotes = this.getSortedSongNotes()
@@ -117,6 +151,8 @@ export default class SongTimer {
           if (note.start <= this.beat) {
             console.log("note started", note.toString())
             searchOffset += 1
+            this.playingNotes.push(note)
+            this.onNoteStart(note)
           }
         }
       }
