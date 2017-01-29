@@ -128,6 +128,11 @@ export default class PlayAlongPage extends React.Component {
 
   render() {
     let heldNotes = {}
+    let keySignature = new KeySignature(0)
+
+    if (this.state.song && this.state.song.metadata) {
+      keySignature = new KeySignature(this.state.song.metadata.keySignature)
+    }
 
     return <div className="play_along_page">
       <div className="staff_wrapper">
@@ -136,7 +141,7 @@ export default class PlayAlongPage extends React.Component {
           notes={this.state.song || []}
           heldNotes={heldNotes}
           pixelsPerBeat={this.state.pixelsPerBeat}
-          keySignature={new KeySignature(0)}>
+          keySignature={keySignature}>
             <div className="time_bar"></div>
         </GStaff>
         {this.renderTransportControls()}

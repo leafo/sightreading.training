@@ -101,6 +101,10 @@ export default class SongParser {
       }
     }
 
+    song.metadata = {
+      keySignature: state.keySignature,
+    }
+
     return song
   }
 }
