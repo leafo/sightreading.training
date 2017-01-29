@@ -161,9 +161,9 @@ export default class PlayAlongPage extends React.Component {
 
   renderKeyboard() {
     return <Keyboard
-      lower={"C3"}
+      lower={"C4"}
       upper={"C7"}
-      heldNotes={{}}
+      heldNotes={this.state.heldNotes}
       onKeyDown={this.pressNote.bind(this)}
       onKeyUp={this.releaseNote.bind(this)} />;
   }
