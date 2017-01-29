@@ -17,6 +17,13 @@ export class SongNoteList extends Array {
     return song
   }
 
+  humanize(amount=1) {
+    for (let note of this) {
+      note.start += Math.random() / 100 * amount
+      note.duration -= 0.2
+    }
+  }
+
   // find the notes that fall in the time range
   notesInRange(start, stop) {
     // TODO: this is slow
