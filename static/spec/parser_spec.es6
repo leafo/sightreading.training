@@ -21,13 +21,6 @@ describe("song parser", function() {
     expect(new SongParser().parse(`
       g4 a5.1 b2 f3.1.2
     `)).toEqual([
-      expect(new SongParser().parse("g4.1 r2 a4.3 r b2")).toEqual([
-        ["note", "G4", {duration: 1}],
-        ["rest", {duration: 2}],
-        ["note", "A4", {duration: 3}],
-        ["rest"],
-        ["note", "B2"],
-      ])
       ["note", "G4"],
       ["note", "A5", { duration: 1 }],
       ["note", "B2"],
