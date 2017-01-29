@@ -17,14 +17,37 @@ export default class PlayAlongPage extends React.Component {
       heldNotes: {},
       bpm: 60,
       pixelsPerBeat: StaffSongNotes.defaultPixelsPerBeat,
+      // mary had a little lamb
+      // song: SongParser.load(`
+      //   ks1
+      //   r4
+      //   b5 a5 g5 a5
+      //   b5 b5 b5.2
+      //   a5 a5 a5.2
+      //   r4
+      // `),
+
       song: SongParser.load(`
-        ks1
-        r4
-        b5 a5 g5 a5
-        b5 b5 b5.2
-        a5 a5 a5.2
-        r4
+        m1 dt
+        c5.3 c5.1
+        g5.3 g5.1
+
+        c5.3 c5.1
+        g5.3 g5.1
+
+        c5.3 c5.1
+        g5.3 g5.1
+
+        c5.3 c5.1
+        g5.3 g5.1
+
+        m1 ht
+        c6 r d6 r
+        c6 r e6 r
+        c6 r d6 r
+        c6 r g6 r
       `),
+
       songTimer: new SongTimer({
         onUpdate: (beat) => this.updateBeats(beat)
       })
