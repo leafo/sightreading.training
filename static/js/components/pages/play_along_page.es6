@@ -11,7 +11,7 @@ import MidiInstrumentPicker from "st/components/midi_instrument_picker"
 
 import SongParser from "st/song_parser"
 import SongTimer from "st/song_timer"
-import {KeySignature, noteName} from "st/music"
+import {KeySignature, noteName, parseNote} from "st/music"
 import {NOTE_EVENTS} from "st/midi"
 
 import {trigger} from "st/events"
@@ -60,6 +60,16 @@ export default class PlayAlongPage extends React.Component {
 
       songTimer: new SongTimer({
         onUpdate: beat => this.updateBeats(beat),
+        onNoteStart: note => {
+          if (this.state.midiChannel) {
+            this.state.midiChannel.noteOn(parseNote(note.note), 100)
+          }
+        },
+        onNoteStop: note => {
+          if (this.state.midiChannel) {
+            this.state.midiChannel.noteOff(parseNote(note.note), 100)
+          }
+        },
         song
       })
     }
