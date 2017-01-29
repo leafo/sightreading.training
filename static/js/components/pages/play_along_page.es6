@@ -6,10 +6,15 @@ import StaffSongNotes from "st/components/staff_song_notes"
 import Slider from "st/components/slider"
 import Hotkeys from "st/components/hotkeys"
 
+import Lightbox from "st/components/lightbox"
+import MidiInstrumentPicker from "st/components/midi_instrument_picker"
+
 import SongParser from "st/song_parser"
 import SongTimer from "st/song_timer"
 import {KeySignature, noteName} from "st/music"
 import {NOTE_EVENTS} from "st/midi"
+
+import {trigger} from "st/events"
 
 export default class PlayAlongPage extends React.Component {
   constructor(props) {
@@ -191,6 +196,26 @@ export default class PlayAlongPage extends React.Component {
         {this.state.songTimer.running ? "Pause" : "Play"}
       </button>
       <span ref="currentBeat">-</span>
+
+      <button onClick={e => {
+        trigger(this, "showLightbox", <Lightbox>
+          <p>Choose instrument to play song to</p>
+          <MidiInstrumentPicker
+            midi={this.props.midi}
+            onPick={midiChannel => {
+              console.log("choosing channel", midiChannel)
+              this.setState({ midiChannel })
+              trigger(this, "closeLightbox")
+            }}
+          />
+        </Lightbox>)
+      }}>
+        {
+          this.state.midiChannel ?
+          `Channel ${this.state.midiChannel.channel + 1}` :
+          "Select output"
+        }
+      </button>
 
       <div className="spacer"></div>
 
