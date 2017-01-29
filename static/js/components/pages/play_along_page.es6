@@ -19,43 +19,48 @@ import {trigger} from "st/events"
 export default class PlayAlongPage extends React.Component {
   constructor(props) {
     super(props)
+
+    // mary had a little lamb
+    // let song = SongParser.load(`
+    //   ks1
+    //   r4
+    //   b5 a5 g5 a5
+    //   b5 b5 b5.2
+    //   a5 a5 a5.2
+    //   r4
+    // `)
+
+    let song = SongParser.load(`
+      m1 dt
+      c5.3 c5.1
+      g5.3 g5.1
+
+      c5.3 c5.1
+      g5.3 g5.1
+
+      c5.3 c5.1
+      g5.3 g5.1
+
+      c5.3 c5.1
+      g5.3 g5.1
+
+      m1 ht
+      c6 r d6 r
+      c6 r e6 r
+      c6 r d6 r
+      c6 r g6 r
+    `)
+
     this.state = {
       heldNotes: {},
       bpm: 60,
       pixelsPerBeat: StaffSongNotes.defaultPixelsPerBeat,
-      // mary had a little lamb
-      // song: SongParser.load(`
-      //   ks1
-      //   r4
-      //   b5 a5 g5 a5
-      //   b5 b5 b5.2
-      //   a5 a5 a5.2
-      //   r4
-      // `),
 
-      song: SongParser.load(`
-        m1 dt
-        c5.3 c5.1
-        g5.3 g5.1
-
-        c5.3 c5.1
-        g5.3 g5.1
-
-        c5.3 c5.1
-        g5.3 g5.1
-
-        c5.3 c5.1
-        g5.3 g5.1
-
-        m1 ht
-        c6 r d6 r
-        c6 r e6 r
-        c6 r d6 r
-        c6 r g6 r
-      `),
+      song,
 
       songTimer: new SongTimer({
-        onUpdate: (beat) => this.updateBeats(beat)
+        onUpdate: beat => this.updateBeats(beat),
+        song
       })
     }
 
@@ -96,6 +101,8 @@ export default class PlayAlongPage extends React.Component {
     this.currentBeat = beat
     this.refs.staff.setOffset(-beat * this.state.pixelsPerBeat + 100)
     this.refs.currentBeat.innerText = `${this.currentBeat.toFixed(1)}`
+
+    // get the notes to play/stop
 
   }
 
@@ -197,6 +204,8 @@ export default class PlayAlongPage extends React.Component {
       </button>
       <span ref="currentBeat">-</span>
 
+      <div className="spacer"></div>
+
       <button onClick={e => {
         trigger(this, "showLightbox", <Lightbox>
           <p>Choose instrument to play song to</p>
@@ -216,8 +225,6 @@ export default class PlayAlongPage extends React.Component {
           "Select output"
         }
       </button>
-
-      <div className="spacer"></div>
 
       <span className="slider_input transport_slider">
         <span className="slider_label">BPM</span>

@@ -3,13 +3,51 @@ export default class SongTimer {
   constructor(opts={}) {
     this.beat = 0
     this.running = false
+    this.song = opts.song
 
-    if (opts.onUpdate) {
-      this.onUpdate = opts.onUpdate
+    for (let cb of ["onUpdate", "onNoteStart", "onNoteStop"]) {
+      if (opts[cb]) {
+        this[cb] = opts[cb]
+      }
     }
   }
 
+  getSortedSongNotes() {
+    if (!this.song) {
+      console.warn("no song on timer")
+      return
+    }
+
+    if (!this.sortedSongNotes) {
+      this.sortedSongNotes = [...this.song]
+      this.sortedSongNotes.sort((a,b) => a.start - b.start)
+    }
+
+    return this.sortedSongNotes
+  }
+
+  // search offset start location for the given beat in sorted notes
+  findSearchOffset(beat, startAt=0) {
+    let sortedNotes = this.getSortedSongNotes()
+    if (!sortedNotes) return
+
+    for (let i = startAt; i < sortedNotes.length; i++) {
+      let note = sortedNotes[i]
+      if (note.start >= beat) {
+        return i
+      }
+    }
+
+    return 0
+  }
+
   onUpdate(beat) {
+  }
+
+  onNoteStart(note) {
+  }
+
+  onNoteStop(note) {
   }
 
   beatsToSeconds(beats) {
@@ -51,7 +89,10 @@ export default class SongTimer {
       this.bpm = bpm
     }
 
-    let lastFrame = performance.now();
+    let lastFrame = performance.now()
+    let lastBeat = this.beat
+
+    let searchOffset = this.findSearchOffset(this.beat)
 
     let frameUpdate = time => {
       let dt = (time - lastFrame) / 1000
@@ -60,7 +101,26 @@ export default class SongTimer {
       if (!this.running) { return }
       if (dt == 0) { return }
 
+      if (lastBeat != this.beat) {
+        // there was a seek, update position
+        searchOffset = this.findSearchOffset(this.beat)
+      }
+
       this.beat += this.bpm * dt / 60
+      lastBeat = this.beat
+
+      // see if any new notes have turned on
+      if (searchOffset != null) {
+        let sortedNotes = this.getSortedSongNotes()
+        for (let i = searchOffset; i < sortedNotes.length; i++) {
+          let note = sortedNotes[i]
+          if (note.start <= this.beat) {
+            console.log("note started", note.toString())
+            searchOffset += 1
+          }
+        }
+      }
+
       this.onUpdate(this.beat);
       window.requestAnimationFrame(frameUpdate);
     }
