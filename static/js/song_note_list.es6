@@ -90,6 +90,11 @@ export class SongNote {
     return this.start + this.duration
   }
 
+  getRenderStop() {
+    // make it slightly shorter so it's easier to read
+    return this.start + this.duration - (this.duration / 10)
+  }
+
   toString() {
     return `${this.note},${this.start},${this.duration}`
   }

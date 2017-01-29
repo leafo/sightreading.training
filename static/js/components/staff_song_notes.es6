@@ -22,7 +22,7 @@ export default class StaffSongNotes extends StaffNotes {
     let row = letterOffset(pitch, !key.isFlat())
     let fromTop = letterOffset(this.props.upperLine) - row;
     let fromLeft = songNote.start * pixelsPerBeat
-    let width = songNote.duration * pixelsPerBeat
+    let width = songNote.getRenderStop() * pixelsPerBeat - fromLeft
 
     let style = {
       top: `${Math.floor(fromTop * 25/2)}%`,

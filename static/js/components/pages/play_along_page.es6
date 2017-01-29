@@ -20,7 +20,7 @@ export default class PlayAlongPage extends React.Component {
   constructor(props) {
     super(props)
 
-    // mary had a little lamb
+    // // mary had a little lamb
     // let song = SongParser.load(`
     //   ks1
     //   r4
@@ -32,8 +32,6 @@ export default class PlayAlongPage extends React.Component {
 
     let song = SongParser.load(`
       m1 dt
-      c5.3 c5.1
-      g5.3 g5.1
 
       c5.3 c5.1
       g5.3 g5.1
@@ -43,6 +41,10 @@ export default class PlayAlongPage extends React.Component {
 
       c5.3 c5.1
       g5.3 g5.1
+
+      c5.3 c5.1
+      g5.3 g5.1
+
 
       m1 ht
       c6 r d6 r
@@ -111,9 +113,6 @@ export default class PlayAlongPage extends React.Component {
     this.currentBeat = beat
     this.refs.staff.setOffset(-beat * this.state.pixelsPerBeat + 100)
     this.refs.currentBeat.innerText = `${this.currentBeat.toFixed(1)}`
-
-    // get the notes to play/stop
-
   }
 
   render() {

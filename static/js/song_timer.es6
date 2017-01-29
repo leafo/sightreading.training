@@ -133,7 +133,6 @@ export default class SongTimer {
           if (this.beat >= note.start + note.duration) {
             this.playingNotes[i] = null
             stopped += 1
-            console.log("note stopped", note.toString())
             this.onNoteStop(note)
           }
         }
@@ -149,7 +148,6 @@ export default class SongTimer {
         for (let i = searchOffset; i < sortedNotes.length; i++) {
           let note = sortedNotes[i]
           if (note.start <= this.beat) {
-            console.log("note started", note.toString())
             searchOffset += 1
             this.playingNotes.push(note)
             this.onNoteStart(note)
