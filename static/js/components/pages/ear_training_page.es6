@@ -5,7 +5,7 @@ import NoteList from "st/note_list"
 
 import Slider from "st/components/slider"
 import Select from "st/components/select"
-import MidiSelector from "st/components/midi_selector"
+import MidiInstrumentPicker from "st/components/midi_instrument_picker"
 
 import {parseMidiMessage, MidiChannel} from "st/midi"
 import {setTitle} from "st/globals"
@@ -36,10 +36,6 @@ export default class EarTrainingPage extends React.Component {
 
       rand: new MersenneTwister(),
       successes: 0,
-
-      outInputIdx: null,
-      outChannel: 0,
-      outInstrument: 0,
     }
   }
 
@@ -333,70 +329,12 @@ export default class EarTrainingPage extends React.Component {
       next melody will automatically play. You can trigger the melody to reply by
       interacting with any of the sliders or pedals on your MIDI controller.</p>
 
-      <div className="midi_options">
-        <label>
-          <span>Channel</span>
-          <Slider
-            min={1}
-            max={16}
-            onChange={(value) => {
-              this.setState({outChannel: value - 1})
-            }}
-            value={this.state.outChannel + 1} />
-          <span>{this.state.outChannel + 1}</span>
-        </label>
-        <label>
-          <span>Instrument</span>
-          <Select
-            value={this.state.outInstrument}
-            onChange={v => this.setState({ outInstrument: v})}
-            options={[
-              { name: "Piano", value: 0 },
-              { name: "Celesta", value: 8 },
-              { name: "Organ", value: 16 },
-              { name: "Guitar", value: 24 },
-              { name: "Acoustic Bass", value: 32 },
-              { name: "Violin", value: 40 },
-              { name: "String Ensamble", value: 48 },
-              { name: "Trumpet", value: 56 },
-              { name: "Sax", value: 64 },
-              { name: "Piccolo", value: 72 },
-              { name: "Square Synth", value: 80 },
-              { name: "Pad", value: 88 },
-              { name: "Brightness", value: 100 },
-            ]}/>
-        </label>
-      </div>
-
-      <MidiSelector
-        selectedInput={idx => this.setState({ outInputIdx: idx })}
-        midiOptions={this.midiOutputs()} />
-
-      <div className="confirm_buttons">
-        <button
-          onClick={e => {
-            e.preventDefault()
-
-            let output = this.midiOutputs()[this.state.outInputIdx]
-            let channel = new MidiChannel(output, this.state.outChannel)
-            channel.setInstrument(this.state.outInstrument)
-            this.setState({ midiChannel: channel })
-          }}
-          disabled={this.state.outInputIdx == null}>
-            {this.state.outInputIdx == null ? "Select a device to continue" : "Continue to ear training" }
-          </button>
-        <span className="spacer"></span>
-        <button
-          onClick={e => {
-            e.preventDefault()
-
-            let output = this.midiOutputs()[this.state.outInputIdx]
-            let channel = new MidiChannel(output, this.state.outChannel)
-            channel.setInstrument(this.state.outInstrument)
-            channel.testNote()
-          }}
-          disabled={this.state.outInputIdx == null}>Play test note</button>
-      </div>
+      <MidiInstrumentPicker
+        confirmLabel="Continue to ear training"
+        unselectedLabel="Select device to continue"
+        midi={this.props.midi}
+        onPick={channel => this.setState({midiChannel: channel}) }
+      />
     </div>
   }
 }

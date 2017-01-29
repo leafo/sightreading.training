@@ -216,4 +216,8 @@ export default class PlayAlongPage extends React.Component {
     </div>
   }
 
+  midiOutputs() {
+    if (!this.props.midi) return []
+    return [...this.props.midi.outputs.values()]
+  }
 }
