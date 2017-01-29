@@ -16,11 +16,12 @@ import peg from "st/song_parser_peg"
 export default class SongParser {
   static peg = peg
 
+  // convert song text to ast
   parse(songText) {
-    console.log("parsing", songText)
-    console.log(peg)
+    return peg.parse(songText)
   }
 
-  evaluate(ast) {
+  // compile ast to song notes
+  compile(ast) {
   }
 }
