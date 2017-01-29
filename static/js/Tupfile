@@ -6,4 +6,9 @@ include_rules
 : foreach components/pages/*.es6 |> !babel_amd |> components/pages/%B.js
 : components/pages/*.js |> !join |> components_pages.js
 
+: foreach *.pegjs |> !pegjs |> %B.es6
+
+: song_parser_peg.es6 |> !babel_amd |> %B.js
+
+
 
