@@ -5,7 +5,7 @@ import Keyboard from "st/components/keyboard"
 import StaffSongNotes from "st/components/staff_song_notes"
 import Slider from "st/components/slider"
 
-import {SongNoteList} from "st/song_note_list"
+import SongParser from "st/song_parser"
 import SongTimer from "st/song_timer"
 import {KeySignature} from "st/music"
 
@@ -16,12 +16,13 @@ export default class PlayAlongPage extends React.Component {
       heldNotes: {},
       bpm: 60,
       pixelsPerBeat: StaffSongNotes.defaultPixelsPerBeat,
-      song: SongNoteList.newSong([
-        ["C5", 0, 1],
-        ["D5", 1, 1],
-        ["E5", 3, 1],
-        ["D5", 5, 1]
-      ]),
+      song: SongParser.load(`
+        ks1
+        r
+        b5 a5 g5 a5
+        b5 b5 b5.2
+        a5 a5 a5.2
+      `),
       songTimer: new SongTimer({
         onUpdate: (beat) => this.updateBeats(beat)
       })
