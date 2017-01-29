@@ -4,6 +4,7 @@ import {GStaff} from "st/components/staves"
 import Keyboard from "st/components/keyboard"
 import StaffSongNotes from "st/components/staff_song_notes"
 import Slider from "st/components/slider"
+import Hotkeys from "st/components/hotkeys"
 
 import SongParser from "st/song_parser"
 import SongTimer from "st/song_timer"
@@ -52,6 +53,20 @@ export default class PlayAlongPage extends React.Component {
         onUpdate: (beat) => this.updateBeats(beat)
       })
     }
+
+    this.keyMap = {
+      " ": e => this.togglePlay(),
+      "esc": e => {
+        if (this.state.songTimer.running) {
+          this.state.songTimer.pause()
+        } else {
+          this.state.songTimer.reset()
+        }
+      },
+
+      "left": e => this.state.songTimer.scrub(-1),
+      "right": e => this.state.songTimer.scrub(1),
+    }
   }
 
   componentDidMount() {
@@ -93,13 +108,13 @@ export default class PlayAlongPage extends React.Component {
         {this.renderTransportControls()}
       </div>
       {this.renderKeyboard()}
+      <Hotkeys keyMap={this.keyMap} />
     </div>
   }
 
-
   togglePlay() {
     if (this.state.songTimer.running) {
-      this.state.songTimer.reset()
+      this.state.songTimer.pause()
     } else {
       this.state.songTimer.start(this.state.bpm)
     }
@@ -173,6 +188,7 @@ export default class PlayAlongPage extends React.Component {
       <button onClick={e => this.togglePlay()}>
         {this.state.songTimer.running ? "Stop" : "Play"}
       </button>
+      <span ref="currentBeat">-</span>
 
       <div className="spacer"></div>
 
@@ -195,7 +211,6 @@ export default class PlayAlongPage extends React.Component {
           value={+this.state.pixelsPerBeat} />
         <span className="slider_value">{this.state.pixelsPerBeat}</span>
       </span>
-
     </div>
   }
 

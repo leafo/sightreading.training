@@ -24,9 +24,19 @@ export default class SongTimer {
     this.bpm = bpm
   }
 
+  pause() {
+    this.running = false
+  }
+
   reset() {
     this.running = false
     this.beat = 0
+    this.onUpdate(this.beat);
+  }
+
+  scrub(amount) {
+    this.beat += amount
+    this.beat = Math.max(0, this.beat)
     this.onUpdate(this.beat);
   }
 
