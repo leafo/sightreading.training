@@ -20,60 +20,11 @@ export default class PlayAlongPage extends React.Component {
   constructor(props) {
     super(props)
 
-    // // mary had a little lamb
-    // let song = SongParser.load(`
-    //   ks1
-    //   r4
-    //   b5 a5 g5 a5
-    //   b5 b5 b5.2
-    //   a5 a5 a5.2
-    //   r4
-    // `)
-
-    let song = SongParser.load(`
-      m1 dt
-
-      c5.3 c5.1
-      g5.3 g5.1
-
-      c5.3 c5.1
-      g5.3 g5.1
-
-      c5.3 c5.1
-      g5.3 g5.1
-
-      c5.3 c5.1
-      g5.3 g5.1
-
-
-      m1 ht
-      c6 r d6 r
-      c6 r e6 r
-      c6 r d6 r
-      c6 r g6 r
-    `)
-
     this.state = {
       heldNotes: {},
       bpm: 60,
       pixelsPerBeat: StaffSongNotes.defaultPixelsPerBeat,
 
-      song,
-
-      songTimer: new SongTimer({
-        onUpdate: beat => this.updateBeats(beat),
-        onNoteStart: note => {
-          if (this.state.midiChannel) {
-            this.state.midiChannel.noteOn(parseNote(note.note), 100)
-          }
-        },
-        onNoteStop: note => {
-          if (this.state.midiChannel) {
-            this.state.midiChannel.noteOff(parseNote(note.note), 100)
-          }
-        },
-        song
-      })
     }
 
     this.keyMap = {
@@ -98,11 +49,54 @@ export default class PlayAlongPage extends React.Component {
       },
     }
   }
+
+  loadSong(name) {
+    if (this.state.loading) {
+      return
+    }
+
+    this.setState({loading: true})
+    var request = new XMLHttpRequest()
+
+    request.open("GET", `/static/music/${name}.lml`)
+    request.send()
+    request.onload = (e) => {
+      let songText = request.responseText
+      let song = SongParser.load(songText)
+
+      if (this.state.songTimer) {
+        this.state.songTimer.reset()
+      }
+
+      this.setState({
+        loading: false,
+        song,
+
+        songTimer: new SongTimer({
+          onUpdate: this.updateBeats.bind(this),
+          onNoteStart: this.onNoteStart.bind(this),
+          onNoteStop: this.onNoteStop.bind(this),
+          song
+        })
+      })
+    }
+  }
+
+  onNoteStart(note) {
+    if (this.state.midiChannel) {
+      this.state.midiChannel.noteOn(parseNote(note.note), 100)
+    }
+  }
+
+  onNoteStop(note) {
+    if (this.state.midiChannel) {
+      this.state.midiChannel.noteOff(parseNote(note.note), 100)
     }
   }
 
   componentDidMount() {
     this.updateBeats(0)
+    this.loadSong("bossa_nova_test")
   }
 
   componentWillUnmount() {
