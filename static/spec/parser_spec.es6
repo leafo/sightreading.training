@@ -27,7 +27,16 @@ describe("song parser", function() {
       ["note", "B2"],
       ["note", "F3", { duration: 1, start: 2 }]
     ])
+  })
 
+  it("parses rests and notes", function() {
+    expect(new SongParser().parse("g4.1 r2 a4.3 r b2")).toEqual([
+      ["note", "G4", {duration: 1}],
+      ["rest", {duration: 2}],
+      ["note", "A4", {duration: 3}],
+      ["rest"],
+      ["note", "B2"],
+    ])
   })
 
 })

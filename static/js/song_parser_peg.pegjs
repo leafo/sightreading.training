@@ -4,20 +4,24 @@ start
   }
 
 command
-  = note
+  = note / rest
 
 note
-  = name:[a-gA-G] octave:[0-9] timing:(noteTiming) ? {
+  = name:[a-gA-G] octave:[0-9] timing:("." t:noteTiming { return t }) ? {
     let note = ["note", `${name}${octave}`.toUpperCase()]
-    if (timing) {
-      note.push(timing)
-    }
-
+    if (timing) { note.push(timing) }
     return note
   }
 
+rest
+  = [rR] timing:(noteTiming) ? {
+    let rest = ["rest"]
+    if (timing) { rest.push(timing) }
+    return rest
+  }
+
 noteTiming
-  = "." duration:($ [0-9]+) start:( "." s:($ [0-9]+) { return s } ) ?  {
+  = duration:($ [0-9]+) start:( "." s:($ [0-9]+) { return s } ) ?  {
     let timing = {}
 
     if (duration) {
