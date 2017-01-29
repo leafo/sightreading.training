@@ -12,8 +12,14 @@ keySignature
   }
 
 note
-  = name:[a-gA-G] octave:[0-9] timing:("." t:noteTiming { return t }) ? {
-    let note = ["note", `${name}${octave}`.toUpperCase()]
+  = name:[a-gA-G] accidental:[+-] ? octave:[0-9] timing:("." t:noteTiming { return t }) ? {
+    if (accidental == "+") {
+      accidental = "#"
+    }
+    if (accidental == "-") {
+      accidental = "b"
+    }
+    let note = ["note", `${name.toUpperCase()}${accidental || ""}${octave}`]
     if (timing) { note.push(timing) }
     return note
   }

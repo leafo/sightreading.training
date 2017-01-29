@@ -59,6 +59,16 @@ describe("song parser", function() {
       ["halfTime"],
     ])
   })
+
+  it("parses accidental", function() {
+    expect(new SongParser().parse(`
+      a+5
+      a-5
+    `)).toEqual([
+      ["note", "A#5"],
+      ["note", "Ab5"]
+    ])
+  })
 })
 
 describe("load song", function() {
