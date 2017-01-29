@@ -64,6 +64,7 @@ export default class PlayAlongPage extends React.Component {
 
     if (songNote) {
       songNote.held = true
+      let accuracy = this.state.song.beatsToSeconds(this.currentBeat - songNote.start)
     }
 
     let heldNotes = {

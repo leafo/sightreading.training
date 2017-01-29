@@ -34,6 +34,14 @@ export class SongNoteList extends Array {
     return Math.min.apply(null, this.map((n) => n.getStart()))
   }
 
+  beatsToSeconds(beats) {
+    return beats / this.bpm * 60
+  }
+
+  secondsToBeats(sec) {
+    return sec / 60 * this.bpm
+  }
+
   // see if we're hitting a valid note
   // TODO: this is very slow
   matchNote(findNote, beat) {
