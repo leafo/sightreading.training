@@ -1,16 +1,15 @@
 // like note list but notes in time
 export class SongNoteList extends Array {
-  constructor(bpm=100) {
+  constructor() {
     super()
-    this.bpm = bpm
     Object.setPrototypeOf(this, SongNoteList.prototype)
   }
 
-  static newSong(noteTuples, bpm=100) {
+  static newSong(noteTuples) {
     let notes = noteTuples.map(([note, start, duration]) =>
       new SongNote(note, start, duration))
 
-    let song = new SongNoteList(bpm)
+    let song = new SongNoteList()
     for (let note of notes) {
       song.push(note)
     }
@@ -32,14 +31,6 @@ export class SongNoteList extends Array {
   getStartInBeats() {
     if (this.length == 0) { return 0 }
     return Math.min.apply(null, this.map((n) => n.getStart()))
-  }
-
-  beatsToSeconds(beats) {
-    return beats / this.bpm * 60
-  }
-
-  secondsToBeats(sec) {
-    return sec / 60 * this.bpm
   }
 
   // see if we're hitting a valid note

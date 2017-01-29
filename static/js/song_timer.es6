@@ -12,6 +12,14 @@ export default class SongTimer {
   onUpdate(beat) {
   }
 
+  beatsToSeconds(beats) {
+    return beats / this.bpm * 60
+  }
+
+  secondsToBeats(sec) {
+    return sec / 60 * this.bpm
+  }
+
   setBpm(bpm) {
     this.bpm = bpm
   }
