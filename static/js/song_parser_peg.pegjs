@@ -8,7 +8,6 @@ command
 
 keySignature
   = "ks" mod:$( "-"? [0-9]+) {
-    console.log(mod)
     return ["keySignature", +mod]
   }
 
