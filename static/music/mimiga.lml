@@ -1,5 +1,6 @@
 ks-1
 
+
 m0
 
 	f5
@@ -8,6 +9,14 @@ m0
 	f5
 	dt f5 ht
 
+
+m0
+
+	dt
+	f3 c4 f4 c4
+	f3 c4 f4 c4
+	ht
+
 m1
 
 	c6
@@ -15,8 +24,15 @@ m1
 		a5
 		c6.3
 		ht
-	
+
 	c6
+
+m1
+
+	dt
+	e3 c4 e4 c4
+	e3 c4 e4 c4
+	ht
 
 m2
 
@@ -25,10 +41,25 @@ m2
 	f6
 	c6
 
+
+m2
+
+	dt
+	e-3 c4 e-4 c4
+	e-3 c4 e-4 c4
+	ht
+
 m3
 
 	b-5.3
 	b-5
+
+m3
+
+	dt
+	d3 b-3 d4 b-3
+	d3 b-3 d4 b-3
+	ht
 
 
 m4
@@ -37,4 +68,11 @@ m4
 	b-5
 	c+6
 	b-5
+
+m4
+
+	dt
+	c+3 b-3 c+4 b-3
+	c+3 b-3 c+4 b-3
+	ht
 
