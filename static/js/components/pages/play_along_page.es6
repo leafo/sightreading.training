@@ -65,6 +65,8 @@ export default class PlayAlongPage extends React.Component {
       let songText = request.responseText
       let song = SongParser.load(songText)
 
+      let currentBeat = this.currentBeat
+
       if (this.state.songTimer) {
         this.state.songTimer.reset()
       }
@@ -80,9 +82,12 @@ export default class PlayAlongPage extends React.Component {
           onNoteStop: this.onNoteStop.bind(this),
           song
         })
+      }, () => {
+        // restore our position in the song (temporary while we edit)
+        this.state.songTimer.beat = currentBeat || 0
+        this.updateBeat(currentBeat || 0)
       })
 
-      this.updateBeat(0)
     }
   }
 
