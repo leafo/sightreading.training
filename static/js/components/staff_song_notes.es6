@@ -17,6 +17,10 @@ export default class StaffSongNotes extends StaffNotes {
 
     let pitch = parseNote(songNote.note)
 
+    if (!this.shouldRenderPitch(pitch)) {
+      return
+    }
+
     let pixelsPerBeat = this.props.pixelsPerBeat || this.constructor.defaultPixelsPerBeat
 
     let row = letterOffset(pitch, !key.isFlat())

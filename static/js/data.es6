@@ -22,42 +22,47 @@ export const STAVES = [
     mode: "notes",
     name: "treble",
     range: ["A4", "C7"],
-    render: function() {
+    render: function(props=this.state) {
       return <GStaff
         ref={(staff) => this.staff = staff}
-        {...this.state} />;
+        {...props}
+      />
     },
   },
   {
     mode: "notes",
     name: "bass",
     range: ["C3", "E5"],
-    render: function() {
+    render: function(props=this.state) {
       return <FStaff
         ref={(staff) => this.staff = staff}
-        {...this.state} />;
+        {...props}
+      />
     },
   },
   {
     mode: "notes",
     name: "grand",
     range: ["C3", "C7"],
-    render: function() {
+    render: function(props=this.state) {
       return <GrandStaff
         ref={(staff) => this.staff = staff}
-        {...this.state} />;
+        {...props}
+      />
     },
   },
   {
     mode: "chords",
     name: "chord",
     range: ["B7", "C8"],
-    render: function() {
+    render: function(props) {
       return <ChordStaff 
         chords={this.state.notes}
         noteShaking={this.state.noteShaking}
         touchedNotes={this.state.touchedNotes}
-        ref={(staff) => this.staff = staff} />
+        ref={(staff) => this.staff = staff}
+        {...props}
+      />
     }
   }
 ]

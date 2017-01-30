@@ -79,6 +79,27 @@ export default class StaffNotes extends React.Component {
     )
   }
 
+  shouldRenderPitch(pitch) {
+    const props = this.props
+
+    if (props.inGrand) {
+      switch (props.staffClass) {
+        case "f_staff":  // lower
+          if (pitch >= MIDDLE_C_PITCH) {
+            return false
+          }
+          break;
+        case "g_staff":  // upper
+          if (pitch < MIDDLE_C_PITCH) {
+            return false
+          }
+          break;
+      }
+    }
+
+    return true
+  }
+
   renderNote(note, opts={}) {
     const props = this.props
     let key = props.keySignature
@@ -86,19 +107,8 @@ export default class StaffNotes extends React.Component {
 
     let pitch = parseNote(note)
 
-    if (props.inGrand) {
-      switch (props.staffClass) {
-        case "f_staff":  // lower
-          if (pitch >= MIDDLE_C_PITCH) {
-            return;
-          }
-          break;
-        case "g_staff":  // upper
-          if (pitch < MIDDLE_C_PITCH) {
-            return;
-          }
-          break;
-      }
+    if (!this.shouldRenderPitch(pitch)) {
+      return
     }
 
     let row = letterOffset(pitch, !key.isFlat())

@@ -1,6 +1,5 @@
 import * as React from "react"
 
-import {GStaff} from "st/components/staves"
 import Keyboard from "st/components/keyboard"
 import StaffSongNotes from "st/components/staff_song_notes"
 import Slider from "st/components/slider"
@@ -15,6 +14,8 @@ import {KeySignature, noteName, parseNote} from "st/music"
 import {NOTE_EVENTS} from "st/midi"
 
 import {trigger} from "st/events"
+import {STAVES} from "st/data"
+import {GStaff} from "st/components/staves"
 
 export default class PlayAlongPage extends React.Component {
   constructor(props) {
@@ -70,15 +71,18 @@ export default class PlayAlongPage extends React.Component {
 
       this.setState({
         loading: false,
+        staffType: song.fittingStaff(),
         song,
 
         songTimer: new SongTimer({
-          onUpdate: this.updateBeats.bind(this),
+          onUpdate: this.updateBeat.bind(this),
           onNoteStart: this.onNoteStart.bind(this),
           onNoteStop: this.onNoteStop.bind(this),
           song
         })
       })
+
+      this.updateBeat(0)
     }
   }
 
@@ -95,7 +99,7 @@ export default class PlayAlongPage extends React.Component {
   }
 
   componentDidMount() {
-    this.updateBeats(0)
+    this.updateBeat(0)
     this.loadSong("mimiga")
   }
 
@@ -113,7 +117,7 @@ export default class PlayAlongPage extends React.Component {
     }
   }
 
-  updateBeats(beat) {
+  updateBeat(beat) {
     if (this.state.song) {
       if (beat > this.state.song.getStopInBeats()) {
         this.state.songTimer.restart()
@@ -134,16 +138,25 @@ export default class PlayAlongPage extends React.Component {
       keySignature = new KeySignature(this.state.song.metadata.keySignature)
     }
 
+    let staff = null
+    let staffType = STAVES.find(s => s.name == this.state.staffType)
+
+    if (staffType) {
+      let staffProps = {
+        ref: "staff",
+        notes: this.state.song || [],
+        heldNotes,
+        keySignature,
+        pixelsPerBeat: this.state.pixelsPerBeat,
+        children: <div className="time_bar"></div>
+      }
+
+      staff = staffType.render.call(this, staffProps)
+    }
+
     return <div className="play_along_page">
       <div className="staff_wrapper">
-        <GStaff
-          ref="staff"
-          notes={this.state.song || []}
-          heldNotes={heldNotes}
-          pixelsPerBeat={this.state.pixelsPerBeat}
-          keySignature={keySignature}>
-            <div className="time_bar"></div>
-        </GStaff>
+        {staff}
         {this.renderTransportControls()}
       </div>
       {this.renderKeyboard()}
@@ -152,7 +165,7 @@ export default class PlayAlongPage extends React.Component {
   }
 
   togglePlay() {
-    if (!this.state.songTimer) return
+    if (!this.state.songTimer) { return }
 
     if (this.state.songTimer.running) {
       this.state.songTimer.pause()
@@ -248,7 +261,6 @@ export default class PlayAlongPage extends React.Component {
           <MidiInstrumentPicker
             midi={this.props.midi}
             onPick={midiChannel => {
-              console.log("choosing channel", midiChannel)
               this.setState({ midiChannel })
               trigger(this, "closeLightbox")
             }}
@@ -256,9 +268,9 @@ export default class PlayAlongPage extends React.Component {
         </Lightbox>)
       }}>
         {
-          this.state.midiChannel ?
-          `Channel ${this.state.midiChannel.channel + 1}` :
-          "Select output"
+          this.state.midiChannel
+          ? `Channel ${this.state.midiChannel.channel + 1}`
+          : "Select output"
         }
       </button>
 

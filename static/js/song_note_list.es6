@@ -1,3 +1,6 @@
+
+import {parseNote, noteName, MIDDLE_C_PITCH} from 'st/music'
+
 // like note list but notes in time
 export class SongNoteList extends Array {
   constructor() {
@@ -39,6 +42,49 @@ export class SongNoteList extends Array {
     if (this.length == 0) { return 0 }
     return Math.min.apply(null, this.map((n) => n.getStart()))
   }
+
+  noteRange() {
+    if (!this.length) { return }
+
+    let min = parseNote(this[0].note)
+    let max = min
+
+    for (let songNote of this) {
+      let pitch = parseNote(songNote.note)
+      if (pitch < min) {
+        min = pitch
+      }
+
+      if (pitch > max) {
+        max = pitch
+      }
+    }
+
+    return [noteName(min), noteName(max)]
+  }
+
+  fittingStaff() {
+    let [min, max] = this.noteRange()
+    let useBase = false
+    let useTreble = false
+
+    if (parseNote(max) > MIDDLE_C_PITCH + 4) {
+      useTreble = true
+    }
+
+    if (parseNote(min) < MIDDLE_C_PITCH - 4) {
+      useBase = true
+    }
+
+    if (useTreble && useBase) {
+      return "grand"
+    } else if (useBase) {
+      return "bass"
+    } else {
+      return "treble"
+    }
+  }
+
 
   // see if we're hitting a valid note
   // TODO: this is very slow
