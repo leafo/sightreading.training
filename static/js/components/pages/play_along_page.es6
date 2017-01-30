@@ -96,7 +96,7 @@ export default class PlayAlongPage extends React.Component {
 
   componentDidMount() {
     this.updateBeats(0)
-    this.loadSong("bossa_nova_test")
+    this.loadSong("mimiga")
   }
 
   componentWillUnmount() {
@@ -239,6 +239,8 @@ export default class PlayAlongPage extends React.Component {
       <span ref="currentBeat">-</span>
 
       <div className="spacer"></div>
+
+      <button onClick={e => this.loadSong("mimiga")}>Load mimiga</button>
 
       <button onClick={e => {
         trigger(this, "showLightbox", <Lightbox>
