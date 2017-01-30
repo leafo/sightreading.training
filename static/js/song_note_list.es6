@@ -92,7 +92,7 @@ export class SongNoteList extends Array {
     let found = null
 
     for (let note of this) {
-      if (note.note != findNote) {
+      if (parseNote(note.note) != parseNote(findNote)) {
         continue
       }
 

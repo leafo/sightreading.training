@@ -7,6 +7,14 @@
         align-items: center;
         padding-right: 40px;
 
+        > * {
+            margin-left: 10px;
+
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+
         .spacer {
             flex: 1
         }

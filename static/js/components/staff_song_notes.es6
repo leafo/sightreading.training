@@ -36,7 +36,9 @@ export default class StaffSongNotes extends StaffNotes {
       width: `${width}px`
     }
 
-    return <div
+    let outside = pitch > this.props.upperLine || pitch < this.props.lowerLine;
+
+    let noteEl = <div
       className={classNames("note_bar", {
         is_flat: accidentals == -1,
         is_sharp: accidentals == 1,
@@ -45,5 +47,15 @@ export default class StaffSongNotes extends StaffNotes {
       })}
       style={style}
       key={opts.key}></div>
+
+    if (false) {
+      return [
+        noteEl,
+        this.renderLedgerLines(songNote.note, opts),
+      ];
+    } else {
+      return noteEl;
+    }
+
   }
 }
