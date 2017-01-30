@@ -184,6 +184,10 @@ export default class PlayAlongPage extends React.Component {
   pressNote(note) {
     if (!this.state.song) return
 
+    if (!this.state.songTimer.running) {
+      this.state.songTimer.start(this.state.bpm)
+    }
+
     let songNote = this.state.song.matchNote(note, this.currentBeat)
 
     if (songNote) {
