@@ -121,6 +121,24 @@
 
             }
 
+            &.is_sharp {
+                &:before {
+                    background: red;
+                }
+            }
+
+            &.is_flat {
+                &:before {
+                    background: orange;
+                }
+            }
+
+            &.is_natural {
+                &:before {
+                    background: purple;
+                }
+            }
+
             &.held {
                 &:before {
                     background: lighten(green, 20%);

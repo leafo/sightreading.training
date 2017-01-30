@@ -24,6 +24,8 @@ export default class StaffSongNotes extends StaffNotes {
     let fromLeft = songNote.start * pixelsPerBeat
     let width = songNote.getRenderStop() * pixelsPerBeat - fromLeft
 
+    let accidentals = key.accidentalsForNote(songNote.note)
+
     let style = {
       top: `${Math.floor(fromTop * 25/2)}%`,
       left: `${fromLeft}px`,
@@ -31,7 +33,12 @@ export default class StaffSongNotes extends StaffNotes {
     }
 
     return <div
-      className={classNames("note_bar", {held: songNote.held})}
+      className={classNames("note_bar", {
+        is_flat: accidentals == -1,
+        is_sharp: accidentals == 1,
+        is_natural: accidentals == 0,
+        held: songNote.held
+      })}
       style={style}
       key={opts.key}></div>
   }
