@@ -187,6 +187,21 @@ describe("load song", function() {
     })
   })
 
+  it("sets position when using blocks", function() {
+    let song = SongParser.load(`
+      {
+        dt
+        a5
+        a5.2
+      }
+      g6
+    `)
 
+    expect([...song]).toEqual([
+      new SongNote("A5", 0, 0.5),
+      new SongNote("A5", 0.5, 1),
+      new SongNote("G6", 1.5, 1),
+    ])
+  })
 })
 

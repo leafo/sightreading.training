@@ -31,6 +31,7 @@ export default class SongParser {
   // compile ast to song notes
   compile(ast) {
     let state = {
+      startPosition: 0,
       position: 0,
       keySignature: 0,
       beatsPerNote: 1,
@@ -38,10 +39,32 @@ export default class SongParser {
     }
 
     let song = new SongNoteList()
+    this.compileCommands(ast, state, song)
 
-    for (let command of ast) {
+    song.metadata = {
+      keySignature: state.keySignature,
+    }
+
+    return song
+  }
+
+  compileCommands(commands, state, song) {
+    for (let command of commands) {
       let t = command[0]
       switch (t) {
+        case "block": {
+          let [, blockCommands] = command
+          let blockState = {
+            startPosition: state.position
+          }
+
+          Object.setPrototypeOf(blockState, state)
+          this.compileCommands(blockCommands, blockState, song)
+
+          state.position = blockState.position
+
+          break
+        }
         case "halfTime": {
           state.beatsPerNote *= 2
           break
@@ -101,10 +124,5 @@ export default class SongParser {
       }
     }
 
-    song.metadata = {
-      keySignature: state.keySignature,
-    }
-
-    return song
   }
 }
