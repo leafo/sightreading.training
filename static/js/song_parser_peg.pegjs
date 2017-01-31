@@ -1,10 +1,13 @@
 start
+  = commands
+
+commands
   = white ? head:command rest:(white command) * white ? {
     return [head].concat(rest.map((m) => m[1]))
   }
 
 command
-  = note / rest / keySignature / halfTime / doubleTime / measure
+  = note / rest / keySignature / halfTime / doubleTime / measure / block
 
 keySignature
   = "ks" mod:$( "-"? [0-9]+) {
@@ -55,6 +58,11 @@ doubleTime
 measure
   = "m" measure:$([0-9]+) {
     return ["measure", +measure]
+  }
+
+block
+  = "{" commands:commands "}" {
+    return ["block", commands]
   }
 
 white

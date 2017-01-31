@@ -69,6 +69,19 @@ describe("song parser", function() {
       ["note", "Ab5"]
     ])
   })
+
+  it("parses a block", function() {
+    expect(new SongParser().parse(`
+      m1 {
+        a5
+      }
+    `)).toEqual([
+      ["measure", 1],
+      ["block", [
+        ["note", "A5"]
+      ]],
+    ])
+  })
 })
 
 describe("load song", function() {
