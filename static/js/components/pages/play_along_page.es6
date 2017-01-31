@@ -25,7 +25,8 @@ export default class PlayAlongPage extends React.Component {
       heldNotes: {},
       bpm: 60,
       pixelsPerBeat: StaffSongNotes.defaultPixelsPerBeat,
-
+      loopLeft: 0,
+      loopRight: 0,
     }
 
     this.keyMap = {
@@ -75,6 +76,8 @@ export default class PlayAlongPage extends React.Component {
         loading: false,
         staffType: song.fittingStaff(),
         song,
+        loopLeft: 0,
+        loopRight: song.getStopInBeats(),
 
         songTimer: new SongTimer({
           onUpdate: this.updateBeat.bind(this),
@@ -124,8 +127,8 @@ export default class PlayAlongPage extends React.Component {
 
   updateBeat(beat) {
     if (this.state.song) {
-      if (beat > this.state.song.getStopInBeats()) {
-        this.state.songTimer.restart()
+      if (beat > this.state.loopRight) {
+        this.state.songTimer.seek(this.state.loopLeft)
       }
 
       this.refs.staff.setOffset(-beat * this.state.pixelsPerBeat + 100)
@@ -259,6 +262,40 @@ export default class PlayAlongPage extends React.Component {
       }
 
       <span ref="currentBeat">-</span>
+
+      <label className="loop_control">
+        <span className="label_text">
+          Loop Left
+        </span>
+        <input type="text" value={this.state.loopLeft} onChange={e => {
+          let val = e.target.value
+          if (val.match(/^\d*$/)) {
+            this.setState({ loopLeft: +val })
+          }
+        }} />
+      </label>
+
+      <label className="loop_control">
+        <span className="label_text">
+          Loop Right
+        </span>
+
+        <input type="text" value={this.state.loopRight}
+          onKeyDown={e => {
+            if (e.keyCode == 27) {
+              this.setState({loopRight: this.state.song.getStopInBeats()})
+            }
+          }}
+
+          onChange={e => {
+            let val = e.target.value
+            if (val.match(/^\d*$/)) {
+              this.setState({ loopRight: +val })
+            }
+          }}
+        />
+
+      </label>
 
       <div className="spacer"></div>
 

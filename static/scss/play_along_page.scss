@@ -1,3 +1,5 @@
+@import "include/common";
+
 .play_along_page {
     overflow: hidden;
 
@@ -12,6 +14,26 @@
 
             &:first-child {
                 margin-left: 0;
+            }
+        }
+
+        .loop_control {
+
+            .label_text {
+                font-size: 13px;
+                font-weight: bold;
+                opacity: 0.8;
+            }
+
+            input {
+                margin-left: 10px;
+                @include border_box;
+                border: 1px solid lighten($border_color, 10%);
+                font-family: 'Raleway', sans-serif;
+                font-size: 13px;
+                padding: 4px 4px;
+                width: 40px;
+                text-align: center;
             }
         }
 

@@ -83,7 +83,11 @@ export default class SongTimer {
   }
 
   restart() {
-    this.beat = 0
+    this.seek(0)
+  }
+
+  seek(position) {
+    this.beat = position
     this.clearPlayingNotes()
   }
 
