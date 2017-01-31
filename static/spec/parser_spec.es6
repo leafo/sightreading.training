@@ -74,7 +74,7 @@ describe("song parser", function() {
 describe("load song", function() {
   it("loads empty song", function() {
     let song = SongParser.load("ks0")
-    expect(song).toEqual([])
+    expect([...song]).toEqual([])
   })
 
   it("loads some notes", function() {
@@ -85,7 +85,7 @@ describe("load song", function() {
       a6 a6 a6.2
     `)
 
-    expect(song).toEqual([
+    expect([...song]).toEqual([
       new SongNote("B6", 0, 1),
       new SongNote("A6", 1, 1),
       new SongNote("G6", 2, 1),
@@ -106,7 +106,7 @@ describe("load song", function() {
       r1 g5 r2 a5 r3 r1.1 f6
     `)
 
-    expect(song).toEqual([
+    expect([...song]).toEqual([
       new SongNote("G5", 1, 1),
       new SongNote("A5", 4, 1),
       new SongNote("F6", 8, 1),
@@ -122,7 +122,7 @@ describe("load song", function() {
       m1 c6
     `)
 
-    expect(song).toEqual([
+    expect([...song]).toEqual([
       // first measure
       new SongNote("C5", 0, 0.5),
       new SongNote("C5", 0.5, 0.5),
@@ -153,7 +153,7 @@ describe("load song", function() {
       a5
     `)
 
-    expect(song).toEqual([
+    expect([...song]).toEqual([
       new SongNote("A5", 0, 4),
       new SongNote("B5", 4, 2),
       new SongNote("C5", 6, 1),
