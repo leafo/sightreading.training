@@ -203,5 +203,20 @@ describe("load song", function() {
       new SongNote("G6", 1.5, 1),
     ])
   })
+
+  it("renders a chord with restore position", function() {
+    let song = SongParser.load(`
+      c5 | e5 | g5
+      a6
+    `)
+
+    expect([...song]).toEqual([
+      new SongNote("C5", 0, 1),
+      new SongNote("E5", 0, 1),
+      new SongNote("G5", 0, 1),
+      new SongNote("A6", 1, 1),
+    ])
+  })
+
 })
 

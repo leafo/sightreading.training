@@ -7,11 +7,16 @@ commands
   }
 
 command
-  = note / rest / keySignature / halfTime / doubleTime / measure / block
+  = note / rest / keySignature / halfTime / doubleTime / measure / block / restoreStartPosition
 
 keySignature
   = "ks" mod:$( "-"? [0-9]+) {
     return ["keySignature", +mod]
+  }
+
+restoreStartPosition
+  = "|" {
+    return ["restoreStartPosition"]
   }
 
 note

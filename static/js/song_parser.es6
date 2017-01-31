@@ -52,6 +52,10 @@ export default class SongParser {
     for (let command of commands) {
       let t = command[0]
       switch (t) {
+        case "restoreStartPosition": {
+          state.position = state.startPosition
+          break
+        }
         case "block": {
           let [, blockCommands] = command
           let blockState = {
