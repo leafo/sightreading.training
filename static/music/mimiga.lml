@@ -1,110 +1,88 @@
 ks-1
 
-
 m0 {
+  f5
+  a5
+  { dt g5 }
+  f5
+  { dt f5 }
 |
-	f5
-	a5
-	{ dt g5 }
-	f5
-	{ dt f5 }
-|
-	dt
-	f3 c4 f4 c4
-	f3 c4 f4 c4
+  dt
+  f3 c4 f4 c4
+  f3 c4 f4 c4
 }
 
 m1 {
+  c6
+  {
+    dt
+    a5
+    c6.3
+  }
+  c6
 |
-	c6
-	{
-		dt
-		a5
-		c6.3
-	}
-	c6
-|
-	dt
-	e3 c4 e4 c4
-	e3 c4 e4 c4
+  dt
+  e3 c4 e4 c4
+  e3 c4 e4 c4
 }
 
 
-m2
+m2 {
+  d6
+  c6
+  f6
+  c6
 
-	d6
-	c6
-	f6
-	c6
-
-
-m2
-
-	dt
-	e-3 c4 e-4 c4
-	e-3 c4 e-4 c4
-	ht
-
-m3
-
-	b-5.3
-	b-5
-
-m3
-
-	dt
-	d3 b-3 d4 b-3
-	d3 b-3 d4 b-3
-	ht
+|
+  dt
+  e-3 c4 e-4 c4
+  e-3 c4 e-4 c4
+}
 
 
-m4
+m3 {
+  b-5.3
+  b-5
+|
+  dt
+  d3 b-3 d4 b-3
+  d3 b-3 d4 b-3
+}
 
-	c6
-	b-5
-	c+6
-	b-5
+m4 {
+  c6
+  b-5
+  c+6
+  b-5
+|
+  dt
+  c+3 b-3 c+4 b-3
+  c+3 b-3 c+4 b-3
+}
 
-m4
-
-	dt
-	c+3 b-3 c+4 b-3
-	c+3 b-3 c+4 b-3
-	ht
-
-m5
-
-	a5.3 a5
-
-m5
-
-	dt
-	f3 c4 f4 c4
-	f3 c4 f4 c4
-	ht
-
-m6
-
-	a5 g5 g5 f5
-
-
-m6
-
-	dt
-	b3 g4 b4 g4
-	b3 g4 b4 g4
-	ht
+m5 {
+  a5.3 a5
+|
+  dt
+  f3 c4 f4 c4
+  f3 c4 f4 c4
+}
 
 
-m7
+m6 {
+  a5 g5 g5 f5
+|
+  dt
+  b3 g4 b4 g4
+  b3 g4 b4 g4
+}
 
-	f5.2 e5.2
 
-m7
-
-	dt
-	c4 g4 c5 g4
-	c4 g4 c5 g4
-	ht
-
+m7 {
+  f5.2 e5.2
+|
+  dt
+  c4 g4 c5 g4
+  c4 g4 c5 g4
+}
 
