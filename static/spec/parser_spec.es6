@@ -163,6 +163,17 @@ describe("load song", function() {
     ])
   })
 
+  it("parses song metadata", function() {
+    let song = SongParser.load(`
+      ks-5
+      c5
+    `)
+
+    expect(song.metadata).toEqual({
+      keySignature: -5
+    })
+  })
+
 
 })
 
