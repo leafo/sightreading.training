@@ -17,6 +17,98 @@ import {trigger} from "st/events"
 import {STAVES} from "st/data"
 import {GStaff} from "st/components/staves"
 
+let {PropTypes: types} = React
+
+class PositionField extends React.Component {
+  static propTypes = {
+    min: types.number,
+    max: types.number,
+    value: types.number
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      value: null,
+      editValue: null
+    }
+  }
+
+  formattedValue() {
+    let value = this.state.value || this.props.value || 0
+    return value.toFixed(1)
+  }
+
+  confirmEdit() {
+    if (!this.state.editValue) {
+      return
+    }
+
+    if (this.state.editValue.match(/[^0-9\.]/)) {
+      this.cancelEdit()
+    }
+
+    let value = +this.state.editValue
+
+    if (this.props.min != null) {
+      value = Math.max(this.props.min, value)
+    }
+
+    if (this.props.max != null) {
+      value = Math.min(this.props.max, value)
+    }
+
+    this.setState({
+      value: value,
+      editValue: null
+    })
+
+    if (this.props.onUpdate) {
+      this.props.onUpdate(this.state.value)
+    }
+  }
+
+  cancelEdit() {
+    this.setState({ editValue: null })
+  }
+
+  render() {
+    let displayValue = this.state.editValue
+    if (displayValue == null) {
+      displayValue = this.formattedValue()
+    }
+
+    return <input
+      className="position_field_input"
+      type="text"
+      readOnly={this.props.readOnly}
+      value={displayValue}
+      onKeyDown={e => {
+        if (e.keyCode == 27)  {
+          this.cancelEdit()
+          e.stopPropagation()
+          return
+        }
+
+        if (e.keyCode == 13)  {
+          this.confirmEdit()
+          e.stopPropagation()
+          return
+        }
+
+        // todo: allow up/down keys
+      }}
+      onFocus={e => e.target.select()}
+      onChange={e => {
+        this.setState({
+          editValue: e.target.value
+        })
+      }}
+      onBlur={e => this.confirmEdit()}
+      />
+  }
+}
+
 export default class PlayAlongPage extends React.Component {
   constructor(props) {
     super(props)
@@ -136,6 +228,7 @@ export default class PlayAlongPage extends React.Component {
 
     this.currentBeat = beat
     this.refs.currentBeat.innerText = `${this.currentBeat.toFixed(1)}`
+    this.refs.currentBeatField.setState({ value: beat })
   }
 
   render() {
@@ -262,6 +355,10 @@ export default class PlayAlongPage extends React.Component {
       }
 
       <span ref="currentBeat">-</span>
+
+      <PositionField ref="currentBeatField"
+        value={this.currentBeat}
+      />
 
       <label className="loop_control">
         <span className="label_text">
