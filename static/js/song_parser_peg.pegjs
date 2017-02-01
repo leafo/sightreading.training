@@ -70,7 +70,11 @@ block
     return ["block", commands]
   }
 
+
+comment
+  = "#" [^\n]+
+
 white
-  = [\t\r\n ]+
+  = [\t\r\n ]+ (comment white) ?
 
 //** vim: et:ts=2:sw=2:sts=2

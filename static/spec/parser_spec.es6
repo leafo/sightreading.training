@@ -82,6 +82,23 @@ describe("song parser", function() {
       ]],
     ])
   })
+
+  it("ignores a comment", function() {
+    expect(new SongParser().parse(`
+      # this is comment
+      a5 c5 # a good one
+
+      #more comment
+
+      b6 #a5
+    `)).toEqual([
+      ["note", "A5"],
+      ["note", "C5"],
+      ["note", "B6"],
+    ])
+  })
+
+
 })
 
 describe("load song", function() {
