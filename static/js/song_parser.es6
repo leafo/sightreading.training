@@ -1,5 +1,6 @@
 
 import peg from "st/song_parser_peg"
+import {parseNote, noteName, KeySignature} from "st/music"
 
 import {SongNoteList, SongNote} from "st/song_note_list"
 
@@ -36,13 +37,14 @@ export default class SongParser {
       keySignature: 0,
       beatsPerNote: 1,
       beatsPerMeasure: 4,
+      keySignature: new KeySignature(0),
     }
 
     let song = new SongNoteList()
     this.compileCommands(ast, state, song)
 
     song.metadata = {
-      keySignature: state.keySignature,
+      keySignature: state.keySignature.count,
     }
 
     return song
@@ -83,16 +85,38 @@ export default class SongParser {
           break
         }
         case "note": {
-          let [, noteName, noteTiming] = command
+          let [, name, noteOpts] = command
           let duration = state.beatsPerNote
           let start = null
 
-          if (noteTiming) {
-            if (noteTiming.duration) {
-              duration *= noteTiming.duration
+          let accidental = false
+
+          if (noteOpts) {
+            if (noteOpts.duration) {
+              duration *= noteOpts.duration
             }
 
-            start = noteTiming.start
+            start = noteOpts.start
+
+            if (noteOpts.sharp) {
+              accidental = true
+              name = noteName(parseNote(name) + 1)
+            } else if (noteOpts.flat) {
+              accidental = true
+              name = noteName(parseNote(name) - 1)
+            } else if (noteOpts.natural) {
+              accidental = true
+            } 
+          }
+
+          if (!accidental) {
+            // TODO: this method is not right
+            let accidentals = state.keySignature.accidentalsForNote(name)
+            console.log("applying key signature", name, accidentals)
+            if (accidentals && accidentals != 0) {
+              console.log("updating name", name, accidentals)
+              name = noteName(parseNote(name) + accidentals)
+            }
           }
 
           if (!start) {
@@ -100,7 +124,7 @@ export default class SongParser {
             state.position += duration
           }
 
-          song.push(new SongNote(noteName, start, duration))
+          song.push(new SongNote(name, start, duration))
           break
         }
         case "rest": {
@@ -122,7 +146,7 @@ export default class SongParser {
           break
         }
         case "keySignature": {
-          state.keySignature = command[1]
+          state.keySignature = new KeySignature(+command[1])
           break
         }
       }

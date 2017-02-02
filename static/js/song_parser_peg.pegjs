@@ -20,15 +20,23 @@ restoreStartPosition
   }
 
 note
-  = name:[a-gA-G] accidental:[+-] ? octave:[0-9] timing:("." t:noteTiming { return t }) ? {
+  = name:[a-gA-G] accidental:[+=-] ? octave:[0-9] timing:("." t:noteTiming { return t }) ? {
+    let opts = {
+      ...timing
+    }
+
     if (accidental == "+") {
-      accidental = "#"
+      opts.sharp = true
+    } else if (accidental == "-") {
+      opts.flat = true
+    } else if (accidental == "=") {
+      opts.natural = true
     }
-    if (accidental == "-") {
-      accidental = "b"
+
+    let note = ["note", `${name.toUpperCase()}${octave}`]
+    if (timing || accidental) {
+     note.push(opts) 
     }
-    let note = ["note", `${name.toUpperCase()}${accidental || ""}${octave}`]
-    if (timing) { note.push(timing) }
     return note
   }
 

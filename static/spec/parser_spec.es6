@@ -64,9 +64,11 @@ describe("song parser", function() {
     expect(new SongParser().parse(`
       a+5
       a-5
+      a=5
     `)).toEqual([
-      ["note", "A#5"],
-      ["note", "Ab5"]
+      ["note", "A5", {sharp: true}],
+      ["note", "A5", {flat: true}],
+      ["note", "A5", {natural: true}],
     ])
   })
 
@@ -193,7 +195,7 @@ describe("load song", function() {
     ])
   })
 
-  it("parses song metadata", function() {
+  it("parses keysignature into metadta", function() {
     let song = SongParser.load(`
       ks-5
       c5
@@ -203,6 +205,30 @@ describe("load song", function() {
       keySignature: -5
     })
   })
+
+  it("applies key signature to notes", function() {
+    let song = SongParser.load(`
+      ks2
+      c5
+      d5
+      e5
+      f5
+      g5
+      a5
+      b5
+    `)
+
+    expect([...song]).toEqual([
+      new SongNote("C5", 0, 1),
+      new SongNote("D5", 1, 1),
+      new SongNote("E5", 2, 1),
+      new SongNote("F5", 3, 1),
+      new SongNote("G5", 4, 1),
+      new SongNote("A5", 5, 1),
+      new SongNote("B5", 6, 1),
+    ])
+  })
+
 
   it("sets position when using blocks", function() {
     let song = SongParser.load(`
@@ -234,6 +260,8 @@ describe("load song", function() {
       new SongNote("A6", 1, 1),
     ])
   })
+
+
 
 })
 
