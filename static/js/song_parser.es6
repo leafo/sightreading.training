@@ -98,12 +98,13 @@ export default class SongParser {
 
             start = noteOpts.start
 
+
             if (noteOpts.sharp) {
               hasAccidental = true
-              name = noteName(parseNote(name) + 1)
+              name = name.substr(0, 1) + "#" + name.substr(1)
             } else if (noteOpts.flat) {
               hasAccidental = true
-              name = noteName(parseNote(name) - 1)
+              name = name.substr(0, 1) + "b" + name.substr(1)
             } else if (noteOpts.natural) {
               hasAccidental = true
             } 
