@@ -17,23 +17,30 @@
             }
         }
 
-        .loop_control {
+        > button {
+            min-width: 60px;
+        }
+
+        input {
+            margin-left: 10px;
+            @include border_box;
+            border: 1px solid lighten($border_color, 10%);
+            font-family: 'Raleway', sans-serif;
+            font-size: 13px;
+            padding: 4px 4px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .loop_controls {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
 
             .label_text {
                 font-size: 13px;
                 font-weight: bold;
                 opacity: 0.8;
-            }
-
-            input {
-                margin-left: 10px;
-                @include border_box;
-                border: 1px solid lighten($border_color, 10%);
-                font-family: 'Raleway', sans-serif;
-                font-size: 13px;
-                padding: 4px 4px;
-                width: 40px;
-                text-align: center;
             }
         }
 

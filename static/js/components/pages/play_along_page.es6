@@ -64,7 +64,7 @@ class PositionField extends React.Component {
     })
 
     if (this.props.onUpdate) {
-      this.props.onUpdate(this.state.value)
+      this.props.onUpdate(value)
     }
   }
 
@@ -227,7 +227,6 @@ export default class PlayAlongPage extends React.Component {
     }
 
     this.currentBeat = beat
-    this.refs.currentBeat.innerText = `${this.currentBeat.toFixed(1)}`
     this.refs.currentBeatField.setState({ value: beat })
   }
 
@@ -341,10 +340,16 @@ export default class PlayAlongPage extends React.Component {
       upper={"C7"}
       heldNotes={this.state.heldNotes}
       onKeyDown={this.pressNote.bind(this)}
-      onKeyUp={this.releaseNote.bind(this)} />;
+      onKeyUp={this.releaseNote.bind(this)}
+    />
   }
 
   renderTransportControls() {
+    let stop = 0
+    if (this.state.song) {
+      stop = this.state.song.getStopInBeats()
+    }
+
     return <div className="transport_controls">
       {
         this.state.songTimer
@@ -354,45 +359,40 @@ export default class PlayAlongPage extends React.Component {
         : null
       }
 
-      <span ref="currentBeat">-</span>
-
       <PositionField ref="currentBeatField"
+        min={0}
+        max={stop}
         value={this.currentBeat}
+        onUpdate={val => {
+          this.state.songTimer.seek(val)
+        }}
       />
 
-      <label className="loop_control">
+      <span className="loop_controls">
         <span className="label_text">
-          Loop Left
-        </span>
-        <input type="text" value={this.state.loopLeft} onChange={e => {
-          let val = e.target.value
-          if (val.match(/^\d*$/)) {
-            this.setState({ loopLeft: +val })
-          }
-        }} />
-      </label>
-
-      <label className="loop_control">
-        <span className="label_text">
-          Loop Right
+          Loop
         </span>
 
-        <input type="text" value={this.state.loopRight}
-          onKeyDown={e => {
-            if (e.keyCode == 27) {
-              this.setState({loopRight: this.state.song.getStopInBeats()})
-            }
-          }}
-
-          onChange={e => {
-            let val = e.target.value
-            if (val.match(/^\d*$/)) {
-              this.setState({ loopRight: +val })
-            }
+        <PositionField ref="loopLeft"
+          min={0}
+          max={stop}
+          resetValue={0}
+          value={this.state.loopLeft}
+          onUpdate={val => {
+            this.setState({ loopLeft: val })
           }}
         />
 
-      </label>
+        <PositionField ref="loopRight"
+          min={0}
+          max={stop}
+          resetValue={stop}
+          value={this.state.loopRight}
+          onUpdate={val => {
+            this.setState({ loopRight: val })
+          }}
+        />
+      </span>
 
       <div className="spacer"></div>
 

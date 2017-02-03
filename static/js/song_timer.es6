@@ -88,7 +88,9 @@ export default class SongTimer {
 
   seek(position) {
     this.beat = position
+    this.beat = Math.max(0, this.beat)
     this.clearPlayingNotes()
+    this.onUpdate(this.beat);
   }
 
   // should be called whenever we stop or scrub
