@@ -49,10 +49,13 @@ export default class StaffSongNotes extends StaffNotes {
       style={style}
       key={opts.key}></div>
 
-    if (false) {
+    if (outside) {
       return [
+        this.renderLedgerLines(songNote.note, {
+          offset: fromLeft,
+          width: width,
+        }),
         noteEl,
-        this.renderLedgerLines(songNote.note, opts),
       ];
     } else {
       return noteEl;

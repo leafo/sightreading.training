@@ -32,8 +32,11 @@ export default class StaffNotes extends React.Component {
     return props.notes.map((note, idx) => {
       let opts = {
         goal: true,
-        offset: keySignatureWidth + props.noteWidth * idx,
         first: idx == 0,
+      }
+
+      if (props.noteWidth) {
+        opts.offset= keySignatureWidth + props.noteWidth * idx
       }
 
       if (Array.isArray(note)) {
@@ -44,7 +47,7 @@ export default class StaffNotes extends React.Component {
           return this.renderNote(sub_note, opts)
         })
 
-        if (note.annotation) {
+        if (note.annotation && opts.offset) {
           let style = {
             top: "-66%",
             left: `${opts.offset}px`
@@ -204,7 +207,7 @@ export default class StaffNotes extends React.Component {
     for (let i = 0; i < numLines; i++) {
       let style = {
         left: `${(opts.offset || 0) - 10}px`,
-        width: `${40 + 20}px`,
+        width: `${(opts.width || 40) + 20}px`,
       }
 
       if (below) {
