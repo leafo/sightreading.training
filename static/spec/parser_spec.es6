@@ -229,7 +229,7 @@ describe("load song", function() {
     ])
 
 
-    let song = SongParser.load(`
+    let song2 = SongParser.load(`
       ks-2
       c5
       d5
@@ -240,7 +240,7 @@ describe("load song", function() {
       b5
     `)
 
-    expect([...song]).toEqual([
+    expect([...song2]).toEqual([
       new SongNote("C5", 0, 1),
       new SongNote("D5", 1, 1),
       new SongNote("Eb5", 2, 1),
