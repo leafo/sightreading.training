@@ -45,6 +45,7 @@ export default class StaffSongNotes extends StaffNotes {
         is_natural: accidentals == 0,
         held: songNote.held
       })}
+      title={songNote.note}
       style={style}
       key={opts.key}></div>
 
