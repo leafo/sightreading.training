@@ -203,6 +203,31 @@ export class KeySignature {
     }
   }
 
+  // key note -> raw note
+  unconvertNote(note) {
+    if (this.count == 0) {
+      return note
+    }
+
+    if (typeof note == "number") {
+      note = noteName(note)
+    }
+
+    let [_, name, octave] = note.match(/^([A-G])(\d+)?/)
+
+    if (!name) {
+      throw "can't unconvert note with accidental"
+    }
+
+    for (let modifiedNote of this.accidentalNotes()) {
+      if (modifiedNote == name) {
+        return `${name}${this.isSharp() ? "#" : "b"}${octave}`
+      }
+    }
+
+    return note
+  }
+
   // how many accidentals should display on note for this key
   // null: nothing
   // 0: a natural

@@ -219,14 +219,38 @@ describe("load song", function() {
     `)
 
     expect([...song]).toEqual([
-      new SongNote("C5", 0, 1),
+      new SongNote("C#5", 0, 1),
       new SongNote("D5", 1, 1),
       new SongNote("E5", 2, 1),
-      new SongNote("F5", 3, 1),
+      new SongNote("F#5", 3, 1),
       new SongNote("G5", 4, 1),
       new SongNote("A5", 5, 1),
       new SongNote("B5", 6, 1),
     ])
+
+
+    let song = SongParser.load(`
+      ks-2
+      c5
+      d5
+      e5
+      f5
+      g5
+      a5
+      b5
+    `)
+
+    expect([...song]).toEqual([
+      new SongNote("C5", 0, 1),
+      new SongNote("D5", 1, 1),
+      new SongNote("Eb5", 2, 1),
+      new SongNote("F5", 3, 1),
+      new SongNote("G5", 4, 1),
+      new SongNote("A5", 5, 1),
+      new SongNote("Bb5", 6, 1),
+    ])
+
+
   })
 
 

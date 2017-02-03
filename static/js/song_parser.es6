@@ -89,7 +89,7 @@ export default class SongParser {
           let duration = state.beatsPerNote
           let start = null
 
-          let accidental = false
+          let hasAccidental = false
 
           if (noteOpts) {
             if (noteOpts.duration) {
@@ -99,24 +99,19 @@ export default class SongParser {
             start = noteOpts.start
 
             if (noteOpts.sharp) {
-              accidental = true
+              hasAccidental = true
               name = noteName(parseNote(name) + 1)
             } else if (noteOpts.flat) {
-              accidental = true
+              hasAccidental = true
               name = noteName(parseNote(name) - 1)
             } else if (noteOpts.natural) {
-              accidental = true
+              hasAccidental = true
             } 
           }
 
-          if (!accidental) {
-            // TODO: this method is not right
-            let accidentals = state.keySignature.accidentalsForNote(name)
-            console.log("applying key signature", name, accidentals)
-            if (accidentals && accidentals != 0) {
-              console.log("updating name", name, accidentals)
-              name = noteName(parseNote(name) + accidentals)
-            }
+          if (!hasAccidental) {
+            // apply default accidental
+            name = state.keySignature.unconvertNote(name)
           }
 
           if (!start) {
