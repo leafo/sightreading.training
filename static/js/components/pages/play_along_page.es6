@@ -35,7 +35,16 @@ class PositionField extends React.Component {
   }
 
   formattedValue() {
-    let value = this.state.value || this.props.value || 0
+    let value = 0
+
+    if (this.props.value != null) {
+      value = this.props.value
+    }
+
+    if (this.state.value != null) {
+      value = this.state.value
+    }
+
     return value.toFixed(1)
   }
 
@@ -58,6 +67,10 @@ class PositionField extends React.Component {
       value = Math.min(this.props.max, value)
     }
 
+    this.setValue(value)
+  }
+
+  setValue(value) {
     this.setState({
       value: value,
       editValue: null
@@ -85,7 +98,11 @@ class PositionField extends React.Component {
       value={displayValue}
       onKeyDown={e => {
         if (e.keyCode == 27)  {
-          this.cancelEdit()
+          if (!this.state.editValue && this.props.resetValue != null) {
+            this.setValue(this.props.resetValue)
+          } else {
+            this.cancelEdit()
+          }
           e.stopPropagation()
           return
         }
@@ -375,7 +392,7 @@ export default class PlayAlongPage extends React.Component {
 
         <PositionField ref="loopLeft"
           min={0}
-          max={stop}
+          max={this.state.loopRight}
           resetValue={0}
           value={this.state.loopLeft}
           onUpdate={val => {
@@ -384,7 +401,7 @@ export default class PlayAlongPage extends React.Component {
         />
 
         <PositionField ref="loopRight"
-          min={0}
+          min={this.state.loopLeft}
           max={stop}
           resetValue={stop}
           value={this.state.loopRight}
