@@ -295,7 +295,57 @@ describe("load song", function() {
     ])
   })
 
+  it("loads song with 3/4 time", function() {
+    let song = SongParser.load(`
+      ts3/4
+      m0 {
+        c5
+        d5.2
+        |
+        g4.3
+      }
 
+      m1 {
+        e5
+        d5
+        c5
+      }
+    `)
+
+    expect([...song]).toEqual([
+      new SongNote("C5", 0, 1),
+      new SongNote("D5", 1, 2),
+      new SongNote("G4", 0, 3),
+
+      new SongNote("E5", 3, 1),
+      new SongNote("D5", 4, 1),
+      new SongNote("C5", 5, 1),
+    ])
+  })
+
+  it("loads song with 6/8 time", function() {
+    let song = SongParser.load(`
+      ts6/8
+      m0 {
+        c5
+        d5.2
+        |
+        g4.3
+      }
+
+      m1 {
+        c6
+      }
+    `)
+
+    expect([...song]).toEqual([
+      new SongNote("C5", 0, 0.5),
+      new SongNote("D5", 0.5, 1),
+      new SongNote("G4", 0, 1.5),
+
+      new SongNote("C6", 3, 0.5),
+    ])
+  })
 
 })
 

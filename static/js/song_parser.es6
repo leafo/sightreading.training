@@ -37,6 +37,7 @@ export default class SongParser {
       keySignature: 0,
       beatsPerNote: 1,
       beatsPerMeasure: 4,
+      timeScale: 1,
       keySignature: new KeySignature(0),
     }
 
@@ -72,11 +73,11 @@ export default class SongParser {
           break
         }
         case "halfTime": {
-          state.beatsPerNote *= 2
+          state.timeScale *= 2
           break
         }
         case "doubleTime": {
-          state.beatsPerNote *= 0.5
+          state.timeScale *= 0.5
           break
         }
         case "measure": {
@@ -86,7 +87,7 @@ export default class SongParser {
         }
         case "note": {
           let [, name, noteOpts] = command
-          let duration = state.beatsPerNote
+          let duration = state.beatsPerNote * state.timeScale
           let start = null
 
           let hasAccidental = false
@@ -126,7 +127,7 @@ export default class SongParser {
         case "rest": {
           let [, restTiming] = command
 
-          let duration = state.beatsPerNote
+          let duration = state.beatsPerNote * state.timeScale
 
           if (restTiming) {
             if (restTiming.start) {
@@ -143,6 +144,12 @@ export default class SongParser {
         }
         case "keySignature": {
           state.keySignature = new KeySignature(+command[1])
+          break
+        }
+        case "timeSignature": {
+          let [, perBeat, noteValue] = command
+          state.beatsPerNote = 4 / noteValue
+          state.beatsPerMeasure = state.beatsPerNote * perBeat
           break
         }
       }
