@@ -8,7 +8,7 @@ import NoteList from "st/note_list"
 import {SongNoteList} from "st/song_note_list"
 import ChordList from "st/chord_list"
 
-import {parseNote, letterOffset} from "st/music"
+import {parseNote, noteStaffOffset} from "st/music"
 
 import StaffNotes from "st/components/staff_notes"
 import StaffSongNotes from "st/components/staff_song_notes"
@@ -16,8 +16,8 @@ import StaffSongNotes from "st/components/staff_song_notes"
 export class Staff extends React.Component {
   static propTypes = {
     // rendering props
-    upperLine: types.number.isRequired,
-    lowerLine: types.number.isRequired,
+    upperRow: types.number.isRequired,
+    lowerRow: types.number.isRequired,
     cleffImage: types.string.isRequired,
     staffClass: types.string.isRequired,
     keySignature: types.object,
@@ -90,7 +90,7 @@ export class Staff extends React.Component {
 
     let sigNotes = keySignature.notesInRange(ksCenter - 10, ksCenter + 2)
 
-    let topOffset = letterOffset(this.props.upperLine)
+    let topOffset = this.props.upperRow
 
     let sigClass = keySignature.isFlat() ? "flat" : "sharp";
 
@@ -98,8 +98,7 @@ export class Staff extends React.Component {
 
     return <div className="key_signature">
       {sigNotes.map((n, i) => {
-        let pitch = parseNote(n);
-        let fromTop = topOffset - letterOffset(pitch);
+        let fromTop = topOffset - noteStaffOffset(n);
         let style = {
           top: `${Math.floor(fromTop * 25/2)}%`,
           left: `${i * 20}px`
@@ -121,8 +120,8 @@ export class GStaff extends Staff {
   static defaultProps = {
     // where the key signature is centered around
     keySignatureCenter: "F6",
-    upperLine: 77,
-    lowerLine: 64,
+    upperRow: 45,
+    lowerRow: 37,
     cleffImage: "/static/svg/clefs.G.svg",
     staffClass: "g_staff",
   }
@@ -131,8 +130,8 @@ export class GStaff extends Staff {
 export class FStaff extends Staff {
   static defaultProps = {
     keySignatureCenter: "F4",
-    upperLine: 57,
-    lowerLine: 57 - 13,
+    upperRow: 33,
+    lowerRow: 25,
     cleffImage: "/static/svg/clefs.F_change.svg",
     staffClass: "f_staff",
   }

@@ -3,7 +3,7 @@ import * as React from "react"
 import {classNames} from "lib"
 
 import StaffNotes from "st/components/staff_notes"
-import {parseNote, letterOffset, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
+import {parseNote, noteName, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
 export default class StaffSongNotes extends StaffNotes {
   classNames()  {
@@ -24,7 +24,11 @@ export default class StaffSongNotes extends StaffNotes {
     let pixelsPerBeat = this.props.pixelsPerBeat || this.constructor.defaultPixelsPerBeat
 
     let row = noteStaffOffset(note)
-    let fromTop = letterOffset(this.props.upperLine) - row;
+
+    let ns = noteStaffOffset
+    let nn = noteName
+
+    let fromTop = this.props.upperRow - row;
     let fromLeft = songNote.start * pixelsPerBeat
     let width = songNote.getRenderStop() * pixelsPerBeat - fromLeft
 
@@ -36,7 +40,7 @@ export default class StaffSongNotes extends StaffNotes {
       width: `${width}px`
     }
 
-    let outside = pitch > this.props.upperLine || pitch < this.props.lowerLine;
+    let outside = row > this.props.upperRow || row < this.props.lowerRow;
 
     let noteEl = <div
       className={classNames("note_bar", {

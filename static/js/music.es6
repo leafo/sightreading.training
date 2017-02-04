@@ -114,23 +114,6 @@ export function noteStaffOffset(note) {
   return +octave * 7 + NOTE_NAME_OFFSETS[name]
 }
 
-export function letterOffset(pitch, sharp=true) {
-  let offset = 0
-
-  while (pitch >= 12) {
-    offset += 7
-    pitch -= 12
-  }
-
-  while (LETTER_OFFSETS[pitch] == undefined) {
-    // go down sinc we assume we're sharp
-    if (sharp) { pitch -= 1 }
-    else { pitch += 1 }
-  }
-
-  return offset + LETTER_OFFSETS[pitch]
-}
-
 // octaveless note comparison
 export function notesSame(a, b) {
   return a.replace(/\d+$/, "") == b.replace(/\d+$/, "")

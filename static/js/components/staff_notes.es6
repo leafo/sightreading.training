@@ -2,7 +2,7 @@ import * as React from "react"
 import {classNames} from "lib"
 
 let {PropTypes: types} = React;
-import {parseNote, letterOffset, MIDDLE_C_PITCH} from "st/music"
+import {parseNote, noteStaffOffset, letterOffset, MIDDLE_C_PITCH} from "st/music"
 
 export default class StaffNotes extends React.Component {
   render() {
@@ -183,21 +183,20 @@ export default class StaffNotes extends React.Component {
     const props = this.props
 
     let key = props.keySignature
-    let pitch = parseNote(note)
     let fromLeft =  opts.offset || 0
     let letterDelta = 0
     let below = false
 
-    let offset = letterOffset(pitch, !key.isFlat())
+    let offset = noteStaffOffset(note)
 
     // above
-    if (pitch > props.upperLine) {
-      letterDelta = offset - letterOffset(props.upperLine);
+    if (offset > props.upperRow) {
+      letterDelta = offset - props.upperRow;
     }
 
     // below
-    if (pitch < props.lowerLine) {
-      letterDelta = letterOffset(props.lowerLine) - offset;
+    if (offset < props.lowerRow) {
+      letterDelta = props.lowerRow - offset;
       below = true;
     }
 
