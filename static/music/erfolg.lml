@@ -1,0 +1,63 @@
+ts4/4
+ks-1
+
+dt
+
+m0 {
+  r7
+  a5
+}
+
+m1 {
+  { a5.2 | a6.2 }
+
+  {
+    dt
+    g6 f6 e6.3
+    f6 g6 c6
+  }
+
+  { g5.2 | d6.2}
+
+  |
+
+  d4 f4 a4 { dt c5 a4 }
+  f4 d4 e-4 g4
+}
+
+m2 {
+  {dt c6 b5 }
+  a5.2
+  d6
+  { ht d6 | a6}
+  { dt g6 f6 e6.3 }
+
+  |
+
+  b4 d5
+  { dt b4 d5 b4 g4 }
+  d4 f4 a4
+  { dt c5 a4 }
+}
+
+m3 {
+  {
+    dt
+    r1 # tied from last
+    f6 g6 c7
+  }
+
+  {
+    c6.6 | {a6.5 a6 }
+  }
+
+  |
+
+  { dt f4 d4 f4 a4 }
+  a4 c5 e5 g5
+  { dt e5 c5 a4 c5 }
+}
+
+m4 {
+  { ht a6 | d6 }
+}

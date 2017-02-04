@@ -20,7 +20,7 @@ import {GStaff} from "st/components/staves"
 
 let {PropTypes: types} = React
 
-const DEFAULT_SONG = "waltz_coordination_exercise"
+const DEFAULT_SONG = "erfolg"
 
 class PositionField extends React.Component {
   static propTypes = {
