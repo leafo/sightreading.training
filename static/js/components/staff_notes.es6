@@ -2,7 +2,7 @@ import * as React from "react"
 import {classNames} from "lib"
 
 let {PropTypes: types} = React;
-import {parseNote, noteStaffOffset, letterOffset, MIDDLE_C_PITCH} from "st/music"
+import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
 export default class StaffNotes extends React.Component {
   render() {
@@ -114,8 +114,9 @@ export default class StaffNotes extends React.Component {
       return
     }
 
-    let row = letterOffset(pitch, !key.isFlat())
-    let fromTop = letterOffset(props.upperLine) - row;
+    let row = noteStaffOffset(note)
+
+    let fromTop = props.upperRow - row;
     let fromLeft = opts.offset || 0
 
     if (opts.rowOffsets) {
@@ -133,7 +134,7 @@ export default class StaffNotes extends React.Component {
       left: `${fromLeft}px`
     }
 
-    let outside = pitch > props.upperLine || pitch < props.lowerLine;
+    let outside = row > props.upperRow || row < props.lowerRow
     let accidentals = key.accidentalsForNote(note)
 
     let classes = classNames("whole_note", "note", {
@@ -171,8 +172,8 @@ export default class StaffNotes extends React.Component {
 
     if (outside) {
       return [
-        noteEl,
         this.renderLedgerLines(note, opts),
+        noteEl,
       ];
     } else {
       return noteEl;

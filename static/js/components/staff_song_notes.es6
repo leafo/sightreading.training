@@ -40,7 +40,7 @@ export default class StaffSongNotes extends StaffNotes {
       width: `${width}px`
     }
 
-    let outside = row > this.props.upperRow || row < this.props.lowerRow;
+    let outside = row > this.props.upperRow || row < this.props.lowerRow
 
     let noteEl = <div
       className={classNames("note_bar", {
