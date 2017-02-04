@@ -4,6 +4,7 @@ import Keyboard from "st/components/keyboard"
 import StaffSongNotes from "st/components/staff_song_notes"
 import Slider from "st/components/slider"
 import Hotkeys from "st/components/hotkeys"
+import Draggable from "st/components/draggable"
 
 import Lightbox from "st/components/lightbox"
 import MidiInstrumentPicker from "st/components/midi_instrument_picker"
@@ -268,7 +269,13 @@ export default class PlayAlongPage extends React.Component {
         children: <div className="time_bar"></div>
       }
 
-      staff = staffType.render.call(this, staffProps)
+      staff = <Draggable
+        onDrag={(dx, dy) => {
+          this.state.songTimer.scrub(-dx / this.state.pixelsPerBeat)
+        }}
+      >
+        {staffType.render.call(this, staffProps)}
+      </Draggable>
     }
 
     return <div className="play_along_page">
@@ -413,7 +420,7 @@ export default class PlayAlongPage extends React.Component {
 
       <div className="spacer"></div>
 
-      <button onClick={e => this.loadSong("mimiga")}>Load mimiga</button>
+      <button onClick={e => this.loadSong("note_positioning_test")}>Load mimiga</button>
 
       <button onClick={e => {
         trigger(this, "showLightbox", <Lightbox>
