@@ -20,6 +20,8 @@ import {GStaff} from "st/components/staves"
 
 let {PropTypes: types} = React
 
+const DEFAULT_SONG = "waltz_coordination_exercise"
+
 class PositionField extends React.Component {
   static propTypes = {
     min: types.number,
@@ -218,7 +220,7 @@ export default class PlayAlongPage extends React.Component {
 
   componentDidMount() {
     this.updateBeat(0)
-    this.loadSong("mimiga")
+    this.loadSong(DEFAULT_SONG)
   }
 
   componentWillUnmount() {
@@ -420,7 +422,7 @@ export default class PlayAlongPage extends React.Component {
 
       <div className="spacer"></div>
 
-      <button onClick={e => this.loadSong("note_positioning_test")}>Load mimiga</button>
+      <button onClick={e => this.loadSong(DEFAULT_SONG)}>Reload song</button>
 
       <button onClick={e => {
         trigger(this, "showLightbox", <Lightbox>
