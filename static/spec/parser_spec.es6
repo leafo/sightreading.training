@@ -100,7 +100,17 @@ describe("song parser", function() {
     ])
   })
 
-
+  it("parses time signature", function() {
+    expect(new SongParser().parse(`
+      ts4/4
+      ts3/4
+      ts6/8
+    `)).toEqual([
+      ["timeSignature", 4, 4],
+      ["timeSignature", 3, 4],
+      ["timeSignature", 6, 8],
+    ])
+  })
 })
 
 describe("load song", function() {
