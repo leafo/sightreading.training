@@ -2,6 +2,7 @@ import "jasmine_boot"
 
 import {
   notesLessThan, notesGreaterThan, compareNotes, noteName, parseNote,
+  noteStaffOffset,
   MajorScale, MinorScale, Chord, KeySignature
 } from "st/music"
 
@@ -466,3 +467,29 @@ describe("key signature", function() {
     ])
   })
 })
+
+
+describe("noteStaffOffset", function() {
+  it("gets offsets for notes", function() {
+    let notes = [
+      "A#3",
+      "B#3",
+      "C#4",
+
+      "Ab3",
+      "Bb3",
+      "Cb4",
+
+      "A3",
+      "B3",
+      "C4",
+    ]
+
+    expect(notes.map(noteStaffOffset)).toEqual([
+      26,27,28,
+      26,27,28,
+      26,27,28,
+    ])
+  })
+})
+

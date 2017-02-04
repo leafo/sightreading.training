@@ -109,11 +109,9 @@ export function parseNote(note) {
 }
 
 export function noteStaffOffset(note) {
-  let pitch = parseNote(note)
-  let name = note.substr(0, 1)
-  let octave = Math.floor((pitch + 1) / 12)
-
-  return octave * 7 + NOTE_NAME_OFFSETS[name]
+  let [_, name, octave] = note.match(/(\w)[#b]?(\d+)/)
+  if (!name) { throw "Invalid note" }
+  return +octave * 7 + NOTE_NAME_OFFSETS[name]
 }
 
 export function letterOffset(pitch, sharp=true) {
