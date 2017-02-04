@@ -104,5 +104,28 @@ export class MidiChannel {
       0
     ])
   }
+
+  getMetronome() {
+    return new Metronome(this.output)
+  }
+}
+
+export class Metronome extends MidiChannel {
+  constructor(output) {
+    super(output, 9)
+  }
+
+  hit(n, v=100) {
+    this.noteOn(n, v)
+    setTimeout(() => this.noteOff(n), 10)
+  }
+
+  tick() {
+    this.hit(75)
+  }
+
+  tock() {
+    this.hit(76)
+  }
 }
 

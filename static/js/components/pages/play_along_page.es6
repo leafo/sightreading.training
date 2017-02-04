@@ -246,6 +246,20 @@ export default class PlayAlongPage extends React.Component {
       this.refs.staff.setOffset(-beat * this.state.pixelsPerBeat + 100)
     }
 
+
+    if (this.state.metronome) {
+      if ("currentBeat" in this) {
+        if (Math.floor(this.currentBeat) < Math.floor(beat)) {
+          let m = Math.floor(beat)
+          if (m % 4 == 0) {
+            this.state.metronome.tick()
+          } else {
+            this.state.metronome.tock()
+          }
+        }
+      }
+    }
+
     this.currentBeat = beat
     this.refs.currentBeatField.setState({ value: beat })
   }
@@ -430,7 +444,9 @@ export default class PlayAlongPage extends React.Component {
           <MidiInstrumentPicker
             midi={this.props.midi}
             onPick={midiChannel => {
-              this.setState({ midiChannel })
+              this.setState({
+                metronome: midiChannel.getMetronome(),
+                midiChannel})
               trigger(this, "closeLightbox")
             }}
           />
