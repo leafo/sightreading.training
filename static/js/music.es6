@@ -33,6 +33,15 @@ export const LETTER_OFFSETS = {
   [11]: 6
 }
 
+export const NOTE_NAME_OFFSETS = {
+  "C": 0,
+  "D": 1,
+  "E": 2,
+  "F": 3,
+  "G": 4,
+  "A": 5,
+  "B": 6,
+}
 
 export function noteName(pitch, sharpen=true) {
   let octave = Math.floor(pitch / OCTAVE_SIZE)
@@ -97,6 +106,14 @@ export function parseNote(note) {
   }
 
   return n;
+}
+
+export function noteStaffOffset(note) {
+  let pitch = parseNote(note)
+  let name = note.substr(0, 1)
+  let octave = Math.floor((pitch + 1) / 12)
+
+  return octave * 7 + NOTE_NAME_OFFSETS[name]
 }
 
 export function letterOffset(pitch, sharp=true) {

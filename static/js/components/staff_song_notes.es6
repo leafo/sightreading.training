@@ -3,7 +3,7 @@ import * as React from "react"
 import {classNames} from "lib"
 
 import StaffNotes from "st/components/staff_notes"
-import {parseNote, letterOffset, MIDDLE_C_PITCH} from "st/music"
+import {parseNote, letterOffset, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
 export default class StaffSongNotes extends StaffNotes {
   classNames()  {
@@ -14,8 +14,8 @@ export default class StaffSongNotes extends StaffNotes {
 
   renderNote(songNote, opts) {
     const key = this.props.keySignature
-
-    let pitch = parseNote(songNote.note)
+    let note = songNote.note
+    let pitch = parseNote(note)
 
     if (!this.shouldRenderPitch(pitch)) {
       return
@@ -23,12 +23,12 @@ export default class StaffSongNotes extends StaffNotes {
 
     let pixelsPerBeat = this.props.pixelsPerBeat || this.constructor.defaultPixelsPerBeat
 
-    let row = letterOffset(pitch, !key.isFlat())
+    let row = noteStaffOffset(note)
     let fromTop = letterOffset(this.props.upperLine) - row;
     let fromLeft = songNote.start * pixelsPerBeat
     let width = songNote.getRenderStop() * pixelsPerBeat - fromLeft
 
-    let accidentals = key.accidentalsForNote(songNote.note)
+    let accidentals = key.accidentalsForNote(note)
 
     let style = {
       top: `${Math.floor(fromTop * 25/2)}%`,
@@ -51,7 +51,7 @@ export default class StaffSongNotes extends StaffNotes {
 
     if (outside) {
       return [
-        this.renderLedgerLines(songNote.note, {
+        this.renderLedgerLines(note, {
           offset: fromLeft,
           width: width,
         }),
