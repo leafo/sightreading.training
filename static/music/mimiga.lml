@@ -71,26 +71,50 @@ m7 {
 
 m8 {
   f5 a5 {dt g5} f5 {dt f5 }
+|
+  dt
+  f3 c4 f4 c4
+  f3 c4 f4 c4
 }
 
 m9 {
   c6 {dt a5 c6.3} c6
+|
+  dt
+  e3 c4 e4 c4
+  e3 c4 e4 c4
 }
 
 m10 {
   d6 c6 f6 c6
+|
+  dt
+  e-3 c4 e-4 c4
+  e-3 c4 e-4 c4
 }
 
 m11 {
   b5.3 b5
+|
+  dt
+  d3 b3 d4 b3
+  d3 b3 d4 b3
 }
 
 m12 {
   c6 b5 c+6 b5
+|
+  dt
+  c+3 b3 c+4 b3
+  c+3 b3 c+4 b3
 }
 
 m13 {
   f6.3 c6
+|
+  dt
+  f3 c4 f4 c4
+  f3 c4 f4 c4
 }
 
 m14 {
@@ -102,7 +126,132 @@ m15 {
   { dt g5 | f5.3 }
 |
   a3.4
-| 
-r4 dt f6 g6
+|
+r3 dt f6 g6
 }
+
+# second half
+
+m16 {
+  f6 | a6
+  { dt a6 g6.2 c7.2 c7.5 }
+|
+  dt dt
+  a4.3 a4
+  f5.3 f5
+  a5.3 a5
+  c6.3 c6
+}
+
+m17 {
+  {r3 dt b6 a6}
+|
+  dt dt
+  a-4.3 a-4
+  c5.3 c5
+  e5.3 e5
+  c6.3 c6
+}
+
+m18 {
+  {
+    dt
+    b6.3
+    d6.2
+    e6.2
+    f6.6
+  }
+|
+  dt dt
+  g-4.3 g-4
+  b4.3 b4
+  d5.3 d5
+  b5.3 b5
+}
+
+
+m19 {
+  { dt r5 b6 c7 b6 }
+|
+  dt dt
+  f4.3 f4
+  a-4.3 a-4
+  b4.3 b4
+  f5.3 f5
+}
+
+m20 {
+  { dt f7.3 e-7.3 c+7.2 }
+|
+  dt dt
+  b4.3 b4
+  f5.3 f5
+  a-5.3 a-5
+  f5.3 f5
+}
+
+m21 {
+  { ht c7 b6 }
+|
+  dt dt
+  e-5.3 e-5
+  g5.3 g5
+  b5.3 b5
+  g5.3 g5
+}
+
+m22 {
+  { dt c7.5 f6 g6 f6 }
+|
+  dt
+  c6 g5 f5 b5.2 a5 g5 f5
+}
+
+m23 {
+  { dt c7.5 f6 g6 f6 }
+|
+  dt
+  c6 g5 f5 b5.2 a5 g5 f5
+}
+
+m24 {
+  { dt f7.3 e-7.3 c7.2 }
+|
+  dt
+  e-6 g5 f5 c6.2 b5 g5 f5
+}
+
+m25 {
+  { dt b6 a6 f6 d6.2 f6 c7}
+|
+  c5 d5 c5 b4
+}
+
+m26 {
+  {dt g6.3 f6.3 a-6.2}
+|
+  dt
+  f4 c5 f5 c5 g5 f5 e-5 f5
+}
+
+m27 {
+  {dt g6.3 f6.3 g6.2}
+|
+  dt
+  g4 e-5 g5 e-5 b5 a5 f5 g5
+}
+
+m28 {
+  {dt r c6 b5 c6 a5 c6 b5 c6}
+|
+  f6.4
+}
+
+m29 {
+  e-6 c6 g6
+  {dt e-5 e5}
+
+}
+
+
 
