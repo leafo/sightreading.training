@@ -138,7 +138,7 @@ export class SongNote {
 
   getRenderStop() {
     // make it slightly shorter so it's easier to read
-    return this.start + this.duration - (this.duration / 10)
+    return this.start + this.duration
   }
 
   toString() {

@@ -57,8 +57,8 @@ export default class StaffSongNotes extends StaffNotes {
     let nn = noteName
 
     let fromTop = this.props.upperRow - row
-    let fromLeft = songNote.start * pixelsPerBeat
-    let width = songNote.getRenderStop() * pixelsPerBeat - fromLeft
+    let fromLeft = songNote.start * pixelsPerBeat + 2
+    let width = songNote.getRenderStop() * pixelsPerBeat - fromLeft - 4
 
     let accidentals = key.accidentalsForNote(note)
 
