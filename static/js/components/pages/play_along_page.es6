@@ -20,7 +20,7 @@ import {GStaff} from "st/components/staves"
 
 let {PropTypes: types} = React
 
-const DEFAULT_SONG = "mimiga"
+const DEFAULT_SONG = "erfolg"
 
 class PositionField extends React.Component {
   static propTypes = {
@@ -139,6 +139,8 @@ export default class PlayAlongPage extends React.Component {
       pixelsPerBeat: StaffSongNotes.defaultPixelsPerBeat,
       loopLeft: 0,
       loopRight: 0,
+      playNotes: true,
+      metronomeMultiplier: 1.0,
     }
 
     this.keyMap = {
@@ -207,12 +209,20 @@ export default class PlayAlongPage extends React.Component {
   }
 
   onNoteStart(note) {
+    if (!this.state.playNotes) {
+      return
+    }
+
     if (this.state.midiChannel) {
       this.state.midiChannel.noteOn(parseNote(note.note), 100)
     }
   }
 
   onNoteStop(note) {
+    if (!this.state.playNotes) {
+      return
+    }
+
     if (this.state.midiChannel) {
       this.state.midiChannel.noteOff(parseNote(note.note), 100)
     }
@@ -248,9 +258,10 @@ export default class PlayAlongPage extends React.Component {
 
 
     if (this.state.metronome) {
+      let mm = this.state.metronomeMultiplier
       if ("currentBeat" in this) {
-        if (Math.floor(this.currentBeat) < Math.floor(beat)) {
-          let m = Math.floor(beat)
+        if (Math.floor(this.currentBeat * mm) < Math.floor(beat * mm)) {
+          let m = Math.floor(beat * mm)
           if (m % 4 == 0) {
             this.state.metronome.tick()
           } else {
@@ -435,6 +446,20 @@ export default class PlayAlongPage extends React.Component {
       </span>
 
       <div className="spacer"></div>
+
+      <PositionField
+        min={1}
+        max={10}
+        value={this.state.metronomeMultiplier}
+        onUpdate={val => {
+          this.setState({ metronomeMultiplier: val })
+        }}
+      />
+
+      <input
+        checked={this.state.playNotes || false}
+        onChange={(e) => this.setState({playNotes: e.target.checked}) }
+        type="checkbox" />
 
       <button onClick={e => this.loadSong(DEFAULT_SONG)}>Reload song</button>
 
