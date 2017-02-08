@@ -100,6 +100,27 @@
     }
 
     .staff_song_notes {
+        .measure_line {
+            width: 2px;
+            position: absolute;
+            background: #aaa;
+            top: 0;
+            bottom: 0;
+
+            &:nth-child(2n) {
+                &:before {
+                    position: absolute;
+                    content: attr(data-label);
+                    font-size: 12px;
+                    font-weight: bold;
+                    bottom: 100%;
+                    padding-bottom: 4px;
+                    color: #888;
+                }
+            }
+        }
+
+
         .note_bar {
             position: absolute;
             top: 0;

@@ -12,6 +12,34 @@ export default class StaffSongNotes extends StaffNotes {
 
   static defaultPixelsPerBeat = 100
 
+  renderNotes() {
+    return [
+      this.renderMeasureLines(),
+      super.renderNotes()
+    ]
+  }
+
+  renderMeasureLines() {
+    let beatsPerMeasure = 4
+    let stop = this.props.notes.getStopInBeats()
+    let measures = Math.ceil(stop / beatsPerMeasure)
+
+    let lines = []
+
+    let pixelsPerBeat = this.props.pixelsPerBeat || this.constructor.defaultPixelsPerBeat
+
+    for (let m = 0; m <= measures; m++) {
+      let fromLeft = m * beatsPerMeasure * pixelsPerBeat
+
+      lines.push(<div
+        style={{ left: `${fromLeft - 2}px`}}
+        data-label={m + 1}
+        className="measure_line"></div>)
+    }
+
+    return lines
+  }
+
   renderNote(songNote, opts) {
     const key = this.props.keySignature
     let note = songNote.note
@@ -28,7 +56,7 @@ export default class StaffSongNotes extends StaffNotes {
     let ns = noteStaffOffset
     let nn = noteName
 
-    let fromTop = this.props.upperRow - row;
+    let fromTop = this.props.upperRow - row
     let fromLeft = songNote.start * pixelsPerBeat
     let width = songNote.getRenderStop() * pixelsPerBeat - fromLeft
 
@@ -60,9 +88,9 @@ export default class StaffSongNotes extends StaffNotes {
           width: width,
         }),
         noteEl,
-      ];
+      ]
     } else {
-      return noteEl;
+      return noteEl
     }
 
   }
