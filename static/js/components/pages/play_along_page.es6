@@ -174,7 +174,7 @@ export default class PlayAlongPage extends React.Component {
     this.setState({loading: true})
     var request = new XMLHttpRequest()
 
-    request.open("GET", `/static/music/${name}.lml`)
+    request.open("GET", `/static/music/${name}.lml?${+new Date()}`)
     request.send()
     request.onload = (e) => {
       let songText = request.responseText
