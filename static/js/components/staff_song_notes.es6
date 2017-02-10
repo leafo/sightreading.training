@@ -21,6 +21,11 @@ export default class StaffSongNotes extends StaffNotes {
 
   renderMeasureLines() {
     let beatsPerMeasure = 4
+
+    if (this.props.notes.metadata) {
+      beatsPerMeasure = this.props.notes.metadata.beatsPerMeasure || beatsPerMeasure
+    }
+
     let stop = this.props.notes.getStopInBeats()
     let measures = Math.ceil(stop / beatsPerMeasure)
 

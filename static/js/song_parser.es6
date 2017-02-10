@@ -46,6 +46,7 @@ export default class SongParser {
 
     song.metadata = {
       keySignature: state.keySignature.count,
+      beatsPerMeasure: state.beatsPerMeasure,
     }
 
     return song
