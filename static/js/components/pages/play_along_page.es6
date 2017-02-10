@@ -259,10 +259,12 @@ export default class PlayAlongPage extends React.Component {
 
     if (this.state.metronome) {
       let mm = this.state.metronomeMultiplier
+      let beatsMeasure = this.state.song.metadata.beatsPerMeasure || 4
+
       if ("currentBeat" in this) {
         if (Math.floor(this.currentBeat * mm) < Math.floor(beat * mm)) {
           let m = Math.floor(beat * mm)
-          if (m % 4 == 0) {
+          if (m % beatsMeasure == 0) {
             this.state.metronome.tick()
           } else {
             this.state.metronome.tock()
