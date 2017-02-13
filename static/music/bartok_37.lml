@@ -29,70 +29,64 @@ m5 {
   g4.3
 }
 
-m5 {
+m6 {
   b5 {dt a5 b5}
 |
   r1 c5
 }
 
-m6 {
+m7 {
   g5 f5
 |
   b4 {dt a4 g4}
 }
 
-m7 {
+m8 {
   a5 c5
 |
   f4 a4
 }
 
-m8 {
+m9 {
   b5 {dt a5 b5}
 |
   g4.3
 }
 
-m9 {
+m10 {
   g5.2
 |
   r1 a4 b4
 }
 
-m10 {
+m11 {
   r1 c6
 |
   g4 c5.2
 }
 
-m11 {
+m12 {
   c6 c6
 |
   r1 c5.2
 }
 
-m12 {
+m13 {
   c6 {dt b5 g5}
 |
   r1 c5.2
 }
 
-m13 {
+m14 {
   { dt a5 g5 f5 g5 }
 |
   r1 { dt b4 f4 }
 }
 
-m14 {
+m15 {
   a5 f5
 |
   { dt c5 b4 a4 b4 }
-}
-
-m15 {
-  r1 c6.2
-|
-  c5 c5
 }
 
 m16 {
@@ -108,77 +102,83 @@ m17 {
 }
 
 m18 {
+  r1 c6
+|
+  c5 c5
+}
+
+m19 {
   b5 { dt a5 b5 }
 |
   r1 c5
 }
 
-m19 {
+m20 {
   g5.3
 |
   b4 { dt a4 b4}
 }
 
-m20 {
+m21 {
   r1 {dt a5 b5}
 |
   {dt g4 r1} c5.2
 }
 
-m21 {
+m22 {
   {dt c6 a5 b5 g5}
 |
   r1 f4
 }
 
-m22 {
+m23 {
   {dt a5 g5 a5 f5}
 |
-  b4.3
+  {dt b4.5}
 }
 
-m23 {
-  g5.3
+m24 {
+  {dt g5.5 }
 |
   {dt r1 a4 b4 g4}
 }
 
-m24 {
+m25 {
   {dt r1 f5 a5 b5}
 |
   a4.3
 }
 
-m25 {
+m26 {
   {dt c6 b5 a5 b5}
 |
   r1 { dt f4 g4}
 }
 
-m26 {
+m27 {
   {dt a5 g5 f5 g5}
 |
   a4 b4
 }
 
-m27 {
+m28 {
   r1 {dt a5 b5}
 |
   c5.3
 }
 
-m28 {
+m29 {
   a5 g5
 |
   r1 {dt f4 g4}
 }
 
-m29 {
+m30 {
   f5 {dt g5 f5}
 |
   a4 b4
 }
 
-m30 {
+m31 {
   c5.2
 }
