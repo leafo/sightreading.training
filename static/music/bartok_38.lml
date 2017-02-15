@@ -1,0 +1,26 @@
+ks2
+ts3/4
+
+m0 {
+{dt d5 e5} f5 f5
+|
+{dt f4 e4} d4 d4
+}
+
+m1 {
+f5 f5 {dt f5 e5 }
+|
+d4 d4 {dt d4 e4}
+}
+
+m2 {
+d5 {dt e5 f5} g5
+|
+f4 {dt g4 f4} e4
+}
+
+m3 {
+{dt f5 g5} a5.2
+}
+
+
