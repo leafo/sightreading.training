@@ -58,3 +58,26 @@ package.loaded.migrations =
   [1472141760]: =>
     add_column "presets", "name", varchar
 
+
+  [1487280271]: =>
+    create_table "songs", {
+      {"id", serial}
+      {"user_id", foreign_key}
+      {"title", text}
+
+      {"artist", text null: true}
+      {"album", text null: true}
+      {"source", text null: true}
+
+      {"song", text}
+      {"players", integer default: 0}
+
+      {"created_at", time}
+      {"updated_at", time}
+
+      "PRIMARY KEY (id)"
+    }
+
+
+
+
