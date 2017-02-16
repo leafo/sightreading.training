@@ -523,6 +523,8 @@ export default class PlayAlongPage extends React.Component {
       "bartok_36",
       "bartok_37",
       "bartok_38",
+      "bartok_39",
+      "bartok_40",
       "waltz_coordination_exercise",
       "erfolg",
       "mimiga",

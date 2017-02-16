@@ -1,0 +1,70 @@
+
+ks-1
+
+
+m0 {
+  a5
+  a5
+  a5
+  a5
+}
+
+m1 {
+  {dt a5 g5 f5 g5} f5 {dt f5 g5}
+  |
+  a4 a4 a4 a4
+}
+
+m2 {
+  {dt a5 b5} a5 {dt a5 g5} a5
+  |
+  {dt a4 g4 f4 g4} f4 {dt f4 g4}
+}
+
+m3 {
+  {dt a5 g5 a5 b5} c6 c6
+  |
+  {dt a4 b4} a4 {dt a4 g4 a4 b4}
+}
+
+m4 {
+ c6 c6 c6 c6
+ |
+ c5 c5 r1 c5
+}
+
+m5 {
+  r1 c6 c6 {dt c6 b5}
+  |
+  c5 c5 c5 c5
+}
+
+m6 {
+  {dt a5 b5 a5 g5} a5 {dt a5 b5}
+  |
+  c5 {dt c5 b4} {dt a4 b4 a4 g4}
+}
+
+m7 {
+  {dt a5 g5} f5 {dt f5 g5 a5 b5}
+  |
+  a4 {dt a4 b4 a4 g4} f4
+}
+
+m8 {
+  {dt a5 g5} f5 {dt f5 g5 a5 g5}
+  |
+  {dt f4 g4 a4 b4 a4 g4} f4
+}
+
+m9 {
+  f5 f5 f5 f5 
+  |
+  {dt f4 g4 a4 g4} f4 f4
+}
+
+m10 {
+  r1 f5 r1 f5
+  |
+  f4 f4 f4 f4
+}
