@@ -22,7 +22,7 @@ f4 {dt g4 f4} e4
 m3 {
 {dt f5 g5} a5.2
 |
-{dt d4 e4} f4
+{dt d4 e4} f4.2
 }
 
 m4 {
@@ -32,9 +32,22 @@ m4 {
 }
 
 m5 {
-  
+{dt d5 e5} f5 {dt e5 f5}
+|
+{dt f4 e4} d4 {dt c4 d4}
 }
 
+m6 {
+{dt g5 a5 g5 f5} e5
+|
+e4 {dt e4 d4} c4
+}
+
+m7 {
+d5.3
+|
+d4.3
+}
 
 
 
