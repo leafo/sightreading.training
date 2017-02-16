@@ -21,6 +21,20 @@ f4 {dt g4 f4} e4
 
 m3 {
 {dt f5 g5} a5.2
+|
+{dt d4 e4} f4
 }
+
+m4 {
+{dt g5 f5} e5 e5
+|
+{dt e4 f4} g4 g4
+}
+
+m5 {
+  
+}
+
+
 
 
