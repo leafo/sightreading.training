@@ -463,7 +463,9 @@ export default class PlayAlongPage extends React.Component {
         onChange={(e) => this.setState({playNotes: e.target.checked}) }
         type="checkbox" />
 
-      <button onClick={e => this.loadSong(DEFAULT_SONG)}>Reload song</button>
+      <button onClick={e =>
+        trigger(this, "showLightbox", this.renderSongPicker())
+      }>Pick Song</button>
 
       <button onClick={e => {
         trigger(this, "showLightbox", <Lightbox>
@@ -511,5 +513,37 @@ export default class PlayAlongPage extends React.Component {
   midiOutputs() {
     if (!this.props.midi) return []
     return [...this.props.midi.outputs.values()]
+  }
+
+  renderSongPicker() {
+    let songs = [
+      "bartok_1",
+      "bartok_2",
+      "bartok_35",
+      "bartok_36",
+      "bartok_37",
+      "bartok_38",
+      "waltz_coordination_exercise",
+      "erfolg",
+      "mimiga",
+
+      // bossa_nova_test
+      // mary_had_a_little_lamb
+      // note_positioning_test
+    ]
+
+    return <Lightbox>
+      <p>Select a song to load</p>
+      <ul>
+      {songs.map(song =>
+          <li>
+            <button onClick={e => {
+              this.loadSong(song)
+              trigger(this, "closeLightbox")
+            }}>{song}</button>
+          </li>
+      )}
+      </ul>
+    </Lightbox>
   }
 }
