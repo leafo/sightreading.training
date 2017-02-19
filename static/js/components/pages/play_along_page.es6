@@ -12,7 +12,7 @@ import MidiInstrumentPicker from "st/components/midi_instrument_picker"
 import SongParser from "st/song_parser"
 import SongTimer from "st/song_timer"
 import {KeySignature, noteName, parseNote} from "st/music"
-import {NOTE_EVENTS} from "st/midi"
+import {MidiInput} from "st/midi"
 
 import {trigger} from "st/events"
 import {STAVES} from "st/data"
@@ -142,6 +142,12 @@ export default class PlayAlongPage extends React.Component {
       playNotes: true,
       metronomeMultiplier: 1.0,
     }
+
+    this.midiInput = new MidiInput({
+      sustainPedalEnabled: true,
+      noteOn: (note) => this.pressNote(note),
+      noteOff: (note) => this.releaseNote(note)
+    })
 
     this.keyMap = {
       " ": e => this.togglePlay(),
@@ -367,25 +373,7 @@ export default class PlayAlongPage extends React.Component {
   }
 
   onMidiMessage(message) {
-    let [raw, pitch, velocity] = message.data;
-
-    let cmd = raw >> 4,
-      channel = raw & 0xf,
-      type = raw & 0xf0;
-
-    let n = noteName(pitch)
-
-    if (NOTE_EVENTS[type] == "noteOn") {
-      if (velocity == 0) {
-        this.releaseNote(n);
-      } else if (!document.hidden) { // ignore when the browser tab isn't active
-        this.pressNote(n);
-      }
-    }
-
-    if (NOTE_EVENTS[type] == "noteOff") {
-      this.releaseNote(n);
-    }
+    this.midiInput.onMidiMessage(message)
   }
 
   renderKeyboard() {

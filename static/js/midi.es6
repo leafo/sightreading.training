@@ -32,6 +32,97 @@ export function parseMidiMessage(message) {
   }
 }
 
+// takes input, transforms it into note events
+export class MidiInput {
+  constructor(opts={}) {
+    this.sustainPedalEnabled = opts.sustainPedalEnabled
+    this.heldNotes = {}
+    this.sustainPedalOn = false
+    this.opts = opts
+  }
+
+  noteOn(name, velocity) {
+    if (this.heldNotes[name]) {
+      return
+    }
+
+    this.heldNotes[name] = { held: true }
+
+    if (this.opts.noteOn) {
+      this.opts.noteOn(name, velocity)
+    }
+  }
+
+  noteOff(name) {
+    if (!this.heldNotes[name]) {
+      return
+    }
+
+    if (this.sustainPedalOn) {
+      this.heldNotes[name].held = false
+      this.heldNotes[name].sustain = true
+    } else {
+      delete this.heldNotes[name]
+
+      if (this.opts.noteOff) {
+        this.opts.noteOff(name)
+      }
+    }
+  }
+
+  pedalOn() {
+    if (!this.sustainPedalEnabled) { return }
+    this.sustainPedalOn = true
+  }
+
+  pedalOff() {
+    if (!this.sustainPedalEnabled || !this.sustainPedalOn) { return }
+    this.sustainPedalOn = false
+
+    // see who to turn off
+    let toTurnOff = Object.keys(this.heldNotes).filter(name => this.heldNotes[name].sustain && !this.heldNotes[name].held)
+    for (let name of toTurnOff) {
+      delete this.heldNotes[name]
+
+      if (this.opts.noteOff) {
+        this.opts.noteOff(name)
+      }
+    }
+  }
+
+  onMidiMessage(message) {
+    let [raw, pitch, velocity] = message.data;
+
+    let cmd = raw >> 4,
+      channel = raw & 0xf,
+      type = raw & 0xf0;
+
+    let n = noteName(pitch)
+
+    if (NOTE_EVENTS[type] == "noteOn") {
+      if (velocity == 0) {
+        this.noteOff(n);
+      } else if (!document.hidden) { // ignore when the browser tab isn't active
+        this.noteOn(n, velocity);
+      }
+    }
+
+    if (NOTE_EVENTS[type] == "noteOff") {
+      this.noteOff(n);
+    }
+
+    if (NOTE_EVENTS[type] == "dataEntry") {
+      if (pitch == 64) {
+        if (velocity > 0) {
+          this.pedalOn()
+        } else {
+          this.pedalOff()
+        }
+      }
+    }
+  }
+}
+
 
 export class MidiChannel {
   constructor(output, channel) {
