@@ -20,7 +20,7 @@ import {GStaff} from "st/components/staves"
 
 let {PropTypes: types} = React
 
-const DEFAULT_SONG = "erfolg"
+const DEFAULT_SONG = "bartok_36"
 
 class PositionField extends React.Component {
   static propTypes = {
@@ -192,6 +192,7 @@ export default class PlayAlongPage extends React.Component {
         song,
         loopLeft: 0,
         loopRight: song.getStopInBeats(),
+        currentSongName: name,
 
         songTimer: new SongTimer({
           onUpdate: this.updateBeat.bind(this),
@@ -539,11 +540,12 @@ export default class PlayAlongPage extends React.Component {
       <p>Select a song to load</p>
       <ul>
       {songs.map(song =>
-          <li>
+          <li key={song}>
             <button onClick={e => {
               this.loadSong(song)
               trigger(this, "closeLightbox")
             }}>{song}</button>
+            {this.state.currentSongName == song ? " Loaded" : ""}
           </li>
       )}
       </ul>
