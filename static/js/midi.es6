@@ -43,7 +43,15 @@ export class MidiInput {
 
   noteOn(name, velocity) {
     if (this.heldNotes[name]) {
-      return
+      if (this.heldNotes[name].sustain) {
+        delete this.heldNotes[name]
+
+        if (this.opts.noteOff) {
+          this.opts.noteOff(name)
+        }
+      } else {
+        return
+      }
     }
 
     this.heldNotes[name] = { held: true }
