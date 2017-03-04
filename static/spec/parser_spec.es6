@@ -111,6 +111,18 @@ describe("song parser", function() {
       ["timeSignature", 6, 8],
     ])
   })
+
+
+  it("parses macro", function() {
+    expect(new SongParser().parse(`
+      $hello $w $cm7
+    `)).toEqual([
+      ["macro", "hello"],
+      ["macro", "w"],
+      ["macro", "cm7"],
+    ])
+
+  })
 })
 
 describe("load song", function() {

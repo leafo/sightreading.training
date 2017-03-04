@@ -7,7 +7,7 @@ commands
   }
 
 command
-  = note / rest / keySignature / timeSignature / halfTime / doubleTime / measure / block / restoreStartPosition / setTrack
+  = note / rest / keySignature / timeSignature / halfTime / doubleTime / measure / block / restoreStartPosition / setTrack / macro
 
 keySignature
   = "ks" mod:$( "-"? [0-9]+) {
@@ -22,6 +22,11 @@ timeSignature
 setTrack
   = "t" track:$[0-9]+ {
     return ["setTrack", +track]
+  }
+
+macro
+  = "$" name:[a-zA-Z0-9_]+ {
+    return ["macro", name.join("")]
   }
 
 restoreStartPosition
@@ -87,7 +92,6 @@ block
   = "{" commands:commands "}" {
     return ["block", commands]
   }
-
 
 comment
   = "#" [^\n]+
