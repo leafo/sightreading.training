@@ -224,7 +224,8 @@ describe("load song", function() {
     `)
 
     expect(song.metadata).toEqual({
-      keySignature: -5
+      keySignature: -5,
+      beatsPerMeasure: 4,
     })
   })
 
