@@ -154,7 +154,11 @@ export default class SongParser {
           break
         }
         case "macro": {
-          console.log(command)
+          let [, chordName] = command
+          if (!song.autoChords) {
+            song.autoChords = []
+          }
+          song.autoChords.push([state.position, chordName])
           break
         }
       }
