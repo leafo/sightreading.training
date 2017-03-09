@@ -7,64 +7,80 @@ m0 {
 
 m1 {
   { dt g5 g5 {dt g5 g5.2 e5}}
+  $g
 }
 
 m2 {
   {dt g5 g5 g5.2}
+  $g
 }
 
 m3 {
   {dt g5 g5 a5 { dt b5 b5 }}
+  $g
 }
 
 m4 {
   {dt d5 d5 e5 g5}
+  $d7
 }
 
 m5 {
   {dt g5 g5 g5 {dt e5 e5}}
+  $g
 }
 
 m6 {
   {dt g5 g5 g5 e5}
+  $g
 }
 
 m7 {
   {dt g5 {dt g5 g5} a5 b5}
+  $g
 }
 
 m8 {
   {dt {dt d5 d5.3}} e5
+  $d7
 }
 
 m9 {
   { dt dt b5 b5.2 b5 } b5
+  $g
 }
 
 m10 {
   { dt a5 g5 {dt e5 g5.3}}
+  $c
 }
 
 m11 {
   {dt a5 a5 {dt a5.3 b5}}
+  $d7
 }
 
 m12 {
   { dt d5  d5 {dt e5 g5.3}}
+  $g
 }
 
 m13 {
   { dt dt b5 b5.2 b5 } d6
+  $g
 }
 
 m14 {
   { dt b5 a5 {dt g5 e5.3}}
+  $c
 }
 
 m15 {
   {dt a5 a5 {dt a5.3 b5}}
+  $d7
 }
 
 m16 {
   {dt d5 d5 {dt e5 g5.3}}
+  $g
 }

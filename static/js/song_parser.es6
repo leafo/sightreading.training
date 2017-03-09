@@ -153,6 +153,10 @@ export default class SongParser {
           state.beatsPerMeasure = state.beatsPerNote * perBeat
           break
         }
+        case "macro": {
+          console.log(command)
+          break
+        }
       }
     }
 
