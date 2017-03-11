@@ -40,6 +40,7 @@ export default class StaffSongNotes extends StaffNotes {
         style={{ left: `${fromLeft - 2}px`}}
         data-label={m + 1}
         className="measure_line"></div>)
+
     }
 
     return lines
@@ -57,9 +58,6 @@ export default class StaffSongNotes extends StaffNotes {
     let pixelsPerBeat = this.props.pixelsPerBeat || this.constructor.defaultPixelsPerBeat
 
     let row = noteStaffOffset(note)
-
-    let ns = noteStaffOffset
-    let nn = noteName
 
     let fromTop = this.props.upperRow - row
     let fromLeft = songNote.start * pixelsPerBeat + 2
