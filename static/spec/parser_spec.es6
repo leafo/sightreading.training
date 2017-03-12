@@ -217,7 +217,7 @@ describe("load song", function() {
     ])
   })
 
-  it("parses keysignature into metadta", function() {
+  it("parses keysignature into metadata", function() {
     let song = SongParser.load(`
       ks-5
       c5
@@ -360,5 +360,18 @@ describe("load song", function() {
     ])
   })
 
+  it("loads song with autochords", function() {
+    let song = SongParser.load(`
+      ts6/8
+      m0 $g
+      m1 $bbm
+    `)
+
+    expect(song.metadata.beatsPerMeasure).toEqual(3)
+    expect(song.autoChords).toEqual([
+      [0, ["G", "M"]],
+      [3, ["Bb", "m"]],
+    ])
+  })
 })
 

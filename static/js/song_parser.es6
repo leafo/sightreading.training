@@ -3,6 +3,7 @@ import peg from "st/song_parser_peg"
 import {parseNote, noteName, KeySignature} from "st/music"
 
 import {SongNoteList, SongNote} from "st/song_note_list"
+import AutoChords from "st/auto_chords"
 
 // tokens are separated by whitepace
 // a note is a5.1.2
@@ -154,11 +155,16 @@ export default class SongParser {
           break
         }
         case "macro": {
-          let [, chordName] = command
-          if (!song.autoChords) {
-            song.autoChords = []
+          let [, macroName] = command
+          let chord = AutoChords.coerceChord(macroName)
+
+          if (chord) {
+            if (!song.autoChords) {
+              song.autoChords = []
+            }
+            song.autoChords.push([state.position, chord])
           }
-          song.autoChords.push([state.position, chordName])
+
           break
         }
       }
