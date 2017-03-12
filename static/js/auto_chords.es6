@@ -68,7 +68,7 @@ export default class AutoChords {
 
   addChords() {
     let blocks = this.findChordBlocks()
-    let chordNotes = [] // the final set of notes added
+    let notesToAdd = [] // the final set of notes added
 
     for (let block of blocks) {
       let [root, shape] = block.chord
@@ -84,15 +84,27 @@ export default class AutoChords {
 
       // find the closest root beneath the notes in range
       let chordRootPitch = Math.floor(((minPitch - 1) - rootPitch) / 12) * 12 + rootPitch
+      let chordRoot = noteName(chordRootPitch)
 
-      chordNotes.push(new SongNote(
-        noteName(chordRootPitch), block.start, block.stop - block.start
-      ))
+      let chordNotes = Chord.notes(chordRoot, shape)
+
+      for (let note of chordNotes) {
+        notesToAdd.push(new SongNote(
+          note, block.start, block.stop - block.start
+        ))
+      }
+
+      // notesToAdd.push(new SongNote(
+      //   chordRoot, block.start, block.stop - block.start
+      // ))
     }
 
     // just mutate the song for now
-    for (let note of chordNotes) {
+    for (let note of notesToAdd) {
       this.song.push(note)
     }
   }
+
+
+
 }
