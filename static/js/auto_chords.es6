@@ -1,5 +1,6 @@
 
-import {Chord} from "st/music"
+import {Chord, parseNote, noteName, MIDDLE_C_PITCH} from "st/music"
+import {SongNote} from "st/song_note_list"
 
 export default class AutoChords {
   // attempt to parse chord from macro name
@@ -66,10 +67,32 @@ export default class AutoChords {
   }
 
   addChords() {
-    this.findChordBlocks()
-  }
+    let blocks = this.findChordBlocks()
+    let chordNotes = [] // the final set of notes added
 
-  notesInRange(left, right) {
-    return this.map(note => note.inRange(left, right))
+    for (let block of blocks) {
+      let [root, shape] = block.chord
+      let notes = this.song.notesInRange(block.start, block.stop)
+
+      let pitches = [
+        MIDDLE_C_PITCH,
+        ...notes.map(n => parseNote(n.note))
+      ]
+
+      let minPitch = Math.min(...pitches)
+      let rootPitch = parseNote(root + "0")
+
+      // find the closest root beneath the notes in range
+      let chordRootPitch = Math.floor(((minPitch - 1) - rootPitch) / 12) * 12 + rootPitch
+
+      chordNotes.push(new SongNote(
+        noteName(chordRootPitch), block.start, block.stop - block.start
+      ))
+    }
+
+    // just mutate the song for now
+    for (let note of chordNotes) {
+      this.song.push(note)
+    }
   }
 }

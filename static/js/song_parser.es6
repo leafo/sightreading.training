@@ -50,6 +50,10 @@ export default class SongParser {
       beatsPerMeasure: state.beatsPerMeasure,
     }
 
+    if (song.autoChords) {
+      new AutoChords(song).addChords()
+    }
+
     return song
   }
 
