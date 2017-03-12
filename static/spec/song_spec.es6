@@ -35,6 +35,23 @@ describe("song", function() {
 })
 
 describe("autochords", function() {
+  describe("coerceChord", function() {
+    [
+      [undefined, () => AutoChords.coerceChord("hello world")],
+      [["G", "M"], () => AutoChords.coerceChord("g")],
+      [["A", "M"], () => AutoChords.coerceChord("aM")],
+      [["B", "m"], () => AutoChords.coerceChord("bm")],
+      [["Fb", "M"], () => AutoChords.coerceChord("fbM")],
+      [["G#", "m"], () => AutoChords.coerceChord("g#m")],
+      [["Cb", "dimM7"], () => AutoChords.coerceChord("cbdimM7")],
+    ].map(function([expected, fn]) {
+      let name = (expected && expected.join) ? expected.join("") : "non-chord"
+      it(`coerces chord ${name}`, function() {
+        expect(fn()).toEqual(expected)
+      })
+    })
+  })
+
   it("finds chord blocks for basic song", function() {
     let song = SongNoteList.newSong([
       ["C5", 0, 1],

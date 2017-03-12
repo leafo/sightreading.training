@@ -1,5 +1,26 @@
 
+import {Chord} from "st/music"
+
 export default class AutoChords {
+  // attempt to parse chord from macro name
+  static coerceChord(macro) {
+    let m = macro.match(/([a-gA-G][#b]?)(.*)/)
+    if (!m) { return }
+    let [, root, shape] =  m
+
+    root = root.substr(0,1).toUpperCase() + root.substr(1)
+
+    if (shape == "") {
+      shape = "M"
+    }
+
+    if (!Chord.SHAPES[shape]) {
+      return
+    }
+
+    return [root, shape]
+  }
+
   constructor(song) {
     this.song = song
   }
@@ -49,7 +70,6 @@ export default class AutoChords {
   }
 
   notesInRange(left, right) {
-    let notes = []
     return this.map(note => note.inRange(left, right))
   }
 }
