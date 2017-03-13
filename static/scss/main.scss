@@ -166,7 +166,7 @@ form, .form {
     }
 
     .logo {
-        opacity: 0.5;
+        opacity: 0.7;
         margin-right: 10px;
     }
 
@@ -193,6 +193,13 @@ form, .form {
 
         &:last-child {
             margin-right: 0;
+        }
+    }
+
+    .logo_link {
+        padding: 0;
+        > img {
+            display: block;
         }
     }
 

@@ -182,11 +182,9 @@ class Layout extends React.Component {
       </div>
     }
     return <div className="header">
-      <img className="logo" src="/static/img/logo.svg" height="40" alt="" />
-
-      <h1>
-        <Link to="/">Sight reading trainer</Link>
-      </h1>
+      <Link to="/" className="logo_link">
+        <img className="logo" src="/static/img/logo.svg" height="35" alt="" />
+      </Link>
 
       {userLinks}
       {userPanel}
