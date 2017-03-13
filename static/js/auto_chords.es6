@@ -72,15 +72,8 @@ export class AutoChords {
 
     for (let block of blocks) {
       let [root, shape] = block.chord
-      let notes = this.song.notesInRange(block.start, block.stop)
 
-      let pitches = [
-        MIDDLE_C_PITCH,
-        ...notes.map(n => parseNote(n.note))
-      ]
-
-      let minPitch = Math.min(...pitches)
-      let toAdd = this.notesForChord(root, shape, block.start, block.stop, minPitch)
+      let toAdd = this.notesForChord(root, shape, block.start, block.stop)
 
       if (toAdd) {
         notesToAdd.push(...toAdd)
@@ -93,32 +86,46 @@ export class AutoChords {
     }
   }
 
+  minPitchInRange(start, stop) {
+    let notes = this.song.notesInRange(start, stop)
+
+    let pitches = [
+      MIDDLE_C_PITCH,
+      ...notes.map(n => parseNote(n.note))
+    ]
+
+    return Math.min(...pitches)
+  }
+
+  // find the closest root beneath the notes in range
+  rootBelow(name, maxPitch) {
+    let rootPitch = parseNote(name + "0")
+    let chordRootPitch = Math.floor(((maxPitch - 1) - rootPitch) / 12) * 12 + rootPitch
+    return noteName(chordRootPitch)
+  }
+
   notesForChord(root, shape, blockStart, blockStop, minPitch) {
     console.warn("Autochords doesn't generate any notes")
     return []
   }
 }
 
+export class RootAutoChords extends AutoChords {
+  notesForChord(root, shape, blockStart, blockStop, minPitch) {
+    return []
+  }
+}
 
 export class TriadAutoChords extends AutoChords {
-  notesForChord(root, shape, blockStart, blockStop, minPitch) {
+  notesForChord(root, shape, blockStart, blockStop) {
     let notesToAdd = []
 
-    let rootPitch = parseNote(root + "0")
+    let maxPitch = this.minPitchInRange(blockStart, blockStop)
+    let chordRoot = this.rootBelow(root, maxPitch)
 
-    // find the closest root beneath the notes in range
-    let chordRootPitch = Math.floor(((minPitch - 1) - rootPitch) / 12) * 12 + rootPitch
-    let chordRoot = noteName(chordRootPitch)
-
-    let chordNotes = Chord.notes(chordRoot, shape)
-
-    for (let note of chordNotes) {
-      notesToAdd.push(new SongNote(
-        note, blockStart, blockStop - blockStart
-      ))
-    }
-
-    return notesToAdd
+    return Chord.notes(chordRoot, shape).map((note) =>
+      new SongNote(note, blockStart, blockStop - blockStart)
+    )
   }
 
 }
