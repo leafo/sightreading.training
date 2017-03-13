@@ -10,7 +10,7 @@ class BaseGuidePage extends React.Component {
     return <div className="guide_page">
       <div className="page_navigation">
         <section>
-          <div className="nav_header">Guides</div>
+          <div className="nav_header">Overview</div>
           <ul>
             <li>{link("/about", "About")}</li>
             <li>{link("/guide/generators", "Generators")}</li>
@@ -34,7 +34,7 @@ export class AboutPage extends BaseGuidePage {
 
   renderContents() {
     return <div className="page_container">
-      <h2>About Sight Reading Trainer</h2>
+      <h2>About Sightreading.training</h2>
 
       <p>This site is a way for you to practice <a
       href="https://en.wikipedia.org/wiki/Sight-reading">sight reading</a> by
