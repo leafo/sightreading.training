@@ -22,6 +22,8 @@ let {PropTypes: types} = React
 
 const DEFAULT_SONG = "old_dan_tucker"
 
+import {AutoChords} from "st/auto_chords"
+
 class PositionField extends React.Component {
   static propTypes = {
     min: types.number,
@@ -33,7 +35,7 @@ class PositionField extends React.Component {
     super(props)
     this.state = {
       value: null,
-      editValue: null
+      editValue: null,
     }
   }
 
@@ -141,6 +143,7 @@ export default class PlayAlongPage extends React.Component {
       loopRight: 0,
       playNotes: true,
       metronomeMultiplier: 1.0,
+      autoChordType: 0,
     }
 
     this.midiInput = new MidiInput({
@@ -184,7 +187,13 @@ export default class PlayAlongPage extends React.Component {
     request.send()
     request.onload = (e) => {
       let songText = request.responseText
-      let song = SongParser.load(songText)
+      console.log(this.state)
+
+      let autoChordIdx = this.state.autoChordType % AutoChords.allGenerators.length
+
+      let song = SongParser.load(songText, {
+        autoChords: AutoChords.allGenerators[autoChordIdx],
+      })
 
       let currentBeat = this.currentBeat
 
@@ -451,6 +460,12 @@ export default class PlayAlongPage extends React.Component {
         checked={this.state.playNotes || false}
         onChange={(e) => this.setState({playNotes: e.target.checked}) }
         type="checkbox" />
+
+      <button onClick={e =>
+        this.setState({
+          autoChordType: this.state.autoChordType + 1
+        }, () => this.loadSong(this.state.currentSongName))
+      }>Debug</button>
 
       <button onClick={e =>
         trigger(this, "showLightbox", this.renderSongPicker())
