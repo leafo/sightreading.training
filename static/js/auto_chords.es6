@@ -4,7 +4,7 @@ import {SongNote} from "st/song_note_list"
 
 export class AutoChords {
   static defaultChords(song) {
-    return new RootAutoChords(song)
+    return new BossaNovaAutoChords(song)
   }
 
   // attempt to parse chord from macro name
@@ -154,5 +154,45 @@ export class TriadAutoChords extends AutoChords {
       new SongNote(note, blockStart, blockStop - blockStart)
     )
   }
-
 }
+
+
+export class BossaNovaAutoChords extends AutoChords {
+  notesForChord(root, shape, blockStart, blockStop) {
+    let maxPitch = this.minPitchInRange(blockStart, blockStop)
+    let chordRoot = this.rootBelow(root, maxPitch)
+    let chordNotes = Chord.notes(chordRoot, shape)
+
+    let out = []
+    this.inDivisions(blockStart, blockStop, 3, (start, stop, k) => {
+      let d = (stop - start) / 2
+
+      switch (k) {
+        case 0:
+          out.push(
+            new SongNote(chordNotes[0], start, d * 3 )
+          )
+          break
+        case 1:
+          out.push(
+            new SongNote(chordNotes[0], start + d, d)
+          )
+          break
+        case 2:
+          out.push(
+            new SongNote(chordNotes[2], start, d * 3 )
+          )
+          break
+        case 3:
+          out.push(
+            new SongNote(chordNotes[2], start + d, d)
+          )
+          break
+      }
+    })
+
+    return out
+  }
+}
+
+
