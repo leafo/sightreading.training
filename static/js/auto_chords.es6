@@ -2,7 +2,7 @@
 import {Chord, parseNote, noteName, MIDDLE_C_PITCH} from "st/music"
 import {SongNote} from "st/song_note_list"
 
-export default class AutoChords {
+export class AutoChords {
   // attempt to parse chord from macro name
   static coerceChord(macro) {
     let m = macro.match(/([a-gA-G][#b]?)(.*)/)
@@ -80,23 +80,11 @@ export default class AutoChords {
       ]
 
       let minPitch = Math.min(...pitches)
-      let rootPitch = parseNote(root + "0")
+      let toAdd = this.notesForChord(root, shape, block.start, block.stop, minPitch)
 
-      // find the closest root beneath the notes in range
-      let chordRootPitch = Math.floor(((minPitch - 1) - rootPitch) / 12) * 12 + rootPitch
-      let chordRoot = noteName(chordRootPitch)
-
-      let chordNotes = Chord.notes(chordRoot, shape)
-
-      for (let note of chordNotes) {
-        notesToAdd.push(new SongNote(
-          note, block.start, block.stop - block.start
-        ))
+      if (toAdd) {
+        notesToAdd.push(...toAdd)
       }
-
-      // notesToAdd.push(new SongNote(
-      //   chordRoot, block.start, block.stop - block.start
-      // ))
     }
 
     // just mutate the song for now
@@ -105,6 +93,32 @@ export default class AutoChords {
     }
   }
 
+  notesForChord(root, shape, blockStart, blockStop, minPitch) {
+    console.warn("Autochords doesn't generate any notes")
+    return []
+  }
+}
 
+
+export class TriadAutoChords extends AutoChords {
+  notesForChord(root, shape, blockStart, blockStop, minPitch) {
+    let notesToAdd = []
+
+    let rootPitch = parseNote(root + "0")
+
+    // find the closest root beneath the notes in range
+    let chordRootPitch = Math.floor(((minPitch - 1) - rootPitch) / 12) * 12 + rootPitch
+    let chordRoot = noteName(chordRootPitch)
+
+    let chordNotes = Chord.notes(chordRoot, shape)
+
+    for (let note of chordNotes) {
+      notesToAdd.push(new SongNote(
+        note, blockStart, blockStop - blockStart
+      ))
+    }
+
+    return notesToAdd
+  }
 
 }

@@ -1,7 +1,7 @@
 import "jasmine_boot"
 
 import {SongNoteList, SongNote} from "st/song_note_list"
-import AutoChords from "st/auto_chords"
+import {AutoChords} from "st/auto_chords"
 
 describe("song", function() {
   it("creates an empty song notes", function() {
