@@ -3,7 +3,7 @@ import peg from "st/song_parser_peg"
 import {parseNote, noteName, KeySignature} from "st/music"
 
 import {SongNoteList, SongNote} from "st/song_note_list"
-import {AutoChords, TriadAutoChords} from "st/auto_chords"
+import {AutoChords} from "st/auto_chords"
 
 // tokens are separated by whitepace
 // a note is a5.1.2
@@ -51,7 +51,7 @@ export default class SongParser {
     }
 
     if (song.autoChords) {
-      new TriadAutoChords(song).addChords()
+      new AutoChords.defaultChords(song).addChords()
     }
 
     return song

@@ -3,6 +3,10 @@ import {Chord, parseNote, noteName, MIDDLE_C_PITCH} from "st/music"
 import {SongNote} from "st/song_note_list"
 
 export class AutoChords {
+  static defaultChords(song) {
+    return new RootAutoChords(song)
+  }
+
   // attempt to parse chord from macro name
   static coerceChord(macro) {
     let m = macro.match(/([a-gA-G][#b]?)(.*)/)
@@ -104,15 +108,19 @@ export class AutoChords {
     return noteName(chordRootPitch)
   }
 
-  notesForChord(root, shape, blockStart, blockStop, minPitch) {
+  notesForChord(root, shape, blockStart, blockStop) {
     console.warn("Autochords doesn't generate any notes")
     return []
   }
 }
 
 export class RootAutoChords extends AutoChords {
-  notesForChord(root, shape, blockStart, blockStop, minPitch) {
-    return []
+  notesForChord(root, shape, blockStart, blockStop) {
+    let maxPitch = this.minPitchInRange(blockStart, blockStop)
+
+    return [
+      new SongNote(this.rootBelow(root, maxPitch), blockStart, blockStop - blockStart)
+    ]
   }
 }
 
