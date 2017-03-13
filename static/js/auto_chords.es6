@@ -186,6 +186,43 @@ export class Root5AutoChords extends AutoChords {
   }
 }
 
+export class ArpAutoChords extends AutoChords {
+  notesForChord(root, shape, blockStart, blockStop) {
+    let maxPitch = this.minPitchInRange(blockStart, blockStop)
+    let chordRoot = this.rootBelow(root, maxPitch)
+    let chordNotes = Chord.notes(chordRoot, shape)
+
+    let out = []
+    this.inDivisions(blockStart, blockStop, 3, (start, stop, k) => {
+      switch (k) {
+        case 0:
+          out.push(
+            new SongNote(chordNotes[0], start, stop - start)
+          )
+          break
+        case 1:
+          out.push(
+            new SongNote(chordNotes[1], start, stop - start)
+          )
+          break
+        case 2:
+          out.push(
+            new SongNote(chordNotes[3] || chordNotes[2],
+              start, stop - start)
+          )
+          break
+        case 3:
+          out.push(
+            new SongNote(chordNotes[1], start, stop - start)
+          )
+          break
+      }
+    })
+
+    return out
+  }
+}
+
 
 export class BossaNovaAutoChords extends AutoChords {
   notesForChord(root, shape, blockStart, blockStop) {
@@ -230,6 +267,7 @@ AutoChords.allGenerators = [
   RootAutoChords,
   TriadAutoChords,
   Root5AutoChords,
+  ArpAutoChords,
   BossaNovaAutoChords,
 ]
 
