@@ -19,10 +19,10 @@ import {AutoChords} from "st/auto_chords"
 export default class SongParser {
   static peg = peg
 
-  static load(songText) {
+  static load(songText, opts) {
     let parser = new SongParser
     let ast = parser.parse(songText)
-    return parser.compile(ast)
+    return parser.compile(ast, opts)
   }
 
   // convert song text to ast
@@ -31,7 +31,7 @@ export default class SongParser {
   }
 
   // compile ast to song notes
-  compile(ast) {
+  compile(ast, opts) {
     let state = {
       startPosition: 0,
       position: 0,
@@ -51,7 +51,11 @@ export default class SongParser {
     }
 
     if (song.autoChords) {
-      new AutoChords.defaultChords(song).addChords()
+      if (opts && opts.autoChords) {
+        new opts.autoChords(song).addChords()
+      } else {
+        new AutoChords.defaultChords(song).addChords()
+      }
     }
 
     return song

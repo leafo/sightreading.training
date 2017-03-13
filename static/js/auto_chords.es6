@@ -133,7 +133,7 @@ export class RootAutoChords extends AutoChords {
     let maxPitch = this.minPitchInRange(blockStart, blockStop)
 
     let out = []
-    this.inDivisions(blockStart, blockStop, 2, (start, stop) => {
+    this.inDivisions(blockStart, blockStop, 1, (start, stop) => {
       out.push(
         new SongNote(this.rootBelow(root, maxPitch), start, stop - start)
       )
