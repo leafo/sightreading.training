@@ -112,15 +112,34 @@ export class AutoChords {
     console.warn("Autochords doesn't generate any notes")
     return []
   }
+
+  inDivisions(start, stop, count, fn) {
+    let bpm = this.song.metadata.beatsPerMeasure
+
+    let chunkSize = bpm / Math.pow(2, count - 1)
+    let left = start
+
+    let k = 0
+    while (left + chunkSize <= stop) {
+      fn(left, Math.min(stop, left + chunkSize), k)
+      left += chunkSize
+      k += 1
+    }
+  }
 }
 
 export class RootAutoChords extends AutoChords {
   notesForChord(root, shape, blockStart, blockStop) {
     let maxPitch = this.minPitchInRange(blockStart, blockStop)
 
-    return [
-      new SongNote(this.rootBelow(root, maxPitch), blockStart, blockStop - blockStart)
-    ]
+    let out = []
+    this.inDivisions(blockStart, blockStop, 2, (start, stop) => {
+      out.push(
+        new SongNote(this.rootBelow(root, maxPitch), start, stop - start)
+      )
+    })
+
+    return out
   }
 }
 
