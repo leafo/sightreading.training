@@ -131,6 +131,41 @@ class PositionField extends React.Component {
   }
 }
 
+class SongEditor extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+    }
+  }
+
+  compileSong(code) {
+    let song = null
+
+    try {
+      song = SongParser.load(code)
+    } catch(err) {
+      console.error(err.message)
+      if (this.props.onError) {
+        this.props.onError(err.message)
+      }
+    }
+
+    if (song && this.props.onSong) {
+      this.props.onSong(song)
+    }
+  }
+
+  render() {
+    return <textarea className="song_editor" onChange={
+      (e) => {
+        let code = e.target.value
+        this.setState({ code })
+        this.compileSong(code)
+      }
+    }></textarea>
+  }
+}
+
 export default class PlayAlongPage extends React.Component {
   constructor(props) {
     super(props)
@@ -326,12 +361,14 @@ export default class PlayAlongPage extends React.Component {
       </Draggable>
     }
 
+    // {this.renderKeyboard()}
+
     return <div className="play_along_page">
       <div className="staff_wrapper">
         {staff}
         {this.renderTransportControls()}
       </div>
-      {this.renderKeyboard()}
+      {this.renderEditor()}
       <Hotkeys keyMap={this.keyMap} />
     </div>
   }
@@ -396,6 +433,14 @@ export default class PlayAlongPage extends React.Component {
       onKeyDown={this.pressNote.bind(this)}
       onKeyUp={this.releaseNote.bind(this)}
     />
+  }
+
+  renderEditor() {
+    return <SongEditor onSong={
+      song => {
+        this.setSong(song)
+      }
+    } />
   }
 
   renderTransportControls() {
