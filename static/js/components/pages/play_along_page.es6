@@ -195,33 +195,36 @@ export default class PlayAlongPage extends React.Component {
         autoChords: AutoChords.allGenerators[autoChordIdx],
       })
 
-      let currentBeat = this.currentBeat
-
-      if (this.state.songTimer) {
-        this.state.songTimer.reset()
-      }
-
-      this.setState({
-        loading: false,
-        staffType: song.fittingStaff(),
-        song,
-        loopLeft: 0,
-        loopRight: song.getStopInBeats(),
-        currentSongName: name,
-
-        songTimer: new SongTimer({
-          onUpdate: this.updateBeat.bind(this),
-          onNoteStart: this.onNoteStart.bind(this),
-          onNoteStop: this.onNoteStop.bind(this),
-          song
-        })
-      }, () => {
-        // restore our position in the song (temporary while we edit)
-        this.state.songTimer.beat = currentBeat || 0
-        this.updateBeat(currentBeat || 0)
-      })
-
+      this.setSong(song)
     }
+  }
+
+  setSong(song) {
+    let currentBeat = this.currentBeat
+
+    if (this.state.songTimer) {
+      this.state.songTimer.reset()
+    }
+
+    this.setState({
+      loading: false,
+      staffType: song.fittingStaff(),
+      song,
+      loopLeft: 0,
+      loopRight: song.getStopInBeats(),
+      currentSongName: name,
+
+      songTimer: new SongTimer({
+        onUpdate: this.updateBeat.bind(this),
+        onNoteStart: this.onNoteStart.bind(this),
+        onNoteStop: this.onNoteStop.bind(this),
+        song
+      })
+    }, () => {
+      // restore our position in the song (temporary while we edit)
+      this.state.songTimer.beat = currentBeat || 0
+      this.updateBeat(currentBeat || 0)
+    })
   }
 
   onNoteStart(note) {
