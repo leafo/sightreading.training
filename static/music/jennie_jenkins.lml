@@ -1,0 +1,44 @@
+ks4
+
+m0 {
+r3 b4
+}
+
+m1 {
+$e
+dt
+e5 e5 e5.2 g5.2 g5 g5
+}
+
+m2 {
+$e
+dt
+e5.2 e5 e5 c5.2 b4.2
+}
+
+m3 {
+$e
+dt
+e5 e5 e5.2 e5.2 g5 a5
+}
+
+m4 {
+$b7
+b5 b5.2 dt b5 b5 
+}
+
+m5 {
+$e
+c6 b5 g5 dt e5 e5
+}
+
+m6 {
+$a
+dt
+f5 f5 e5 e5 c5 c5 b4.2
+}
+
+m7 {
+dt
+e5.2 e5 e5
+}
