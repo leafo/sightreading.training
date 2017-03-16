@@ -39,6 +39,41 @@ f5 f5 e5 e5 c5 c5 b4.2
 }
 
 m7 {
+$e
 dt
 e5.2 e5 e5
+# need a way to shorten this measure
+}
+
+m8 {
+$e
+dt
+e5 e5 e5 e5 e5 e5 e5 e5
+}
+
+m9 {
+$e
+dt
+e5 e5 e5 e5 e5 e5 e5 e5
+}
+
+m10 {
+$e
+e5 b4 c5 e5
+}
+
+m11 {
+$e
+g5.4
+}
+
+m12 {
+$b7
+dt
+r2 e5 e5 f5.2 f5.2
+}
+
+m13 {
+$e
+e5.8
 }
