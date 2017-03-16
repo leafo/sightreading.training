@@ -234,25 +234,33 @@ export class BossaNovaAutoChords extends AutoChords {
     this.inDivisions(blockStart, blockStop, 3, (start, stop, k) => {
       let d = (stop - start) / 2
 
+      let one = chordNotes[0]
+      let two = chordNotes[2]
+
+      if (parseNote(two) >= maxPitch) {
+        one = noteName(parseNote(chordNotes[2]) - 12)
+        two = chordNotes[0]
+      }
+
       switch (k) {
         case 0:
           out.push(
-            new SongNote(chordNotes[0], start, d * 3 )
+            new SongNote(one, start, d * 3 )
           )
           break
         case 1:
           out.push(
-            new SongNote(chordNotes[0], start + d, d)
+            new SongNote(one, start + d, d)
           )
           break
         case 2:
           out.push(
-            new SongNote(chordNotes[2], start, d * 3 )
+            new SongNote(two, start, d * 3 )
           )
           break
         case 3:
           out.push(
-            new SongNote(chordNotes[2], start + d, d)
+            new SongNote(two, start + d, d)
           )
           break
       }
