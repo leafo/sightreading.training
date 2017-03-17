@@ -582,6 +582,7 @@ export default class PlayAlongPage extends React.Component {
       "erfolg",
       "mimiga",
       "old_dan_tucker",
+      "good_vibrations"
 
       // bossa_nova_test
       // mary_had_a_little_lamb
