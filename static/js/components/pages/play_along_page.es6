@@ -197,6 +197,10 @@ export default class PlayAlongPage extends React.Component {
         autoChords: AutoChords.allGenerators[autoChordIdx],
       })
 
+      this.setState({
+        currentSongName: name,
+      })
+
       this.setSong(song)
     }
   }
@@ -214,7 +218,6 @@ export default class PlayAlongPage extends React.Component {
       song,
       loopLeft: 0,
       loopRight: song.getStopInBeats(),
-      currentSongName: name,
 
       songTimer: new SongTimer({
         onUpdate: this.updateBeat.bind(this),
@@ -328,14 +331,14 @@ export default class PlayAlongPage extends React.Component {
       </Draggable>
     }
 
-    // {this.renderKeyboard()}
+    // {this.renderEditor()}
 
     return <div className="play_along_page">
       <div className="staff_wrapper">
         {staff}
         {this.renderTransportControls()}
       </div>
-      {this.renderEditor()}
+      {this.renderKeyboard()}
       <Hotkeys keyMap={this.keyMap} />
     </div>
   }
