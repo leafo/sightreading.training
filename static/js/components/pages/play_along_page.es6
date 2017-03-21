@@ -146,6 +146,7 @@ export default class PlayAlongPage extends React.Component {
       playNotes: true,
       metronomeMultiplier: 1.0,
       autoChordType: 0,
+      enableEditor: false,
     }
 
     this.midiInput = new MidiInput({
@@ -331,14 +332,12 @@ export default class PlayAlongPage extends React.Component {
       </Draggable>
     }
 
-    // {this.renderEditor()}
-
     return <div className="play_along_page">
       <div className="staff_wrapper">
         {staff}
         {this.renderTransportControls()}
       </div>
-      {this.renderKeyboard()}
+      {this.state.enableEditor ? this.renderEditor() : this.renderKeyboard()}
       <Hotkeys keyMap={this.keyMap} />
     </div>
   }
@@ -478,6 +477,12 @@ export default class PlayAlongPage extends React.Component {
         checked={this.state.playNotes || false}
         onChange={(e) => this.setState({playNotes: e.target.checked}) }
         type="checkbox" />
+
+      <button onClick={e =>
+        this.setState({
+          enableEditor: !this.state.enableEditor
+        })
+      }>Toggle</button>
 
       <button onClick={e =>
         this.setState({
