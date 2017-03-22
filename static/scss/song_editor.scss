@@ -1,4 +1,23 @@
+@import "include/common";
+
 .song_editor {
-    width: 100%;
     min-height: 200px;
+    padding: 20px;
+    display: flex;
+
+    .song_editor_tools {
+        width: 200px;
+        margin-left: 20px;
+
+        input[type='text'] {
+            width: 100%;
+            @include border_box;
+        }
+    }
+
+    > textarea {
+        flex: 1
+    }
 }
+
+
