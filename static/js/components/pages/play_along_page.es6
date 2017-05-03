@@ -133,6 +133,21 @@ class PositionField extends React.Component {
 }
 
 
+
+class SettingsPanel extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+    return <div className="settings_panel">
+      <div className="settings_header">
+        <h3>Play Along Settings</h3>
+      </div>
+    </div>
+  }
+}
+
 export default class PlayAlongPage extends React.Component {
   constructor(props) {
     super(props)
@@ -333,13 +348,20 @@ export default class PlayAlongPage extends React.Component {
     }
 
     return <div className="play_along_page">
-      <div className="staff_wrapper">
-        {staff}
-        {this.renderTransportControls()}
+      {this.state.settingsPanelOpen ? this.renderSettingsPanel() : null}
+      <div className={classNames("play_along_workspace", {settings_open: this.state.settingsPanelOpen})}>
+        <div className="staff_wrapper">
+          {staff}
+          {this.renderTransportControls()}
+        </div>
+        {this.state.enableEditor ? this.renderEditor() : this.renderKeyboard()}
       </div>
-      {this.state.enableEditor ? this.renderEditor() : this.renderKeyboard()}
       <Hotkeys keyMap={this.keyMap} />
     </div>
+  }
+
+  renderSettingsPanel() {
+    return <SettingsPanel />
   }
 
   togglePlay() {
@@ -486,8 +508,11 @@ export default class PlayAlongPage extends React.Component {
 
       <button onClick={e =>
         this.setState({
-          autoChordType: this.state.autoChordType + 1
-        }, () => this.loadSong(this.state.currentSongName))
+          settingsPanelOpen: !this.state.settingsPanelOpen
+        })
+        // this.setState({
+        //   autoChordType: this.state.autoChordType + 1
+        // }, () => this.loadSong(this.state.currentSongName))
       }>Debug</button>
 
       <button onClick={e =>

@@ -3,6 +3,11 @@
 .play_along_page {
     overflow: hidden;
 
+    .play_along_workspace {
+        &.settings_open {
+            margin-left: 250px;
+        }
+    }
 
     .transport_controls {
         display: flex;
