@@ -142,11 +142,18 @@ class SettingsPanel extends React.Component {
   }
 
   render() {
-    return <div className="settings_panel">
+    return <section className="settings_panel">
       <div className="settings_header">
-        <h3>Play Along Settings</h3>
+        <button onClick={this.props.close}>Close</button>
+        <h3>Settings</h3>
       </div>
-    </div>
+      <section className="settings_group">
+        <h4>Song Editor</h4>
+      </section>
+      <section className="settings_group">
+        <h4>Autochords</h4>
+      </section>
+    </section>
   }
 }
 
@@ -370,7 +377,10 @@ export default class PlayAlongPage extends React.Component {
       return
     }
 
-    return <SettingsPanel />
+    return <SettingsPanel
+      close={() => this.setState({
+        settingsPanelOpen: !this.state.settingsPanelOpen
+      }) } />
   }
 
   togglePlay() {
