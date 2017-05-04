@@ -25,6 +25,8 @@ const DEFAULT_SONG = "old_dan_tucker"
 
 import {AutoChords} from "st/auto_chords"
 
+let {CSSTransitionGroup} = React.addons || {}
+
 class PositionField extends React.Component {
   static propTypes = {
     min: types.number,
@@ -348,7 +350,10 @@ export default class PlayAlongPage extends React.Component {
     }
 
     return <div className="play_along_page">
-      {this.state.settingsPanelOpen ? this.renderSettingsPanel() : null}
+      <CSSTransitionGroup transitionName="slide_right" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
+        {this.renderSettings()}
+      </CSSTransitionGroup>
+
       <div className={classNames("play_along_workspace", {settings_open: this.state.settingsPanelOpen})}>
         <div className="staff_wrapper">
           {staff}
@@ -360,7 +365,11 @@ export default class PlayAlongPage extends React.Component {
     </div>
   }
 
-  renderSettingsPanel() {
+  renderSettings() {
+    if (!this.state.settingsPanelOpen) {
+      return
+    }
+
     return <SettingsPanel />
   }
 
