@@ -3,7 +3,7 @@
 .settings_panel {
     @include border_box;
     @include unselectable;
-    position: absolute;
+    position: fixed;
     overflow: auto;
     left: 0;
     top: 0;
@@ -109,14 +109,12 @@
             width: calc(50% - 10px);
             background: white;
             border: 1px solid $border_color;
-            padding: 5px 10px;
             text-align: center;
-            font-size: 14px;
             margin: 0 5px 5px 5px;
-            cursor: pointer;
+            color: #444;
 
             &.active {
-                color: $button_color;
+                color: darken($button_color, 10%);
                 background: mix(white, $button_color, 80%);
                 border-color: $button_color;
                 box-shadow: 0 0 0 1px $button_color;
