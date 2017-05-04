@@ -31,7 +31,7 @@ export class SettingsPanel extends React.Component {
   }
 
   render() {
-    return <div className="settings_panel">
+    return <section className="settings_panel">
       <div className="settings_header">
         <button onClick={this.props.close}>Close</button>
         <h3>Settings</h3>
@@ -39,23 +39,23 @@ export class SettingsPanel extends React.Component {
 
       {this.renderPresets()}
 
-      <div className="settings_group">
+      <section className="settings_group">
         <h4>Staff</h4>
         {this.renderStaves()}
-      </div>
+      </section>
 
-      <div className="settings_group">
+      <section className="settings_group">
         <h4>Generator</h4>
         {this.renderGenerators()}
-      </div>
+      </section>
 
       {this.renderGeneratorInputs()}
 
-      <div className="settings_group">
+      <section className="settings_group">
         <h4>Key</h4>
         {this.renderKeys()}
-      </div>
-    </div>
+      </section>
+    </section>
   }
 
   savePreset(e) {
@@ -121,7 +121,7 @@ export class SettingsPanel extends React.Component {
 
   renderStaves() {
     return this.props.staves.map((staff, i) => {
-      return <div
+      return <button
         key={staff.name}
         onClick={(e) => {
           e.preventDefault();
@@ -130,7 +130,7 @@ export class SettingsPanel extends React.Component {
         className={classNames("toggle_option", {
           active: this.props.currentStaff == staff
         })}>
-        {staff.name}</div>;
+        {staff.name}</button>;
     })
   }
 
@@ -144,7 +144,7 @@ export class SettingsPanel extends React.Component {
         return
       }
 
-      return <div
+      return <button
         key={generator.name}
         onClick={(e) => {
           e.preventDefault();
@@ -154,7 +154,7 @@ export class SettingsPanel extends React.Component {
         className={classNames("toggle_option", {
           active: this.props.currentGenerator == generator
         })}>
-        {generator.name}</div>;
+        {generator.name}</button>;
     })
   }
 
@@ -174,7 +174,7 @@ export class SettingsPanel extends React.Component {
     return [0, 1, 2, 3, 4, 5, -1, -2, -3, -4, -5, -6].map((key) => {
       key = new KeySignature(key)
 
-      return <div
+      return <button
         onClick={(e) => {
           this.props.setKeySignature(key)
         }}
@@ -183,7 +183,7 @@ export class SettingsPanel extends React.Component {
         })}
         key={key.name()}>
           {key.name()}
-        </div>
+        </button>
     })
   }
 }
