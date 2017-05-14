@@ -10,7 +10,7 @@ import StatsLightbox from "st/components/stats_lightbox"
 
 import {KeySignature, noteName} from "st/music"
 import {STAVES, GENERATORS} from "st/data"
-import {GeneratorSettings, SettingsPanel} from "st/components/settings_panel"
+import {GeneratorSettings, SettingsPanel} from "st/components/sight_reading/settings_panel"
 import {setTitle, gaEvent, csrfToken} from "st/globals"
 import {dispatch, trigger} from "st/events"
 import {NOTE_EVENTS} from "st/midi"

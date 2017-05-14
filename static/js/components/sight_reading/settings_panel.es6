@@ -224,6 +224,8 @@ export class GeneratorSettings extends React.Component {
   constructor(props) {
     super(props)
 
+    console.log(this.props.currentSettings)
+
     this.state = {
       inputValues: {
         ...GeneratorSettings.inputDefaults(this.props.generator),
