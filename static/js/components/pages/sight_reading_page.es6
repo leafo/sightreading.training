@@ -109,10 +109,19 @@ export default class SightReadingPage extends React.Component {
   refreshNoteList() {
     let generator = this.state.currentGenerator
 
-    let generatorInstance = generator.create.call(generator,
+    let generatorSettings = {
+      ...generatorDefaultSettings(generator),
+      ...this.state.currentGeneratorSettings
+    }
+
+    console.log("rendering notes", this.state.currentGeneratorSettings)
+
+    let generatorInstance = generator.create.call(
+      generator,
       this.state.currentStaff,
       this.state.keySignature,
-      this.state.currentGeneratorSettings)
+      generatorSettings
+    )
 
     var notes
 
@@ -327,7 +336,7 @@ export default class SightReadingPage extends React.Component {
       }
 
       update.currentGenerator = newGenerator
-      update.currentGeneratorSettings = generatorDefaultSettings(newGenerator)
+      update.currentGeneratorSettings = {}
     }
 
     this.setState(update)

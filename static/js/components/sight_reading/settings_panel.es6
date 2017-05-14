@@ -195,23 +195,17 @@ export class SettingsPanel extends React.Component {
 export class GeneratorSettings extends React.Component {
   static propTypes = {
     generator: types.object.isRequired,
+    currentSettings: types.object.isRequired,
     setGenerator: types.func.isRequired,
   }
 
-  constructor(props) {
-    super(props)
-
-    console.log(this.props.currentSettings)
-
-    this.state = {
-      inputValues: {
-        ...generatorDefaultSettings(this.props.generator),
-        ...this.props.currentSettings
-      }
-    }
-  }
-
   render() {
+    // calculate full settings with defaults
+    this.cachedSettings = {
+      ...generatorDefaultSettings(this.props.generator),
+      ...this.props.currentSettings
+    }
+
     let inputs = this.props.generator.inputs
 
     return <div className="generator_inputs">{
@@ -243,17 +237,14 @@ export class GeneratorSettings extends React.Component {
   }
 
   updateInputValue(input, value) {
-    let values = {
-      ...this.state.inputValues,
+    this.props.setGenerator(this.props.generator, {
+      ...this.props.currentSettings,
       [input.name]: value
-    }
-
-    this.setState({ inputValues: values })
-    this.props.setGenerator(this.props.generator, values)
+    })
   }
 
   renderSelect(input, idx) {
-    let currentValue = this.state.inputValues[input.name]
+    let currentValue = this.cachedSettings[input.name]
     let options = input.values.map((input_val, input_val_idx) => {
       return {
         name: input_val.name,
@@ -268,7 +259,7 @@ export class GeneratorSettings extends React.Component {
   }
 
   renderRange(input, idx) {
-    let currentValue = this.state.inputValues[input.name]
+    let currentValue = this.cachedSettings[input.name]
 
     return <div className="slider_row">
       <Slider
@@ -281,7 +272,7 @@ export class GeneratorSettings extends React.Component {
   }
 
   renderBool(input, idx) {
-    let currentValue = !!this.state.inputValues[input.name]
+    let currentValue = !!this.cachedSettings[input.name]
 
     return <div className="bool_row">
       <input
