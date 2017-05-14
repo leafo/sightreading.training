@@ -2,7 +2,7 @@ import * as React from "react"
 import {classNames} from "lib"
 let {PropTypes: types} = React;
 
-export default class Slider extends React.Component {
+export default class Slider extends React.PureComponent {
   static propTypes = {
     min: types.number,
     max: types.number,

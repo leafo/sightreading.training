@@ -27,7 +27,7 @@ import {AutoChords} from "st/auto_chords"
 
 let {CSSTransitionGroup} = React.addons || {}
 
-class PositionField extends React.Component {
+class PositionField extends React.PureComponent {
   static propTypes = {
     min: types.number,
     max: types.number,
@@ -181,6 +181,8 @@ export default class PlayAlongPage extends React.Component {
 
     this.pressNote = this.pressNote.bind(this)
     this.releaseNote = this.releaseNote.bind(this)
+    this.setBpm = (bpm) => this.setState({ bpm: value })
+    this.setPixelsPerBeat = (ppb) => this.setState({ pixelsPerBeat: ppb })
 
     this.keyMap = {
       " ": e => this.togglePlay(),
@@ -217,7 +219,6 @@ export default class PlayAlongPage extends React.Component {
     request.send()
     request.onload = (e) => {
       let songText = request.responseText
-      console.log(this.state)
 
       let autoChordIdx = this.state.autoChordType % AutoChords.allGenerators.length
 
@@ -330,6 +331,7 @@ export default class PlayAlongPage extends React.Component {
   }
 
   render() {
+    console.log("rendering play along page")
     let heldNotes = {}
     let keySignature = new KeySignature(0)
 
@@ -567,7 +569,7 @@ export default class PlayAlongPage extends React.Component {
         <Slider
           min={10}
           max={300}
-          onChange={(value) => this.setState({ bpm: value })}
+          onChange={this.setBpm}
           value={+this.state.bpm} />
         <span className="slider_value">{ this.state.bpm }</span>
       </span>
@@ -577,7 +579,7 @@ export default class PlayAlongPage extends React.Component {
         <Slider
           min={50}
           max={300}
-          onChange={(value) => this.setState({ pixelsPerBeat: value })}
+          onChange={this.setPixelsPerBeat}
           value={+this.state.pixelsPerBeat} />
         <span className="slider_value">{this.state.pixelsPerBeat}</span>
       </span>
