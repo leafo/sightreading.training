@@ -181,8 +181,7 @@ export default class PlayAlongPage extends React.Component {
 
     this.pressNote = this.pressNote.bind(this)
     this.releaseNote = this.releaseNote.bind(this)
-    this.setBpm = (bpm) => this.setState({ bpm: value })
-    this.setPixelsPerBeat = (ppb) => this.setState({ pixelsPerBeat: ppb })
+    this.seekBpm = (pos) => this.state.songTimer.seek(pos)
 
     this.keyMap = {
       " ": e => this.togglePlay(),
@@ -205,6 +204,18 @@ export default class PlayAlongPage extends React.Component {
         this.state.songTimer.scrub(1)
       },
     }
+  }
+
+  getSetter(name) {
+    if (!this.setters) {
+      this.setters = {}
+    }
+
+    if (!this.setters[name]) {
+      this.setters[name] = (val) => this.setState({ [name]: val })
+    }
+
+    return this.setters[name]
   }
 
   loadSong(name) {
@@ -331,7 +342,6 @@ export default class PlayAlongPage extends React.Component {
   }
 
   render() {
-    console.log("rendering play along page")
     let heldNotes = {}
     let keySignature = new KeySignature(0)
 
@@ -477,9 +487,7 @@ export default class PlayAlongPage extends React.Component {
         min={0}
         max={stop}
         value={this.currentBeat}
-        onUpdate={val => {
-          this.state.songTimer.seek(val)
-        }}
+        onUpdate={this.seekBpm}
       />
 
       <span className="loop_controls">
@@ -492,9 +500,7 @@ export default class PlayAlongPage extends React.Component {
           max={this.state.loopRight}
           resetValue={0}
           value={this.state.loopLeft}
-          onUpdate={val => {
-            this.setState({ loopLeft: val })
-          }}
+          onUpdate={this.getSetter("loopLeft")}
         />
 
         <PositionField ref="loopRight"
@@ -502,9 +508,7 @@ export default class PlayAlongPage extends React.Component {
           max={stop}
           resetValue={stop}
           value={this.state.loopRight}
-          onUpdate={val => {
-            this.setState({ loopRight: val })
-          }}
+          onUpdate={this.getSetter("loopRight")}
         />
       </span>
 
@@ -514,9 +518,7 @@ export default class PlayAlongPage extends React.Component {
         min={1}
         max={10}
         value={this.state.metronomeMultiplier}
-        onUpdate={val => {
-          this.setState({ metronomeMultiplier: val })
-        }}
+        onUpdate={this.getSetter("metronomeMultiplier")}
       />
 
       <input
@@ -569,7 +571,7 @@ export default class PlayAlongPage extends React.Component {
         <Slider
           min={10}
           max={300}
-          onChange={this.setBpm}
+          onChange={this.getSetter("bpm")}
           value={+this.state.bpm} />
         <span className="slider_value">{ this.state.bpm }</span>
       </span>
@@ -579,7 +581,7 @@ export default class PlayAlongPage extends React.Component {
         <Slider
           min={50}
           max={300}
-          onChange={this.setPixelsPerBeat}
+          onChange={this.getSetter("pixelsPerBeat")}
           value={+this.state.pixelsPerBeat} />
         <span className="slider_value">{this.state.pixelsPerBeat}</span>
       </span>
