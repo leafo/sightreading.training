@@ -179,6 +179,9 @@ export default class PlayAlongPage extends React.Component {
       noteOff: (note) => this.releaseNote(note)
     })
 
+    this.pressNote = this.pressNote.bind(this)
+    this.releaseNote = this.releaseNote.bind(this)
+
     this.keyMap = {
       " ": e => this.togglePlay(),
       "esc": e => {
@@ -440,8 +443,8 @@ export default class PlayAlongPage extends React.Component {
       lower={"C4"}
       upper={"C7"}
       heldNotes={this.state.heldNotes}
-      onKeyDown={this.pressNote.bind(this)}
-      onKeyUp={this.releaseNote.bind(this)}
+      onKeyDown={this.pressNote}
+      onKeyUp={this.releaseNote}
     />
   }
 

@@ -28,6 +28,9 @@ export default class SightReadingPage extends React.Component {
   constructor(props) {
     super(props);
 
+    this.pressNote = this.pressNote.bind(this)
+    this.releaseNote = this.releaseNote.bind(this)
+
     this.state = {
       midi: null,
       noteShaking: false,
@@ -426,8 +429,8 @@ export default class SightReadingPage extends React.Component {
       lower={lower}
       upper={upper}
       heldNotes={this.state.heldNotes}
-      onKeyDown={this.pressNote.bind(this)}
-      onKeyUp={this.releaseNote.bind(this)} />;
+      onKeyDown={this.pressNote}
+      onKeyUp={this.releaseNote} />;
   }
 
   renderWorkspace() {

@@ -7,7 +7,7 @@ import {keyCodeToChar, noteForKey} from "st/keyboard_input"
 
 let {PropTypes: types} = React
 
-export default class Keyboard extends React.Component {
+export default class Keyboard extends React.PureComponent {
   static propTypes = {
     lower: types.oneOfType([types.string, types.number]),
     upper: types.oneOfType([types.string, types.number]),
