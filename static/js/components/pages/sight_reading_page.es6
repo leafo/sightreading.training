@@ -6,7 +6,7 @@ import NoteStats from "st/note_stats"
 import SlideToZero from "st/slide_to_zero"
 import Slider from "st/components/slider"
 import Keyboard from "st/components/keyboard"
-import StatsLightbox from "st/components/stats_lightbox"
+import StatsLightbox from "st/components/sight_reading/stats_lightbox"
 
 import {KeySignature, noteName} from "st/music"
 import {STAVES, GENERATORS} from "st/data"
@@ -360,7 +360,6 @@ export default class SightReadingPage extends React.Component {
     trigger(this, "showLightbox",
       <StatsLightbox
         resetStats={() => this.setState({stats: new NoteStats()})}
-        close={() => alert("close the lightbox") }
         stats={this.state.stats} />)
   }
 
