@@ -2,6 +2,34 @@
 import {parseNote, noteName, MajorScale, Chord} from "st/music"
 import {MersenneTwister} from "lib"
 
+// takes generator object from data
+export function generatorDefaultSettings(generator) {
+  let out = {}
+
+  if (!generator.inputs) {
+    return out
+  }
+
+  let defaultValue = input => {
+    if ("default" in input) {
+      return input.default
+    }
+
+    switch (input.type) {
+      case "select":
+        return input.values[0].name
+      case "range":
+        return input.min
+    }
+  }
+
+  for (let input of generator.inputs) {
+    out[input.name] = defaultValue(input)
+  }
+
+  return out
+}
+
 export function testRandomNotes() {
   let scale = new MajorScale("C")
   // let notes = scale.getLooseRange("A4", "C7")

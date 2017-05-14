@@ -14,6 +14,7 @@ import {GeneratorSettings, SettingsPanel} from "st/components/sight_reading/sett
 import {setTitle, gaEvent, csrfToken} from "st/globals"
 import {dispatch, trigger} from "st/events"
 import {NOTE_EVENTS} from "st/midi"
+import {generatorDefaultSettings} from "st/generators"
 
 import * as React from "react"
 import {classNames} from "lib"
@@ -326,7 +327,7 @@ export default class SightReadingPage extends React.Component {
       }
 
       update.currentGenerator = newGenerator
-      update.currentGeneratorSettings = GeneratorSettings.inputDefaults(newGenerator)
+      update.currentGeneratorSettings = generatorDefaultSettings(newGenerator)
     }
 
     this.setState(update)

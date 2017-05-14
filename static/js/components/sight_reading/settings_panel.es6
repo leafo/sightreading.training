@@ -5,6 +5,7 @@ import {classNames} from "lib"
 import Slider from "st/components/slider"
 import Select from "st/components/select"
 import {trigger} from "st/events"
+import {generatorDefaultSettings} from "st/generators"
 
 import {KeySignature} from "st/music"
 
@@ -148,7 +149,10 @@ export class SettingsPanel extends React.Component {
         key={generator.name}
         onClick={(e) => {
           e.preventDefault();
-          this.props.setGenerator(generator, GeneratorSettings.inputDefaults(generator));
+          this.props.setGenerator(
+            generator,
+            generatorDefaultSettings(generator)
+          )
         }}
 
         className={classNames("toggle_option", {
@@ -194,33 +198,6 @@ export class GeneratorSettings extends React.Component {
     setGenerator: types.func.isRequired,
   }
 
-  static inputDefaults(generator) {
-    let out = {}
-
-    if (!generator.inputs) {
-      return out
-    }
-
-    let defaultValue = input => {
-      if ("default" in input) {
-        return input.default
-      }
-
-      switch (input.type) {
-        case "select":
-          return input.values[0].name
-        case "range":
-          return input.min
-      }
-    }
-
-    for (let input of generator.inputs) {
-      out[input.name] = defaultValue(input)
-    }
-
-    return out
-  }
-
   constructor(props) {
     super(props)
 
@@ -228,7 +205,7 @@ export class GeneratorSettings extends React.Component {
 
     this.state = {
       inputValues: {
-        ...GeneratorSettings.inputDefaults(this.props.generator),
+        ...generatorDefaultSettings(this.props.generator),
         ...this.props.currentSettings
       }
     }
