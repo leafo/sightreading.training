@@ -1,5 +1,5 @@
 
-import {parseNote, noteName, MIDDLE_C_PITCH} from 'st/music'
+import {parseNote, noteName, MIDDLE_C_PITCH} from "st/music"
 
 // like note list but notes in time
 export class SongNoteList extends Array {

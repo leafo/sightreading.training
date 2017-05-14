@@ -35,7 +35,6 @@ export default class SongParser {
     let state = {
       startPosition: 0,
       position: 0,
-      keySignature: 0,
       beatsPerNote: 1,
       beatsPerMeasure: 4,
       timeScale: 1,

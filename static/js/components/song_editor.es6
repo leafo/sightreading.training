@@ -1,3 +1,4 @@
+import * as React from "react"
 import SongParser from "st/song_parser"
 
 export default class SongEditor extends React.Component {
