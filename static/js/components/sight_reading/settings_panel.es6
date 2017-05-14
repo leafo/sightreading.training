@@ -5,7 +5,7 @@ import {classNames} from "lib"
 import Slider from "st/components/slider"
 import Select from "st/components/select"
 import {trigger} from "st/events"
-import {generatorDefaultSettings} from "st/generators"
+import {generatorDefaultSettings, fixGeneratorSettings} from "st/generators"
 
 import {KeySignature} from "st/music"
 
@@ -151,7 +151,7 @@ export class SettingsPanel extends React.Component {
           e.preventDefault();
           this.props.setGenerator(
             generator,
-            generatorDefaultSettings(generator)
+            fixGeneratorSettings(generator, this.props.currentGeneratorSettings)
           )
         }}
 

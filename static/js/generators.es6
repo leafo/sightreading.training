@@ -30,6 +30,53 @@ export function generatorDefaultSettings(generator) {
   return out
 }
 
+// strip any values that don't make sense
+export function fixGeneratorSettings(generator, settings) {
+  let out = {}
+
+  if (!generator.inputs) {
+    return out
+  }
+
+  for (let input of generator.inputs) {
+    let currentValue = settings[input.name]
+    if (currentValue != null) {
+      switch (input.type) {
+        case "select":
+          let found = input.values.select(v => v.name == currentValue)
+          if (!found) {
+            currentValue = null
+          }
+          break
+        case "range":
+          if (typeof currentValue == "number") {
+            currentValue = Math.min(
+              input.max,
+              Math.max(input.min, +currentValue)
+            )
+          } else {
+            currentValue = null
+          }
+          break
+        case "bool":
+          if (typeof currentValue != "boolean") {
+            currentValue = null
+          }
+          break
+      }
+
+      if (currentValue == null) {
+        console.warn(`Truncating generator input: ${input.name}`)
+        continue
+      }
+
+      out[input.name] = currentValue
+    }
+  }
+
+  return out
+}
+
 export function testRandomNotes() {
   let scale = new MajorScale("C")
   // let notes = scale.getLooseRange("A4", "C7")
