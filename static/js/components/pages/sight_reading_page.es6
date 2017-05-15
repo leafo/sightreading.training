@@ -114,8 +114,6 @@ export default class SightReadingPage extends React.Component {
       ...this.state.currentGeneratorSettings
     }
 
-    console.log("rendering notes", this.state.currentGeneratorSettings)
-
     let generatorInstance = generator.create.call(
       generator,
       this.state.currentStaff,
@@ -329,12 +327,8 @@ export default class SightReadingPage extends React.Component {
     let update = {currentStaff: staff}
 
     // if the current generator is not compatible with new staff change it
-    if (!this.currentGenerator || (this.state.currentGenerator.mode != staff.mode)) {
+    if (!this.state.currentGenerator || (this.state.currentGenerator.mode != staff.mode)) {
       let newGenerator = GENERATORS.find(g => staff.mode == g.mode)
-      if (!newGenerator) {
-        console.warn("failed to find new generator for staff")
-      }
-
       update.currentGenerator = newGenerator
       update.currentGeneratorSettings = {}
     }

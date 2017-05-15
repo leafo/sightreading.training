@@ -123,6 +123,7 @@ export class SettingsPanel extends React.Component {
   renderStaves() {
     return this.props.staves.map((staff, i) => {
       return <button
+        type="button"
         key={staff.name}
         onClick={(e) => {
           e.preventDefault();
