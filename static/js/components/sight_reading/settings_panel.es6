@@ -193,7 +193,7 @@ export class SettingsPanel extends React.Component {
   }
 }
 
-export class GeneratorSettings extends React.Component {
+export class GeneratorSettings extends React.PureComponent {
   static propTypes = {
     generator: types.object.isRequired,
     currentSettings: types.object.isRequired,
