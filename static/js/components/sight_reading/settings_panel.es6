@@ -7,7 +7,7 @@ import Select from "st/components/select"
 import {trigger} from "st/events"
 import {generatorDefaultSettings, fixGeneratorSettings} from "st/generators"
 
-import {KeySignature} from "st/music"
+import {KeySignature, noteName} from "st/music"
 
 let {PropTypes: types} = React;
 
@@ -219,6 +219,9 @@ export class GeneratorSettings extends React.PureComponent {
           case "range":
             fn = this.renderRange
             break
+          case "noteRange":
+            fn = this.renderNoteRange
+            break
           case "bool":
             fn = this.renderBool
             break
@@ -257,6 +260,35 @@ export class GeneratorSettings extends React.PureComponent {
       onChange={ value => this.updateInputValue(input, value) }
       value={currentValue}
       options={options} />
+  }
+
+  renderNoteRange(input, idx) {
+    let currentValue = this.cachedSettings[input.name]
+    console.log(input)
+
+    let possibleInputs = []
+    
+    for (let i=input.min; i < input.max; i++) {
+      possibleInputs.push(noteName(i))
+    }
+
+    return <div className="note_range_row">
+      <label>
+        Min <select value={noteName(currentValue[0])}>
+          {possibleInputs.map(name =>
+            <option key={name} value={name}>{name}</option>
+          )}
+        </select>
+      </label>
+
+      <label>
+        Min <select value={noteName(currentValue[1])}>
+          {possibleInputs.map(name =>
+            <option key={name} value={name}>{name}</option>
+          )}
+        </select>
+      </label>
+    </div>
   }
 
   renderRange(input, idx) {

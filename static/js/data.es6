@@ -17,6 +17,15 @@ let smoothInput = {
   max: 6,
 }
 
+let noteRangeInput = {
+  name: "noteRange",
+  type: "noteRange",
+  label: "note range",
+  default: [0, 10],
+  min: 0,
+  max: 100,
+}
+
 export const STAVES = [
   {
     mode: "notes",
@@ -86,6 +95,7 @@ export const GENERATORS = [
         max: 2,
       },
       smoothInput,
+      noteRangeInput,
       {
         label: "chord based",
         name: "musical",
