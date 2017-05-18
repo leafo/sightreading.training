@@ -7,7 +7,7 @@ import Select from "st/components/select"
 import {trigger} from "st/events"
 import {generatorDefaultSettings, fixGeneratorSettings} from "st/generators"
 
-import {KeySignature, noteName} from "st/music"
+import {KeySignature, noteName, parseNote} from "st/music"
 
 let {PropTypes: types} = React;
 
@@ -264,7 +264,6 @@ export class GeneratorSettings extends React.PureComponent {
 
   renderNoteRange(input, idx) {
     let currentValue = this.cachedSettings[input.name]
-    console.log(input)
 
     let possibleInputs = []
     
@@ -274,7 +273,14 @@ export class GeneratorSettings extends React.PureComponent {
 
     return <div className="note_range_row">
       <label>
-        Min <select value={noteName(currentValue[0])}>
+        Min <select
+          onChange={e => {
+            this.updateInputValue(input, [
+              parseNote(e.target.value),
+              currentValue[1],
+            ])
+          }}
+          value={noteName(currentValue[0])}>
           {possibleInputs.map(name =>
             <option key={name} value={name}>{name}</option>
           )}
@@ -282,7 +288,14 @@ export class GeneratorSettings extends React.PureComponent {
       </label>
 
       <label>
-        Min <select value={noteName(currentValue[1])}>
+        Min <select
+          onChange={e => {
+            this.updateInputValue(input, [
+              currentValue[0],
+              parseNote(e.target.value),
+            ])
+          }}
+          value={noteName(currentValue[1])}>
           {possibleInputs.map(name =>
             <option key={name} value={name}>{name}</option>
           )}
