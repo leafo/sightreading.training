@@ -1,5 +1,5 @@
 
-import {MajorScale} from "st/music"
+import {MajorScale, parseNote} from "st/music"
 
 import {
   RandomNotes, SweepRangeNotes, MiniSteps, TriadNotes, SevenOpenNotes,
@@ -21,7 +21,7 @@ let noteRangeInput = {
   name: "noteRange",
   type: "noteRange",
   label: "note range",
-  default: [0, 10],
+  default: [0, 99],
   min: 0,
   max: 100,
 }
@@ -106,6 +106,11 @@ export const GENERATORS = [
     create: function(staff, keySignature, options) {
       let scale = new MajorScale(keySignature)
       let notes = scale.getLooseRange(...staff.range)
+
+      notes = notes.filter( n => {
+        let pitch = parseNote(n)
+        return pitch >= options.noteRange[0] && pitch <= options.noteRange[1]
+      })
 
       // send the scale
       if (options.musical) {
