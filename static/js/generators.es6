@@ -3,7 +3,7 @@ import {parseNote, noteName, MajorScale, Chord} from "st/music"
 import {MersenneTwister} from "lib"
 
 // takes generator object from data
-export function generatorDefaultSettings(generator) {
+export function generatorDefaultSettings(generator, staff) {
   let out = {}
 
   if (!generator.inputs) {

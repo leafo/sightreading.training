@@ -170,6 +170,7 @@ export class SettingsPanel extends React.Component {
       <GeneratorSettings
         key={`${g.name}-${g.mode}`}
         generator={g}
+        currentKey={this.props.currentKey}
         currentSettings={this.props.currentGeneratorSettings}
         setGenerator={this.props.setGenerator} />
     </div>
@@ -203,7 +204,10 @@ export class GeneratorSettings extends React.PureComponent {
   render() {
     // calculate full settings with defaults
     this.cachedSettings = {
-      ...generatorDefaultSettings(this.props.generator),
+      ...generatorDefaultSettings(
+        this.props.generator,
+        this.props.currentKey,
+      ),
       ...this.props.currentSettings
     }
 

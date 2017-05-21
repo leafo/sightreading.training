@@ -110,7 +110,10 @@ export default class SightReadingPage extends React.Component {
     let generator = this.state.currentGenerator
 
     let generatorSettings = {
-      ...generatorDefaultSettings(generator),
+      ...generatorDefaultSettings(
+        generator,
+        this.state.currentStaff
+      ),
       ...this.state.currentGeneratorSettings
     }
 
