@@ -23,6 +23,8 @@ export default class EarTrainingPage extends React.Component {
   constructor(props) {
     super(props)
 
+    this.onPickMidiInstrument = channel => this.setState({midiChannel: channel}) 
+
     this.state = {
       midiChannel: null,
       noteHistory: new NoteList([]),
@@ -333,7 +335,7 @@ export default class EarTrainingPage extends React.Component {
         confirmLabel="Continue to ear training"
         unselectedLabel="Select device to continue"
         midi={this.props.midi}
-        onPick={channel => this.setState({midiChannel: channel}) }
+        onPick={this.onPickMidiInstrument}
       />
     </div>
   }

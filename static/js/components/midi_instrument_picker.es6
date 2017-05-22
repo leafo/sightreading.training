@@ -8,7 +8,7 @@ import {MidiChannel} from "st/midi"
 
 let {PropTypes: types} = React
 
-export default class MidiInstrumentPicker extends React.Component {
+export default class MidiInstrumentPicker extends React.PureComponent {
   static propTypes = {
     midi: types.object.isRequired
   }

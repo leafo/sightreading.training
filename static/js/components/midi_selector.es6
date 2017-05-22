@@ -3,7 +3,7 @@ import {classNames} from "lib"
 
 let {PropTypes: types} = React
 
-export default class MidiSelector extends React.Component {
+export default class MidiSelector extends React.PureComponent {
   static propTypes = {
     midiOptions: types.array.isRequired,
     selectedInput: types.func,
