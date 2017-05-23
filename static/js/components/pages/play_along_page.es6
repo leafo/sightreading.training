@@ -15,7 +15,7 @@ import SongTimer from "st/song_timer"
 import {KeySignature, noteName, parseNote} from "st/music"
 import {MidiInput} from "st/midi"
 
-import {trigger} from "st/events"
+import {dispatch, trigger} from "st/events"
 import {STAVES} from "st/data"
 import {GStaff} from "st/components/staves"
 import SongEditor from "st/components/song_editor"
@@ -31,6 +31,10 @@ import {AutoChords} from "st/auto_chords"
 let {CSSTransitionGroup} = React.addons || {}
 
 class SettingsPanel extends React.Component {
+  static propTypes = {
+    autoChordType: types.number.isRequired,
+  }
+
   constructor(props) {
     super(props)
   }
@@ -46,9 +50,26 @@ class SettingsPanel extends React.Component {
       </section>
       <section className="settings_group">
         <h4>Autochords</h4>
+        {this.renderAutochords()}
       </section>
     </section>
   }
+
+  renderAutochords() {
+    return AutoChords.allGenerators.map((type, idx) => {
+      let name = type.name
+
+      return <button
+        onClick={(e) => trigger(this, "setAutochords", idx)}
+        className={classNames("toggle_option", {
+          active: idx == this.props.autoChordType
+        })}
+        key={name}>
+          {name}
+        </button>
+    })
+  }
+
 }
 
 export default class PlayAlongPage extends React.Component {
@@ -189,6 +210,11 @@ export default class PlayAlongPage extends React.Component {
   componentDidMount() {
     this.updateBeat(0)
     this.loadSong(DEFAULT_SONG)
+    dispatch(this, {
+      setAutochords: (e, t) => {
+        this.setState({autoChordType: t})
+      }
+    })
   }
 
   componentWillUnmount() {
@@ -287,6 +313,7 @@ export default class PlayAlongPage extends React.Component {
     }
 
     return <SettingsPanel
+      autoChordType={this.state.autoChordType}
       close={() => this.setState({
         settingsPanelOpen: !this.state.settingsPanelOpen
       }) } />
