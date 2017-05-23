@@ -57,7 +57,7 @@ class SettingsPanel extends React.Component {
 
   renderAutochords() {
     return AutoChords.allGenerators.map((type, idx) => {
-      let name = type.name
+      let name = type.displayName
 
       return <button
         onClick={(e) => trigger(this, "setAutochords", idx)}

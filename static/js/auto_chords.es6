@@ -129,6 +129,7 @@ export class AutoChords {
 }
 
 export class RootAutoChords extends AutoChords {
+  static displayName = "Root"
   notesForChord(root, shape, blockStart, blockStop) {
     let maxPitch = this.minPitchInRange(blockStart, blockStop)
 
@@ -144,6 +145,7 @@ export class RootAutoChords extends AutoChords {
 }
 
 export class TriadAutoChords extends AutoChords {
+  static displayName = "Triad"
   notesForChord(root, shape, blockStart, blockStop) {
     let notesToAdd = []
 
@@ -157,6 +159,7 @@ export class TriadAutoChords extends AutoChords {
 }
 
 export class Root5AutoChords extends AutoChords {
+  static displayName = "Root+5"
   notesForChord(root, shape, blockStart, blockStop) {
     let maxPitch = this.minPitchInRange(blockStart, blockStop)
     let chordRoot = this.rootBelow(root, maxPitch)
@@ -187,6 +190,7 @@ export class Root5AutoChords extends AutoChords {
 }
 
 export class ArpAutoChords extends AutoChords {
+  static displayName = "Arp"
   notesForChord(root, shape, blockStart, blockStop) {
     let maxPitch = this.minPitchInRange(blockStart, blockStop)
     let chordRoot = this.rootBelow(root, maxPitch)
@@ -225,6 +229,7 @@ export class ArpAutoChords extends AutoChords {
 
 
 export class BossaNovaAutoChords extends AutoChords {
+  static displayName = "Bossa Nova"
   notesForChord(root, shape, blockStart, blockStop) {
     let maxPitch = this.minPitchInRange(blockStart, blockStop)
     let chordRoot = this.rootBelow(root, maxPitch)
