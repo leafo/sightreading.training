@@ -212,7 +212,10 @@ export default class PlayAlongPage extends React.Component {
     this.loadSong(DEFAULT_SONG)
     dispatch(this, {
       setAutochords: (e, t) => {
-        this.setState({autoChordType: t})
+        this.setState(
+          {autoChordType: t},
+          () => this.loadSong(this.state.currentSongName)
+        )
       }
     })
   }
