@@ -1,0 +1,12 @@
+
+.select_output_lightbox {
+    .confirm_buttons {
+        margin-top: 20px;
+        > button {
+            margin-right: 10px;
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+}

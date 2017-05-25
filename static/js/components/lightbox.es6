@@ -43,7 +43,7 @@ export default class Lightbox extends React.Component {
   }
 
   render() {
-    return <div className={classNames("lightbox", this.constructor.className)}>
+    return <div className={classNames("lightbox", this.constructor.className, this.props.className)}>
       {this.renderContent()}
     </div>
   }

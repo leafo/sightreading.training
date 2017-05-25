@@ -470,7 +470,8 @@ export default class PlayAlongPage extends React.Component {
       }>Pick Song</button>
 
       <button onClick={e => {
-        trigger(this, "showLightbox", <Lightbox>
+        trigger(this, "showLightbox", <Lightbox className="select_output_lightbox">
+          <h2>Select output</h2>
           <p>Choose instrument to play song to</p>
           <MidiInstrumentPicker
             midi={this.props.midi}
