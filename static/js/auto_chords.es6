@@ -26,8 +26,9 @@ export class AutoChords {
     return [root, shape]
   }
 
-  constructor(song) {
+  constructor(song, options={}) {
     this.song = song
+    this.options = options
   }
 
   findChordBlocks() {
@@ -98,7 +99,13 @@ export class AutoChords {
       ...notes.map(n => parseNote(n.note))
     ]
 
-    return Math.min(...pitches)
+    let minPitch = Math.min(...pitches)
+
+    if (this.options.chordMinSpacing) {
+      minPitch -= this.options.chordMinSpacing
+    }
+
+    return minPitch
   }
 
   // find the closest root beneath the notes in range
