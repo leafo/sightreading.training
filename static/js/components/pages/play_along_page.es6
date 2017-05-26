@@ -40,6 +40,8 @@ class SettingsPanel extends React.Component {
   }
 
   render() {
+    let chordMinSpacing = this.props.chordMinSpacing || 0
+
     return <section className="settings_panel">
       <div className="settings_header">
         <button onClick={this.props.close}>Close</button>
@@ -50,6 +52,14 @@ class SettingsPanel extends React.Component {
       </section>
       <section className="settings_group">
         <h4>Autochords</h4>
+        <div className="slider_row">
+          <Slider
+            min={0}
+            max={10}
+            onChange={(value) => trigger(this, "setMinChordSpacing", value)}
+            value={chordMinSpacing} />
+          <span className="current_value">{chordMinSpacing}</span>
+        </div>
         {this.renderAutochords()}
       </section>
     </section>
@@ -150,6 +160,9 @@ export default class PlayAlongPage extends React.Component {
 
       let song = SongParser.load(songText, {
         autoChords: AutoChords.allGenerators[autoChordIdx],
+        autoChordsSettings: {
+          chordMinSpacing: this.state.chordMinSpacing
+        }
       })
 
       this.setState({
@@ -211,6 +224,11 @@ export default class PlayAlongPage extends React.Component {
     this.updateBeat(0)
     this.loadSong(DEFAULT_SONG)
     dispatch(this, {
+      setMinChordSpacing: (e, value) => {
+        this.setState({
+          chordMinSpacing: value
+        }, () => this.loadSong(this.state.currentSongName))
+      },
       setAutochords: (e, t) => {
         this.setState(
           {autoChordType: t},
@@ -317,6 +335,7 @@ export default class PlayAlongPage extends React.Component {
 
     return <SettingsPanel
       autoChordType={this.state.autoChordType}
+      chordMinSpacing={this.state.chordMinSpacing}
       close={() => this.setState({
         settingsPanelOpen: !this.state.settingsPanelOpen
       }) } />

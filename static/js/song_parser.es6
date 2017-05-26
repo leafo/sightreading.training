@@ -51,9 +51,9 @@ export default class SongParser {
 
     if (song.autoChords) {
       if (opts && opts.autoChords) {
-        new opts.autoChords(song).addChords()
+        new opts.autoChords(song, opts.autoChordsSettings).addChords()
       } else {
-        new AutoChords.defaultChords(song).addChords()
+        new AutoChords.defaultChords(song, opts.autoChordsSettings).addChords()
       }
     }
 
