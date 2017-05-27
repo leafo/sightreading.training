@@ -37,6 +37,7 @@ class SettingsPanel extends React.Component {
 
   constructor(props) {
     super(props)
+    this.setMinChordSpacing = (value) => trigger(this, "setMinChordSpacing", value)
   }
 
   render() {
@@ -56,7 +57,7 @@ class SettingsPanel extends React.Component {
           <Slider
             min={0}
             max={10}
-            onChange={(value) => trigger(this, "setMinChordSpacing", value)}
+            onChange={this.setMinChordSpacing}
             value={chordMinSpacing} />
           <span className="current_value">{chordMinSpacing}</span>
         </div>
