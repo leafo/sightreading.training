@@ -24,6 +24,7 @@ export default class EarTrainingPage extends React.Component {
     super(props)
 
     this.onPickMidiInstrument = channel => this.setState({midiChannel: channel}) 
+    this.setNotesPerMelody = value => this.setState({ notesPerMelody: value })
 
     this.state = {
       midiChannel: null,
@@ -234,9 +235,7 @@ export default class EarTrainingPage extends React.Component {
         <Slider
           min={2}
           max={8}
-          onChange={(value) => {
-            this.setState({ notesPerMelody: value })
-          }}
+          onChange={this.setNotesPerMelody}
           value={this.state.notesPerMelody} />
         <span>{this.state.notesPerMelody}</span>
 
