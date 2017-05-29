@@ -49,6 +49,11 @@ class SettingsPanel extends React.Component {
         <h3>Settings</h3>
       </div>
       <section className="settings_group">
+        <h4>Load Song</h4>
+        {this.renderSongPicker()}
+      </section>
+
+      <section className="settings_group">
         <h4>Song Editor</h4>
       </section>
       <section className="settings_group">
@@ -81,6 +86,43 @@ class SettingsPanel extends React.Component {
     })
   }
 
+  renderSongPicker() {
+    let currentSong = this.props.currentSongName
+
+    let songs = [
+      "bartok_1",
+      "bartok_2",
+      "bartok_35",
+      "bartok_36",
+      "bartok_37",
+      "bartok_38",
+      "bartok_39",
+      "bartok_40",
+      "bartok_42",
+      "waltz_coordination_exercise",
+      "erfolg",
+      "mimiga",
+      "old_dan_tucker",
+      "good_vibrations"
+
+      // bossa_nova_test
+      // mary_had_a_little_lamb
+      // note_positioning_test
+    ]
+
+    return <ul>
+      {songs.map(song => {
+        let loaded = currentSong == song
+        return <li key={song}>
+          <button className={classNames({loaded})} onClick={e => {
+            trigger(this, "loadSong", song)
+          }}>{song}</button>
+        </li>
+        }
+      )}
+    </ul>
+
+  }
 }
 
 export default class PlayAlongPage extends React.Component {
@@ -337,6 +379,7 @@ export default class PlayAlongPage extends React.Component {
     return <SettingsPanel
       autoChordType={this.state.autoChordType}
       chordMinSpacing={this.state.chordMinSpacing}
+      currentSongName={this.state.currentSongName}
       close={() => this.setState({
         settingsPanelOpen: !this.state.settingsPanelOpen
       }) } />
@@ -484,10 +527,6 @@ export default class PlayAlongPage extends React.Component {
         //   autoChordType: this.state.autoChordType + 1
         // }, () => this.loadSong(this.state.currentSongName))
       }>Debug</button>
-
-      <button onClick={e =>
-        trigger(this, "showLightbox", this.renderSongPicker())
-      }>Pick Song</button>
 
       <button onClick={e => {
         trigger(this, "showLightbox", <Lightbox className="select_output_lightbox">
