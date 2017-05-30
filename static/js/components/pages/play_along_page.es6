@@ -267,6 +267,9 @@ export default class PlayAlongPage extends React.Component {
     this.updateBeat(0)
     this.loadSong(DEFAULT_SONG)
     dispatch(this, {
+      loadSong: (e, songName) => {
+        this.loadSong(songName)
+      },
       setMinChordSpacing: (e, value) => {
         this.setState({
           chordMinSpacing: value
@@ -517,16 +520,13 @@ export default class PlayAlongPage extends React.Component {
         this.setState({
           enableEditor: !this.state.enableEditor
         })
-      }>Toggle</button>
+      }>Editor</button>
 
       <button onClick={e =>
         this.setState({
           settingsPanelOpen: !this.state.settingsPanelOpen
         })
-        // this.setState({
-        //   autoChordType: this.state.autoChordType + 1
-        // }, () => this.loadSong(this.state.currentSongName))
-      }>Debug</button>
+      }>Settings</button>
 
       <button onClick={e => {
         trigger(this, "showLightbox", <Lightbox className="select_output_lightbox">
@@ -575,43 +575,5 @@ export default class PlayAlongPage extends React.Component {
   midiOutputs() {
     if (!this.props.midi) return []
     return [...this.props.midi.outputs.values()]
-  }
-
-  renderSongPicker() {
-    let songs = [
-      "bartok_1",
-      "bartok_2",
-      "bartok_35",
-      "bartok_36",
-      "bartok_37",
-      "bartok_38",
-      "bartok_39",
-      "bartok_40",
-      "bartok_42",
-      "waltz_coordination_exercise",
-      "erfolg",
-      "mimiga",
-      "old_dan_tucker",
-      "good_vibrations"
-
-      // bossa_nova_test
-      // mary_had_a_little_lamb
-      // note_positioning_test
-    ]
-
-    return <Lightbox>
-      <p>Select a song to load</p>
-      <ul>
-      {songs.map(song =>
-          <li key={song}>
-            <button onClick={e => {
-              this.loadSong(song)
-              trigger(this, "closeLightbox")
-            }}>{song}</button>
-            {this.state.currentSongName == song ? " Loaded" : ""}
-          </li>
-      )}
-      </ul>
-    </Lightbox>
   }
 }
