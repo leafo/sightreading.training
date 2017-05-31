@@ -271,11 +271,24 @@ export class GeneratorSettings extends React.PureComponent {
 
   renderNoteRange(input, idx) {
     let currentValue = this.cachedSettings[input.name]
+    let [min, max] = currentValue
 
     let possibleInputs = []
+    let possibleMin = []
+    let possibleMax = []
     
     for (let i=input.min; i < input.max; i++) {
-      possibleInputs.push(noteName(i))
+      let iName = noteName(i)
+
+      possibleInputs.push(iName)
+
+      if (i >= min) {
+        possibleMax.push(iName)
+      }
+
+      if (i <= max) {
+        possibleMin.push(iName)
+      }
     }
 
     return <div className="note_range_row">
@@ -288,7 +301,7 @@ export class GeneratorSettings extends React.PureComponent {
             ])
           }}
           value={noteName(currentValue[0])}>
-          {possibleInputs.map(name =>
+          {possibleMin.map(name =>
             <option key={name} value={name}>{name}</option>
           )}
         </select>
@@ -303,7 +316,7 @@ export class GeneratorSettings extends React.PureComponent {
             ])
           }}
           value={noteName(currentValue[1])}>
-          {possibleInputs.map(name =>
+          {possibleMax.map(name =>
             <option key={name} value={name}>{name}</option>
           )}
         </select>
