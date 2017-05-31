@@ -21,7 +21,7 @@ let noteRangeInput = {
   name: "noteRange",
   type: "noteRange",
   label: "note range",
-  default: [0, 99],
+  // default: [0, 99], // default is set automatically
   min: 0,
   max: 100,
 }

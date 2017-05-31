@@ -20,6 +20,16 @@ export function generatorDefaultSettings(generator, staff) {
         return input.values[0].name
       case "range":
         return input.min
+      case "noteRange":
+        if (staff && input.name == "noteRange") {
+          console.log("range for staff", staff)
+          return [
+            parseNote(staff.range[0]),
+            parseNote(staff.range[1])
+          ]
+        } else {
+          return [input.min, input.max]
+        }
     }
   }
 
