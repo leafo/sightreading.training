@@ -54,9 +54,6 @@ class SettingsPanel extends React.Component {
       </section>
 
       <section className="settings_group">
-        <h4>Song Editor</h4>
-      </section>
-      <section className="settings_group">
         <h4>Autochords</h4>
         <div className="slider_row">
           <Slider
@@ -110,18 +107,19 @@ class SettingsPanel extends React.Component {
       // note_positioning_test
     ]
 
-    return <ul>
-      {songs.map(song => {
-        let loaded = currentSong == song
-        return <li key={song}>
-          <button className={classNames({loaded})} onClick={e => {
-            trigger(this, "loadSong", song)
-          }}>{song}</button>
-        </li>
-        }
-      )}
-    </ul>
-
+    return <section className="song_list">
+      <ul>
+        {songs.map(song => {
+          let loaded = currentSong == song
+          return <li key={song}>
+            <button className={classNames({selected: loaded})} onClick={e => {
+              trigger(this, "loadSong", song)
+            }}>{song}</button>
+          </li>
+          }
+        )}
+      </ul>
+    </section>
   }
 }
 
