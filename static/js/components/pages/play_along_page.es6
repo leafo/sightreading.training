@@ -57,7 +57,7 @@ class SettingsPanel extends React.Component {
         <h4>Autochords</h4>
         <div className="slider_row">
           <Slider
-            min={0}
+            min={-5}
             max={10}
             onChange={this.setMinChordSpacing}
             value={chordMinSpacing} />
