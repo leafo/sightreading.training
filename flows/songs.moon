@@ -57,6 +57,31 @@ class SongsFlow extends Flow
       }
     }
 
+  create_song: =>
+    trim_filter @params
+    assert_valid @params, {
+      {"song", type: "table"}
+    }
 
+    new_song = @params.song
+    assert_valid new_song, {
+      {"title", type: "string", max_length: 160, exists: true}
+      {"song", type: "string", max_length: 1024*10, exists: true}
+      {"source", type: "string", optional: true, max_length: 250}
+      {"album", type: "string", optional: true, max_length: 250}
+      {"artist", type: "string", optional: true, max_length: 250}
+    }
 
+    song = Songs\create {
+      title: new_song.title
+      song: new_song.song
+      user_id: @current_user.id
+    }
+
+    json: {
+      success: true
+      song: {
+        id: song.id
+      }
+    }
 

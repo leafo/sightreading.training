@@ -3,7 +3,7 @@ lapis = require "lapis"
 import assert_error from require "lapis.application"
 import set_csrf from require "helpers.csrf"
 
-import get, post from require "helpers.app"
+import get, post, multi from require "helpers.app"
 
 date = require "date"
 
@@ -59,8 +59,14 @@ class extends lapis.Application
   "/new-preset.json": post =>
     @flow("presets")\create_preset!
 
-  "/songs.json": get =>
-    @flow("songs")\list_songs!
+  "/songs.json": multi {
+    get: =>
+      @flow("songs")\list_songs!
+
+    post: =>
+      assert_error @current_user, "must be logged in"
+      @flow("songs")\create_song!
+  }
 
   "/songs/:song_id.json": get =>
     @flow("songs")\get_song!
