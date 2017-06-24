@@ -25,9 +25,19 @@ describe "app", ->
       assert.same 200, status
       assert.same { success: true, songs: {} },res
 
+    it "gets song with result", ->
+      song = factory.Songs!
+      status, res = request "/songs.json", expect: "json"
+      assert.same 200, status
+
+      assert.same 1, #res.songs
+
     it "gets song", ->
       song = factory.Songs!
       status, res = request "/songs/#{song.id}.json", expect: "json"
       assert.same 200, status
       assert.true res.success
+
+
+
 
