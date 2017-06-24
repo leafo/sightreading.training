@@ -58,3 +58,8 @@ class extends lapis.Application
 
   "/new-preset.json": post =>
     @flow("presets")\create_preset!
+
+  "/songs.json": get =>
+    @flow("songs")\list_songs!
+
+
