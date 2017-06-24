@@ -14,10 +14,18 @@ next_counter = do
 next_email = ->
   "me-#{next_counter "email"}@example.com"
 
-Users = (opts) ->
+local *
+
+Users = (opts={}) ->
   opts.email or= next_email!
-  opts.username or= next_counter "user"
-  opts.password or= next_counter "password"
+  opts.username or= "user #{next_counter "user"}"
+  opts.password or= "password #{next_counter "password"}"
   models.Users\create opts
 
-{:Users}
+Songs = (opts={}) ->
+  opts.user_id or= Users!.id
+  opts.title or= "Song #{next_counter "song"}"
+  opts.song or= "c4 d4 f4 e4"
+  models.Songs\create opts
+
+{:Users, :Songs}
