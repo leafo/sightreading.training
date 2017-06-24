@@ -62,4 +62,7 @@ class extends lapis.Application
   "/songs.json": get =>
     @flow("songs")\list_songs!
 
+  "/songs/:song_id.json": get =>
+    @flow("songs")\get_song!
+
 
