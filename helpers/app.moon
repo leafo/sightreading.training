@@ -1,23 +1,26 @@
 
 import respond_to from require "lapis.application"
 import assert_csrf from require "helpers.csrf"
+import capture_errors_json from require "lapis.application"
 
 post = (fn) ->
-  respond_to {
-    on_error: =>
-      json: { errors: @errors }
-
+  capture_errors_json respond_to {
     POST: =>
       assert_csrf @
       fn @
   }
 
 get = (fn) ->
-  respond_to {
-    on_error: =>
-      json: { errors: @errors }
-
+  capture_errors_json respond_to {
     GET: fn
   }
 
-{:get, :post}
+multi = (tbl) ->
+  capture_errors_json respond_to {
+    GET: tbl.get
+    POST: tbl.post and =>
+      assert_csrf @
+      tbl.post @
+  }
+
+{:get, :post, :multi}
