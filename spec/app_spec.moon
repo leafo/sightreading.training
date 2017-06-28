@@ -2,6 +2,8 @@ import use_test_server from require "lapis.spec"
 import request from require "lapis.spec.server"
 import truncate_tables from require "lapis.spec.db"
 
+import request_as from require "spec.helpers"
+
 factory = require "spec.factory"
 
 describe "app", ->
@@ -14,8 +16,25 @@ describe "app", ->
     assert.same 200, status
 
   it "gets presets", ->
-    status = request "/presets.json"
+    status, res = request "/presets.json", {
+      expect: "json"
+    }
+
     assert.same 200, status
+    assert.same {
+      errors: {"must be logged in"}
+    }, res
+
+    user = factory.Users!
+    status, res = request_as user, "/presets.json", {
+      expect: "json"
+    }
+
+    assert.same 200, status
+    assert.same {
+      success: true
+      presets: {}
+    }, res
 
   describe "songs", ->
     import Songs from require "spec.models"

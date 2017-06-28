@@ -2,6 +2,8 @@
 import escape from require "lapis.util"
 csrf = require "lapis.csrf"
 
+import request from require "lapis.spec.server"
+
 -- returns headers for logged in user
 log_in_user_session = (user) ->
   config = require("lapis.config").get "test"
@@ -42,3 +44,5 @@ request_as = (user, url, opts={}) ->
 
   request_fn url, opts
 
+
+{:request_as}
