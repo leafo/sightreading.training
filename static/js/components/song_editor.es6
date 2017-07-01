@@ -1,6 +1,8 @@
 import * as React from "react"
 import SongParser from "st/song_parser"
 
+import {JsonForm, TextInputRow} from "st/components/forms"
+
 export default class SongEditor extends React.Component {
   constructor(props) {
     super(props)
@@ -26,29 +28,21 @@ export default class SongEditor extends React.Component {
   }
 
   render() {
-    return <form
-      onSubmit={(e) => {
-        e.preventDefault()
-      }}
-      className="song_editor">
-      <textarea className="song_editor" onChange={
+    return <JsonForm action="/songs.json" className="song_editor">
+      <div className="song_editor_tools">
+        <TextInputRow name="song[title]">Title</TextInputRow>
+      </div>
+
+      <textarea name="song[song]" className="song_editor" onChange={
         (e) => {
           let code = e.target.value
           this.setState({ code })
           this.compileSong(code)
         }
       }></textarea>
-      <div className="song_editor_tools">
-        <div className="input_row">
-          <label>
-            Title
-            <input type="text" />
-          </label>
-        </div>
-        </div>
-        <div className="input_row">
-          <button>Save</button>
-        </div>
-    </form>
+      <div className="input_row">
+        <button>Save</button>
+      </div>
+    </JsonForm>
   }
 }
