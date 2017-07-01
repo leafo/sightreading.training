@@ -7,14 +7,47 @@ export default class SongEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentSong: this.props.currentSong
+      currentSong: this.props.currentSong,
+      loading: false,
+
+      title: "",
+      code: "dong",
+      source: "",
+      album: "",
+      artist: "",
+    }
+  }
+
+  componentDidMount() {
+    this.loadSong(1)
+  }
+
+  loadSong(song_id) {
+    if (this.state.loading) {
+      return
+    }
+
+    this.setState({ loading: true })
+
+    let request = new XMLHttpRequest()
+    request.open("GET", `/songs/${song_id}.json`)
+    request.send()
+
+    request.onload = (e) => {
+      let res = JSON.parse(request.responseText)
+      console.warn(res.song)
+      this.setState({
+        loading: false,
+        song: res.song,
+        code: res.song.song,
+        title: res.song.title,
+      })
     }
   }
 
   beforeSubmit() {
     this.setState({
       errors: null,
-      loading: true,
     })
   }
 
@@ -62,22 +95,39 @@ export default class SongEditor extends React.Component {
     return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
       {errors}
       <div className="song_editor_tools">
-        <TextInputRow name="song[title]">Title</TextInputRow>
-        <TextInputRow name="song[source]">Source</TextInputRow>
-        <TextInputRow name="song[artist]">Artist</TextInputRow>
-        <TextInputRow name="song[album]">Album</TextInputRow>
+        {this.textInput("Title", "title")}
+        {this.textInput("Source", "source")}
+        {this.textInput("Artist", "artist")}
+        {this.textInput("Album", "album")}
       </div>
 
-      <textarea name="song[song]" className="song_editor" onChange={
-        (e) => {
-          let code = e.target.value
-          this.setState({ code })
-          this.compileSong(code)
-        }
-      }></textarea>
+      <textarea
+        disabled={this.state.loading}
+        name="song[song]"
+        className="song_editor"
+        value={this.state.code}
+        onChange={
+          (e) => {
+            let code = e.target.value
+            this.setState({ code })
+            this.compileSong(code)
+          }
+        }></textarea>
+
       <div className="input_row">
         <button>Save</button>
       </div>
     </JsonForm>
+  }
+
+  textInput(title, field) {
+    return <TextInputRow
+      disabled={this.state.loading}
+      onChange={e => this.setState({
+        [field]: e.target.value
+      })}
+      value={this.state[field]}
+      name={`song[${field}]`}
+      >{title}</TextInputRow>
   }
 }

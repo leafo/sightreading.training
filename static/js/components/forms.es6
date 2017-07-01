@@ -17,7 +17,7 @@ export class TextInputRow extends React.Component {
       name: this.props.name,
     };
 
-    (["onChange", "value", "required"]).forEach((k) => {
+    (["onChange", "value", "required", "disabled"]).forEach((k) => {
       if (k in this.props) {
         inputProps[k] = this.props[k]
       }
@@ -63,7 +63,7 @@ export class JsonForm extends React.Component {
 
     let url = this.refs.form.getAttribute("action")
 
-    var request = new XMLHttpRequest()
+    let request = new XMLHttpRequest()
     request.open("POST", url)
     request.send(formData)
 

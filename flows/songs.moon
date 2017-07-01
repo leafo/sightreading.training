@@ -54,6 +54,7 @@ class SongsFlow extends Flow
       song: {
         id: song.id
         user_id: song.user_id
+        title: song.title
         artist: song.artist
         album: song.album
         source: song.source
