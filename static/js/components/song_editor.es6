@@ -7,7 +7,15 @@ export default class SongEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      currentSong: this.props.currentSong
     }
+  }
+
+  afterSubmit(res) {
+    console.log("got response", res)
+    this.setState({
+      song: res.song
+    })
   }
 
   compileSong(code) {
@@ -28,7 +36,12 @@ export default class SongEditor extends React.Component {
   }
 
   render() {
-    return <JsonForm action="/songs.json" className="song_editor">
+    let action = "/songs.json"
+    if (this.state.song) {
+      let action = `/songs/${this.state.song.id}.json`
+    }
+
+    return <JsonForm action={action} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
       <div className="song_editor_tools">
         <TextInputRow name="song[title]">Title</TextInputRow>
       </div>
