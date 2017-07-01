@@ -11,8 +11,20 @@ export default class SongEditor extends React.Component {
     }
   }
 
+  beforeSubmit() {
+    this.setState({
+      errors: null,
+      loading: true,
+    })
+  }
+
   afterSubmit(res) {
-    console.log("got response", res)
+    if (res.errors) {
+      this.setState({
+        errors: res.errors
+      })
+    }
+
     this.setState({
       song: res.song
     })
@@ -38,12 +50,22 @@ export default class SongEditor extends React.Component {
   render() {
     let action = "/songs.json"
     if (this.state.song) {
-      let action = `/songs/${this.state.song.id}.json`
+      action = `/songs/${this.state.song.id}.json`
     }
 
-    return <JsonForm action={action} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
+    let errors
+
+    if (this.state.errors) {
+      errors = <ul>{this.state.errors.map(e => <li key={e}>{e}</li>)}</ul>
+    }
+
+    return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
+      {errors}
       <div className="song_editor_tools">
         <TextInputRow name="song[title]">Title</TextInputRow>
+        <TextInputRow name="song[source]">Source</TextInputRow>
+        <TextInputRow name="song[artist]">Artist</TextInputRow>
+        <TextInputRow name="song[album]">Album</TextInputRow>
       </div>
 
       <textarea name="song[song]" className="song_editor" onChange={
