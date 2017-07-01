@@ -6,6 +6,8 @@ import request_as from require "spec.helpers"
 
 factory = require "spec.factory"
 
+import types from require "tableshape"
+
 describe "app", ->
   use_test_server!
 
@@ -57,6 +59,25 @@ describe "app", ->
       assert.same 200, status
       assert.true res.success
 
+    it "creates a song", ->
+      user = factory.Users!
 
+      status, res = request_as user, "/songs.json", {
+        expect: "json"
+        post: {
+          "song[title]": "hello world"
+          "song[song]": "g5 g5 g5"
+        }
+      }
 
+      assert.same 200, status
+
+      s = types.shape {
+        success: true
+        song: types.shape {
+          id: types.number
+        }
+      }
+
+      assert s res
 
