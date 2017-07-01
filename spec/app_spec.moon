@@ -81,3 +81,23 @@ describe "app", ->
 
       assert s res
 
+    it "updates a song", ->
+      user = factory.Users!
+      song = factory.Songs user_id: user.id
+
+      status, res = request_as user, "/songs/#{song.id}.json", {
+        expect: "json"
+        post: {
+          "song[title]": "the new title"
+          "song[song]": "g5 a5"
+        }
+      }
+
+      assert.same 200, status
+      assert.same {success: true}, res
+
+      song\refresh!
+      assert.same "the new title", song.title
+      assert.same "g5 a5", song.song
+
+

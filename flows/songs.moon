@@ -35,15 +35,19 @@ class SongsFlow extends Flow
         }
     }
 
-  get_song: =>
-    trim_filter @params
-
+  find_song: =>
     assert_valid @params, {
       {"song_id", exists: true, is_integer: true}
     }
 
     song = Songs\find @params.song_id
     assert_error song, "could not find song"
+    song
+
+  get_song: =>
+    trim_filter @params
+
+    song = @find_song!
 
     json: {
       success: true
@@ -76,6 +80,18 @@ class SongsFlow extends Flow
     new_song
 
   update_song: =>
+    song = @find_song!
+    assert_error song\allowed_to_edit @current_user
+    song_params = @validate_song!
+
+    song\update {
+      title: song_params.title
+      song: song_params.song
+    }
+
+    json: {
+      success: true
+    }
 
   create_song: =>
     song_params = @validate_song!

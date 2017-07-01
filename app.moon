@@ -68,7 +68,13 @@ class extends lapis.Application
       @flow("songs")\create_song!
   }
 
-  "/songs/:song_id.json": get =>
-    @flow("songs")\get_song!
+  "/songs/:song_id.json": multi {
+    get: =>
+      @flow("songs")\get_song!
+
+    post: =>
+      assert_error @current_user, "must be logged in"
+      @flow("songs")\update_song!
+  }
 
 
