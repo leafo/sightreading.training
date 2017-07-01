@@ -9,7 +9,11 @@ log_in_user_session = (user) ->
   config = require("lapis.config").get "test"
   import encode_session from require "lapis.session"
 
-  stub = { session: {} }
+  stub = {
+    session: {
+      csrf_token: "helloworld"
+    }
+  }
 
   user\write_session stub
   val = escape encode_session stub.session
@@ -25,8 +29,7 @@ append_cookie = (opts, cookie) ->
 
 add_csrf = (opts) ->
   import cookie_name from require "helpers.csrf"
-  opts.post.csrf_token = csrf.generate_token nil, "helloworld"
-  append_cookie opts, "#{cookie_name}=helloworld"
+  opts.post.csrf_token = "helloworld"
   opts
 
 request_as = (user, url, opts={}) ->
