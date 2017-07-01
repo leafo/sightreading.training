@@ -29,3 +29,8 @@ class Songs extends Model
   get_slug: =>
     slugify @title
 
+
+  allowed_to_edit: (user) =>
+    return false unless user
+    return true if user\is_admin!
+    user.id == @user_id

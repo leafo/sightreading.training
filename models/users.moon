@@ -108,3 +108,6 @@ class Users extends Model
 
     if not span or span > 1
       @update { last_active_at: db.format_date! }, timestamp: false
+
+
+  is_admin: => false
