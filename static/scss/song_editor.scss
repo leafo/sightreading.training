@@ -6,8 +6,10 @@
     display: flex;
 
     .song_editor_tools {
-        width: 200px;
+        width: 20%;
+        max-width: 300px;
         margin-left: 20px;
+        flex-basis: 1;
 
         input[type='text'] {
             width: 100%;
@@ -16,7 +18,8 @@
     }
 
     > textarea {
-        flex: 1
+        flex-basis: 1;
+        flex-grow: 1;
     }
 }
 

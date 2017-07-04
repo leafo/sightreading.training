@@ -93,18 +93,9 @@ export default class SongEditor extends React.Component {
     }
 
     return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
-      {errors}
-      <div className="song_editor_tools">
-        {this.textInput("Title", "title")}
-        {this.textInput("Source", "source")}
-        {this.textInput("Artist", "artist")}
-        {this.textInput("Album", "album")}
-      </div>
-
       <textarea
         disabled={this.state.loading}
         name="song[song]"
-        className="song_editor"
         value={this.state.code}
         onChange={
           (e) => {
@@ -114,9 +105,18 @@ export default class SongEditor extends React.Component {
           }
         }></textarea>
 
-      <div className="input_row">
-        <button>Save</button>
+      <div className="song_editor_tools">
+        {errors}
+        {this.textInput("Title", "title")}
+        {this.textInput("Source", "source")}
+        {this.textInput("Artist", "artist")}
+        {this.textInput("Album", "album")}
+
+        <div className="input_row">
+          <button>Save</button>
+        </div>
       </div>
+
     </JsonForm>
   }
 

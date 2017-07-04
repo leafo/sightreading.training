@@ -88,7 +88,7 @@ export class JsonForm extends React.Component {
   }
 
   render() {
-    return <form ref="form" action={this.props.action} method="post" onSubmit={this.submitHandler.bind(this)}>
+    return <form ref="form" className={this.props.className} action={this.props.action} method="post" onSubmit={this.submitHandler.bind(this)}>
       {this.props.children}
     </form>
   }
