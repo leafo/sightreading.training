@@ -11,7 +11,7 @@ export default class SongEditor extends React.Component {
       loading: false,
 
       title: "",
-      code: "dong",
+      code: "",
       source: "",
       album: "",
       artist: "",
@@ -19,10 +19,12 @@ export default class SongEditor extends React.Component {
   }
 
   componentDidMount() {
-    this.loadSong(1)
+    if (this.props.songId) {
+      this.loadSong(this.props.songId)
+    }
   }
 
-  loadSong(song_id) {
+  loadSong(songId) {
     if (this.state.loading) {
       return
     }
@@ -30,7 +32,7 @@ export default class SongEditor extends React.Component {
     this.setState({ loading: true })
 
     let request = new XMLHttpRequest()
-    request.open("GET", `/songs/${song_id}.json`)
+    request.open("GET", `/songs/${songId}.json`)
     request.send()
 
     request.onload = (e) => {

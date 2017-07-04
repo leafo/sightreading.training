@@ -451,7 +451,6 @@ export default class PlayAlongPage extends React.Component {
   renderEditor() {
     return <SongEditor onSong={
       song => {
-        this.setSong(song)
       }
     } />
   }
