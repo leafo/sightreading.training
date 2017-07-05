@@ -184,6 +184,17 @@ export default class PlayAlongPage extends React.Component {
     return this.setters[name]
   }
 
+  songParserParams() {
+    let autoChordIdx = this.state.autoChordType % AutoChords.allGenerators.length
+
+    return {
+      autoChords: AutoChords.allGenerators[autoChordIdx],
+      autoChordsSettings: {
+        chordMinSpacing: this.state.chordMinSpacing
+      }
+    }
+  }
+
   loadSong(name) {
     if (this.state.loading) {
       return
@@ -196,18 +207,11 @@ export default class PlayAlongPage extends React.Component {
     request.send()
     request.onload = (e) => {
       let songText = request.responseText
-
-      let autoChordIdx = this.state.autoChordType % AutoChords.allGenerators.length
-
-      let song = SongParser.load(songText, {
-        autoChords: AutoChords.allGenerators[autoChordIdx],
-        autoChordsSettings: {
-          chordMinSpacing: this.state.chordMinSpacing
-        }
-      })
+      let song = SongParser.load(songText, this.songParserParams())
 
       this.setState({
         currentSongName: name,
+        currentSongCode: songText,
       })
 
       this.setSong(song)
@@ -449,10 +453,10 @@ export default class PlayAlongPage extends React.Component {
   }
 
   renderEditor() {
-    return <SongEditor onSong={
-      song => {
-      }
-    } />
+    return <SongEditor
+      parserParams={this.songParserParams()}
+      code={this.state.currentSongCode}
+      onSong={song => this.setSong(song) } />
   }
 
   renderTransportControls() {

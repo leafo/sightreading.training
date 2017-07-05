@@ -11,7 +11,7 @@ export default class SongEditor extends React.Component {
       loading: false,
 
       title: "",
-      code: "",
+      code: this.props.code || "",
       source: "",
       album: "",
       artist: "",
@@ -69,7 +69,7 @@ export default class SongEditor extends React.Component {
     let song = null
 
     try {
-      song = SongParser.load(code)
+      song = SongParser.load(code, this.props.parserParams)
     } catch(err) {
       console.error(err.message)
       if (this.props.onError) {
@@ -78,7 +78,7 @@ export default class SongEditor extends React.Component {
     }
 
     if (song && this.props.onSong) {
-      this.props.onSong(song)
+      this.props.onSong(song, code)
     }
   }
 
