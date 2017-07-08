@@ -229,6 +229,16 @@ export class ArpAutoChords extends AutoChords {
       }
     })
 
+    for (let note of out) {
+      while (parseNote(note.note) >= maxPitch) {
+        // shift everything done by octave
+        for (let note of out) {
+          note.note = noteName(parseNote(note.note) - 12)
+        }
+      }
+    }
+
+
     return out
   }
 }
