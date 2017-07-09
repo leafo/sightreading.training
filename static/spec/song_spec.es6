@@ -23,13 +23,19 @@ describe("song", function() {
       ["C5", 0, 1],
       ["D5", 1, 1],
       ["E5", 3, 1],
-      ["D5", 5, 1]
+      ["D5", 5, 1],
+
+      ["F5", 1, 5], // overlap (1 - 6)
+      ["F5", 1, 3], // overlap start (1 - 4)
+      ["F5", 4, 2], // overlap end (4 - 6)
     ])
 
     let range = song.notesInRange(3,5)
     expect(range).toEqual([
       new SongNote("E5", 3, 1),
-      new SongNote("D5", 5, 1),
+      new SongNote("F5", 1, 5),
+      new SongNote("F5", 1, 3),
+      new SongNote("F5", 4, 2),
     ])
   })
 })
