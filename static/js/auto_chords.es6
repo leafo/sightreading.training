@@ -94,7 +94,9 @@ export class AutoChords {
   minPitchInRange(start, stop) {
     let notes = this.song.notesInRange(start, stop)
 
+
     let pitches = [
+      MIDDLE_C_PITCH + 5,
       ...notes.map(n => parseNote(n.note))
     ]
 
