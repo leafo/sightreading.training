@@ -122,8 +122,8 @@ export class SongNote {
   inRange(min, max) {
     let stop = this.start + this.duration
 
-    if (min > stop) { return false }
-    if (max < this.start) { return false }
+    if (min >= stop) { return false }
+    if (max <= this.start) { return false }
 
     return true
   }
