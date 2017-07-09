@@ -276,7 +276,7 @@ export class GeneratorSettings extends React.PureComponent {
     let possibleInputs = []
     let possibleMin = []
     let possibleMax = []
-    
+
     for (let i=input.min; i < input.max; i++) {
       let iName = noteName(i)
 
@@ -293,33 +293,31 @@ export class GeneratorSettings extends React.PureComponent {
 
     return <div className="note_range_row">
       <label>
-        Min <select
-          onChange={e => {
+        Min
+        <Select
+          onChange={value => {
             this.updateInputValue(input, [
-              parseNote(e.target.value),
+              parseNote(value),
               currentValue[1],
             ])
           }}
-          value={noteName(currentValue[0])}>
-          {possibleMin.map(name =>
-            <option key={name} value={name}>{name}</option>
-          )}
-        </select>
+          value={noteName(currentValue[0])}
+          options={possibleMin.map(name => ({ value: name, name }))}
+        />
       </label>
 
       <label>
-        Min <select
-          onChange={e => {
+        Min
+        <Select
+          onChange={value => {
             this.updateInputValue(input, [
               currentValue[0],
-              parseNote(e.target.value),
+              parseNote(value),
             ])
           }}
-          value={noteName(currentValue[1])}>
-          {possibleMax.map(name =>
-            <option key={name} value={name}>{name}</option>
-          )}
-        </select>
+          value={noteName(currentValue[1])}
+          options={possibleMax.map(name => ({ value: name, name }))}
+        />
       </label>
     </div>
   }
