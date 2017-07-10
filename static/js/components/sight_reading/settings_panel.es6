@@ -95,7 +95,6 @@ export class SettingsPanel extends React.Component {
     var presetsPicker
 
     if (this.state.presets && this.state.presets.length) {
-      console.log(this.state.presets)
       presetsPicker = <div className="presetsPicker">
         <Select
           name="preset"
@@ -273,14 +272,22 @@ export class GeneratorSettings extends React.PureComponent {
     let currentValue = this.cachedSettings[input.name]
     let [min, max] = currentValue
 
-    let possibleInputs = []
     let possibleMin = []
     let possibleMax = []
 
-    for (let i=input.min; i < input.max; i++) {
+    let staffMin, staffMax
+
+    if (this.props.currentStaff) {
+      let staff = this.props.currentStaff
+      staffMin = parseNote(staff.range[0])
+      staffMax = parseNote(staff.range[1])
+    }
+
+    for (let i=input.max; i >= input.min; i--) {
       let iName = noteName(i)
 
-      possibleInputs.push(iName)
+      if (i < staffMin) { continue }
+      if (i > staffMax) { continue }
 
       if (i >= min) {
         possibleMax.push(iName)
@@ -307,7 +314,7 @@ export class GeneratorSettings extends React.PureComponent {
       </label>
 
       <label>
-        Min
+        Max
         <Select
           onChange={value => {
             this.updateInputValue(input, [
