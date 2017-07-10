@@ -84,6 +84,26 @@ export default class Slider extends React.PureComponent {
       <div ref="track" className="slider_track">
         <button
           onMouseDown={(e) => this.startDrag(e.pageX, e.pageY)}
+          onKeyDown={e => {
+            let delta = 0
+
+            switch (e.keyCode) {
+              case 37: // left
+                delta = -1
+                break
+              case 39: // right
+                delta = 1
+                break
+              case 38: // up
+                delta = 10
+                break
+              case 40: // down
+                delta = -10
+                break
+            }
+
+            this.onChange(Math.max(this.props.min, Math.min(this.props.max, this.currentValue() + delta)))
+          }}
           style={{
             left: this.percent() * 100 + "%"
           }}
