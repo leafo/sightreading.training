@@ -28,18 +28,27 @@ class HitsFlow extends Flow
 
     true
 
-  get_stats: (range='30 days') =>
+  get_stats: (opts={}) =>
     assert_error @current_user
+    assert_valid opts, {
+      {"offset", is_integer: true, optional: true}
+    }
 
+    {:range, :offset} = opts
+    range or= "30 days"
+
+    offset = "#{offset or "0"} minutes"
+
+    -- converts dates into local time
     HourlyHits\select "
       where hour >= now() at time zone 'utc' - ?::interval
       and user_id = ?
-      group by hour::date
-    ", range, @current_user.id, {
+      group by (hour - ?::interval)::date
+    ", range, @current_user.id, offset, {
       fields: db.interpolate_query "
-        hour::date as date,
+        (hour - ?::interval)::date as date,
         sum(count) filter (where type = ?) as hits,
         sum(count) filter (where type = ?) as misses
-      ", HourlyHits.types.hit, HourlyHits.types.miss
+      ", offset, HourlyHits.types.hit, HourlyHits.types.miss
     }
 

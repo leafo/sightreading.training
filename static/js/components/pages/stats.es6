@@ -30,7 +30,8 @@ export default class StatsPage extends React.Component {
     })
 
     let request = new XMLHttpRequest()
-    request.open("GET", "/stats.json")
+    let offset = new Date().getTimezoneOffset()
+    request.open("GET", `/stats.json?offset=${offset}`)
     request.send()
     request.onload = (e) => {
       try {

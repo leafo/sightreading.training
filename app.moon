@@ -47,7 +47,10 @@ class extends lapis.Application
 
   "/stats.json": get =>
     assert_error @current_user, "must be logged in"
-    stats = @flow("hits")\get_stats!
+    stats = @flow("hits")\get_stats {
+      offset: @params.offset
+    }
+
     stats = nil unless next stats
 
     json: { success: true, :stats }
