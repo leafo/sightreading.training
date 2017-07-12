@@ -172,6 +172,11 @@ export class KeySignature {
     return KeySignature.FIFTHS[offset]
   }
 
+  // the default scale root for building scales from key signature
+  scaleRoot() {
+    return this.name()
+  }
+
   // convert note to enharmonic equivalent that fits into this key signature
   // TODO: this might have to be done at the scale level
   enharmonic(note) {
@@ -313,14 +318,28 @@ export class KeySignature {
   }
 }
 
+export class ChromaticKeySignature extends KeySignature {
+  constructor() {
+    super(0) // render as c major
+  }
+
+  name() {
+    return "Chromatic"
+  }
+
+  scaleRoot() {
+    return "C"
+  }
+}
+
 export class Scale {
   constructor(root) {
     if (root instanceof KeySignature) {
-      root = root.name()
+      root = root.scaleRoot()
     }
 
     if (!root.match(/^[A-G][b#]?$/)) {
-      throw "scale root not properly formed"
+      throw "scale root not properly formed: " + root
     }
  
     this.root = root

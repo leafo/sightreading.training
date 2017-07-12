@@ -7,7 +7,7 @@ import Select from "st/components/select"
 import {trigger} from "st/events"
 import {generatorDefaultSettings, fixGeneratorSettings} from "st/generators"
 
-import {KeySignature, noteName, parseNote} from "st/music"
+import {KeySignature, ChromaticKeySignature, noteName, parseNote} from "st/music"
 
 let {PropTypes: types} = React;
 
@@ -177,10 +177,8 @@ export class SettingsPanel extends React.Component {
   }
 
   renderKeys() {
-    return [0, 1, 2, 3, 4, 5, -1, -2, -3, -4, -5, -6].map((key) => {
-      key = new KeySignature(key)
-
-      return <button
+    let keyButton = (key) =>
+      <button
         onClick={(e) => {
           this.props.setKeySignature(key)
         }}
@@ -190,7 +188,13 @@ export class SettingsPanel extends React.Component {
         key={key.name()}>
           {key.name()}
         </button>
-    })
+
+
+    return [
+      0, 1, 2, 3, 4, 5, -1, -2, -3, -4, -5, -6
+    ].map((key) => keyButton(new KeySignature(key))).concat([
+      keyButton(new ChromaticKeySignature())
+    ])
   }
 }
 
