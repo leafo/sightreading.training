@@ -3,7 +3,7 @@ import "jasmine_boot"
 import {
   notesLessThan, notesGreaterThan, compareNotes, noteName, parseNote,
   noteStaffOffset,
-  MajorScale, MinorScale, Chord, KeySignature
+  MajorScale, MinorScale, Chord, KeySignature, ChromaticScale
 } from "st/music"
 
 describe("notes", function() {
@@ -59,6 +59,13 @@ describe("notes", function() {
 });
 
 describe("scales", function() {
+  it("gets notes in chromatic scale", function() {
+    let scale = new ChromaticScale("C")
+    expect(scale.getRange(5)).toEqual([
+      "C5", "C#5", "D5", "D#5", "E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5", "C6"
+    ]);
+  })
+
   it("gets notes in C MajorScale", function() {
     let scale = new MajorScale("C");
     expect(scale.getRange(5)).toEqual([

@@ -512,6 +512,13 @@ export class MinorBluesScale extends Scale {
   }
 }
 
+export class ChromaticScale extends Scale {
+  constructor(root) {
+    super(root)
+    this.steps = [1,1,1,1,1,1,1,1,1,1,1,1]
+  }
+}
+
 export class Chord extends Scale {
   static SHAPES = {
     "M": [4, 3],
