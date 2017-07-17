@@ -50,10 +50,11 @@ export default class SongParser {
     }
 
     if (song.autoChords) {
+      let settings = opts ? opts.autoChordsSettings : {}
       if (opts && opts.autoChords) {
-        new opts.autoChords(song, opts.autoChordsSettings).addChords()
+        new opts.autoChords(song, settings).addChords()
       } else {
-        new AutoChords.defaultChords(song, opts.autoChordsSettings).addChords()
+        new AutoChords.defaultChords(song, settings).addChords()
       }
     }
 
