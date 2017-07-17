@@ -155,6 +155,10 @@ export class KeySignature {
     this.count = count;
   }
 
+  isChromatic() {
+    false
+  }
+
   isSharp() {
     return this.count > 0
   }
@@ -326,6 +330,10 @@ export class KeySignature {
 export class ChromaticKeySignature extends KeySignature {
   constructor() {
     super(0) // render as c major
+  }
+
+  isChromatic() {
+    return true
   }
 
   name() {
