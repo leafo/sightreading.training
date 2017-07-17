@@ -104,7 +104,7 @@ export const GENERATORS = [
       }
     ],
     create: function(staff, keySignature, options) {
-      let scale = new MajorScale(keySignature)
+      let scale = keySignature.defaultScale()
       let notes = scale.getLooseRange(...staff.range)
 
       notes = notes.filter( n => {

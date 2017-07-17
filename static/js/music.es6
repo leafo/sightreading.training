@@ -177,6 +177,11 @@ export class KeySignature {
     return this.name()
   }
 
+  // the scale used on the random note generator
+  defaultScale() {
+    return new MajorScale(this, ...arguments);
+  }
+
   // convert note to enharmonic equivalent that fits into this key signature
   // TODO: this might have to be done at the scale level
   enharmonic(note) {
@@ -329,6 +334,10 @@ export class ChromaticKeySignature extends KeySignature {
 
   scaleRoot() {
     return "C"
+  }
+
+  defaultScale() {
+    return new ChromaticScale(this, ...arguments);
   }
 }
 
