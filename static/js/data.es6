@@ -272,6 +272,25 @@ export const GENERATORS = [
         default: 3,
         min: 3,
         max: 4,
+      },
+      {
+        name: "commonNotes",
+        label: "common notes",
+        type: "select",
+        values: [
+          {
+            name: "any",
+            value: -1
+          },
+          {
+            name: "1",
+            value: 1
+          },
+          {
+            name: "2",
+            value: 2
+          }
+        ]
       }
     ],
     create: function(staff, keySignature, options) {

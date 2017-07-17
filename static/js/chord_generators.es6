@@ -5,6 +5,9 @@ export class ChordGenerator {
   constructor(keySignature, opts={}) {
     this.noteCount = opts.notes || 3
     this.keySignature = keySignature
+    if (opts.commonNotes > 0) {
+      this.commonNotes = opts.commonNotes
+    }
 
     this.generator = new MersenneTwister()
 
@@ -54,17 +57,23 @@ export class ChordGenerator {
       this.chords = this.allChords()
     }
 
-
-    let idx
-
-    for (let k = 0; k < 10; k++) {
-      idx = (this.generator.int() % this.chords.length)
-      if (idx != this.lastChord) {
-        break
+    let availableChords = []
+    this.chords.forEach(chord => {
+      if (this.lastChord == chord) {
+        return
       }
-    }
 
-    this.lastChord = idx
-    return this.chords[idx]
+      if (this.commonNotes && this.lastChord) {
+        let common = this.lastChord.countSharedNotes(chord)
+        if (common < this.commonNotes) {
+          return
+        }
+      }
+
+      availableChords.push(chord)
+    })
+
+    this.lastChord = availableChords[this.generator.int() % availableChords.length]
+    return this.lastChord
   }
 }
