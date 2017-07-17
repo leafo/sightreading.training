@@ -77,5 +77,13 @@ describe("chord generator", function() {
       new Chord("B", "dim"),
     ])
   })
+
+  it("generates some chords without an error", function() {
+    let generator = new ChordGenerator(new KeySignature(0))
+    for (let i = 0; i < 10; i++) {
+      let chord = generator.nextChord()
+      expect(chord).toBeTruthy()
+    }
+  })
 })
 

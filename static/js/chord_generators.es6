@@ -40,21 +40,23 @@ export class ChordGenerator {
     return out
   }
 
+
   nextChord() {
-    let degree = null
+    if (!this.chords) {
+      this.chords = this.allChords()
+    }
+
+
+    let idx
 
     for (;;) {
-      degree = (this.generator.int() % this.scale.steps.length) + 1
-      if (degree != this.lastDegree) {
+      idx = (this.generator.int() % this.chords.length)
+      if (idx != this.lastChord) {
         break
       }
     }
 
-    this.lastDegree = degree
-
-    let steps = this.scale.buildChordSteps(degree, this.noteCount - 1)
-    let root = this.scale.degreeToName(degree)
-
-    return new Chord(root, steps)
+    this.lastChord = idx
+    return this.chords[idx]
   }
 }
