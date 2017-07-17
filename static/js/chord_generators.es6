@@ -4,6 +4,7 @@ import {MersenneTwister} from "lib"
 export class ChordGenerator {
   constructor(keySignature, opts={}) {
     this.noteCount = opts.notes || 3
+    this.keySignature = keySignature
 
     this.generator = new MersenneTwister()
 
@@ -33,8 +34,15 @@ export class ChordGenerator {
       let degree = i + 1
 
       let root = this.scale.degreeToName(degree)
-      let steps = this.scale.buildChordSteps(degree, this.noteCount - 1)
-      out.push(new Chord(root, steps))
+      if (this.keySignature.isChromatic()) {
+        let shapes = this.noteCount == 3 ? ["M", "m"] : ["M7", "7", "m7"]
+        shapes.forEach(s => {
+          out.push(new Chord(root, s))
+        })
+      } else {
+        let steps = this.scale.buildChordSteps(degree, this.noteCount - 1)
+        out.push(new Chord(root, steps))
+      }
     }
 
     return out
@@ -49,7 +57,7 @@ export class ChordGenerator {
 
     let idx
 
-    for (;;) {
+    for (let k = 0; k < 10; k++) {
       idx = (this.generator.int() % this.chords.length)
       if (idx != this.lastChord) {
         break
