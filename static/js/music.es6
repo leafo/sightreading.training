@@ -635,6 +635,31 @@ export class Chord extends Scale {
     return true
   }
 
+  // how many notes do the two chords share
+  countSharedNotes(otherChord) {
+    let myNotes = this.getRange(5, this.steps.length)
+    let theirNotes = otherChord.getRange(5, this.steps.length)
+    let count = 0
+
+    let noteNames = {}
+    let normalizeNote = (note) => note.replace(/\d+$/, "")
+
+    for (let note of myNotes) {
+      noteNames[normalizeNote(note)] = true
+    }
+
+    for (let note of theirNotes) {
+      note = normalizeNote(note)
+      if (noteNames[note]) {
+        count += 1
+      }
+
+      delete noteNames[note]
+    }
+
+    return count
+  }
+
   toString() {
     let name = this.chordShapeName()
     if (!name) {

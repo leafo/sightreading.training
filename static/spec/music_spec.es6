@@ -321,6 +321,24 @@ describe("chords", function() {
     })
 
   })
+
+  it("gets shared notes", function() {
+    expect(
+      new Chord("C", "M").countSharedNotes(new Chord("G", "M"))
+    ).toEqual(1)
+
+    expect(
+      new Chord("C", "M").countSharedNotes(new Chord("E", "m"))
+    ).toEqual(2)
+
+    expect(
+      new Chord("C", "M").countSharedNotes(new Chord("D", "m"))
+    ).toEqual(0)
+
+    expect(
+      new Chord("C", "M").countSharedNotes(new Chord("C", [12, 4]))
+    ).toEqual(2)
+  })
 })
 
 describe("key signature", function() {
