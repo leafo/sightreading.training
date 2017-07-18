@@ -7,7 +7,10 @@ set -o xtrace
 luarocks-5.1 install https://luarocks.org/manifests/leafo/lapis-dev-1.rockspec
 luarocks-5.1 install moonscript
 luarocks-5.1 install busted
-eval $(luarocks-5.1 path)
+luarocks-5.1 install https://raw.githubusercontent.com/mikejsavage/lua-bcrypt/master/rockspec/bcrypt-1.5-1.rockspec
+luarocks-5.1 install https://raw.githubusercontent.com/leafo/lua-date/master/date-dev-1.rockspec
+luarocks-5.1 install tableshape
+eval $(luarocks-4.1 path)
 
 # js
 npm install
