@@ -5,6 +5,8 @@ set -o xtrace
 
 # setup lua
 luarocks-5.1 install https://luarocks.org/manifests/leafo/lapis-dev-1.rockspec
+luarocks-5.1 install moonscript
+luarocks-5.1 install busted
 eval $(luarocks-5.1 path)
 
 # js
