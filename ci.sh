@@ -9,7 +9,7 @@ luarocks-5.1 install moonscript
 luarocks-5.1 install busted
 luarocks-5.1 install https://raw.githubusercontent.com/mikejsavage/lua-bcrypt/master/rockspec/bcrypt-1.5-1.rockspec
 luarocks-5.1 install https://raw.githubusercontent.com/leafo/lua-date/master/date-dev-1.rockspec
-luarocks-5.1 install tableshape
+luarocks-5.1 install https://luarocks.org/manifests/leafo/tableshape-dev-1.rockspec
 eval $(luarocks-4.1 path)
 
 # js
