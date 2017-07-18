@@ -1,6 +1,6 @@
 # mursicjs
 
-[![Build Status](https://travis-ci.org/leafo/sightreading.training.svg?branch=master)](https://travis-ci.org/leafo/mursicjs)
+[![Build Status](https://travis-ci.org/leafo/sightreading.training.svg?branch=master)](https://travis-ci.org/leafo/sightreading.training)
 
 
 Sight reading music trainer written for browsers. The successor to <https://github.com/leafo/mursic>.
