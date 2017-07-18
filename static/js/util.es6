@@ -31,8 +31,6 @@ export function dithered(array, e=1.5, rand) {
     [dither_score(idx + 1, e), item]
   )
 
-  console.log(scored)
-
   scored.sort((a, b) => {
     var aScore = a[0]
     var bScore = b[0]
