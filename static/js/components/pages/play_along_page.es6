@@ -19,6 +19,7 @@ import {dispatch, trigger} from "st/events"
 import {STAVES} from "st/data"
 import {GStaff} from "st/components/staves"
 import SongEditor from "st/components/song_editor"
+import NoteStats from "st/note_stats"
 
 import {classNames} from "lib"
 
@@ -139,6 +140,10 @@ export default class PlayAlongPage extends React.Component {
       enableEditor: false,
     }
 
+    this.stats = new NoteStats(N.session.currentUser)
+
+    this.resetHitNotes()
+
     this.midiInput = new MidiInput({
       sustainPedalEnabled: true,
       noteOn: (note) => this.pressNote(note),
@@ -170,6 +175,10 @@ export default class PlayAlongPage extends React.Component {
         this.state.songTimer.scrub(1)
       },
     }
+  }
+
+  resetHitNotes() {
+    this.hitNotes = new Map
   }
 
   getSetter(name) {
@@ -303,6 +312,7 @@ export default class PlayAlongPage extends React.Component {
   updateBeat(beat) {
     if (this.state.song) {
       if (beat > this.state.loopRight) {
+        this.resetHitNotes()
         this.state.songTimer.seek(this.state.loopLeft)
       }
 
@@ -396,6 +406,7 @@ export default class PlayAlongPage extends React.Component {
     if (this.state.songTimer.running) {
       this.state.songTimer.pause()
     } else {
+      this.resetHitNotes()
       this.state.songTimer.start(this.state.bpm)
     }
 
@@ -406,14 +417,27 @@ export default class PlayAlongPage extends React.Component {
     if (!this.state.song) return
 
     if (!this.state.songTimer.running) {
+      this.resetHitNotes()
       this.state.songTimer.start(this.state.bpm)
     }
 
     let songNote = this.state.song.matchNote(note, this.currentBeat)
 
+    let recordHit = false
+
     if (songNote) {
       songNote.held = true
       let accuracy = this.state.songTimer.beatsToSeconds(this.currentBeat - songNote.start)
+      if (Math.abs(accuracy) < 1 && !this.hitNotes.get(songNote)) {
+        this.hitNotes.set(songNote, true)
+        recordHit = true
+      }
+    }
+
+    if (recordHit) {
+      this.stats.hitNotes([songNote.note])
+    } else {
+      this.stats.missNotes([songNote.note])
     }
 
     let heldNotes = {
