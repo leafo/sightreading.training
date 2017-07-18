@@ -171,6 +171,8 @@ export default class SightReadingPage extends React.Component {
           this.state.notes.shift()
           this.state.notes.pushRandom()
 
+          this.state.stats.hitNotes([])
+
           this.setState({
             notes: this.state.notes,
             noteShaking: false,
@@ -181,6 +183,8 @@ export default class SightReadingPage extends React.Component {
           this.state.slider.add(this.state.noteWidth)
         } else {
           gaEvent("sight_reading", "chord", "miss");
+
+          this.state.stats.missNotes([])
 
           this.setState({
             noteShaking: true,
