@@ -165,6 +165,13 @@
                     background: lighten(green, 20%);
                 }
             }
+
+            &.outside_loop {
+                &:before {
+                    background: #bbb;
+                    box-shadow: none;
+                }
+            }
         }
 
     }

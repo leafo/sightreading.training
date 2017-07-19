@@ -5,7 +5,14 @@ import {classNames} from "lib"
 import StaffNotes from "st/components/staff_notes"
 import {parseNote, noteName, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
+let {PropTypes: types} = React;
+
 export default class StaffSongNotes extends StaffNotes {
+  static propTypes = {
+    loopLeft: types.number,
+    loopRight: types.number,
+  }
+
   classNames()  {
     return "staff_notes staff_song_notes"
   }
@@ -73,12 +80,19 @@ export default class StaffSongNotes extends StaffNotes {
 
     let outside = row > this.props.upperRow || row < this.props.lowerRow
 
+    let outsideLoop = false
+
+    if (this.props.loopLeft != null && this.props.loopRight != null) {
+      outsideLoop = songNote.start < this.props.loopLeft || songNote.start >= this.props.loopRight
+    }
+
     let noteEl = <div
       className={classNames("note_bar", {
         is_flat: accidentals == -1,
         is_sharp: accidentals == 1,
         is_natural: accidentals == 0,
-        held: songNote.held
+        held: songNote.held,
+        outside_loop: outsideLoop,
       })}
       title={songNote.note}
       style={style}

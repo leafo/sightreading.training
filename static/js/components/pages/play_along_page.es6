@@ -9,6 +9,7 @@ import Draggable from "st/components/draggable"
 
 import Lightbox from "st/components/lightbox"
 import MidiInstrumentPicker from "st/components/midi_instrument_picker"
+import SongEditor from "st/components/song_editor"
 
 import SongParser from "st/song_parser"
 import SongTimer from "st/song_timer"
@@ -17,8 +18,6 @@ import {MidiInput} from "st/midi"
 
 import {dispatch, trigger} from "st/events"
 import {STAVES} from "st/data"
-import {GStaff} from "st/components/staves"
-import SongEditor from "st/components/song_editor"
 import NoteStats from "st/note_stats"
 
 import {classNames} from "lib"
@@ -358,7 +357,9 @@ export default class PlayAlongPage extends React.Component {
         heldNotes,
         keySignature,
         pixelsPerBeat: this.state.pixelsPerBeat,
-        children: <div className="time_bar"></div>
+        children: <div className="time_bar"></div>,
+        loopLeft: this.state.loopLeft,
+        loopRight: this.state.loopRight,
       }
 
       staff = <Draggable
