@@ -1,6 +1,6 @@
 lapis = require "lapis"
 
-import assert_error, capture_errors_json from require "lapis.application"
+import assert_error from require "lapis.application"
 import set_csrf from require "helpers.csrf"
 
 import get, post, multi from require "helpers.app"
@@ -8,6 +8,8 @@ import get, post, multi from require "helpers.app"
 date = require "date"
 
 class extends lapis.Application
+  @include "applications.admin"
+
   layout: require "views.layout"
 
   cookie_attributes: =>
@@ -24,9 +26,6 @@ class extends lapis.Application
     if @current_user
       @current_user\update_last_active!
 
-  "/admin": capture_errors_json =>
-    assert_error @current_user and @current_user\is_admin!, "not admin"
-    render: "admin.home", layout: "layouts.admin"
 
   "/test": =>
     "hello world", layout: "test_layout"
