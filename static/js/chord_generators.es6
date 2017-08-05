@@ -32,21 +32,20 @@ export class ChordGenerator {
   }
 
   allChords() {
+    if (!this.keySignature.isChromatic()) {
+      return this.scale.allChords()
+    }
+
     let out = []
 
     for (let i = 0; i < this.scale.steps.length; i++) {
       let degree = i + 1
-
       let root = this.scale.degreeToName(degree)
-      if (this.keySignature.isChromatic()) {
-        let shapes = this.noteCount == 3 ? ["M", "m"] : ["M7", "7", "m7"]
-        shapes.forEach(s => {
-          out.push(new Chord(root, s))
-        })
-      } else {
-        let steps = this.scale.buildChordSteps(degree, this.noteCount - 1)
-        out.push(new Chord(root, steps))
-      }
+      let shapes = this.noteCount == 3 ? ["M", "m"] : ["M7", "7", "m7"]
+
+      shapes.forEach(s => {
+        out.push(new Chord(root, s))
+      })
     }
 
     return out
