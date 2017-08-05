@@ -1,5 +1,5 @@
 
-import {MajorScale, parseNote} from "st/music"
+import {MajorScale, parseNote, noteName} from "st/music"
 
 import {
   RandomNotes, SweepRangeNotes, MiniSteps, TriadNotes, SevenOpenNotes,
@@ -24,6 +24,17 @@ let noteRangeInput = {
   // default: [0, 99], // default is set automatically
   min: 0,
   max: 100,
+}
+
+function staffRange(staff, noteRange) {
+  if (noteRange) {
+    return [
+      noteName(Math.max(noteRange[0], parseNote(staff.range[0]))),
+      noteName(Math.min(noteRange[1], parseNote(staff.range[1])))
+    ]
+  } else {
+    return staff.range
+  }
 }
 
 export const STAVES = [
@@ -105,12 +116,7 @@ export const GENERATORS = [
     ],
     create: function(staff, keySignature, options) {
       let scale = keySignature.defaultScale()
-      let notes = scale.getLooseRange(...staff.range)
-
-      notes = notes.filter( n => {
-        let pitch = parseNote(n)
-        return pitch >= options.noteRange[0] && pitch <= options.noteRange[1]
-      })
+      let notes = scale.getLooseRange(...staffRange(staff, options.noteRange))
 
       // send the scale
       if (options.musical) {
@@ -160,11 +166,13 @@ export const GENERATORS = [
     name: "sevens",
     mode: "notes",
     inputs: [
-      smoothInput
+      smoothInput,
+      noteRangeInput,
     ],
     create: function(staff, keySignature, options) {
-      let notes = new MajorScale(keySignature)
-        .getLooseRange(...staff.range);
+      let scale = keySignature.defaultScale()
+      let notes = scale.getLooseRange(...staffRange(staff, options.noteRange))
+
       return new SevenOpenNotes(notes, options);
     }
   },
