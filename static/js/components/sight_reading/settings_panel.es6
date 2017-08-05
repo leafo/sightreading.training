@@ -190,11 +190,9 @@ export class SettingsPanel extends React.Component {
         </button>
 
 
-    return [
-      0, 1, 2, 3, 4, 5, -1, -2, -3, -4, -5, -6
-    ].map((key) => keyButton(new KeySignature(key))).concat([
-      keyButton(new ChromaticKeySignature())
-    ])
+    return KeySignature.allKeySignatures().concat([
+      new ChromaticKeySignature()
+    ]).map(key => keyButton(key))
   }
 }
 

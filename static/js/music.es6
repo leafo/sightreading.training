@@ -150,6 +150,13 @@ export class KeySignature {
     "F", "C", "G", "D", "A", "E", "B"
   ]
 
+  // excludes the chromatic option
+  static allKeySignatures() {
+    return [
+      0, 1, 2, 3, 4, 5, -1, -2, -3, -4, -5, -6
+    ].map(key => new KeySignature(key))
+  }
+
   // count: the number of accidentals in the key
   constructor(count) {
     this.count = count;
