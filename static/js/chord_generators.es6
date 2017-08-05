@@ -76,15 +76,15 @@ export class ChordGenerator {
 
     // sort by occurence to choose least frequent
     availableChords.sort((a,b) => {
-      let aCount = this.chordOccurrences.get(a) || 0
-      let bCount = this.chordOccurrences.get(b) || 0
+      let aCount = this.chordOccurrences.get(a.toString()) || 0
+      let bCount = this.chordOccurrences.get(b.toString()) || 0
 
       return aCount - bCount
     })
 
     // TODO: dithered is probably overkill here
     this.lastChord = dithered(availableChords, 3, this.generator)[0]
-    this.chordOccurrences.set(this.lastChord, (this.chordOccurrences.get(this.lastChord) || 0) + 1)
+    this.chordOccurrences.set(this.lastChord.toString(), (this.chordOccurrences.get(this.lastChord.toString()) || 0) + 1)
 
     return this.lastChord
   }
