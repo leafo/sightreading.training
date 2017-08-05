@@ -61,7 +61,7 @@ export class ChordGenerator {
 
     let availableChords = []
     this.chords.forEach(chord => {
-      if (this.lastChord == chord) {
+      if (this.lastChord && (this.lastChord.toString() == chord.toString())) {
         return
       }
 
