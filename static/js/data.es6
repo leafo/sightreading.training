@@ -6,7 +6,7 @@ import {
   ProgressionGenerator, PositionGenerator
 } from "st/generators"
 
-import {ChordGenerator} from "st/chord_generators"
+import {ChordGenerator, MultiKeyChordGenerator} from "st/chord_generators"
 import {GStaff, FStaff, GrandStaff, ChordStaff} from "st/components/staves"
 
 let smoothInput = {
@@ -304,5 +304,41 @@ export const GENERATORS = [
     create: function(staff, keySignature, options) {
       return new ChordGenerator(keySignature, options)
     }
+  },
+  {
+    name: "multi-key",
+    mode: "chords",
+    inputs: [
+      {
+        name: "notes",
+        type: "range",
+        default: 3,
+        min: 3,
+        max: 4,
+      },
+      {
+        name: "commonNotes",
+        label: "common notes",
+        type: "select",
+        values: [
+          {
+            name: "any",
+            value: -1
+          },
+          {
+            name: "1",
+            value: 1
+          },
+          {
+            name: "2",
+            value: 2
+          }
+        ]
+      }
+    ],
+    create: function(staff, keySignature, options) {
+      return new MultiKeyChordGenerator(keySignature, options)
+    }
   }
+
 ]
