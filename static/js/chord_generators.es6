@@ -1,4 +1,4 @@
-import {Chord, MajorScale, MinorScale, MajorBluesScale} from "st/music"
+import {Chord, MajorScale, MinorScale, MajorBluesScale, KeySignature} from "st/music"
 import {MersenneTwister} from "lib"
 import {dithered} from "st/util"
 
@@ -90,3 +90,41 @@ export class ChordGenerator {
     return this.lastChord
   }
 }
+
+// chord generator that moves between all keys
+export class MultiKeyChordGenerator extends ChordGenerator {
+  constructor(keySignature, opts={}) {
+    super(keySignature, opts)
+
+    let keys = KeySignature.allKeySignatures()
+    this.chordToKeys = {}
+    for (let key of keys) {
+      for (let chord of new MajorScale(key).allChords()) {
+        let cName = chord.toString()
+        this.chordToKeys[cName] = this.chordToKeys[cName] || []
+        this.chordToKeys[cName].push(key)
+      }
+    }
+  }
+
+  nextChord() {
+    if (this.lastChord) {
+      // time to change keys?
+      let r = this.generator.random()
+      if (r < 0.2) {
+        // this.chords = null
+        let keys = this.chordToKeys[this.lastChord.toString()]
+        keys = keys.filter(key => key.name() != this.keySignature.name())
+        let newKey = keys[this.generator.int() % keys.length]
+
+        // console.warn(`Going from ${this.keySignature.name()} to ${newKey.name()}`)
+        this.keySignature = newKey
+        this.scale = this.keySignature.defaultScale()
+        this.chords = null
+      }
+    }
+
+    return super.nextChord()
+  }
+}
+

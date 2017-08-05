@@ -1,7 +1,7 @@
 
 import "jasmine_boot"
 import {ShapeGenerator, Generator} from "st/generators"
-import {ChordGenerator} from "st/chord_generators"
+import {ChordGenerator, MultiKeyChordGenerator} from "st/chord_generators"
 
 import {
   KeySignature, ChromaticKeySignature, ChromaticScale, Chord
@@ -84,6 +84,17 @@ describe("chord generator", function() {
       let chord = generator.nextChord()
       expect(chord).toBeTruthy()
     }
+  })
+
+  describe("multi key chord generator", function() {
+    it("should create generator", function() {
+      let generator = new MultiKeyChordGenerator(new KeySignature(0))
+      for (let i = 0; i < 10; i++) {
+        let chord = generator.nextChord()
+        console.log(chord.toString())
+        expect(chord).toBeTruthy()
+      }
+    })
   })
 })
 

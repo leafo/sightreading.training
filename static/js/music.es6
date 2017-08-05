@@ -183,6 +183,10 @@ export class KeySignature {
     return KeySignature.FIFTHS[offset]
   }
 
+  toString() {
+    return this.name()
+  }
+
   // the default scale root for building scales from key signature
   scaleRoot() {
     return this.name()
