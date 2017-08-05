@@ -174,6 +174,39 @@ describe("scales", function() {
       expect(scale.buildChordSteps(7, 2)).toEqual(Chord.SHAPES.M)
     })
   })
+
+  describe("allChords", function() {
+    it("gets all triads in scale", function() {
+      let scale = new MajorScale("C")
+      let chords = scale.allChords(3)
+
+      expect(chords.map(chord => chord.toString())).toEqual([
+        "C",
+        "Dm",
+        "Em",
+        "F",
+        "G",
+        "Am",
+        "Bdim",
+      ])
+    })
+
+    it("gets all 7 chords in scale", function() {
+      let scale = new MajorScale("C")
+      let chords = scale.allChords(4)
+
+      expect(chords.map(chord => chord.toString())).toEqual([
+        "CM7",
+        "Dm7",
+        "Em7",
+        "FM7",
+        "G7",
+        "Am7",
+        "Bm7b5",
+      ])
+    })
+
+  })
 })
 
 describe("chords", function() {

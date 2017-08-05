@@ -365,7 +365,7 @@ export class Scale {
     if (!root.match(/^[A-G][b#]?$/)) {
       throw "scale root not properly formed: " + root
     }
- 
+
     this.root = root
   }
 
@@ -499,6 +499,20 @@ export class Scale {
 
       out.push(step)
       count--
+    }
+
+    return out
+  }
+
+
+  // all chords with count notes
+  allChords(noteCount=3) {
+    let out = []
+    for (let i = 0; i < this.steps.length; i++) {
+      let degree = i + 1
+      let root = this.degreeToName(degree)
+      let steps = this.buildChordSteps(degree, noteCount - 1)
+      out.push(new Chord(root, steps))
     }
 
     return out
