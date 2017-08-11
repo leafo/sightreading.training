@@ -52,7 +52,7 @@ export function fixGeneratorSettings(generator, settings) {
     if (currentValue != null) {
       switch (input.type) {
         case "select":
-          let found = input.values.select(v => v.name == currentValue)
+          let found = input.values.filter(v => v.name == currentValue)
           if (!found) {
             currentValue = null
           }
