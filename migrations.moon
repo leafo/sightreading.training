@@ -78,6 +78,7 @@ package.loaded.migrations =
       "PRIMARY KEY (id)"
     }
 
-
+  [1502811966]: =>
+    add_column "users", "admin", boolean default: false
 
 
