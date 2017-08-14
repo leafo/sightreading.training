@@ -10,9 +10,9 @@ The staff you choose configures the range of notes that are available to be read
 
 You can choose from the following:
 
-*   ![g cleff](/static/svg/clefs.G.svg) Treble
-*   ![f cleff](/static/svg/clefs.F_change.svg) Bass
-*   Grand — A combination of treble and bass at the same time
+* <img src="/static/svg/clefs.G.svg" alt="G Cleff" width=25 height=25 /> Treble
+* <img src="/static/svg/clefs.F_change.svg" alt="F Cleff" width=25 height=20 /> Bass
+* Grand — A combination of treble and bass at the same time
 
 ### Choosing a generator type
 

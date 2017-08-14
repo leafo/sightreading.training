@@ -3,7 +3,7 @@
 import SightReadingPage from "st/components/pages/sight_reading_page"
 import LoginPage from "st/components/pages/login_page"
 import RegisterPage from "st/components/pages/register_page"
-import {AboutPage, GuideGeneratorsPage, GuideChordsPage} from "st/components/pages/guide_pages"
+import GuidePage from "st/components/pages/guide_pages"
 import StatsPage from "st/components/pages/stats"
 import FlashCardPage from "st/components/pages/flash_card_page"
 import EarTrainingPage from "st/components/pages/ear_training_page"
@@ -234,14 +234,20 @@ export default class App extends React.Component {
         <IndexRoute component={SightReadingPage}></IndexRoute>
         <Route path="login" component={withRouter(LoginPage)}></Route>
         <Route path="register" component={withRouter(RegisterPage)}></Route>
-        <Route path="about" component={withRouter(AboutPage)}></Route>
-        <Route path="stats" component={withRouter(StatsPage)}></Route>
         <Route path="flash-cards" component={FlashCardPage}></Route>
         <Route path="ear-training" component={EarTrainingPage}></Route>
         <Route path="play-along" component={PlayAlongPage}></Route>
+        <Route path="stats" component={withRouter(StatsPage)}></Route>
 
-        <Route path="guide/generators" component={withRouter(GuideGeneratorsPage)}></Route>
-        <Route path="guide/chords" component={withRouter(GuideChordsPage)}></Route>
+        <Route path="about" component={props =>
+          <GuidePage title="About Sight Reading Trainer" pageSource="about" {...props} />
+        }></Route>
+        <Route path="guide/generators" component={props =>
+          <GuidePage title="Sight Reading Random Notes" pageSource="generators" {...props} />
+        }></Route>
+        <Route path="guide/chords" component={props =>
+          <GuidePage title="Sight Reading Random Chords" pageSource="chord_generators" {...props} />
+        }></Route>
       </Route>
     }
   }
