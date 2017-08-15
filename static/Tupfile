@@ -4,7 +4,7 @@ include_rules
 
 : scss/*.css |> !join |> style.css
 
-: $(TOP)/node_modules/babel-polyfill/dist/polyfill.js $(TOP)/node_modules/classnames/index.js $(TOP)/node_modules/mersennetwister/src/MersenneTwister.js $(TOP)/node_modules/react/dist/react-with-addons.js $(TOP)/node_modules/react-dom/dist/react-dom.js $(TOP)/node_modules/react-router/umd/ReactRouter.js $(TOP)/node_modules/chart.js/Chart.js $(TOP)/node_modules/react-chartjs/dist/react-chartjs.js $(TOP)/node_modules/moment/moment.js $(TOP)/node_modules/requirejs/require.js define_libs.js |> !join |> lib.js
+: $(TOP)/node_modules/babel-polyfill/dist/polyfill.js $(TOP)/node_modules/classnames/index.js $(TOP)/node_modules/mersennetwister/src/MersenneTwister.js $(TOP)/node_modules/react/dist/react-with-addons.js $(TOP)/node_modules/react-dom/dist/react-dom.js $(TOP)/node_modules/react-router/umd/react-router.js $(TOP)/node_modules/react-router-dom/umd/react-router-dom.js $(TOP)/node_modules/chart.js/Chart.js $(TOP)/node_modules/react-chartjs/dist/react-chartjs.js $(TOP)/node_modules/moment/moment.js $(TOP)/node_modules/requirejs/require.js define_libs.js |> !join |> lib.js
 
 : $(TOP)/node_modules/jasmine-core/lib/jasmine-core/boot.js |> $(TOP)/node_modules/.bin/babel --module-id 'jasmine_boot' %f > %o |> jasmine_boot.js
 
