@@ -1,7 +1,7 @@
 /*global N*/
 
 import * as React from "react"
-import {Link} from "react-router-dom"
+import {Link, Redirect} from "react-router-dom"
 
 import {setTitle} from "st/globals"
 import {JsonForm, TextInputRow} from "st/components/forms"
@@ -20,7 +20,7 @@ export default class LoginPage extends React.Component {
     }
 
     N.init(res)
-    this.props.router.replace("/")
+    this.setState({ redirectTo: "/" })
   }
 
   constructor() {
@@ -29,6 +29,10 @@ export default class LoginPage extends React.Component {
   }
 
   render() {
+    if (this.state.redirectTo) {
+      return <Redirect to={this.state.redirectTo} />
+    }
+
     return <div className="login_page page_container">
       <h2>Log in</h2>
       <JsonForm action="/login.json" afterSubmit={this.afterSubmit.bind(this)}>
