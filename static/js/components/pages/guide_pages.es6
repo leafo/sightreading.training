@@ -1,5 +1,5 @@
 import * as React from "react"
-import {Link} from "react-router"
+import {Link, NavLink} from "react-router-dom"
 import {setTitle} from "st/globals"
 
 let {PropTypes: types} = React
@@ -32,7 +32,7 @@ export default class GuidePage extends React.Component {
 
   render() {
     const link = (url, label) =>
-      <Link activeClassName="active" to={url}>{label}</Link>
+      <NavLink activeClassName="active" to={url}>{label}</NavLink>
 
     return <div className="guide_page">
       <div className="page_navigation">

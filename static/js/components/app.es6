@@ -16,7 +16,7 @@ import {readConfig, writeConfig} from "st/config"
 import {csrfToken} from "st/globals"
 
 import * as React from "react"
-import {Router, Route, IndexRoute, Link, browserHistory, withRouter} from "react-router"
+import {BrowserRouter, Route, Link, NavLink} from "react-router-dom"
 
 let {CSSTransitionGroup} = React.addons || {}
 
@@ -99,19 +99,37 @@ class Layout extends React.Component {
     }
   }
 
-  renderChildren() {
-    return React.cloneElement(this.props.children, {
-      ref: "currentPage",
-      ...this.childProps()
-    });
-  }
-
   render() {
+    let page = (C, moreProps) =>
+      props => <C {...moreProps} {...this.childProps()} {...props} />
+
     return <div className="page_layout">
       <div className="header_spacer">
         {this.renderHeader()}
       </div>
-      {this.renderChildren()}
+
+      <Route exact path="/" render={page(SightReadingPage)}/>
+      <Route exact path="/login" render={page(LoginPage)} />
+      <Route exact path="/register" render={page(RegisterPage)} />
+      <Route exact path="/ear-training" render={page(EarTrainingPage)} />
+      <Route exact path="/flash-cards" render={page(FlashCardPage)} />
+      <Route exact path="/play-along" render={page(PlayAlongPage)} />
+      <Route exact path="/stats" render={page(StatsPage)} />
+
+      <Route exact path="/about" render={page(GuidePage, {
+        title: "About Sight Reading Trainer",
+        pageSource: "about"
+      })} />
+
+      <Route path="/guide/generators" render={page(GuidePage, {
+        title: "Sight Reading Random Notes",
+        pageSource: "generators"
+      })} />
+
+      <Route path="/guide/chords" render={page(GuidePage, {
+        title: "Sight Reading Random Chords",
+        pageSource: "chord_generators"
+      })} />
 
       <CSSTransitionGroup transitionName="show_lightbox" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
         {this.renderCurrentLightbox()}
@@ -153,11 +171,11 @@ class Layout extends React.Component {
 
   renderHeader() {
     let userLinks = [
-      <Link key="root" onlyActiveOnIndex to="/" activeClassName="active">Staff</Link>,
-      <Link key="ear-training" to="/ear-training" activeClassName="active">Ear Training</Link>,
-      <Link key="flash-cards" to="/flash-cards" activeClassName="active">Flash Cards</Link>,
-      <Link key="play-along" to="/play-along" activeClassName="active">Play Along</Link>,
-      <Link key="about" to="/about" activeClassName="active">Guide</Link>,
+      <NavLink exact key="root" to="/" activeClassName="active">Staff</NavLink>,
+      <NavLink exact key="ear-training" to="/ear-training" activeClassName="active">Ear Training</NavLink>,
+      <NavLink exact key="flash-cards" to="/flash-cards" activeClassName="active">Flash Cards</NavLink>,
+      <NavLink exact key="play-along" to="/play-along" activeClassName="active">Play Along</NavLink>,
+      <NavLink exact key="about" to="/about" activeClassName="active">Guide</NavLink>,
     ]
 
     let userPanel = null
@@ -169,16 +187,17 @@ class Layout extends React.Component {
         <a href="#" onClick={this.doLogout.bind(this)}>Log out</a>
       </div>
 
-      userLinks.push(<Link
-          key="stats"
-          to="/stats"
-          activeClassName="active">Stats</Link>)
+      userLinks.push(<NavLink
+        exact
+        key="stats"
+        to="/stats"
+        activeClassName="active">Stats</NavLink>)
 
     } else {
       userPanel = <div className="right_section">
-        <Link to="/login" activeClassName="active">Log in</Link>
+        <NavLink to="/login" activeClassName="active">Log in</NavLink>
         {" or "}
-        <Link to="/register" activeClassName="active">Register</Link>
+        <NavLink to="/register" activeClassName="active">Register</NavLink>
       </div>
     }
     return <div className="header">
@@ -226,33 +245,9 @@ class Layout extends React.Component {
 export default class App extends React.Component {
   static Layout = Layout
 
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      routes: <Route path="/" component={withRouter(Layout)}>
-        <IndexRoute component={SightReadingPage}></IndexRoute>
-        <Route path="login" component={withRouter(LoginPage)}></Route>
-        <Route path="register" component={withRouter(RegisterPage)}></Route>
-        <Route path="flash-cards" component={FlashCardPage}></Route>
-        <Route path="ear-training" component={EarTrainingPage}></Route>
-        <Route path="play-along" component={PlayAlongPage}></Route>
-        <Route path="stats" component={withRouter(StatsPage)}></Route>
-
-        <Route path="about" component={props =>
-          <GuidePage title="About Sight Reading Trainer" pageSource="about" {...props} />
-        }></Route>
-        <Route path="guide/generators" component={props =>
-          <GuidePage title="Sight Reading Random Notes" pageSource="generators" {...props} />
-        }></Route>
-        <Route path="guide/chords" component={props =>
-          <GuidePage title="Sight Reading Random Chords" pageSource="chord_generators" {...props} />
-        }></Route>
-      </Route>
-    }
-  }
-
   render() {
-    return <Router history={browserHistory}>{this.state.routes}</Router>
+    return <BrowserRouter>
+      <Layout />
+    </BrowserRouter>
   }
 }

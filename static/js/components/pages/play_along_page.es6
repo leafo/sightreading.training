@@ -20,6 +20,7 @@ import {dispatch, trigger} from "st/events"
 import {STAVES} from "st/data"
 import NoteStats from "st/note_stats"
 
+import {setTitle} from "st/globals"
 import {classNames} from "lib"
 
 let {PropTypes: types} = React
@@ -274,6 +275,7 @@ export default class PlayAlongPage extends React.Component {
   }
 
   componentDidMount() {
+    setTitle("Play along")
     this.updateBeat(0)
     this.loadSong(DEFAULT_SONG)
     dispatch(this, {
