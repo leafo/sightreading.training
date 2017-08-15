@@ -101,7 +101,9 @@ class Layout extends React.Component {
 
   render() {
     let page = (C, moreProps) =>
-      props => <C {...moreProps} {...this.childProps()} {...props} />
+      props => <C
+        ref={comp => this.currentPage = comp}
+        {...moreProps} {...this.childProps()} {...props} />
 
     return <div className="page_layout">
       <div className="header_spacer">
@@ -236,8 +238,8 @@ class Layout extends React.Component {
 
   onMidiMessage(message) {
     // proxy message to the current page
-    if (this.refs.currentPage.onMidiMessage) {
-      this.refs.currentPage.onMidiMessage(message)
+    if (this.currentPage && this.currentPage.onMidiMessage) {
+      this.currentPage.onMidiMessage(message)
     }
   }
 }
