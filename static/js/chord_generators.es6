@@ -33,15 +33,15 @@ export class ChordGenerator {
 
   allChords() {
     if (!this.keySignature.isChromatic()) {
-      return this.scale.allChords()
+      return this.scale.allChords(this.noteCount)
     }
 
     let out = []
 
+    let shapes = this.noteCount == 3 ? ["M", "m"] : ["M7", "7", "m7"]
     for (let i = 0; i < this.scale.steps.length; i++) {
       let degree = i + 1
       let root = this.scale.degreeToName(degree)
-      let shapes = this.noteCount == 3 ? ["M", "m"] : ["M7", "7", "m7"]
 
       shapes.forEach(s => {
         out.push(new Chord(root, s))
