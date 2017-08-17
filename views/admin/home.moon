@@ -1,4 +1,5 @@
 
+import HourlyHits from require "models"
 
 class AdminHome extends require "widgets.page"
   @needs: {"user", ""}
@@ -6,6 +7,7 @@ class AdminHome extends require "widgets.page"
     h1 "Home"
     @render_users!
     @render_songs!
+    @render_counts!
 
   render_users: =>
     h2 "Users"
@@ -38,3 +40,19 @@ class AdminHome extends require "widgets.page"
           td song.id
           td song.title
           td song.created_at
+
+  render_counts: =>
+    h2 "Hit counts"
+    element "table", ->
+      thead ->
+        tr ->
+          td "day"
+          td "type"
+          td "count"
+
+      for tuple in *@counts
+        tr ->
+          td tuple.date
+          td HourlyHits.types[tuple.type]
+          td tuple.count
+

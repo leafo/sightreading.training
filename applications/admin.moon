@@ -14,11 +14,17 @@ class extends lapis.Application
 
   "/home": capture_errors_json =>
     assert_error @current_user and @current_user\is_admin!, "not admin"
-    import Users, Songs from require "models"
+    import Users, Songs, HourlyHits from require "models"
 
     @users = Users\select "order by id desc limit 50"
     @songs = Songs\select "order by id desc limit 50"
     preload @songs, "user"
+
+    @counts = HourlyHits\select "
+      where hour > now() at time zone 'utc' - '30 days'::interval
+      group by type, hour::date
+      order by hour::date desc, type
+    ", fields: "hour::date as date, sum(count) as count, type"
 
 
     render: "admin.home", layout: "layouts.admin"
