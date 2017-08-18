@@ -98,7 +98,7 @@ export class MultiKeyChordGenerator extends ChordGenerator {
     let keys = KeySignature.allKeySignatures()
     this.chordToKeys = {}
     for (let key of keys) {
-      for (let chord of new MajorScale(key).allChords()) {
+      for (let chord of new MajorScale(key).allChords(this.noteCount)) {
         let cName = chord.toString()
         this.chordToKeys[cName] = this.chordToKeys[cName] || []
         this.chordToKeys[cName].push(key)
@@ -113,6 +113,7 @@ export class MultiKeyChordGenerator extends ChordGenerator {
       if (r < 0.2) {
         // this.chords = null
         let keys = this.chordToKeys[this.lastChord.toString()]
+
         keys = keys.filter(key => key.name() != this.keySignature.name())
         let newKey = keys[this.generator.int() % keys.length]
 
