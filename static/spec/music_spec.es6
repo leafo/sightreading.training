@@ -320,12 +320,36 @@ describe("chords", function() {
     })
   })
 
-  describe("isDominant", function() {
+  describe("secondary dominant", function() {
     it("checks if chords are dominant", function() {
       expect(new Chord("A", "m7b5").isDominant()).toBe(false)
       expect(new Chord("F#", "7").isDominant()).toBe(true)
       expect(new Chord("G", "M").isDominant()).toBe(true)
       expect(new Chord("G", "m").isDominant()).toBe(false)
+    })
+
+    it("gets secondary dominant targets", function() {
+      let targets = (root, steps, noteCount=3) =>
+        new Chord(root, steps).getSecondaryDominantTargets(noteCount).map(c => c.toString())
+
+      expect(targets("A", "M")).toEqual(["D", "Dm"])
+      expect(targets("B", "M")).toEqual(["E", "Em"])
+      expect(targets("C", "M")).toEqual(["F", "Fm"])
+      expect(targets("D", "M")).toEqual(["G", "Gm"])
+      expect(targets("E", "M")).toEqual(["A", "Am"])
+
+      expect(targets("A", "7")).toEqual(["D", "Dm"])
+      expect(targets("B", "7")).toEqual(["E", "Em"])
+      expect(targets("C", "7")).toEqual(["F", "Fm"])
+      expect(targets("D", "7")).toEqual(["G", "Gm"])
+      expect(targets("E", "7")).toEqual(["A", "Am"])
+
+
+      expect(targets("A", "7", 4)).toEqual(["DM7", "Dm7"])
+      expect(targets("B", "7", 4)).toEqual(["EM7", "Em7"])
+      expect(targets("C", "7", 4)).toEqual(["FM7", "Fm7"])
+      expect(targets("D", "7", 4)).toEqual(["GM7", "Gm7"])
+      expect(targets("E", "7", 4)).toEqual(["AM7", "Am7"])
     })
   })
 

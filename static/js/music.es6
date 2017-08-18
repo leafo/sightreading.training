@@ -634,6 +634,29 @@ export class Chord extends Scale {
     return false
   }
 
+  // can point to a chord that's a 4th below (third above)
+  // the target chord can either be major or minor (2,3,5,6) in new key
+  getSecondaryDominantTargets(noteCount=3) {
+    if (!this.isDominant()) {
+      throw new Error(`chord is not dominant to begin with: ${this.chordShapeName()}`)
+    }
+
+    // new root is 5 halfsteps above the current (or 7 below)
+    let [_, newRoot] = noteName(parseNote(`${this.root}5`) + 5).match(/^([^\d]+)(\d+)$/)
+
+    // triads
+    if (noteCount == 3) {
+      return ["M", "m"].map(quality => new Chord(newRoot, quality))
+    }
+
+    // sevenths
+    if (noteCount == 4) {
+      return ["M7", "m7"].map(quality => new Chord(newRoot, quality))
+    }
+
+    throw new Error(`don't know how to get secondary dominant for note count: ${noteCount}`)
+  }
+
   chordShapeName() {
     for (let shape in Chord.SHAPES) {
       let intervals = Chord.SHAPES[shape]
