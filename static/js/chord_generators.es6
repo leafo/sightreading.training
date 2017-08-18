@@ -106,23 +106,43 @@ export class MultiKeyChordGenerator extends ChordGenerator {
     }
   }
 
+  // find another key that uses the chord, that isn't the current key
+  changeKeyFromChord(chord=this.lastChord) {
+    // common key modulation
+    let keys = this.chordToKeys[chord.toString()]
+
+    keys = keys.filter(key => key.name() != this.keySignature.name())
+    if (!keys.length) {
+      // some chords are only in one key
+      return
+    }
+
+    let newKey = keys[this.generator.int() % keys.length]
+
+    // console.warn(`Going from ${this.keySignature.name()} to ${newKey.name()}`)
+    this.keySignature = newKey
+    this.scale = this.keySignature.defaultScale()
+    this.chords = null
+  }
+
   nextChord() {
     if (this.lastChord) {
       // time to change keys?
       let r = this.generator.random()
 
-      // move to a key that shares this chord
       if (r < 0.2) {
-        let keys = this.chordToKeys[this.lastChord.toString()]
+        if (this.lastChord.isDominant() && r < 0.15) {
+          let targets = this.lastChord.getSecondaryDominantTargets(this.noteCount)
 
-        keys = keys.filter(key => key.name() != this.keySignature.name())
-        if (keys.length) { // some chords are only in one key
-          let newKey = keys[this.generator.int() % keys.length]
+          targets = targets.filter(t => {
+            let name = t.toString()
+            return !this.chords.find(other => other.toString() == name)
+          })
 
-          // console.warn(`Going from ${this.keySignature.name()} to ${newKey.name()}`)
-          this.keySignature = newKey
-          this.scale = this.keySignature.defaultScale()
-          this.chords = null
+          let target = targets[this.generator.int() % targets.length]
+          this.changeKeyFromChord(target)
+        } else {
+          this.changeKeyFromChord(this.lastChord)
         }
       }
     }
