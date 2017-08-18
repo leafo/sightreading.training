@@ -318,7 +318,15 @@ describe("chords", function() {
       let chord = new Chord("A", "m7b5");
       expect(chord.chordShapeName()).toBe("m7b5")
     })
+  })
 
+  describe("isDominant", function() {
+    it("checks if chords are dominant", function() {
+      expect(new Chord("A", "m7b5").isDominant()).toBe(false)
+      expect(new Chord("F#", "7").isDominant()).toBe(true)
+      expect(new Chord("G", "M").isDominant()).toBe(true)
+      expect(new Chord("G", "m").isDominant()).toBe(false)
+    })
   })
 
   describe("containsNote", function() {

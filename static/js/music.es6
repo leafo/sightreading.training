@@ -624,6 +624,16 @@ export class Chord extends Scale {
     this.steps.push(rest)
   }
 
+  // is major or dom7 chord
+  isDominant() {
+    let shapeName = this.chordShapeName()
+    if (shapeName == "M" || shapeName == "7") {
+      return true
+    }
+
+    return false
+  }
+
   chordShapeName() {
     for (let shape in Chord.SHAPES) {
       let intervals = Chord.SHAPES[shape]
