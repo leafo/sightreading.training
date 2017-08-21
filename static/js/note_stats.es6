@@ -82,18 +82,19 @@ export default class NoteStats {
 
       let now = +new Date
 
-      // block future calls with timer
-      timer = setTimeout(() => {
-        timer = null
-        last = +new Date
-        fn.apply(args)
-      }, Math.min(now - last, wait))
+      if (now - last < wait) {
+        // block future calls with timer
+        timer = setTimeout(() => {
+          timer = null
+          last = +new Date
+          fn.apply(args)
+        }, wait - (now - last))
+        return
+      }
 
       // leading edge call
-      if (!last || now - last > wait) {
-        fn.apply(args)
-        last = now
-      }
+      fn.apply(args)
+      last = now
     }
   }
 
