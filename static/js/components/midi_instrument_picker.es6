@@ -23,7 +23,6 @@ export default class MidiInstrumentPicker extends React.PureComponent {
   }
 
   render() {
-
     return <div className="midi_instrument_picker_component">
       <div className="midi_options">
         <label>

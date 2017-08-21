@@ -3,6 +3,7 @@ let {PropTypes: types} = React;
 
 import Lightbox from "st/components/lightbox"
 import MidiSelector from "st/components/midi_selector"
+import MidiInstrumentPicker from "st/components/midi_instrument_picker"
 
 export default class IntroLightbox extends Lightbox {
   static className = "intro_lightbox"
@@ -35,12 +36,32 @@ export default class IntroLightbox extends Lightbox {
 
     if (this.props.midi) {
       midiSetup = <div>
-        <h4>Select your MIDI device:</h4>
+        <h4>Select MIDI input device:</h4>
         <MidiSelector
           selectedInput={(idx) => {
             this.setState({selectedInput: idx})
           }}
           midiOptions={this.midiInputs()} />
+        <div className="input_row">
+          <label>
+            <input type="checkbox" />
+            {" "}
+            <span className="label">Forward midi input to output</span>
+          </label>
+        </div>
+        <h4>Select MIDI output device:</h4>
+        <p>A MIID output device is only used for play along & ear training mode.</p>
+
+        <MidiInstrumentPicker
+          midi={this.props.midi}
+          onPick={midiChannel => {
+            this.setState({
+              metronome: midiChannel.getMetronome(),
+              midiChannel})
+            trigger(this, "closeLightbox")
+          }}
+        />
+
       </div>
     } else {
       midiSetup = <p>MIDI support not detected on your computer. You'll only be able to use the on-srcreen keyboard.</p>
