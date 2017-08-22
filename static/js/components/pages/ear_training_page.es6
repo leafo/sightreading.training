@@ -6,7 +6,7 @@ import NoteList from "st/note_list"
 import Slider from "st/components/slider"
 import Select from "st/components/select"
 
-import {parseMidiMessage, MidiChannel} from "st/midi"
+import {parseMidiMessage} from "st/midi"
 import {setTitle} from "st/globals"
 import {MajorScale} from "st/music"
 import {RandomNotes} from "st/generators"
@@ -21,12 +21,9 @@ export default class EarTrainingPage extends React.Component {
 
   constructor(props) {
     super(props)
-
-    this.onPickMidiInstrument = channel => this.setState({midiChannel: channel}) 
     this.setNotesPerMelody = value => this.setState({ notesPerMelody: value })
 
     this.state = {
-      midiChannel: null,
       noteHistory: new NoteList([]),
       touchedNotes: {},
       notesPerMelody: 3,
@@ -134,7 +131,7 @@ export default class EarTrainingPage extends React.Component {
     }
 
     this.setState({ playing: true })
-    this.props.midiChannel.playNoteList(notes).then(() => {
+    this.props.midiOutput.playNoteList(notes).then(() => {
       this.setState({ playing: false })
     })
   }
@@ -168,7 +165,7 @@ export default class EarTrainingPage extends React.Component {
     let list = new NoteList([], { generator })
     list.fillBuffer(this.state.notesPerMelody)
 
-    this.props.midiChannel.playNoteList(list).then(() => {
+    this.props.midiOutput.playNoteList(list).then(() => {
       this.setState({ playing: false })
     })
 
@@ -180,7 +177,7 @@ export default class EarTrainingPage extends React.Component {
 
   render() {
     let contents
-    if (this.props.midiChannel) {
+    if (this.props.midiOutput) {
       contents = this.renderMeldoyGenerator()
     } else {
       contents = this.renderIntro()

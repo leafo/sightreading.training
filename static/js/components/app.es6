@@ -91,7 +91,8 @@ class Layout extends React.Component {
   childProps() {
     return {
       midi: this.state.midi,
-      midiInput: this.state.midiInput
+      midiInput: this.state.midiInput,
+      midiOutput: this.state.midiOutputChannel,
     }
   }
 
