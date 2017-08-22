@@ -6,14 +6,14 @@ let {PropTypes: types} = React
 export default class MidiSelector extends React.PureComponent {
   static propTypes = {
     midiOptions: types.array.isRequired,
-    selectedInput: types.func,
+    onChange: types.func,
   }
 
   constructor(props) {
     super(props)
 
     this.state = {
-      selected: null
+      selected: this.props.defaultIdx
     }
   }
 
@@ -34,8 +34,8 @@ export default class MidiSelector extends React.PureComponent {
             })}
             onClick={() => {
               this.setState({selected: i})
-              if (this.props.selectedInput) {
-                this.props.selectedInput(i);
+              if (this.props.onChange) {
+                this.props.onChange(i);
               }
             }}
             >

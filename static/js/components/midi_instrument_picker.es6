@@ -26,6 +26,11 @@ export default class MidiInstrumentPicker extends React.PureComponent {
     if (c) {
       this.state.outChannel = c.channel
       this.state.outInstrument = c.lastProgramNumber
+      this.midiOutputs().map((output, idx) => {
+        if (output == c.output) {
+          this.state.outputIdx = idx
+        }
+      })
     }
   }
 
@@ -67,7 +72,8 @@ export default class MidiInstrumentPicker extends React.PureComponent {
       </div>
 
       <MidiSelector
-        selectedInput={idx => this.setState({ outputIdx: idx })}
+        defaultIdx={this.state.outputIdx}
+        onChange={idx => this.setState({ outputIdx: idx })}
         midiOptions={this.midiOutputs()} />
 
       <div className="midi_instrument_test_buttons">
