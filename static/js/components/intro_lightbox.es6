@@ -42,9 +42,8 @@ export default class IntroLightbox extends Lightbox {
       midiSetup = <div>
         <h4>Select MIDI input device:</h4>
         <MidiSelector
-          selectedInput={(idx) => {
-            this.setState({selectedInput: idx})
-          }}
+          defaultIdx={this.state.selectedInput}
+          onChange={idx => this.setState({ selectedInput: idx })}
           midiOptions={this.midiInputs()} />
         <div className="input_row">
           <label>
