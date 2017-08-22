@@ -16,7 +16,7 @@ export default class MidiInstrumentPicker extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      outInputIdx: null,
+      outputIdx: null,
       outChannel: 0,
       outInstrument: 0,
     }
@@ -60,7 +60,7 @@ export default class MidiInstrumentPicker extends React.PureComponent {
       </div>
 
       <MidiSelector
-        selectedInput={idx => this.setState({ outInputIdx: idx })}
+        selectedInput={idx => this.setState({ outputIdx: idx })}
         midiOptions={this.midiOutputs()} />
 
       <div className="midi_instrument_test_buttons">
@@ -69,20 +69,24 @@ export default class MidiInstrumentPicker extends React.PureComponent {
             e.preventDefault()
             this.getCurrentChannel().testNote()
           }}
-          disabled={this.state.outInputIdx == null}>Play test note</button>
+          disabled={this.state.outputIdx == null}>Play test note</button>
       </div>
     </div>
   }
 
   getCurrentChannel() {
-    if (this.state.outInputIdx == null || this.state.outInstrument == null) {
+    if (this.state.outputIdx == null || this.state.outInstrument == null) {
       return null
     }
 
-    let output = this.midiOutputs()[this.state.outInputIdx]
+    let output = this.midiOutputs()[this.state.outputIdx]
     let channel = new MidiChannel(output, this.state.outChannel)
     channel.setInstrument(this.state.outInstrument)
     return channel
+  }
+
+  getSelectedIdx() {
+    return this.state.outputIdx
   }
 
   midiOutputs() {

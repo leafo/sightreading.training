@@ -74,12 +74,7 @@ class Layout extends React.Component {
       },
       "pickMidi": (e) => {
         this.setState({
-          currentLightbox: <IntroLightbox
-            onClose={lb => {
-              let config = lb.midiConfiguration()
-              let input = this.setInput(config.inputIdx)
-              writeConfig("defaults:midiIn", input.name)
-            }} />
+          currentLightbox: this.renderMidiLightbox()
         })
       }
     })
@@ -231,7 +226,8 @@ class Layout extends React.Component {
     input.onmidimessage = this.onMidiMessage.bind(this)
 
     this.setState({
-      midiInput: input
+      midiInput: input,
+      midiInputIdx: idx,
     })
 
     return input
@@ -242,6 +238,25 @@ class Layout extends React.Component {
     if (this.currentPage && this.currentPage.onMidiMessage) {
       this.currentPage.onMidiMessage(message)
     }
+  }
+
+  renderMidiLightbox() {
+    return <IntroLightbox
+      forwardMidi={this.state.forwardMidi}
+      selectedInputIdx={this.state.midiInputIdx}
+      selectedOutputIdx={this.state.midiOutputIdx}
+      onClose={lb => {
+        let config = lb.midiConfiguration()
+        let input = this.setInput(config.inputIdx)
+
+        this.setState({
+          forwardMidi: config.forwardMidi,
+          midiOutputChannel: config.outputChannel,
+          midiOutputIdx: config.outputIdx
+        })
+
+        writeConfig("defaults:midiIn", input.name)
+      }} />
   }
 }
 

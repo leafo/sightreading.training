@@ -25,7 +25,8 @@ export default class IntroLightbox extends Lightbox {
     return {
       forwardMidi: this.state.forwardMidi,
       inputIdx: this.state.selectedInput,
-      outputChannel: this.refs.instrumentPicker.getCurrentChannel()
+      outputIdx: this.refs.instrumentPicker.getSelectedIdx(),
+      outputChannel: this.refs.instrumentPicker.getCurrentChannel(),
     }
   }
 
