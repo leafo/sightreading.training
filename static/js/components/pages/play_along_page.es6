@@ -8,7 +8,6 @@ import Hotkeys from "st/components/hotkeys"
 import Draggable from "st/components/draggable"
 
 import Lightbox from "st/components/lightbox"
-import MidiInstrumentPicker from "st/components/midi_instrument_picker"
 import SongEditor from "st/components/song_editor"
 
 import SongParser from "st/song_parser"
@@ -138,6 +137,7 @@ export default class PlayAlongPage extends React.Component {
       metronomeMultiplier: 1.0,
       autoChordType: 0,
       enableEditor: false,
+      metronome: props.midiOutput ? props.midiOutput.getMetronome() : null
     }
 
     this.stats = new NoteStats(N.session.currentUser)
@@ -259,8 +259,8 @@ export default class PlayAlongPage extends React.Component {
       return
     }
 
-    if (this.state.midiChannel) {
-      this.state.midiChannel.noteOn(parseNote(note.note), 100)
+    if (this.props.midiOutput) {
+      this.props.midiOutput.noteOn(parseNote(note.note), 100)
     }
   }
 
@@ -269,8 +269,8 @@ export default class PlayAlongPage extends React.Component {
       return
     }
 
-    if (this.state.midiChannel) {
-      this.state.midiChannel.noteOff(parseNote(note.note), 100)
+    if (this.props.midiOutput) {
+      this.props.midiOutput.noteOff(parseNote(note.note), 100)
     }
   }
 
@@ -302,7 +302,16 @@ export default class PlayAlongPage extends React.Component {
     }
   }
 
-  componentDidUpdate(prepProps, prevState) {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.midiOutput != this.props.midiOutput) {
+      this.setState({
+        metronome: nextProps.midiOutput ?
+          nextProps.midiOutput.getMetronome() : null
+      })
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     if (prevState.bpm != this.state.bpm) {
       if (this.state.songTimer) {
         this.state.songTimer.setBpm(this.state.bpm)
@@ -555,28 +564,6 @@ export default class PlayAlongPage extends React.Component {
           settingsPanelOpen: !this.state.settingsPanelOpen
         })
       }>Settings</button>
-
-      <button onClick={e => {
-        trigger(this, "showLightbox", <Lightbox className="select_output_lightbox">
-          <h2>Select output</h2>
-          <p>Choose instrument to play song to</p>
-          <MidiInstrumentPicker
-            midi={this.props.midi}
-            onPick={midiChannel => {
-              this.setState({
-                metronome: midiChannel.getMetronome(),
-                midiChannel})
-              trigger(this, "closeLightbox")
-            }}
-          />
-        </Lightbox>)
-      }}>
-        {
-          this.state.midiChannel
-          ? `Channel ${this.state.midiChannel.channel + 1}`
-          : "Select output"
-        }
-      </button>
 
       <span className="slider_input transport_slider">
         <span className="slider_label">BPM</span>
