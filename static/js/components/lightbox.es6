@@ -34,7 +34,7 @@ export default class Lightbox extends React.Component {
     if (!this.canClose()) { return }
     trigger(this, "lightboxClosed")
     if (this.props.onClose) {
-      this.props.onClose()
+      this.props.onClose(this)
     }
   }
 

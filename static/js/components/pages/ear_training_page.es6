@@ -5,7 +5,6 @@ import NoteList from "st/note_list"
 
 import Slider from "st/components/slider"
 import Select from "st/components/select"
-import MidiInstrumentPicker from "st/components/midi_instrument_picker"
 
 import {parseMidiMessage, MidiChannel} from "st/midi"
 import {setTitle} from "st/globals"
@@ -135,7 +134,7 @@ export default class EarTrainingPage extends React.Component {
     }
 
     this.setState({ playing: true })
-    this.state.midiChannel.playNoteList(notes).then(() => {
+    this.props.midiChannel.playNoteList(notes).then(() => {
       this.setState({ playing: false })
     })
   }
@@ -169,7 +168,7 @@ export default class EarTrainingPage extends React.Component {
     let list = new NoteList([], { generator })
     list.fillBuffer(this.state.notesPerMelody)
 
-    this.state.midiChannel.playNoteList(list).then(() => {
+    this.props.midiChannel.playNoteList(list).then(() => {
       this.setState({ playing: false })
     })
 
@@ -181,10 +180,10 @@ export default class EarTrainingPage extends React.Component {
 
   render() {
     let contents
-    if (this.state.midiChannel) {
+    if (this.props.midiChannel) {
       contents = this.renderMeldoyGenerator()
     } else {
-      contents = this.renderMidiPicker()
+      contents = this.renderIntro()
     }
 
     return <div className="ear_training_page">
@@ -316,7 +315,7 @@ export default class EarTrainingPage extends React.Component {
     </label>
   }
 
-  renderMidiPicker() {
+  renderIntro() {
     if (!this.props.midi) {
       return <div className="choose_device">
         <strong>No MIDI support detected in your browser, ensure you're using Chrome</strong>
@@ -330,12 +329,7 @@ export default class EarTrainingPage extends React.Component {
       next melody will automatically play. You can trigger the melody to reply by
       interacting with any of the sliders or pedals on your MIDI controller.</p>
 
-      <MidiInstrumentPicker
-        confirmLabel="Continue to ear training"
-        unselectedLabel="Select device to continue"
-        midi={this.props.midi}
-        onPick={this.onPickMidiInstrument}
-      />
+      <p>Select a MIDI output device by clicking the device selector in the top toolbar.</p>
     </div>
   }
 }

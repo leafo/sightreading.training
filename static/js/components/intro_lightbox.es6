@@ -10,20 +10,23 @@ export default class IntroLightbox extends Lightbox {
 
   static propTypes = {
     midi: types.object,
-    setInput: types.func.isRequired,
   }
 
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      selectedInput: this.props.selectedInputIdx,
+      selectedOutput: this.props.selectedOutputIdx,
+      forwardMidi: this.props.forwardMidi || false,
+    }
   }
 
-  close() {
-    if (this.state.selectedInput != null) {
-      this.props.setInput(this.state.selectedInput)
+  midiConfiguration() {
+    return {
+      forwardMidi: this.state.forwardMidi,
+      inputIdx: this.state.selectedInput,
+      outputChannel: this.refs.instrumentPicker.getCurrentChannel()
     }
-
-    super.close()
   }
 
   midiInputs() {
@@ -44,9 +47,12 @@ export default class IntroLightbox extends Lightbox {
           midiOptions={this.midiInputs()} />
         <div className="input_row">
           <label>
-            <input type="checkbox" />
+            <input
+              onChange={e => this.setState({forwardMidi: e.target.checked })}
+              type="checkbox" checked={this.state.forwardMidi}
+            />
             {" "}
-            <span className="label">Forward midi input to output</span>
+            <span className="label">Forward MIDI input to output</span>
           </label>
         </div>
         <h4>Select MIDI output device:</h4>
@@ -54,32 +60,26 @@ export default class IntroLightbox extends Lightbox {
 
         <MidiInstrumentPicker
           midi={this.props.midi}
-          onPick={midiChannel => {
-            this.setState({
-              metronome: midiChannel.getMetronome(),
-              midiChannel})
-            trigger(this, "closeLightbox")
-          }}
+          ref={"instrumentPicker"}
         />
 
       </div>
     } else {
-      midiSetup = <p>MIDI support not detected on your computer. You'll only be able to use the on-srcreen keyboard.</p>
+      midiSetup = <p>
+        MIDI support not detected on your computer. You'll only be able to use
+      the on-srcreen keyboard.
+        </p>
     }
 
     return <div>
-      <h2>Sight reading trainer</h2>
-      <p>This tool gives you a way to practice sight reading randomly
-      generated notes. It works best with Chrome and a MIDI keyboard
+      <h2>Select MIDI device</h2>
+      <p>This tool works best with Chrome and a MIDI keyboard
       plugged into your computer.</p>
-
-      <p>You can customize how the notes are generated, and what staff you
-      use from the settings menu.</p>
 
       {midiSetup}
 
       <p>
-        <button onClick={this.close.bind(this)}>Continue</button>
+        <button onClick={this.close.bind(this)}>Save selections</button>
       </p>
     </div>
   }

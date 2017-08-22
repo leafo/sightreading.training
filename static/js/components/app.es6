@@ -75,8 +75,9 @@ class Layout extends React.Component {
       "pickMidi": (e) => {
         this.setState({
           currentLightbox: <IntroLightbox
-            setInput={idx => {
-              let input = this.setInput(idx)
+            onClose={lb => {
+              let config = lb.midiConfiguration()
+              let input = this.setInput(config.inputIdx)
               writeConfig("defaults:midiIn", input.name)
             }} />
         })

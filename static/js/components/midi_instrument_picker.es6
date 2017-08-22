@@ -63,38 +63,26 @@ export default class MidiInstrumentPicker extends React.PureComponent {
         selectedInput={idx => this.setState({ outInputIdx: idx })}
         midiOptions={this.midiOutputs()} />
 
-      <div className="confirm_buttons">
+      <div className="midi_instrument_test_buttons">
         <button
           onClick={e => {
             e.preventDefault()
-
-            let output = this.midiOutputs()[this.state.outInputIdx]
-            let channel = new MidiChannel(output, this.state.outChannel)
-            channel.setInstrument(this.state.outInstrument)
-            if (this.props.onPick) {
-              this.props.onPick(channel)
-            }
-          }}
-          disabled={this.state.outInputIdx == null}>
-            {
-              this.state.outInputIdx == null ?
-              (this.props.unselectedLabel || "Select instrument") :
-              (this.props.confirmLabel || "Select instrument")
-            }
-          </button>
-        <span className="spacer"></span>
-        <button
-          onClick={e => {
-            e.preventDefault()
-
-            let output = this.midiOutputs()[this.state.outInputIdx]
-            let channel = new MidiChannel(output, this.state.outChannel)
-            channel.setInstrument(this.state.outInstrument)
-            channel.testNote()
+            this.getCurrentChannel().testNote()
           }}
           disabled={this.state.outInputIdx == null}>Play test note</button>
       </div>
     </div>
+  }
+
+  getCurrentChannel() {
+    if (this.state.outInputIdx == null || this.state.outInstrument == null) {
+      return null
+    }
+
+    let output = this.midiOutputs()[this.state.outInputIdx]
+    let channel = new MidiChannel(output, this.state.outChannel)
+    channel.setInstrument(this.state.outInstrument)
+    return channel
   }
 
   midiOutputs() {
