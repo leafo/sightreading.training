@@ -10,7 +10,8 @@ let {PropTypes: types} = React
 
 export default class MidiInstrumentPicker extends React.PureComponent {
   static propTypes = {
-    midi: types.object.isRequired
+    midi: types.object.isRequired,
+    defaultChannel: types.object,
   }
 
   constructor(props) {
@@ -19,6 +20,12 @@ export default class MidiInstrumentPicker extends React.PureComponent {
       outputIdx: null,
       outChannel: 0,
       outInstrument: 0,
+    }
+
+    let c = this.props.defaultChannel
+    if (c) {
+      this.state.outChannel = c.channel
+      this.state.outInstrument = c.lastProgramNumber
     }
   }
 

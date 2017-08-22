@@ -61,6 +61,7 @@ export default class IntroLightbox extends Lightbox {
 
         <MidiInstrumentPicker
           midi={this.props.midi}
+          defaultChannel={this.props.selectedOutputChannel}
           ref={"instrumentPicker"}
         />
 

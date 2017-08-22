@@ -144,6 +144,8 @@ export class MidiChannel {
   }
 
   setInstrument(programNumber) {
+    this.lastProgramNumber = +programNumber
+
     this.output.send([
       (12 << 4) + this.channel,
       programNumber

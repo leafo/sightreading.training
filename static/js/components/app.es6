@@ -244,7 +244,9 @@ class Layout extends React.Component {
     return <IntroLightbox
       forwardMidi={this.state.forwardMidi}
       selectedInputIdx={this.state.midiInputIdx}
+      selectedOutputChannel={this.state.midiOutputChannel}
       selectedOutputIdx={this.state.midiOutputIdx}
+
       onClose={lb => {
         let config = lb.midiConfiguration()
         let input = this.setInput(config.inputIdx)
