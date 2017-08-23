@@ -158,6 +158,9 @@ form, .form {
     left: 0;
     right: 0;
 
+    width: 100%;
+    overflow-x: auto;
+
     display: flex;
     align-items: center;
 
@@ -166,10 +169,26 @@ form, .form {
         flex: 1;
     }
 
-    .logo {
+    .logo, .logo_small {
         opacity: 0.7;
         margin-right: 10px;
+        display: block;
     }
+
+    .logo_small {
+        display: none;
+    }
+
+    @media (max-width: 1200px) {
+        .logo {
+            display: none;
+        }
+
+        .logo_small {
+            display: block;
+        }
+    }
+
 
     .settings_open & {
         button {
@@ -199,9 +218,6 @@ form, .form {
 
     .logo_link {
         padding: 0;
-        > img {
-            display: block;
-        }
     }
 
     a {
