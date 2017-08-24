@@ -105,6 +105,10 @@
         margin-top: 40px;
         display: flex;
         justify-content: center;
+        overflow-x: auto;
+        padding-left: 10px;
+        padding-right: 10px;
+        max-width: 100%;
 
         > .test_group {
             margin: 0 10px;
@@ -114,6 +118,7 @@
             padding: 2px 8px;
             border-radius: 3px;
             color: #666;
+            white-space: nowrap;
 
             &.selected {
                 background: white;

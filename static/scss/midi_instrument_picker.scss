@@ -24,5 +24,13 @@
             }
         }
 
+        @media (max-width: 600px) {
+            flex-direction: column;
+            > *  {
+                margin-top: 10px;
+                margin-left: 0;
+            }
+        }
+
     }
 }
