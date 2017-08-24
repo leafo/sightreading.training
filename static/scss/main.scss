@@ -220,6 +220,10 @@ form, .form {
         padding: 0;
     }
 
+    > a, > .right_section {
+        white-space: nowrap;
+    }
+
     a {
         padding: 3px 6px;
 
