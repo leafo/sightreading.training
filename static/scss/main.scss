@@ -122,6 +122,13 @@ form, .form {
     width: 600px;
     padding: 40px;
 
+    @media (max-width: 640px) {
+        margin: 0;
+        width: auto;
+        padding: 20px;
+    }
+
+
     > h2 {
         margin-top: 0;
         font-size: 32px;
