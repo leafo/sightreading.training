@@ -17,6 +17,11 @@
         max-width: 600px;
         margin: 60px auto;
 
+        @media (max-width: 720px) {
+            margin: 0;
+        }
+
+
         > .page_container {
             margin: 0;
             width: auto;
@@ -25,14 +30,22 @@
         .stats_row {
             text-align: right;
             margin-bottom: 10px;
+
+            @media (max-width: 720px) {
+                margin: 0;
+                padding: 10px 20px;
+            }
         }
 
         fieldset {
             margin-top: 20px;
-            display: flex;
             > .spacer {
                 flex: 1;
             }
+        }
+
+        .slider_component {
+            display: block;
         }
 
         > :last-child {
