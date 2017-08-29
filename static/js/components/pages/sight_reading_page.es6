@@ -516,8 +516,6 @@ export default class SightReadingPage extends React.Component {
           {staff}
         </div>
         <div className="toolbar">
-          <div className="left_tools">
-          </div>
           {modeToggle}
         </div>
       </div>
