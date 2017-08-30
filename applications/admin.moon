@@ -31,12 +31,20 @@ class extends lapis.Application
 
 
   [user: "/users/:user_id"]: capture_errors_json =>
-    import Users from require "models"
+    import Users, HourlyHits from require "models"
     assert_valid @params, {
       {"user_id", is_integer: true}
     }
 
     @user = assert_error Users\find(@params.user_id), "invalid user"
+
+    @counts = HourlyHits\select "
+      where hour > now() at time zone 'utc' - '30 days'::interval
+      and user_id = ?
+      group by type, hour::date
+      order by hour::date desc, type
+    ", @user.id, fields: "hour::date as date, sum(count) as count, type"
+
     render: true, layout: "layouts.admin"
 
 
