@@ -2,7 +2,8 @@
 import HourlyHits from require "models"
 
 class AdminHome extends require "widgets.page"
-  @needs: {"user", ""}
+  @needs: {"users", "songs", "counts"}
+
   inner_content: =>
     h1 "Home"
     @render_users!
@@ -22,7 +23,9 @@ class AdminHome extends require "widgets.page"
       for user in *@users
         tr ->
           td user.id
-          td user.username
+          td ->
+            a href: @url_for("admin.user", user_id: user.id),
+              user.username
           td user.email
           td user.created_at
 

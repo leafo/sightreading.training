@@ -110,3 +110,7 @@ class Users extends Model
       @update { last_active_at: db.format_date! }, timestamp: false
 
   is_admin: => @admin
+
+  name_for_display: =>
+    @display_name or @username
+
