@@ -33,9 +33,16 @@ export default class MidiSelector extends React.PureComponent {
               selected: this.state.selected == i
             })}
             onClick={() => {
-              this.setState({selected: i})
-              if (this.props.onChange) {
-                this.props.onChange(i);
+              if (this.state.selected == i) {
+                this.setState({selected: null})
+                if (this.props.onChange) {
+                  this.props.onChange(null);
+                }
+              } else {
+                this.setState({selected: i})
+                if (this.props.onChange) {
+                  this.props.onChange(i);
+                }
               }
             }}
             >
