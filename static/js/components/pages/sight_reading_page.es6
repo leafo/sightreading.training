@@ -507,7 +507,16 @@ export default class SightReadingPage extends React.Component {
       </span>
     </div>
 
-    let staff = this.state.currentStaff && this.state.currentStaff.render.call(this);
+    let staff
+    if (this.state.currentStaff) {
+      staff = this.state.currentStaff.render.call(this, {
+        heldNotes: this.state.heldNotes,
+        notes: this.state.notes,
+        keySignature: this.state.keySignature,
+        noteWidth: this.state.noteWidth,
+        noteShaking: this.state.noteShaking,
+      })
+    }
 
     return <div ref="workspace" className="workspace">
       <div className="workspace_wrapper">

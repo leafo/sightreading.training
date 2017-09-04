@@ -5,6 +5,19 @@ let {PropTypes: types} = React;
 import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
 export default class StaffNotes extends React.Component {
+  static propTypes = {
+    keySignature: types.object.isRequired,
+    noteWidth: types.number.isRequired,
+    notes: types.array.isRequired,
+
+    upperRow: types.number.isRequired,
+    lowerRow: types.number.isRequired,
+    heldNotes: types.object.isRequired,
+    inGrand: types.bool,
+    staffClass: types.string,
+    noteShaking: types.bool,
+  }
+
   render() {
     return <div ref="notes" className={this.classNames()}>
       {this.renderNotes()}
