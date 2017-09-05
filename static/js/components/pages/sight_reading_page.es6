@@ -46,7 +46,7 @@ export default class SightReadingPage extends React.Component {
       bufferSize: 10,
       keyboardOpen: true,
       settingsOpen: false,
-
+      scale: window.innerWidth < 1000 ? 0.8 : 1,
       stats: new NoteStats(N.session.currentUser),
       keySignature: new KeySignature(0),
     }
@@ -515,7 +515,7 @@ export default class SightReadingPage extends React.Component {
         keySignature: this.state.keySignature,
         noteWidth: this.state.noteWidth,
         noteShaking: this.state.noteShaking,
-        scale: 1,
+        scale: this.state.scale,
       })
     }
 
