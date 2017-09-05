@@ -2,7 +2,7 @@
 export default class SlideToZero {
   constructor(opts={}) {
     this.value = 0;
-    this.speed = opts.speed || 100; // 100 pixels a second
+    this.speed = opts.speed || 1; // 1 unit a second
     this.animating = false;
 
     this.onUpdate = opts.onUpdate || function() {}

@@ -23,7 +23,7 @@ let {PropTypes: types} = React
 let {CSSTransitionGroup} = React.addons || {}
 
 const DEFAULT_NOTE_WIDTH = 100
-const DEFAULT_SPEED = 400
+const DEFAULT_SPEED = 4
 
 export default class SightReadingPage extends React.Component {
   constructor(props) {
@@ -180,7 +180,7 @@ export default class SightReadingPage extends React.Component {
             touchedNotes: {},
           })
 
-          this.state.slider.add(this.state.noteWidth)
+          this.state.slider.add(1)
         } else {
           gaEvent("sight_reading", "chord", "miss");
 
@@ -219,7 +219,7 @@ export default class SightReadingPage extends React.Component {
             touchedNotes: {},
           });
 
-          this.state.slider.add(this.state.noteWidth)
+          this.state.slider.add(1)
 
           return true
         } else {
@@ -309,12 +309,12 @@ export default class SightReadingPage extends React.Component {
       mode: "scroll",
       noteWidth: noteWidth,
       slider: new SlideToZero({
-        speed: this.state.scrollSpeed,
-        loopPhase: noteWidth,
-        initialValue: noteWidth * 3,
+        speed: this.state.scrollSpeed / 100,
+        loopPhase: 1,
+        initialValue: 4,
         onUpdate: value => {
-          if (value < 220) {
-            this.state.slider.value = 220
+          if (value < 0.5) {
+            this.state.slider.value = 0.5
             this.state.slider.cancel()
           }
 
@@ -346,7 +346,7 @@ export default class SightReadingPage extends React.Component {
 
   setOffset(value) {
     if (!this.staff) { return; }
-    this.staff.setOffset(value);
+    this.staff.setOffset(value * this.state.noteWidth);
   }
 
   toggleSettings() {
