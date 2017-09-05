@@ -13,10 +13,6 @@
     right: 0;
     height: $keyboard_height;
 
-    @include on_narrow_height {
-        height: $keyboard_height_short;
-    }
-
     .settings_open & {
         left: $settings_panel_width;
     }
@@ -87,5 +83,17 @@
             box-shadow: 0 0 0 2px #999, inset 0 -10px 0 rgba(0,0,0, 0.1), inset 0 5px 10px -5px rgba(0,0,0,0.2);
         }
     }
+
+    @include on_narrow_height {
+        height: $keyboard_height_short;
+    }
+
+    @include on_very_narrow_height {
+        height: 90px;
+        .key.black {
+            bottom: 50%;
+        }
+    }
+
 }
 

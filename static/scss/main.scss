@@ -270,6 +270,10 @@ form, .form {
         @include on_narrow_height {
             bottom: $keyboard_height_short;
         }
+
+        @include on_very_narrow_height {
+            bottom: $keyboard_height_very_short;
+        }
     }
 
     .settings_open & {
