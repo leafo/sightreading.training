@@ -346,7 +346,7 @@ export default class SightReadingPage extends React.Component {
 
   setOffset(value) {
     if (!this.staff) { return; }
-    this.staff.setOffset(value * this.state.noteWidth);
+    this.staff.setOffset(value);
   }
 
   toggleSettings() {
@@ -515,6 +515,7 @@ export default class SightReadingPage extends React.Component {
         keySignature: this.state.keySignature,
         noteWidth: this.state.noteWidth,
         noteShaking: this.state.noteShaking,
+        scale: 1,
       })
     }
 

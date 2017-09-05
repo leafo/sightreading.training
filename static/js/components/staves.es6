@@ -33,14 +33,17 @@ export class Staff extends React.Component {
 
   // skips react for performance
   setOffset(amount) {
-    this.refs.notes.setOffset(amount)
+    let scale = this.props.scale || 1
+    this.refs.notes.setOffset(amount * this.props.noteWidth * scale)
   }
 
   render() {
     let staffNotes = null
 
     if (this.props.notes instanceof NoteList) {
-      staffNotes = <StaffNotes ref="notes" {...this.props}></StaffNotes>
+      let scale = this.props.scale || 1
+      let noteWidth = Math.floor(this.props.noteWidth * scale)
+      staffNotes = <StaffNotes ref="notes" {...this.props} noteWidth={noteWidth}></StaffNotes>
     }
 
     if (this.props.notes instanceof SongNoteList) {
