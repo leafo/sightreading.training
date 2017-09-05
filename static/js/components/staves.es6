@@ -13,6 +13,8 @@ import {parseNote, noteStaffOffset} from "st/music"
 import StaffNotes from "st/components/staff_notes"
 import StaffSongNotes from "st/components/staff_song_notes"
 
+const DEFAULT_HEIGHT = 120
+
 export class Staff extends React.Component {
   static propTypes = {
     // rendering props
@@ -26,6 +28,7 @@ export class Staff extends React.Component {
     notes: types.array.isRequired,
     heldNotes: types.object.isRequired,
     inGrand: types.bool,
+    scale: types.number,
   }
 
   // skips react for performance
@@ -48,7 +51,14 @@ export class Staff extends React.Component {
       return <div />
     }
 
-    return <div className={classNames("staff", this.props.staffClass)}>
+    let height = DEFAULT_HEIGHT * (this.props.scale || 1)
+
+    return <div
+      style={{
+        height: `${height}px`
+      }}
+      className={classNames("staff", this.props.staffClass)}
+    >
       <img className="cleff" src={this.props.cleffImage} />
 
       <div className="lines">
