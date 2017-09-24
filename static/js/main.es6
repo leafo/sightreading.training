@@ -12,9 +12,17 @@ N.init = init
 export function init(session) {
   N.session = session || {}
   ReactDOM.render(<App />, document.getElementById("page"));
+  installServiceWorker()
 }
 
 export function test_page(session) {
   N.session = session || {}
   ReactDOM.render(<App layout={App.BlankLayout} />, document.getElementById("page"));
+}
+
+
+export function installServiceWorker() {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register('/static/service_worker.js')
+  }
 }

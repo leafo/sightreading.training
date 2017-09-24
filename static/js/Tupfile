@@ -10,6 +10,7 @@ include_rules
 : foreach components/sight_reading/*.es6 |> !babel_amd |> components/sight_reading/%B.js
 : components/sight_reading/*.js |> !join |> components_sight_reading.js
 
+: foreach *.es6 |> !babel_amd |> %B.js
 : foreach *.pegjs |> !pegjs |> %B.es6
 
 : song_parser_peg.es6 |> !babel_amd |> %B.js
