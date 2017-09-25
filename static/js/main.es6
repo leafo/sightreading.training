@@ -20,9 +20,12 @@ export function test_page(session) {
   ReactDOM.render(<App layout={App.BlankLayout} />, document.getElementById("page"));
 }
 
-
 export function installServiceWorker() {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register('/static/service_worker.js')
+    navigator.serviceWorker.register("/sw.js").then(function(registration) {
+      console.log("Service worker registered", registration.scope)
+    }, function(err) {
+      console.error("Service worker failed to register", err)
+    })
   }
 }
