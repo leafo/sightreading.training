@@ -4,9 +4,18 @@ const CACHE_NAME = "st_cache_1"
 
 const urlsToCache = []
 
-self.addEventListener('install', function(event) {
+self.addEventListener("install", function(event) {
   console.log("service worker being installed", event)
   event.waitUntil(caches.open(CACHE_NAME).then(function(cache) {
     return cache.addAll(urlsToCache)
+  }))
+})
+
+self.addEventListener("fetch", function(event) {
+  event.respondWith(caches.match(event.request).then(function (response) {
+    if (response) {
+      return response
+    }
+    return fetch(event.request)
   }))
 })
