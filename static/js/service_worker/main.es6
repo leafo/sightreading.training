@@ -1,6 +1,7 @@
 
 
-const CACHE_NAME = "st_cache_1"
+const CACHE_VERSION = "v1"
+const CACHE_NAME = "st_cache"
 
 const urlsToCache = [
   "/static/style.css",
@@ -12,8 +13,7 @@ const urlsToCache = [
 ]
 
 self.addEventListener("install", function(event) {
-  console.log("service worker being installed", event)
-  event.waitUntil(caches.open(CACHE_NAME).then(function(cache) {
+  event.waitUntil(caches.open(`${CACHE_VERSION}:${CACHE_NAME}`).then(function(cache) {
     return cache.addAll(urlsToCache)
   }))
 })
@@ -24,5 +24,14 @@ self.addEventListener("fetch", function(event) {
       return response
     }
     return fetch(event.request)
+  }))
+})
+
+self.addEventListener("activate", function(event) {
+  event.waitUntil(caches.keys().then(function(keys) {
+    return Promise.all(keys
+      .filter(key => !key.startsWith(CACHE_VERSION))
+      .map(key => caches.delete(key))
+    )
   }))
 })
