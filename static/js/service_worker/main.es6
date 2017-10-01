@@ -3,14 +3,7 @@
 const CACHE_VERSION = "v1"
 const CACHE_NAME = "st_cache"
 
-const urlsToCache = [
-  "/static/style.css",
-  "/static/lib.js",
-  "/static/main.js",
-  "/static/img/logo.svg",
-  "/static/img/logo-small.svg",
-  "/static/svg/midi.svg",
-]
+const urlsToCache = [ "/" ]
 
 self.addEventListener("install", function(event) {
   event.waitUntil(caches.open(`${CACHE_VERSION}:${CACHE_NAME}`).then(function(cache) {
@@ -19,11 +12,18 @@ self.addEventListener("install", function(event) {
 })
 
 self.addEventListener("fetch", function(event) {
+
   event.respondWith(caches.match(event.request).then(function (response) {
     if (response) {
       return response
     }
-    return fetch(event.request)
+
+    return fetch(event.request).then(function (response) {
+      return caches.open(`${CACHE_VERSION}:${CACHE_NAME}`).then(function(cache) {
+        cache.put(event.request, response.clone())
+        return response
+      })
+    })
   }))
 })
 
