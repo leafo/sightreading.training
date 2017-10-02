@@ -48,6 +48,8 @@ class Layout extends Widget
     if @current_user
       out.currentUser = @flow("formatter")\user @current_user
 
+    out.cacheBuster = buster
+
     out
 
   include_js: (...) =>
