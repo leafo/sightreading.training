@@ -1,6 +1,6 @@
 
 
-const CACHE_VERSION = "v1"
+const CACHE_VERSION = "v2"
 const CACHE_NAME = "st_cache"
 
 const urlsToCache = [ "/" ]
@@ -12,19 +12,16 @@ self.addEventListener("install", function(event) {
 })
 
 self.addEventListener("fetch", function(event) {
-
-  event.respondWith(caches.match(event.request).then(function (response) {
-    if (response) {
-      return response
-    }
-
-    return fetch(event.request).then(function (response) {
-      return caches.open(`${CACHE_VERSION}:${CACHE_NAME}`).then(function(cache) {
+  event.respondWith(
+    caches.open(`${CACHE_VERSION}:${CACHE_NAME}`).then(function(cache) {
+      return fetch(event.request).then(function (response) {
         cache.put(event.request, response.clone())
         return response
+      }).catch(function() {
+        return cache.match(event.request)
       })
     })
-  }))
+  )
 })
 
 self.addEventListener("activate", function(event) {
