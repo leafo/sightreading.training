@@ -8,6 +8,20 @@ let {CSSTransitionGroup} = React.addons || {}
 import {setTitle} from "st/globals"
 import {keyCodeToChar} from "st/keyboard_input"
 
+class SettingsPanel extends React.Component {
+  render() {
+    return <section className="settings_panel">
+      <div className="settings_header">
+        <button onClick={this.props.close}>Close</button>
+        <h3>Settings</h3>
+      </div>
+
+      <section className="settings_group">
+      </section>
+    </section>
+  }
+}
+
 export default class FlashCardPage extends React.Component {
   static notes = ["C", "D", "E", "F", "G", "A", "B"]
 
@@ -17,6 +31,7 @@ export default class FlashCardPage extends React.Component {
     this.state = {
       cardNumber: 0,
       enabledRoots: { "D": true },
+      settingsPanelOpen: false,
     }
     this.rand = new MersenneTwister()
   }
@@ -190,9 +205,29 @@ export default class FlashCardPage extends React.Component {
 
   render() {
     return <div className="flash_card_page">
+      <button onClick={e => this.setState({
+        settingsPanelOpen: true
+      })} type="button">Settings</button>
+
       {this.renderTestGroups()}
       {this.renderCurrentCard()}
+
+      <CSSTransitionGroup transitionName="slide_right" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
+        {this.renderSettings()}
+      </CSSTransitionGroup>
     </div>
+  }
+
+  renderSettings() {
+    if (!this.state.settingsPanelOpen) {
+      return
+    }
+
+    return <SettingsPanel
+      close={() => this.setState({
+        settingsPanelOpen: false
+      })}
+      />
   }
 
   renderTestGroups() {
