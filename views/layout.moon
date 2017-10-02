@@ -15,7 +15,7 @@ class Layout extends Widget
         link rel: "stylesheet", href: "/static/style.css?#{buster}"
         link rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Raleway"
         link rel: "icon", sizes: "144x144", href: "/static/img/icon-144.png"
-        link rel: "manifest", href: "/static/manifest.json"
+        link rel: "manifest", href: @build_url "/static/manifest.json"
 
         meta name: "viewport", content: "width=device-width, initial-scale=1"
         meta id: "csrf_token", name: "csrf_token", content: @csrf_token
