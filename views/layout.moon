@@ -14,6 +14,9 @@ class Layout extends Widget
         title "Sight Reading Trainer"
         link rel: "stylesheet", href: "/static/style.css?#{buster}"
         link rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Raleway"
+        link rel: "icon", sizes: "144x144", href: "/static/img/icon-144.png"
+        link rel: "manifest", href: "/static/manifest.json"
+
         meta name: "viewport", content: "width=device-width, initial-scale=1"
         meta id: "csrf_token", name: "csrf_token", content: @csrf_token
 
@@ -26,6 +29,7 @@ class Layout extends Widget
           meta name: "description", content: meta_description
 
         @google_analytics!
+        meta name: "theme-color", content: "#727290"
 
       body ->
         div id: "page"

@@ -1,0 +1,15 @@
+{
+  "short_name": "Sightreading Trainer",
+  "name": "Sightreading Trainer",
+  "theme_color": "#727290",
+  "background_color": "#727290",
+  "icons": [
+    {
+      "src": "/static/icon-144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone"
+}
