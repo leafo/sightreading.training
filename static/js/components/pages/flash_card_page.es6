@@ -12,6 +12,8 @@ import Select from "st/components/select"
 
 class SettingsPanel extends React.Component {
   render() {
+    let current = this.props.currentExercise
+
     return <section className="settings_panel">
       <div className="settings_header">
         <button onClick={this.props.close}>Close</button>
@@ -19,12 +21,13 @@ class SettingsPanel extends React.Component {
       </div>
 
       <section className="settings_group">
-        <Select name="exercise" options={[
-          {
-            name: "Note math",
-            value: "note_math"
-          }
-        ]}/>
+        <Select
+          name="exercise"
+          value={current ? current.exerciseId : null}
+          options={this.props.exercises.map(e => ({
+            name: e.exerciseName,
+            value: e.exerciseId
+          }))}/>
       </section>
       {this.renderExerciseOptions()}
     </section>
@@ -34,6 +37,11 @@ class SettingsPanel extends React.Component {
     if (!this.props.currentExercise) {
       return
     }
+
+    let ExerciseOptions = this.props.currentExercise.ExerciseOptions
+    return <ExerciseOptions
+      updateSettings={this.props.updateSettings}
+      currentSettings={this.props.currentExerciseSettings} />
   }
 }
 
@@ -81,7 +89,7 @@ class NoteMathExercise extends React.Component {
                   this.props.updateSettings({
                     ...settings,
                     enabledRoots: {
-                      ...this.settings.enabledRoots,
+                      ...settings.enabledRoots,
                       [note]: !settings.enabledRoots[note]
                     }
                   })
@@ -113,6 +121,14 @@ class NoteMathExercise extends React.Component {
     this.refreshCards(() => {
       this.setupNext()
     })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.settings != this.props.settings) {
+      this.refreshCards(() => {
+        this.setupNext()
+      })
+    }
   }
 
   render() {
@@ -306,6 +322,7 @@ export default class FlashCardPage extends React.Component {
     }
 
     this.state.currentExerciseSettings = this.exercises[this.state.currentExerciseIdx].defaultSettings()
+    this.updateExerciseSettings = this.updateExerciseSettings.bind(this)
   }
 
   setExercise(idx) {
@@ -317,6 +334,12 @@ export default class FlashCardPage extends React.Component {
     this.setState({
       currentExerciseIdx: idx,
       currentExerciseSettings: exercise.defaultSettings()
+    })
+  }
+
+  updateExerciseSettings(settings) {
+    this.setState({
+      currentExerciseSettings: settings
     })
   }
 
@@ -382,8 +405,14 @@ export default class FlashCardPage extends React.Component {
       return
     }
 
+    let Exercise = this.exercises[this.state.currentExerciseIdx]
+
     return <SettingsPanel
       close={() => this.setState({ settingsPanelOpen: false })}
-      />
+      exercises={this.exercises}
+      currentExercise={Exercise}
+      currentExerciseSettings={this.state.currentExerciseSettings}
+      updateSettings={this.updateExerciseSettings}
+    />
   }
 }
