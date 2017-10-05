@@ -119,6 +119,41 @@ class NoteMathExercise extends React.Component {
     })
   }
 
+  componentDidMount() {
+    this.upListener = event => {
+      let key = keyCodeToChar(event.keyCode)
+      if (key == null) {
+        return
+      }
+
+      if (!this.refs.cardOptions) {
+        return
+      }
+
+      if (key.match(/^\d$/)) {
+        let option = (+key) - 1
+        let button = this.refs.cardOptions.children[option]
+        if (button) {
+          button.click()
+        }
+      } else {
+        for (let button of this.refs.cardOptions.children) {
+          if (button.textContent == key.toUpperCase()) {
+            button.click()
+          }
+        }
+      }
+
+    }
+    window.addEventListener("keyup", this.upListener)
+  }
+
+
+  componentWillUnmount() {
+    window.removeEventListener("keyup", this.upListener)
+  }
+
+
   componentDidUpdate(prevProps) {
     if (prevProps.settings != this.props.settings) {
       this.refreshCards(() => {
@@ -343,40 +378,6 @@ export default class FlashCardPage extends React.Component {
 
   componentDidMount() {
     setTitle("Flash Cards")
-    return
-    // TODO: fix this
-
-    this.upListener = event => {
-      let key = keyCodeToChar(event.keyCode)
-      if (key == null) {
-        return
-      }
-
-      if (!this.refs.cardOptions) {
-        return
-      }
-
-      if (key.match(/^\d$/)) {
-        let option = (+key) - 1
-        let button = this.refs.cardOptions.children[option]
-        if (button) {
-          button.click()
-        }
-      } else {
-        for (let button of this.refs.cardOptions.children) {
-          if (button.textContent == key.toUpperCase()) {
-            button.click()
-          }
-        }
-      }
-
-    }
-    window.addEventListener("keyup", this.upListener)
-  }
-
-
-  componentWillUnmount() {
-    window.removeEventListener("keyup", this.upListener)
   }
 
   render() {
