@@ -350,7 +350,7 @@ class NoteMathExercise extends React.PureComponent {
 
 }
 
-export default class FlashCardPage extends React.Component {
+export default class FlashCardPage extends React.PureComponent {
   constructor(props) {
     super(props)
 
