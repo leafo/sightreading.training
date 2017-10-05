@@ -10,7 +10,15 @@ import {keyCodeToChar} from "st/keyboard_input"
 
 import Select from "st/components/select"
 
-class SettingsPanel extends React.Component {
+class SettingsPanel extends React.PureComponent {
+  static propTypes = {
+    close: types.func,
+    updateSettings: types.func.isRequired,
+    exercises: types.array.isRequired,
+    currentExercise: types.func.isRequired, // class
+    currentExerciseSettings: types.object.isRequired,
+  }
+
   render() {
     let current = this.props.currentExercise
 
@@ -358,6 +366,7 @@ export default class FlashCardPage extends React.Component {
 
     this.state.currentExerciseSettings = this.exercises[this.state.currentExerciseIdx].defaultSettings()
     this.updateExerciseSettings = this.updateExerciseSettings.bind(this)
+    this.closeSettingsPanel = () => this.setState({ settingsPanelOpen: false })
   }
 
   setExercise(idx) {
@@ -409,7 +418,7 @@ export default class FlashCardPage extends React.Component {
     let Exercise = this.exercises[this.state.currentExerciseIdx]
 
     return <SettingsPanel
-      close={() => this.setState({ settingsPanelOpen: false })}
+      close={this.closeSettingsPanel}
       exercises={this.exercises}
       currentExercise={Exercise}
       currentExerciseSettings={this.state.currentExerciseSettings}
