@@ -75,6 +75,7 @@ class NoteMathExercise extends React.Component {
       let settings = this.props.currentSettings
 
       return <section className="settings_group">
+        <h4>Root notes</h4>
         {notes.map((note) =>
           <div
             key={note}
@@ -93,11 +94,6 @@ class NoteMathExercise extends React.Component {
                       [note]: !settings.enabledRoots[note]
                     }
                   })
-
-                  // this.state.enabledRoots[note] = !this.state.enabledRoots[note]
-                  // this.refreshCards(() => {
-                  //   this.setupNext()
-                  // })
                 }}
                 />
               {note}
@@ -133,8 +129,10 @@ class NoteMathExercise extends React.Component {
 
   render() {
     let card = this.state.currentCard
+    let errorMessage = card ? null : <strong className="no_cards_error">Please enable some cards from settings</strong>
 
     return <div className="note_math_exercise flash_card_exercise">
+      {errorMessage}
       <CardHolder>{this.renderCurrentCard()}</CardHolder>
       {this.renderCardOptions()}
     </div>
@@ -256,7 +254,7 @@ class NoteMathExercise extends React.Component {
 
     // no cards to pick, use first
     if (!chosenCard) {
-      chosenCard = this.cards[0]
+      chosenCard = this.state.cards[0]
     }
 
     this.setState({
