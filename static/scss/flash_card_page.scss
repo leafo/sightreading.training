@@ -1,8 +1,27 @@
+@import "include/common";
 
 .flash_card_page {
+    .flash_card_header {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgba($border_color, 0.5);
+        padding: 8px 20px;
+        background: rgba(white, 0.3);
+
+        > .exercise_label {
+            flex: 1;
+            @include single_line;
+            font-weight: bold;
+        }
+    }
+
     .card_holder {
         text-align: center;
         margin: 40px 0;
+
+        @include on_narrow_width {
+            margin-top: 0;
+        }
     }
 
     .no_cards_error {
@@ -30,10 +49,14 @@
         background: white;
         font-size: 80px;
         display: inline-block;
-        padding: 80px 40px; 
+        padding: 80px 40px;
         font-weight: bold;
         position: relative;
 
+        @include on_narrow_width {
+            font-size: 60px;
+            display: block;
+        }
     }
 
     .card_row {
@@ -97,7 +120,7 @@
         margin-top: 40px;
         text-align: center;
 
-        button {
+        > button {
             margin-left: 15px;
             font-size: 18px;
             padding: 10px 20px;
@@ -106,6 +129,20 @@
                 margin-left: 0;
             }
         }
+
+        @include on_narrow_width {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: 0;
+            padding: 10px;
+            background: rgba($body_background, 0.8);
+            > button {
+                margin: 5px;
+            }
+        }
+
     }
 
 

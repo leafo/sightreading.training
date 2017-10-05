@@ -203,7 +203,7 @@ class NoteMathExercise extends React.PureComponent {
       return
     }
 
-    let options = card.options.map(a => 
+    let options = card.options.map(a =>
       <button
         key={a}
         disabled={this.state.cardMistakes && this.state.cardMistakes[a]}
@@ -392,10 +392,15 @@ export default class FlashCardPage extends React.PureComponent {
   }
 
   render() {
+    let Exercise = this.exercises[this.state.currentExerciseIdx]
+
     return <div className="flash_card_page">
-      <button onClick={e => this.setState({
-        settingsPanelOpen: true
-      })} type="button">Settings</button>
+      <div className="flash_card_header">
+        <div className="exercise_label">{Exercise ? Exercise.exerciseName : ""}</div>
+        <button onClick={e => this.setState({
+          settingsPanelOpen: true
+        })} type="button">Settings</button>
+      </div>
 
       {this.renderExercise()}
 

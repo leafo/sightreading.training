@@ -2,7 +2,7 @@
 
 body {
     color: #333;
-    background: #e7e7e7;
+    background: $body_background;
     font-family: 'Raleway', sans-serif;
     margin: 0;
     padding: 0;
@@ -572,7 +572,7 @@ form, .form {
     }
 
     &:hover {
-        background: lighten(#e7e7e7, 5%);
+        background: lighten($body_background, 5%);
     }
 }
 
