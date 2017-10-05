@@ -36,7 +36,7 @@ export default class Select extends React.Component {
   render() {
     let current = this.currentOption()
 
-    return <div className={classNames("select_component", {
+    return <div className={classNames("select_component", this.props.className, {
       focused: this.state.focused
     })}>
       <div className="selected_option">

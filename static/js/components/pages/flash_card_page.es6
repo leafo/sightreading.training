@@ -23,6 +23,7 @@ class SettingsPanel extends React.Component {
       <section className="settings_group">
         <Select
           name="exercise"
+          className="exercise_selector"
           value={current ? current.exerciseId : null}
           options={this.props.exercises.map(e => ({
             name: e.exerciseName,
@@ -77,28 +78,26 @@ class NoteMathExercise extends React.Component {
       return <section className="settings_group">
         <h4>Root notes</h4>
         {notes.map((note) =>
-          <div
+          <label
             key={note}
             className={classNames("test_group", {
               selected: settings.enabledRoots[note]
             })}>
-            <label>
-              <input
-                type="checkbox"
-                checked={settings.enabledRoots[note] || false}
-                onChange={(e) => {
-                  this.props.updateSettings({
-                    ...settings,
-                    enabledRoots: {
-                      ...settings.enabledRoots,
-                      [note]: !settings.enabledRoots[note]
-                    }
-                  })
-                }}
-                />
-              {note}
-            </label>
-          </div>
+            <input
+              type="checkbox"
+              checked={settings.enabledRoots[note] || false}
+              onChange={(e) => {
+                this.props.updateSettings({
+                  ...settings,
+                  enabledRoots: {
+                    ...settings.enabledRoots,
+                    [note]: !settings.enabledRoots[note]
+                  }
+                })
+              }}
+              />
+            {note}
+          </label>
         )}
 
       </section>

@@ -108,17 +108,18 @@
         }
     }
 
-    .test_groups {
-        margin-top: 40px;
-        display: flex;
-        justify-content: center;
-        overflow-x: auto;
-        padding-left: 10px;
-        padding-right: 10px;
-        max-width: 100%;
 
-        > .test_group {
+
+    .settings_panel {
+        .exercise_selector {
+            display: block;
+        }
+
+        .test_group {
             margin: 0 10px;
+            margin-bottom: 5px;
+            display: block;
+
             font-size: 16px;
             font-weight: bold;
             border: 1px solid rgba(black, 0.1);
@@ -128,8 +129,12 @@
             white-space: nowrap;
 
             &.selected {
-                background: white;
-                border: 1px solid rgba(black, 0.3);
+                background: rgba(white, 0.3);
+                border: 1px solid rgba(black, 0.2);
+            }
+
+            &:last-child {
+                margin-bottom: 0;
             }
 
             input {
@@ -137,6 +142,4 @@
             }
         }
     }
-
-
 }
