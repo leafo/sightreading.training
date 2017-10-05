@@ -61,10 +61,14 @@ class CardHolder extends React.Component {
   }
 }
 
-class NoteMathExercise extends React.Component {
+class NoteMathExercise extends React.PureComponent {
   static exerciseName = "Note Math"
   static exerciseId = "note_math"
   static notes = ["C", "D", "E", "F", "G", "A", "B"]
+
+  static propTypes = {
+    settings: types.object.isRequired,
+  }
 
   static defaultSettings() {
     return { enabledRoots: { "D": true } }
@@ -113,9 +117,7 @@ class NoteMathExercise extends React.Component {
   }
 
   componentWillMount() {
-    this.refreshCards(() => {
-      this.setupNext()
-    })
+    this.setupNext(this.refreshCards())
   }
 
   componentDidMount() {
@@ -254,10 +256,11 @@ class NoteMathExercise extends React.Component {
     }
 
     this.setState({ cards }, fn)
+    return cards
   }
 
-  setupNext() {
-    if (!this.state.cards) {
+  setupNext(cards=this.state.cards) {
+    if (!cards) {
       this.setState({ currentCard: null })
       return
     }
@@ -265,7 +268,7 @@ class NoteMathExercise extends React.Component {
     // card weights
     let divScore = 0
 
-    let cardsWithWeights = this.state.cards.filter((card) => {
+    let cardsWithWeights = cards.filter((card) => {
       return card != this.state.currentCard
     }).map((card) => {
       let score = 1 / Math.pow(card.score, 2)
@@ -288,7 +291,7 @@ class NoteMathExercise extends React.Component {
 
     // no cards to pick, use first
     if (!chosenCard) {
-      chosenCard = this.state.cards[0]
+      chosenCard = cards[0]
     }
 
     this.setState({
