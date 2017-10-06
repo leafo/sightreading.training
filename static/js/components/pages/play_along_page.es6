@@ -1,3 +1,5 @@
+/*global N*/
+
 import * as React from "react"
 
 import Keyboard from "st/components/keyboard"

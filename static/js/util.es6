@@ -8,7 +8,7 @@ export function dithered(array, e=1.5, rand) {
 
   let gn = (sd=1, mean=0) => {
     let x1, x2, w, y1, y2
-    while (true) {
+    for (;;) {
       x1 = 2 * rand.random() - 1
       x2 = 2 * rand.random() - 1
       w = Math.pow(x1, 2) + Math.pow(x2, 2)

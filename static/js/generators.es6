@@ -51,13 +51,14 @@ export function fixGeneratorSettings(generator, settings) {
     let currentValue = settings[input.name]
     if (currentValue != null) {
       switch (input.type) {
-        case "select":
+        case "select": {
           let found = input.values.filter(v => v.name == currentValue)
           if (!found) {
             currentValue = null
           }
           break
-        case "range":
+        }
+        case "range": {
           if (typeof currentValue == "number") {
             currentValue = Math.min(
               input.max,
@@ -67,11 +68,13 @@ export function fixGeneratorSettings(generator, settings) {
             currentValue = null
           }
           break
-        case "bool":
+        }
+        case "bool": {
           if (typeof currentValue != "boolean") {
             currentValue = null
           }
           break
+        }
       }
 
       if (currentValue == null) {
