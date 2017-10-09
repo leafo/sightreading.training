@@ -7,7 +7,7 @@ import {classNames, MersenneTwister} from "lib"
 
 let {PropTypes: types} = React
 
-class NoteMathExercise extends React.PureComponent {
+export default class NoteMathExercise extends React.PureComponent {
   static exerciseName = "Note Math"
   static exerciseId = "note_math"
   static notes = ["C", "D", "E", "F", "G", "A", "B"]
