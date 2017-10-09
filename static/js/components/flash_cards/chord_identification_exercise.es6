@@ -6,6 +6,14 @@ import {classNames, MersenneTwister} from "lib"
 
 let {PropTypes: types} = React
 
+import ChordList from "st/chord_list"
+import NoteList from "st/note_list"
+
+import {KeySignature} from "st/music"
+import {ChordGenerator, MultiKeyChordGenerator} from "st/chord_generators"
+
+import {GStaff, FStaff, GrandStaff, ChordStaff} from "st/components/staves"
+
 export default class ChordIdentificationExercise extends React.PureComponent {
   static exerciseName = "Chord Identification"
   static exerciseId = "chord_identification"
@@ -32,8 +40,20 @@ export default class ChordIdentificationExercise extends React.PureComponent {
 
   constructor(props) {
     super(props)
-    this.state = {}
     this.rand = new MersenneTwister()
+
+    let generator = new ChordGenerator(new KeySignature(0), {
+      notes: 3,
+    })
+
+    this.state = {
+      cardNumber: 1,
+      chordList: new ChordList([], { generator })
+    }
+  }
+
+  componentWillMount() {
+    this.setupNext()
   }
 
   render() {
@@ -47,7 +67,34 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     </div>
   }
 
+  setupNext() {
+    this.state.chordList.pushRandom()
+    this.setState({
+      currentCard: {
+        chord: this.state.chordList[0]
+      }
+    })
+  }
+
   renderCurrentCard() {
+    let card = this.state.currentCard
+
+    if (!card) {
+      return
+    }
+
+    return <div key={this.state.cardNumber} className="card_row">
+      <div className={classNames("flash_card", {errorshake: this.state.cardError})}>
+        <GStaff
+          heldNotes={{}}
+          notes={new NoteList([["C6", "G6"]])}
+          keySignature={new KeySignature(0)}
+          noteWidth={100}
+          noteShaking={false}
+          scale={0.8}
+        />
+      </div>
+    </div>
   }
 
   renderCardOptions() {

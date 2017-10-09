@@ -51,7 +51,7 @@ export class Staff extends React.Component {
     }
 
     if (!staffNotes) {
-      return <div />
+      return <div data-error="Missing note list" />
     }
 
     let height = DEFAULT_HEIGHT * (this.props.scale || 1)
