@@ -21,6 +21,10 @@ export default class NoteMathExercise extends React.PureComponent {
   }
 
   static ExerciseOptions = class extends React.PureComponent {
+    static propTypes = {
+      updateSettings: types.func.isRequired,
+    }
+
     render() {
       let notes = NoteMathExercise.notes
       let settings = this.props.currentSettings

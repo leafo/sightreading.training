@@ -10,6 +10,7 @@ import {setTitle} from "st/globals"
 import Select from "st/components/select"
 
 import NoteMathExercise from "st/components/flash_cards/note_math_exercise"
+import ChordIdentificationExercise from "st/components/flash_cards/chord_identification_exercise"
 
 class SettingsPanel extends React.PureComponent {
   static propTypes = {
@@ -34,6 +35,7 @@ class SettingsPanel extends React.PureComponent {
           name="exercise"
           className="exercise_selector"
           value={current ? current.exerciseId : null}
+          onChange={this.props.setExercise}
           options={this.props.exercises.map(e => ({
             name: e.exerciseName,
             value: e.exerciseId
@@ -61,7 +63,8 @@ export default class FlashCardPage extends React.PureComponent {
     super(props)
 
     this.exercises = [
-      NoteMathExercise
+      NoteMathExercise,
+      ChordIdentificationExercise,
     ]
 
     this.state = {
@@ -73,13 +76,22 @@ export default class FlashCardPage extends React.PureComponent {
     this.state.currentExerciseSettings = this.exercises[this.state.currentExerciseIdx].defaultSettings()
     this.updateExerciseSettings = this.updateExerciseSettings.bind(this)
     this.closeSettingsPanel = () => this.setState({ settingsPanelOpen: false })
+    this.setExercise = this.setExercise.bind(this)
   }
 
-  setExercise(idx) {
-    let exercise = this.exercises[idx]
+  setExercise(exerciseName) {
+    let exercise = this.exercises.find(e => e.exerciseId == exerciseName)
+
     if (!exercise) {
-      throw new Error(`Invalid exercise ${idx}`)
+      // try by id
+      exercise = this.exercises[exerciseName]
     }
+
+    if (!exercise) {
+      throw new Error(`Invalid exercise ${exerciseName}`)
+    }
+
+    let idx = this.exercises.indexOf(exercise)
 
     this.setState({
       currentExerciseIdx: idx,
@@ -131,6 +143,7 @@ export default class FlashCardPage extends React.PureComponent {
     return <SettingsPanel
       close={this.closeSettingsPanel}
       exercises={this.exercises}
+      setExercise={this.setExercise}
       currentExercise={Exercise}
       currentExerciseSettings={this.state.currentExerciseSettings}
       updateSettings={this.updateExerciseSettings}
