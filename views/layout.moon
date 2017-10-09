@@ -32,7 +32,25 @@ class Layout extends Widget
         meta name: "theme-color", content: "#727290"
 
       body ->
-        div id: "page"
+        div id: "page", ->
+          div class: "page_layout", ->
+            div class: "header_spacer", ->
+              div class: "header", ->
+                a class: "logo_link", href: "/", ->
+                  img {
+                    class: "logo"
+                    src: "/static/img/logo.svg"
+                    height: 35
+                    alt: ""
+                  }
+
+                  img {
+                    class: "logo_small"
+                    src: "/static/img/logo-small.svg"
+                    height: 35
+                    alt: ""
+                  }
+
         @include_js "lib", "main"
 
         if config.sentry_url
