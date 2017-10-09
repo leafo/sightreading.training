@@ -6,7 +6,6 @@ import {classNames, MersenneTwister} from "lib"
 
 let {PropTypes: types} = React
 
-import ChordList from "st/chord_list"
 import NoteList from "st/note_list"
 
 import {KeySignature} from "st/music"
@@ -42,13 +41,11 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     super(props)
     this.rand = new MersenneTwister()
 
-    let generator = new ChordGenerator(new KeySignature(0), {
-      notes: 3,
-    })
-
     this.state = {
       cardNumber: 1,
-      chordList: new ChordList([], { generator })
+      chordGenerator: new ChordGenerator(new KeySignature(0), {
+        notes: 3,
+      })
     }
   }
 
@@ -68,10 +65,14 @@ export default class ChordIdentificationExercise extends React.PureComponent {
   }
 
   setupNext() {
-    this.state.chordList.pushRandom()
+    let chord = this.state.chordGenerator.nextChord()
+    let inversion = this.rand.int() % 3
+
     this.setState({
+      cardNumber: this.state.cardNumber + 1,
       currentCard: {
-        chord: this.state.chordList[0]
+        chord: chord,
+        inversion: inversion,
       }
     })
   }
@@ -83,11 +84,13 @@ export default class ChordIdentificationExercise extends React.PureComponent {
       return
     }
 
+    let notes = card.chord.getRange(5, 3, card.inversion)
+
     return <div key={this.state.cardNumber} className="card_row">
       <div className={classNames("flash_card", {errorshake: this.state.cardError})}>
         <GStaff
           heldNotes={{}}
-          notes={new NoteList([["C6", "G6"]])}
+          notes={new NoteList([notes])}
           keySignature={new KeySignature(0)}
           noteWidth={100}
           noteShaking={false}
@@ -98,5 +101,12 @@ export default class ChordIdentificationExercise extends React.PureComponent {
   }
 
   renderCardOptions() {
+    return <div className="card_options" ref="cardOptions">
+      <button
+        type="button"
+        onClick={e => this.setupNext()}
+      >Next</button>
+    </div>
+
   }
 }
