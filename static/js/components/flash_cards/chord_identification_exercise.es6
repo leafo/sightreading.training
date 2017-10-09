@@ -76,6 +76,10 @@ export default class ChordIdentificationExercise extends React.PureComponent {
 
     this.setState({
       cardNumber: this.state.cardNumber + 1,
+      cardError: false,
+      cardMistakes: null,
+      partialAnswer: null,
+
       currentCard: {
         notes: 3,
         octave: 5,
@@ -117,21 +121,21 @@ export default class ChordIdentificationExercise extends React.PureComponent {
 
     let partialAnswer = this.state.partialAnswer || []
 
-    let options = levels[partialAnswer.length].map(value =>
-      <button
+    let options = levels[partialAnswer.length].map(value => {
+      let newAnswer = [...partialAnswer, value]
+      return <button
         key={`${partialAnswer.length}-${value}`}
         type="button"
+        disabled={this.state.cardMistakes && this.state.cardMistakes[newAnswer.join("")]}
         onClick={e => {
-          let newAnswer = [...partialAnswer, value]
           if (newAnswer.length == levels.length) {
-            console.log("submit answer", newAnswer.join(""))
-            this.setState({ partialAnswer: null })
+            this.checkAnswer(newAnswer.join(""))
           } else {
             this.setState({ partialAnswer: newAnswer })
           }
         }}
       >{value}</button>
-    )
+    })
 
     if (partialAnswer.length) {
       options.push(
@@ -152,5 +156,37 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     return <div className="card_options" ref="cardOptions">
       {options}
     </div>
+  }
+
+  checkAnswer(answer) {
+    if (!this.state.currentCard) {
+      return
+    }
+
+    let card = this.state.currentCard
+
+    let cardAnswer = `${card.chord.root}${card.chord.chordShapeName()}`
+
+    if (cardAnswer == answer) {
+      this.setupNext()
+    } else {
+      let mistakes = this.state.cardMistakes || {}
+      mistakes[answer] = true
+
+      this.setState({
+        cardMistakes: mistakes,
+        cardError: true,
+        partialAnswer: null,
+      })
+
+      let cardNumber = this.state.cardNumber
+
+      window.setTimeout(() => {
+        if (this.state.cardNumber == cardNumber) {
+          this.setState({ cardError: false })
+        }
+      }, 600)
+    }
+
   }
 }
