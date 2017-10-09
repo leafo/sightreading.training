@@ -1,0 +1,18 @@
+{
+  "name": "Sight Reading Training",
+  "description": "Practice sight reading and music theory directly in your browser. Learn random notes or add your own songs.",
+  "version": "1",
+  "manifest_version": 2,
+  "app": {
+    "urls": [
+      "https://sightreading.training/"
+    ],
+    "launch": {
+      "web_url": "https://sightreading.training"
+    }
+  },
+  "icons": {
+    "128": "icon_128.png"
+  },
+  "permissions": []
+}
