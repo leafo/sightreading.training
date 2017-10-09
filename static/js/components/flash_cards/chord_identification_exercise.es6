@@ -25,7 +25,9 @@ export default class ChordIdentificationExercise extends React.PureComponent {
   }
 
   static defaultSettings() {
-    return {}
+    return {
+      keySignatures: { "0": true }
+    }
   }
 
   static ExerciseOptions = class extends React.PureComponent {
@@ -34,8 +36,29 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     }
 
     render() {
+      let settings = this.props.currentSettings
+
       return <section className="settings_group">
-        <h4>Chords</h4>
+        <h4>Key signature</h4>
+        {KeySignature.allKeySignatures().map(ks => {
+          let count = "" + ks.count
+          return <label key={ks.name()}>
+            <input
+              checked={settings.keySignatures[count] || false}
+              onChange={e =>
+                this.props.updateSettings({
+                  ...settings,
+                  keySignatures: {
+                    ...settings.keySignatures,
+                    [count]: !settings.keySignatures[count]
+                  }
+                })
+              }
+              type="checkbox" />
+            {" "}
+            {ks.name()}
+          </label>
+        })}
       </section>
     }
   }
@@ -53,6 +76,12 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     this.setupNext()
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.settings != this.props.settings) {
+      this.setupNext()
+    }
+  }
+
   render() {
     let card = this.state.currentCard
     let errorMessage = card ? null : <strong className="no_cards_error">Please enable some cards from settings</strong>
@@ -65,8 +94,19 @@ export default class ChordIdentificationExercise extends React.PureComponent {
   }
 
   setupNext() {
-    let sigs = KeySignature.allKeySignatures()
+    let sigs = KeySignature.allKeySignatures().filter(ks =>
+      this.props.settings.keySignatures["" + ks.count]
+    )
+
     let keySignature = sigs[this.rand.int() % sigs.length]
+
+    if (!keySignature) {
+      this.setState({
+        currentCard: null
+      })
+
+      return
+    }
 
     let chord = new ChordGenerator(keySignature, {
       notes: 3,
@@ -114,6 +154,10 @@ export default class ChordIdentificationExercise extends React.PureComponent {
   }
 
   renderCardOptions() {
+    if (!this.state.currentCard) {
+      return
+    }
+
     let levels = [
       this.constructor.notes,
       [
