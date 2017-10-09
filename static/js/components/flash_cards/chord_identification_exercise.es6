@@ -43,9 +43,6 @@ export default class ChordIdentificationExercise extends React.PureComponent {
 
     this.state = {
       cardNumber: 1,
-      chordGenerator: new ChordGenerator(new KeySignature(0), {
-        notes: 3,
-      })
     }
   }
 
@@ -65,14 +62,23 @@ export default class ChordIdentificationExercise extends React.PureComponent {
   }
 
   setupNext() {
-    let chord = this.state.chordGenerator.nextChord()
+    let sigs = KeySignature.allKeySignatures()
+    let keySignature = sigs[this.rand.int() % sigs.length]
+
+    let chord = new ChordGenerator(keySignature, {
+      notes: 3,
+    }).nextChord()
+
     let inversion = this.rand.int() % 3
 
     this.setState({
       cardNumber: this.state.cardNumber + 1,
       currentCard: {
-        chord: chord,
-        inversion: inversion,
+        notes: 3,
+        octave: 5,
+        keySignature,
+        chord,
+        inversion
       }
     })
   }
@@ -84,14 +90,14 @@ export default class ChordIdentificationExercise extends React.PureComponent {
       return
     }
 
-    let notes = card.chord.getRange(5, 3, card.inversion)
+    let notes = card.chord.getRange(card.octave, card.notes, card.inversion)
 
     return <div key={this.state.cardNumber} className="card_row">
       <div className={classNames("flash_card", {errorshake: this.state.cardError})}>
         <GStaff
           heldNotes={{}}
           notes={new NoteList([notes])}
-          keySignature={new KeySignature(0)}
+          keySignature={card.keySignature}
           noteWidth={100}
           noteShaking={false}
           scale={0.8}
