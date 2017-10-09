@@ -35,6 +35,11 @@ button {
         background: desaturate($button_color, 100%);
         opacity: 0.8;
     }
+
+    &.outline {
+        background: white;
+        color: darken($button_color, 10%);
+    }
 }
 
 blockquote {

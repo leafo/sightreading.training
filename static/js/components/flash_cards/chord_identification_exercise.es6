@@ -17,6 +17,9 @@ export default class ChordIdentificationExercise extends React.PureComponent {
   static exerciseName = "Chord Identification"
   static exerciseId = "chord_identification"
 
+  static notes = ["C", "D", "E", "F", "G", "A", "B"]
+  static chordTypes = ["M", "m", "dim"]
+
   static propTypes = {
     settings: types.object.isRequired,
   }
@@ -107,12 +110,47 @@ export default class ChordIdentificationExercise extends React.PureComponent {
   }
 
   renderCardOptions() {
-    return <div className="card_options" ref="cardOptions">
-      <button
-        type="button"
-        onClick={e => this.setupNext()}
-      >Next</button>
-    </div>
+    let levels = [
+      this.constructor.notes,
+      this.constructor.chordTypes,
+    ]
 
+    let partialAnswer = this.state.partialAnswer || []
+
+    let options = levels[partialAnswer.length].map(value =>
+      <button
+        key={`${partialAnswer.length}-${value}`}
+        type="button"
+        onClick={e => {
+          let newAnswer = [...partialAnswer, value]
+          if (newAnswer.length == levels.length) {
+            console.log("submit answer", newAnswer.join(""))
+            this.setState({ partialAnswer: null })
+          } else {
+            this.setState({ partialAnswer: newAnswer })
+          }
+        }}
+      >{value}</button>
+    )
+
+    if (partialAnswer.length) {
+      options.push(
+        <button
+          key={`${partialAnswer.length} back`}
+          className="outline back_btn"
+          onClick={e => {
+            let newAnswer = [...partialAnswer]
+            newAnswer.pop()
+            this.setState({
+              partialAnswer: newAnswer
+            })
+          }}
+        >◀ Back</button>
+      )
+    }
+
+    return <div className="card_options" ref="cardOptions">
+      {options}
+    </div>
   }
 }
