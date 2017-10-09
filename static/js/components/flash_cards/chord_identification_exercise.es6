@@ -116,12 +116,20 @@ export default class ChordIdentificationExercise extends React.PureComponent {
   renderCardOptions() {
     let levels = [
       this.constructor.notes,
+      [
+        {value: "", label: "n"},
+        {value: "b", label: "b"},
+        {value: "#", label: "#"},
+      ],
       this.constructor.chordTypes,
     ]
 
     let partialAnswer = this.state.partialAnswer || []
 
     let options = levels[partialAnswer.length].map(value => {
+      let displayLabel = value.label || value
+      value = value.value || value
+
       let newAnswer = [...partialAnswer, value]
       return <button
         key={`${partialAnswer.length}-${value}`}
@@ -134,7 +142,7 @@ export default class ChordIdentificationExercise extends React.PureComponent {
             this.setState({ partialAnswer: newAnswer })
           }
         }}
-      >{value}</button>
+      >{displayLabel}</button>
     })
 
     if (partialAnswer.length) {
