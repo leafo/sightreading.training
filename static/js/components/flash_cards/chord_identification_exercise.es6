@@ -38,28 +38,46 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     render() {
       let settings = this.props.currentSettings
 
-      return <section className="settings_group">
-        <h4>Key signature</h4>
-        {KeySignature.allKeySignatures().map(ks => {
-          let count = "" + ks.count
-          return <label key={ks.name()}>
+      return <div>
+        <section className="settings_group">
+          <h4>Key signature</h4>
+          {KeySignature.allKeySignatures().map(ks => {
+            let count = "" + ks.count
+            return <label key={ks.name()}>
+              <input
+                checked={settings.keySignatures[count] || false}
+                onChange={e =>
+                  this.props.updateSettings({
+                    ...settings,
+                    keySignatures: {
+                      ...settings.keySignatures,
+                      [count]: !settings.keySignatures[count]
+                    }
+                  })
+                }
+                type="checkbox" />
+              {" "}
+              {ks.name()}
+            </label>
+          })}
+        </section>
+        <section className="settings_group">
+          <h4>Inversions</h4>
+          <label>
             <input
-              checked={settings.keySignatures[count] || false}
+              checked={settings.inversions || false}
               onChange={e =>
                 this.props.updateSettings({
                   ...settings,
-                  keySignatures: {
-                    ...settings.keySignatures,
-                    [count]: !settings.keySignatures[count]
-                  }
+                  inversions: !settings.inversions
                 })
               }
               type="checkbox" />
             {" "}
-            {ks.name()}
+            Enabled
           </label>
-        })}
-      </section>
+        </section>
+      </div>
     }
   }
 
@@ -98,6 +116,7 @@ export default class ChordIdentificationExercise extends React.PureComponent {
       this.props.settings.keySignatures["" + ks.count]
     )
 
+    let notes = 3
     let keySignature = sigs[this.rand.int() % sigs.length]
 
     if (!keySignature) {
@@ -108,11 +127,18 @@ export default class ChordIdentificationExercise extends React.PureComponent {
       return
     }
 
-    let chord = new ChordGenerator(keySignature, {
-      notes: 3,
-    }).nextChord()
+    if (!this.generators) {
+      this.generators = {}
+    }
 
-    let inversion = this.rand.int() % 3
+    let generatorKey = `${keySignature.count}-${notes}`
+    if (!this.generators[generatorKey]) {
+      this.generators[generatorKey] = new ChordGenerator(keySignature, { notes })
+    }
+
+    let chord = this.generators[generatorKey].nextChord()
+
+    let inversion = this.props.settings.inversions ? this.rand.int() % 3 : 0
 
     this.setState({
       cardNumber: this.state.cardNumber + 1,
@@ -121,7 +147,7 @@ export default class ChordIdentificationExercise extends React.PureComponent {
       partialAnswer: null,
 
       currentCard: {
-        notes: 3,
+        notes,
         octave: 5,
         keySignature,
         chord,
@@ -222,6 +248,7 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     let card = this.state.currentCard
 
     let cardAnswer = `${card.chord.root}${card.chord.chordShapeName()}`
+    console.log("checking answer", answer, "expected", cardAnswer)
 
     if (cardAnswer == answer) {
       this.setupNext()

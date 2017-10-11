@@ -11,6 +11,7 @@
     background: #D6D6D6;
     width: $settings_panel_width;
     border-right: 2px solid $border_color;
+    z-index: 1;
 
     &.slide_right-enter {
         opacity: 0;
