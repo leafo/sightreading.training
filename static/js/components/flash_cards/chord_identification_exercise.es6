@@ -161,7 +161,7 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     let levels = [
       this.constructor.notes,
       [
-        {value: "", label: "n"},
+        ...this.constructor.chordTypes,
         {value: "b", label: "b"},
         {value: "#", label: "#"},
       ],
@@ -170,18 +170,22 @@ export default class ChordIdentificationExercise extends React.PureComponent {
 
     let partialAnswer = this.state.partialAnswer || []
 
+    let isCompleteAnswer = v => this.constructor.chordTypes.some(t => v.endsWith(t))
+
     let options = levels[partialAnswer.length].map(value => {
       let displayLabel = typeof value == "string" ? value : value.label
       let pushValue = typeof value == "string" ? value : value.value
 
       let newAnswer = [...partialAnswer, pushValue]
+      let newAnswerStr = newAnswer.join("")
+
       return <button
         key={`${partialAnswer.length}-${pushValue}`}
         type="button"
-        disabled={this.state.cardMistakes && this.state.cardMistakes[newAnswer.join("")]}
+        disabled={this.state.cardMistakes && this.state.cardMistakes[newAnswerStr]}
         onClick={e => {
-          if (newAnswer.length == levels.length) {
-            this.checkAnswer(newAnswer.join(""))
+          if (isCompleteAnswer(newAnswerStr)) {
+            this.checkAnswer(newAnswerStr)
           } else {
             this.setState({ partialAnswer: newAnswer })
           }
