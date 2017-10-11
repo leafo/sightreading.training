@@ -171,12 +171,12 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     let partialAnswer = this.state.partialAnswer || []
 
     let options = levels[partialAnswer.length].map(value => {
-      let displayLabel = value.label || value
-      value = value.value || value
+      let displayLabel = typeof value == "string" ? value : value.label
+      let pushValue = typeof value == "string" ? value : value.value
 
-      let newAnswer = [...partialAnswer, value]
+      let newAnswer = [...partialAnswer, pushValue]
       return <button
-        key={`${partialAnswer.length}-${value}`}
+        key={`${partialAnswer.length}-${pushValue}`}
         type="button"
         disabled={this.state.cardMistakes && this.state.cardMistakes[newAnswer.join("")]}
         onClick={e => {
