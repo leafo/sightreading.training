@@ -188,8 +188,8 @@ export default class ChordIdentificationExercise extends React.PureComponent {
       this.constructor.notes,
       [
         ...this.constructor.chordTypes,
-        {value: "b", label: "b"},
-        {value: "#", label: "#"},
+        {value: "b", label: <span style={{ transform: "scale(1.5, 1.5)", display: "inline-block"}}>♭</span>},
+        {value: "#", label: <span style={{ transform: "scale(1.5, 1.5)", display: "inline-block"}}>♯</span>},
       ],
       this.constructor.chordTypes,
     ]
