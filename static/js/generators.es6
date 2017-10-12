@@ -2,6 +2,8 @@
 import {parseNote, noteName, MajorScale, Chord} from "st/music"
 import {MersenneTwister} from "lib"
 
+import {shuffle} from "st/util"
+
 // takes generator object from data
 export function generatorDefaultSettings(generator, staff) {
   let out = {}
@@ -604,7 +606,7 @@ export class PositionGenerator extends Generator {
   getFingerSet() {
     // choose a finger
     let offset = this.generator.int() % (this.notes.length - 5)
-    return [0].concat(this.shuffle([1,2,3,4])).map(i => this.notes[offset + i])
+    return [0].concat(shuffle([1,2,3,4])).map(i => this.notes[offset + i])
   }
 
   nextNote() {
