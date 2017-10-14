@@ -1,6 +1,5 @@
 
-
-const CACHE_VERSION = "v3"
+const CACHE_VERSION = "v4"
 const CACHE_NAME = "st_cache"
 
 const urlsToCache = [ "/" ]
@@ -12,6 +11,10 @@ self.addEventListener("install", function(event) {
 })
 
 self.addEventListener("fetch", function(event) {
+  if (event.request.url.match(/\bmanifest\.json\b/)) {
+    return
+  }
+
   event.respondWith(
     caches.open(`${CACHE_VERSION}:${CACHE_NAME}`).then(function(cache) {
       return fetch(event.request).then(function (response) {
