@@ -4,6 +4,7 @@ import {CardHolder} from "st/components/flash_cards/common"
 
 import * as React from "react"
 import {classNames, MersenneTwister} from "lib"
+import {shuffled} from "st/util"
 
 let {PropTypes: types} = React
 
@@ -67,7 +68,7 @@ export default class NoteMathExercise extends React.PureComponent {
   }
 
   componentWillMount() {
-    this.setupNext(this.refreshCards())
+    this.showNext(this.refreshCards())
   }
 
   componentDidMount() {
@@ -108,7 +109,7 @@ export default class NoteMathExercise extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if (prevProps.settings != this.props.settings) {
       this.refreshCards(() => {
-        this.setupNext()
+        this.showNext()
       })
     }
   }
@@ -205,50 +206,45 @@ export default class NoteMathExercise extends React.PureComponent {
       }
     }
 
-    this.setState({ cards }, fn)
+    cards = shuffled(cards, this.rand)
+
+    this.setState({
+      cardOrder: null,
+      cards,
+    }, fn)
     return cards
   }
 
-  setupNext(cards=this.state.cards) {
+  showNext(cards=this.state.cards) {
     if (!cards) {
       this.setState({ currentCard: null })
       return
     }
 
-    // card weights
-    let divScore = 0
+    let cardOrder = this.state.cardOrder ? [...this.state.cardOrder] : []
+    cardOrder = [...cardOrder]
 
-    let cardsWithWeights = cards.filter((card) => {
-      return card != this.state.currentCard
-    }).map((card) => {
-      let score = 1 / Math.pow(card.score, 2)
-      divScore += score
-      return [score, card]
-    })
+    if (cardOrder.length == 1) {
+      let moreCards = shuffled(cards.map((_, idx) => idx))
 
-    let incr = 0
-    let r = this.rand.random() * divScore
-
-    let chosenCard = null
-    for (let [weight, card] of cardsWithWeights) {
-      incr += weight
-
-      if (r < incr) {
-        chosenCard = card
-        break
+      if (moreCards[0] == cardOrder[cardOrder.length - 1]) {
+        moreCards.reverse()
       }
+
+      cardOrder = cardOrder.concat(moreCards)
     }
 
-    // no cards to pick, use first
-    if (!chosenCard) {
-      chosenCard = cards[0]
-    }
+    console.log("pulling from", cardOrder)
+
+    let nextCardIdx = cardOrder.shift()
+    let chosenCard = cards[nextCardIdx]
 
     this.setState({
       cardMistakes: null,
       cardError: false,
       cardNumber: this.state.cardNumber + 1,
-      currentCard: chosenCard
+      currentCard: chosenCard,
+      cardOrder
     })
   }
 
@@ -263,7 +259,7 @@ export default class NoteMathExercise extends React.PureComponent {
         this.normalizeScores()
       }
 
-      this.setupNext()
+      this.showNext()
     } else {
 
       let card = this.state.currentCard

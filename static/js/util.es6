@@ -47,11 +47,15 @@ export function dithered(array, e=1.5, rand) {
   return scored.map(tuple => tuple[1])
 }
 
-export function shuffled(array) {
+export function shuffled(array, rand) {
+  if (!rand) {
+    rand = new MersenneTwister()
+  }
+
   array = [...array]
 
   for (let i = array.length - 1; i > 0; i--) {
-    let j = this.generator.int() % (i+1)
+    let j = rand.int() % (i+1)
     let a = array[j]
     let b = array[i]
     array[i] = a
