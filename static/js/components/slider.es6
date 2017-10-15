@@ -78,11 +78,29 @@ export default class Slider extends React.PureComponent {
   }
 
   render() {
-    return <div className={classNames("slider_component", {
-      disabled: this.props.disabled
-    })}>
+    return <div
+      onClick={e => {
+        if (e.target == this.refs.sliderNub) {
+          return
+        }
+        let rect = this.refs.track.getBoundingClientRect()
+        let p = Math.min(rect.width, Math.max(0, e.pageX - rect.left)) / rect.width
+
+
+        let newValue = this.props.min + p * (this.props.max - this.props.min)
+        newValue = Math.min(this.props.max, Math.max(this.props.min, newValue))
+
+        if (newValue != this.currentValue()) {
+          this.onChange(newValue)
+        }
+      }}
+      className={classNames("slider_component", {
+        disabled: this.props.disabled
+      })}
+    >
       <div ref="track" className="slider_track">
         <button
+          ref="sliderNub"
           onMouseDown={(e) => this.startDrag(e.pageX, e.pageY)}
           onKeyDown={e => {
             let delta = 0
