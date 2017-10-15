@@ -264,11 +264,7 @@ form, .form {
             top: 0;
         }
 
-        .workspace_header {
-            display: none;
-        }
-
-        .keyboard_toggle {
+        .workspace_header, .keyboard_toggle, .toolbar {
             display: none;
         }
     }
