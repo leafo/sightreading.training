@@ -18,14 +18,16 @@
     }
 
     background: #D6D6D6;
-    display: flex;
-    justify-content: center;
-    overflow: hidden;
+    overflow: auto;
     border-top: 1px solid #D6D6D6;
+    white-space: nowrap;
+    text-align: center;
 
     .key_wrapper {
         position: relative;
         height: 100%;
+        display: inline-block;
+        vertical-align: top;
     }
 
     .key.labeled {
