@@ -206,8 +206,6 @@ export default class NoteMathExercise extends React.PureComponent {
       }
     }
 
-    cards = shuffled(cards, this.rand)
-
     this.setState({
       cardOrder: null,
       cards,
@@ -224,7 +222,7 @@ export default class NoteMathExercise extends React.PureComponent {
     let cardOrder = this.state.cardOrder ? [...this.state.cardOrder] : []
     cardOrder = [...cardOrder]
 
-    if (cardOrder.length == 1) {
+    if (cardOrder.length <= 1) {
       let moreCards = shuffled(cards.map((_, idx) => idx))
 
       if (moreCards[0] == cardOrder[cardOrder.length - 1]) {
