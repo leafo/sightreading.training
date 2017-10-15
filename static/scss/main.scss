@@ -254,6 +254,14 @@ form, .form {
     }
 }
 
+.sight_reading_page {
+    background: $body_background;
+    &.fullscreen {
+        width: 100%;
+        height: 100%;
+    }
+}
+
 .workspace {
     display: flex;
 
@@ -306,6 +314,10 @@ form, .form {
         margin-bottom: 20px;
         display: flex;
         align-items: center;
+
+        > button {
+            margin-right: 10px;
+        }
 
         .stats {
             text-align: right;

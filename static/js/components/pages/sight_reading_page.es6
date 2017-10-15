@@ -31,6 +31,7 @@ export default class SightReadingPage extends React.Component {
 
     this.pressNote = this.pressNote.bind(this)
     this.releaseNote = this.releaseNote.bind(this)
+    this.onFullscreenChange = this.onFullscreenChange.bind(this)
 
     this.state = {
       midi: null,
@@ -103,6 +104,18 @@ export default class SightReadingPage extends React.Component {
           this.setState({savingPreset: false})
         }
       }
+    })
+
+    document.addEventListener("webkitfullscreenchange", this.onFullscreenChange)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("webkitfullscreenchange", this.onFullscreenChange)
+  }
+
+  onFullscreenChange(event) {
+    this.setState({
+      fullscreen: document.webkitIsFullScreen
     })
   }
 
@@ -349,6 +362,21 @@ export default class SightReadingPage extends React.Component {
     this.staff.setOffset(value);
   }
 
+  toggleFullscreen() {
+    let el = this.refs.page_container
+    if (el.webkitRequestFullscreen) {
+      if (this.state.fullscreen) {
+        document.webkitExitFullscreen()
+        return
+      }
+
+      el.webkitRequestFullscreen()
+      if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
+        window.screen.orientation.lock("landscape")
+      }
+    }
+  }
+
   toggleSettings() {
     this.setState({
       settingsOpen: !this.state.settingsOpen
@@ -376,7 +404,9 @@ export default class SightReadingPage extends React.Component {
 
   render() {
     return <div
-      className={classNames({
+      ref="page_container"
+      className={classNames("sight_reading_page", {
+        fullscreen: this.state.fullscreen,
         keyboard_open: this.state.keyboardOpen,
         settings_open: this.state.settingsOpen,
         scroll_mode: this.state.mode == "scroll",
@@ -451,12 +481,24 @@ export default class SightReadingPage extends React.Component {
       </div>
     }
 
+    let fullscreenButton
+    if (document.body.webkitRequestFullscreen && !this.state.fullscreen) {
+      fullscreenButton = <button
+        type="button"
+        onClick={e => this.toggleFullscreen()}
+      >Fullscreen</button>
+    }
+
     let header = <div className="workspace_header">
       <button
         onClick={this.toggleSettings.bind(this)}
         className="settings_toggle">
         Configure
       </button>
+
+      {" "}
+
+      {fullscreenButton}
 
       <div className="stats">
         {streak}
