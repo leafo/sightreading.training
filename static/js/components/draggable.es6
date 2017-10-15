@@ -18,6 +18,48 @@ export default class Draggable extends React.Component {
     node.addEventListener("mousedown", e => {
       this.startDrag(e.pageX, e.pageY)
     })
+
+    node.addEventListener("touchstart", e => {
+      let {pageX: x, pageY: y} = e.targetTouches[0]
+      this.startTouchDrag(x, y)
+    })
+  }
+
+  startTouchDrag(startX, startY) {
+    if (this.props.disabled) {
+      return true;
+    }
+
+    if (this.props.startDrag) {
+      this.props.startDrag()
+    }
+
+    let upListener = (e) => {
+      document.body.removeEventListener("touchmove", moveListener)
+      document.body.removeEventListener("touchend", upListener)
+
+      if (this.props.stopDrag) {
+        this.props.stopDrag()
+      }
+    }
+
+    let moveListener = (e) => {
+      let {pageX: x, pageY: y} = e.targetTouches[0]
+
+      let dx = x - startX
+      let dy = y - startX
+
+      startX = x
+      startY = y
+
+      if (this.props.onDrag) {
+        this.props.onDrag(dx, dy)
+      }
+    }
+
+    document.body.addEventListener("touchmove", moveListener)
+    document.body.addEventListener("touchend", upListener)
+
   }
 
   startDrag(startX, startY) {
