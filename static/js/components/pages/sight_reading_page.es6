@@ -17,7 +17,7 @@ import {NOTE_EVENTS} from "st/midi"
 import {generatorDefaultSettings} from "st/generators"
 
 import * as React from "react"
-import {classNames} from "lib"
+import {classNames, NoSleep} from "lib"
 
 let {PropTypes: types} = React
 let {CSSTransitionGroup} = React.addons || {}
@@ -111,9 +111,22 @@ export default class SightReadingPage extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener("webkitfullscreenchange", this.onFullscreenChange)
+
+    if (this.nosleep && this.state.fullscreen) {
+      this.nosleep.disable()
+    }
   }
 
   onFullscreenChange(event) {
+    if (document.webkitIsFullScreen) {
+      this.nosleep = this.nosleep || new NoSleep()
+      this.nosleep.enable()
+    } else {
+      if (this.nosleep) {
+        this.nosleep.disable()
+      }
+    }
+
     this.setState({
       fullscreen: document.webkitIsFullScreen
     })
