@@ -11,6 +11,10 @@ self.addEventListener("install", function(event) {
 })
 
 self.addEventListener("fetch", function(event) {
+  if (event.request.method != "GET") {
+    return
+  }
+
   if (event.request.url.match(/\bmanifest\.json\b/)) {
     return
   }
