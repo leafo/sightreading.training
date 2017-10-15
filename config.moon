@@ -18,6 +18,8 @@ config "production", ->
   num_workers 3
   port 10007
 
+  default_scheme "https"
+
   sentry_url "https://8ab5f34b22de49fd956dddbd902d6005@sentry.io/125841"
 
 
