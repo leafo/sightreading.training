@@ -34,7 +34,8 @@ export class Staff extends React.Component {
   // skips react for performance
   setOffset(amount) {
     let scale = this.props.scale || 1
-    this.refs.notes.setOffset(amount * this.props.noteWidth * scale)
+    let noteWidth = this.props.noteWidth || 1
+    this.refs.notes.setOffset(amount * noteWidth * scale)
   }
 
   render() {
