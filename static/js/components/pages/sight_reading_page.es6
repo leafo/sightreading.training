@@ -19,6 +19,8 @@ import {generatorDefaultSettings} from "st/generators"
 import * as React from "react"
 import {classNames, NoSleep} from "lib"
 
+import {isMobile} from "st/browser"
+
 let {PropTypes: types} = React
 let {CSSTransitionGroup} = React.addons || {}
 
@@ -119,8 +121,11 @@ export default class SightReadingPage extends React.Component {
 
   onFullscreenChange(event) {
     if (document.webkitIsFullScreen) {
-      this.nosleep = this.nosleep || new NoSleep()
-      this.nosleep.enable()
+      console.log("is mobile", isMobile())
+      if (isMobile()) {
+        this.nosleep = this.nosleep || new NoSleep()
+        this.nosleep.enable()
+      }
     } else {
       if (this.nosleep) {
         this.nosleep.disable()
