@@ -264,7 +264,7 @@ class Layout extends React.Component {
           midiOutputIdx: config.outputIdx
         })
 
-        writeConfig("defaults:midiIn", input.name)
+        writeConfig("defaults:midiIn", input ? input.name : undefined)
       }} />
   }
 }
