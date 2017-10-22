@@ -15,7 +15,7 @@ export function init(session) {
   installServiceWorker(session.cacheBuster)
 }
 
-export function test_page(session) {
+export function testPage(session) {
   N.session = session || {}
   ReactDOM.render(<App layout={App.BlankLayout} />, document.getElementById("page"));
 }

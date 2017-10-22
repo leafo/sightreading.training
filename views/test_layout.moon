@@ -23,7 +23,7 @@ class Layout extends Widget
         @include_js "lib", "main"
 
         script type: "text/javascript", ->
-          raw "requirejs(['st/main'], function(m) { m.test_page(#{to_json @initial_state!}) });"
+          raw "requirejs(['st/main'], function(m) { m.testPage(#{to_json @initial_state!}) });"
 
   initial_state: =>
     out = { }
