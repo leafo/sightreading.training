@@ -8,6 +8,7 @@ import StatsPage from "st/components/pages/stats"
 import FlashCardPage from "st/components/pages/flash_card_page"
 import EarTrainingPage from "st/components/pages/ear_training_page"
 import PlayAlongPage from "st/components/pages/play_along_page"
+import LatencyPage from "st/components/pages/latency"
 
 import IntroLightbox from "st/components/intro_lightbox"
 
@@ -114,6 +115,7 @@ class Layout extends React.Component {
       <Route exact path="/flash-cards" render={page(FlashCardPage)} />
       <Route exact path="/play-along" render={page(PlayAlongPage)} />
       <Route exact path="/stats" render={page(StatsPage)} />
+      <Route exact path="/latency" render={page(LatencyPage)} />
 
       <Route exact path="/about" render={page(GuidePage, {
         title: "About Sight Reading Trainer",

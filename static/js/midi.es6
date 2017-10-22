@@ -228,5 +228,53 @@ export class Metronome extends MidiChannel {
   tock() {
     this.hit(76)
   }
+
+  start(bpm=60) {
+    if (this.running) {
+      console.warn("Attempted to start already running metronome")
+      return
+    }
+
+    this.running = true
+
+    let signature = 4
+    let bps = bpm / 60
+    let beatDurationMs = 1 / bps * 1000
+
+    let beat = 0
+
+    let tick = () => {
+      if (beat % signature == 0) {
+        this.tick()
+      } else {
+        this.tock()
+      }
+
+      beat += 1
+    }
+
+    let startTime = performance.now()
+    let epsilon = 5 // ms threshold
+
+    let frameUpdate = time => {
+      let delta = time - startTime
+      if (delta >= beatDurationMs - epsilon) {
+        startTime = performance.now()
+        console.log("error", delta - beatDurationMs)
+        tick()
+      }
+
+      if (this.running) {
+        window.requestAnimationFrame(frameUpdate);
+      }
+    }
+
+    window.requestAnimationFrame(frameUpdate);
+    tick()
+  }
+
+  stop() {
+    this.running = false
+  }
 }
 
