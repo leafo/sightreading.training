@@ -239,7 +239,9 @@ export class Metronome extends MidiChannel {
 
     let signature = 4
     let bps = bpm / 60
+
     let beatDurationMs = 1 / bps * 1000
+    this.beatDurationMs = beatDurationMs
 
     let beat = 0
 
@@ -254,13 +256,15 @@ export class Metronome extends MidiChannel {
     }
 
     let startTime = performance.now()
+    this.currentTick = startTime
+
     let epsilon = 5 // ms threshold
 
     let frameUpdate = time => {
       let delta = time - startTime
       if (delta >= beatDurationMs - epsilon) {
-        startTime = performance.now()
-        console.log("error", delta - beatDurationMs)
+        startTime += beatDurationMs
+        this.currentTick = startTime
         tick()
       }
 
@@ -271,6 +275,22 @@ export class Metronome extends MidiChannel {
 
     window.requestAnimationFrame(frameUpdate);
     tick()
+  }
+
+  getLatency() {
+    if (!this.running) {
+      console.error("metronome not running")
+      return
+    }
+
+    let now = performance.now()
+    let nextTick = this.currentTick + this.beatDurationMs
+
+    if (Math.abs(now - this.currentTick) < Math.abs(now - nextTick)) {
+      return now - this.currentTick
+    } else {
+      return now - nextTick
+    }
   }
 
   stop() {
