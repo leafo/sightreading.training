@@ -1,6 +1,6 @@
 import {Chord, MajorScale, MinorScale, MajorBluesScale, KeySignature} from "st/music"
 import {MersenneTwister} from "lib"
-import {dithered} from "st/util"
+import {dithered, shuffled} from "st/util"
 
 export class ChordGenerator {
   constructor(keySignature, opts={}) {
@@ -74,15 +74,20 @@ export class ChordGenerator {
       availableChords.push(chord)
     })
 
-    // sort by occurence to choose least frequent
-    availableChords.sort((a,b) => {
-      let aCount = this.chordOccurrences.get(a.toString()) || 0
-      let bCount = this.chordOccurrences.get(b.toString()) || 0
-
-      return aCount - bCount
+    let groupedByOccurence = {}
+    availableChords.forEach(chord => {
+      let count = this.chordOccurrences.get(chord.toString()) || 0;
+      groupedByOccurence[count] = groupedByOccurence[count] || []
+      groupedByOccurence[count].push(chord)
     })
 
-    // TODO: dithered is probably overkill here
+    let chordGroups = Object.keys(groupedByOccurence).map(key =>
+      [+key, shuffled(groupedByOccurence[key], this.generator)]
+    )
+
+    chordGroups.sort((a,b) => a[0] - b[0])
+    availableChords = chordGroups.reduce((list, group) => list.concat(group[1]), [])
+
     this.lastChord = dithered(availableChords, 3, this.generator)[0]
     this.chordOccurrences.set(this.lastChord.toString(), (this.chordOccurrences.get(this.lastChord.toString()) || 0) + 1)
 
