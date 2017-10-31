@@ -3,7 +3,7 @@ import {MajorScale, parseNote, noteName} from "st/music"
 
 import {
   RandomNotes, SweepRangeNotes, MiniSteps, TriadNotes, SevenOpenNotes,
-  ProgressionGenerator, PositionGenerator
+  ProgressionGenerator, PositionGenerator, IntervalGenerator
 } from "st/generators"
 
 import {ChordGenerator, MultiKeyChordGenerator} from "st/chord_generators"
@@ -259,6 +259,17 @@ export const GENERATORS = [
         .getLooseRange(...staff.range);
 
       return new PositionGenerator(notes, options)
+    }
+  },
+  {
+    name: "intervals",
+    mode: "notes",
+    inputs: [],
+    create: function(staff, keySignature, options) {
+      let notes = new MajorScale(keySignature)
+        .getLooseRange(...staff.range);
+
+      return new IntervalGenerator(notes, options)
     }
   },
   {

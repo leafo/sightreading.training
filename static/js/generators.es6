@@ -614,4 +614,16 @@ export class PositionGenerator extends Generator {
   }
 }
 
+export class IntervalGenerator extends Generator {
+  constructor(notes, opts) {
+    super(opts)
+    this.notes = notes
+    this.generator = new MersenneTwister()
+  }
+
+  nextNote() {
+    return "C5"
+
+  }
+}
 
