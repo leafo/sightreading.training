@@ -26,7 +26,7 @@ import {classNames} from "lib"
 
 let {PropTypes: types} = React
 
-const DEFAULT_SONG = "old_dan_tucker"
+const DEFAULT_SONG = "over_the_rainbow"
 
 import {AutoChords} from "st/auto_chords"
 

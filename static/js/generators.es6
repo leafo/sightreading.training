@@ -622,8 +622,28 @@ export class IntervalGenerator extends Generator {
   }
 
   nextNote() {
-    return "C5"
+    // hard code interval for testing
+    let intervals = {
+      "3": true
+    }
 
+    if (this.currentNote) {
+      let intervalArray = Object.keys(intervals).map(i => +i - 1)
+      let interval = intervalArray[this.generator.int() % intervalArray.length]
+      let sign = this.generator.int() % 2 == 0 ? -1 : 1
+      let nextNote = this.currentNote + sign * interval
+
+      if (nextNote < 0 || nextNote >= this.notes.length) {
+        sign = -sign
+      }
+
+      this.currentNote = this.currentNote + sign * interval
+    } else {
+      this.currentNote = this.generator.int() % this.notes.length
+    }
+
+    console.log(this.notes, this.currentNote, this.notes[this.currentNote])
+    return this.notes[this.currentNote]
   }
 }
 
