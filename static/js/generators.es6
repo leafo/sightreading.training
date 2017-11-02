@@ -619,12 +619,16 @@ export class IntervalGenerator extends Generator {
     super(opts)
     this.notes = notes
     this.generator = new MersenneTwister()
+    this.opts = opts
   }
 
   nextNote() {
     // hard code interval for testing
-    let intervals = {
-      "3": true
+    let intervals = {}
+    for (let key of Object.keys(this.opts)) {
+      if (key.match(/\d+/) && this.opts[key]) {
+        intervals[key] = true
+      }
     }
 
     if (this.currentNote) {
@@ -642,7 +646,6 @@ export class IntervalGenerator extends Generator {
       this.currentNote = this.generator.int() % this.notes.length
     }
 
-    console.log(this.notes, this.currentNote, this.notes[this.currentNote])
     return this.notes[this.currentNote]
   }
 }

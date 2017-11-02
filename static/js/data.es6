@@ -264,7 +264,39 @@ export const GENERATORS = [
   {
     name: "intervals",
     mode: "notes",
-    inputs: [],
+    inputs: [
+      {
+        name: "2",
+        type: "bool",
+        hint: "2",
+        default: true
+      },
+      {
+        name: "3",
+        type: "bool",
+        hint: "3",
+      },
+      {
+        name: "4",
+        type: "bool",
+        hint: "4",
+      },
+      {
+        name: "5",
+        type: "bool",
+        hint: "5",
+      },
+      {
+        name: "6",
+        type: "bool",
+        hint: "6",
+      },
+      {
+        name: "7",
+        type: "bool",
+        hint: "7",
+      },
+    ],
     create: function(staff, keySignature, options) {
       let notes = new MajorScale(keySignature)
         .getLooseRange(...staff.range);
