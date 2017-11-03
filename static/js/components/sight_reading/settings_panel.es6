@@ -233,16 +233,23 @@ export class GeneratorSettings extends React.PureComponent {
           case "bool":
             fn = this.renderBool
             break
+          case "toggles":
+            fn = this.renderToggles
+            break
           default:
             console.error(`No input renderer for ${input.type}`)
             return
         }
 
+        let el = input.type == "toggles" ? "div" : "label"
+
+        let inside = React.createElement(el, null, ...[
+          <div className="input_label">{input.label || input.name}</div>,
+          fn.call(this, input, idx)
+        ])
+
         return <div key={input.name} className="generator_input">
-          <label>
-            <div className="input_label">{input.label || input.name}</div>
-            {fn.call(this, input, idx)}
-          </label>
+          {inside}
         </div>
       })
     }</div>
@@ -353,6 +360,25 @@ export class GeneratorSettings extends React.PureComponent {
         checked={currentValue}
         onChange={e => this.updateInputValue(input, e.target.checked)} />
       {input.hint}
+    </div>
+  }
+
+  renderToggles(input, idx) {
+    let currentValue = this.cachedSettings[input.name] || {}
+
+    return <div className="toggles">
+      {input.options.map(subName =>
+        <label className="toggle" key={subName}>
+          <input
+            onChange={e => 
+              this.updateInputValue(input, {...currentValue, [subName]: e.target.checked})
+            }
+            checked={currentValue[subName] || false}
+            type="checkbox" />
+          {" "}
+          {subName}
+        </label>
+      )}
     </div>
   }
 }

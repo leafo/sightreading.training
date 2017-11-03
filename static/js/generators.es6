@@ -624,11 +624,16 @@ export class IntervalGenerator extends Generator {
 
   nextNote() {
     // hard code interval for testing
+    let inputIntervals = this.opts.intervals || {}
     let intervals = {}
-    for (let key of Object.keys(this.opts)) {
-      if (key.match(/\d+/) && this.opts[key]) {
+    for (let key of Object.keys(inputIntervals)) {
+      if (key.match(/\d+/) && inputIntervals[key]) {
         intervals[key] = true
       }
+    }
+
+    if (Object.keys(intervals).length == 0) {
+      return "C5"
     }
 
     if (this.currentNote) {
