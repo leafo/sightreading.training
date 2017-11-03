@@ -636,7 +636,7 @@ export class IntervalGenerator extends Generator {
       return "C5"
     }
 
-    if (this.currentNote) {
+    if (this.currentNote != null) {
       let intervalArray = Object.keys(intervals).map(i => +i - 1)
       let interval = intervalArray[this.generator.int() % intervalArray.length]
       let sign = this.generator.int() % 2 == 0 ? -1 : 1
