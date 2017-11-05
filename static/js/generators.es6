@@ -618,7 +618,12 @@ export class IntervalGenerator extends Generator {
   constructor(notes, opts) {
     super(opts)
     this.notes = notes
-    this.generator = new MersenneTwister()
+    console.log(notes)
+
+    let seed = new Date().getTime()
+    seed = 1509875466444
+    console.log("interval with seed", seed)
+    this.generator = new MersenneTwister(seed)
     this.opts = opts
   }
 

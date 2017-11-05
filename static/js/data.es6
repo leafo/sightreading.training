@@ -271,11 +271,12 @@ export const GENERATORS = [
         options: [
           "2", "3", "4", "5", "6", "7"
         ]
-      }
+      },
+      noteRangeInput
     ],
     create: function(staff, keySignature, options) {
       let notes = new MajorScale(keySignature)
-        .getLooseRange(...staff.range);
+        .getLooseRange(...staffRange(staff, options.noteRange))
 
       return new IntervalGenerator(notes, options)
     }
