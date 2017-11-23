@@ -14,6 +14,13 @@ export default class GuidePage extends React.Component {
     this.state = {}
   }
 
+  componentWillUnmount() {
+    if (this.request) {
+      this.request.abort()
+      delete this.request
+    }
+  }
+
   componentDidMount() {
     setTitle(this.props.title)
 
@@ -27,6 +34,8 @@ export default class GuidePage extends React.Component {
         contents: res.contents
       })
     }
+
+    this.request = request
   }
 
   render() {

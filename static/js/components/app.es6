@@ -118,12 +118,16 @@ class Layout extends React.Component {
     </div>
   }
 
-  render() {
-    let page = (C, moreProps) =>
-      props => <C
-        ref={comp => this.currentPage = comp}
-        {...moreProps} {...this.childProps()} {...props} />
+  renderRoutes(routes) {
+    return routes.map(({page: C, props: moreProps, path}, i) =>
+      <Route key={i} exact path={path} render={
+        props =>
+          <C key={i} ref={comp => this.currentPage = comp} {...moreProps} {...this.childProps()} {...props} />
+      } />
+    )
+  }
 
+  render() {
     let PageLayout = this.pageLayout.bind(this)
 
     if (this.state.hasError) {
@@ -137,31 +141,33 @@ class Layout extends React.Component {
       </PageLayout>
     }
 
-    return <PageLayout>
-      <Route exact path="/" render={page(SightReadingPage)}/>
-      <Route exact path="/login" render={page(LoginPage)} />
-      <Route exact path="/register" render={page(RegisterPage)} />
-      <Route exact path="/ear-training" render={page(EarTrainingPage)} />
-      <Route exact path="/flash-cards" render={page(FlashCardPage)} />
-      <Route exact path="/play-along" render={page(PlayAlongPage)} />
-      <Route exact path="/stats" render={page(StatsPage)} />
-      <Route exact path="/latency" render={page(LatencyPage)} />
+    let routes = this.renderRoutes([
+      { path: "/", page: SightReadingPage },
+      { path: "/login", page: LoginPage },
+      { path: "/register", page: RegisterPage },
+      { path: "/ear-training", page: EarTrainingPage },
+      { path: "/flash-cards", page: FlashCardPage },
+      { path: "/play-along", page: PlayAlongPage },
+      { path: "/stats", page: StatsPage },
+      { path: "/latency", page: LatencyPage },
 
-      <Route exact path="/about" render={page(GuidePage, {
+      { path: "/about", page: GuidePage, props: {
         title: "About Sight Reading Trainer",
         pageSource: "about"
-      })} />
+      }},
 
-      <Route path="/guide/generators" render={page(GuidePage, {
+      { path: "/guide/generators", page: GuidePage, props: {
         title: "Sight Reading Random Notes",
         pageSource: "generators"
-      })} />
+      }},
 
-      <Route path="/guide/chords" render={page(GuidePage, {
+      { path: "/guide/chords", page: GuidePage, props: {
         title: "Sight Reading Random Chords",
         pageSource: "chord_generators"
-      })} />
-    </PageLayout>
+      }},
+    ])
+
+    return <PageLayout>{routes}</PageLayout>
   }
 
   renderCurrentLightbox() {
