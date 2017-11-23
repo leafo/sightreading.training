@@ -2,8 +2,7 @@
 import * as React from "react"
 import {classNames, MersenneTwister} from "lib"
 import * as types from "prop-types"
-
-let {CSSTransitionGroup} = React.addons || {}
+import {TransitionGroup, CSSTransition} from "react-transition-group"
 
 import {setTitle} from "st/globals"
 
@@ -122,9 +121,9 @@ export default class FlashCardPage extends React.PureComponent {
 
       {this.renderExercise()}
 
-      <CSSTransitionGroup transitionName="slide_right" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
+      <TransitionGroup>
         {this.renderSettings()}
-      </CSSTransitionGroup>
+      </TransitionGroup>
     </div>
   }
 
@@ -140,13 +139,15 @@ export default class FlashCardPage extends React.PureComponent {
 
     let Exercise = this.exercises[this.state.currentExerciseIdx]
 
-    return <SettingsPanel
-      close={this.closeSettingsPanel}
-      exercises={this.exercises}
-      setExercise={this.setExercise}
-      currentExercise={Exercise}
-      currentExerciseSettings={this.state.currentExerciseSettings}
-      updateSettings={this.updateExerciseSettings}
-    />
+    return <CSSTransition classNames="slide_right" timeout={{enter: 200, exit: 100}}>
+      <SettingsPanel
+        close={this.closeSettingsPanel}
+        exercises={this.exercises}
+        setExercise={this.setExercise}
+        currentExercise={Exercise}
+        currentExerciseSettings={this.state.currentExerciseSettings}
+        updateSettings={this.updateExerciseSettings}
+      />
+    </CSSTransition>
   }
 }

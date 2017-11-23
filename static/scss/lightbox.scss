@@ -30,11 +30,11 @@
         }
     }
 
-    &.show_lightbox-leave {
+    &.show_lightbox-exit {
         opacity: 1;
         transition: opacity 0.1s ease;
 
-        &.show_lightbox-leave-active {
+        &.show_lightbox-exit-active {
             opacity: 0;
         }
     }

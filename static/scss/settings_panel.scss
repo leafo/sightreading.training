@@ -24,11 +24,11 @@
         }
     }
 
-    &.slide_right-leave {
+    &.slide_right-exit {
         opacity: 1;
         transition: opacity 0.1s ease;
 
-        &.slide_right-leave-active {
+        &.slide_right-exit-active {
             opacity: 0;
         }
     }

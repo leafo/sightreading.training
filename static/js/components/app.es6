@@ -19,7 +19,7 @@ import {csrfToken} from "st/globals"
 import * as React from "react"
 import {BrowserRouter, Route, Link, NavLink} from "react-router-dom"
 
-let {CSSTransitionGroup} = React.addons || {}
+import {TransitionGroup, CSSTransition} from "react-transition-group"
 
 let MidiButton = (props) =>
   <button
@@ -132,9 +132,9 @@ class Layout extends React.Component {
         pageSource: "chord_generators"
       })} />
 
-      <CSSTransitionGroup transitionName="show_lightbox" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
+      <TransitionGroup>
         {this.renderCurrentLightbox()}
-      </CSSTransitionGroup>
+      </TransitionGroup>
     </div>
   }
 
@@ -146,7 +146,8 @@ class Layout extends React.Component {
       ...this.childProps()
     })
 
-    return <div
+    return <CSSTransition classNames="show_lightbox" timeout={{enter: 200, exit: 100}}>
+      <div
       className="lightbox_shroud"
       onClick={(e) => {
         if (e.target.classList.contains("lightbox_shroud")) {
@@ -155,6 +156,7 @@ class Layout extends React.Component {
         }
       }}
       >{lb}</div>
+    </CSSTransition>
   }
 
   doLogout() {

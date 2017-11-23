@@ -29,8 +29,7 @@ import * as types from "prop-types"
 const DEFAULT_SONG = "over_the_rainbow"
 
 import {AutoChords} from "st/auto_chords"
-
-let {CSSTransitionGroup} = React.addons || {}
+import {TransitionGroup, CSSTransition} from "react-transition-group"
 
 class SettingsPanel extends React.Component {
   static propTypes = {
@@ -385,9 +384,9 @@ export default class PlayAlongPage extends React.Component {
     }
 
     return <div className="play_along_page">
-      <CSSTransitionGroup transitionName="slide_right" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
+      <TransitionGroup>
         {this.renderSettings()}
-      </CSSTransitionGroup>
+      </TransitionGroup>
 
       <div className={classNames("play_along_workspace", {settings_open: this.state.settingsPanelOpen})}>
         <div className="staff_wrapper">
@@ -405,13 +404,15 @@ export default class PlayAlongPage extends React.Component {
       return
     }
 
-    return <SettingsPanel
-      autoChordType={this.state.autoChordType}
-      chordMinSpacing={this.state.chordMinSpacing}
-      currentSongName={this.state.currentSongName}
-      close={() => this.setState({
-        settingsPanelOpen: !this.state.settingsPanelOpen
-      }) } />
+    return <CSSTransition classNames="slide_right" timeout={{ enter: 200, exit: 100 }}>
+      <SettingsPanel
+        autoChordType={this.state.autoChordType}
+        chordMinSpacing={this.state.chordMinSpacing}
+        currentSongName={this.state.currentSongName}
+        close={() => this.setState({
+          settingsPanelOpen: !this.state.settingsPanelOpen
+        }) } />
+    </CSSTransition>
   }
 
   togglePlay() {

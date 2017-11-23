@@ -91,14 +91,14 @@
             }
         }
 
-        &.show_card-leave {
+        &.show_card-exit {
             .flash_card {
                 transform: rotate(0);
                 transition: all $speed ease-out;
                 opacity: 1;
             }
 
-            &.show_card-leave-active {
+            &.show_card-exit-active {
                 .flash_card {
                     transform: translate(-100px, 50px) rotate(-40deg);
                     opacity: 0;

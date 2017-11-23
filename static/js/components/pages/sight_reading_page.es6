@@ -22,7 +22,8 @@ import {classNames, NoSleep} from "lib"
 import {isMobile} from "st/browser"
 
 import * as types from "prop-types"
-let {CSSTransitionGroup} = React.addons || {}
+
+import {TransitionGroup, CSSTransition} from "react-transition-group"
 
 const DEFAULT_NOTE_WIDTH = 100
 const DEFAULT_SPEED = 4
@@ -433,9 +434,9 @@ export default class SightReadingPage extends React.Component {
       {this.renderWorkspace()}
       {this.renderKeyboard()}
 
-      <CSSTransitionGroup transitionName="slide_right" transitionEnterTimeout={200} transitionLeaveTimeout={100}>
+      <TransitionGroup>
         {this.renderSettings()}
-      </CSSTransitionGroup>
+      </TransitionGroup>
 
       {this.renderKeyboardToggle()}
     </div>;
@@ -456,25 +457,27 @@ export default class SightReadingPage extends React.Component {
       return;
     }
 
-    return <SettingsPanel
-      close={this.toggleSettings.bind(this)}
-      staves={STAVES}
-      generators={GENERATORS}
-      saveGeneratorPreset={this.state.savingPreset}
+    return <CSSTransition classNames="slide_right" timeout={{enter: 200, exit: 100}}>
+      <SettingsPanel
+        close={this.toggleSettings.bind(this)}
+        staves={STAVES}
+        generators={GENERATORS}
+        saveGeneratorPreset={this.state.savingPreset}
 
-      currentGenerator={this.state.currentGenerator}
-      currentGeneratorSettings={this.state.currentGeneratorSettings}
-      currentStaff={this.state.currentStaff}
-      currentKey={this.state.keySignature}
+        currentGenerator={this.state.currentGenerator}
+        currentGeneratorSettings={this.state.currentGeneratorSettings}
+        currentStaff={this.state.currentStaff}
+        currentKey={this.state.keySignature}
 
-      setGenerator={(g, settings) => this.setState({
-        currentGenerator: g,
-        currentGeneratorSettings: settings,
-      })}
+        setGenerator={(g, settings) => this.setState({
+          currentGenerator: g,
+          currentGeneratorSettings: settings,
+        })}
 
-      setStaff={this.setStaff.bind(this)}
-      setKeySignature={k => this.setState({keySignature: k})}
-    />
+        setStaff={this.setStaff.bind(this)}
+        setKeySignature={k => this.setState({keySignature: k})}
+      />
+    </CSSTransition>
   }
 
   renderKeyboard() {
