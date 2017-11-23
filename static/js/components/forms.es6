@@ -3,8 +3,7 @@ import * as React from "react"
 import {csrfToken} from "st/globals"
 import {FormData, XMLHttpRequest} from "window"
 import {classNames} from "lib"
-
-let {PropTypes: types} = React
+import * as types from "prop-types"
 
 export class TextInputRow extends React.Component {
   static propTypes = {

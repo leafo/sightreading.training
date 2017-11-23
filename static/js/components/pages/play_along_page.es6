@@ -24,7 +24,7 @@ import NoteStats from "st/note_stats"
 import {setTitle} from "st/globals"
 import {classNames} from "lib"
 
-let {PropTypes: types} = React
+import * as types from "prop-types"
 
 const DEFAULT_SONG = "over_the_rainbow"
 

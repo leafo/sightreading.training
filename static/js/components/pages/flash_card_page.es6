@@ -1,8 +1,8 @@
 
 import * as React from "react"
 import {classNames, MersenneTwister} from "lib"
+import * as types from "prop-types"
 
-let {PropTypes: types} = React
 let {CSSTransitionGroup} = React.addons || {}
 
 import {setTitle} from "st/globals"

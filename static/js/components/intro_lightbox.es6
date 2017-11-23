@@ -1,5 +1,5 @@
 import * as React from "react"
-let {PropTypes: types} = React;
+import * as types from "prop-types"
 
 import Lightbox from "st/components/lightbox"
 import MidiSelector from "st/components/midi_selector"

@@ -1,7 +1,6 @@
 import * as React from "react"
 import {keyCodeToChar, noteForKey} from "st/keyboard_input"
-
-let {PropTypes: types} = React
+import * as types from "prop-types"
 
 export default class Hotkeys extends React.Component {
   static propTypes = {

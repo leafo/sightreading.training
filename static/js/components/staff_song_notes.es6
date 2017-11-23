@@ -4,8 +4,7 @@ import {classNames} from "lib"
 
 import StaffNotes from "st/components/staff_notes"
 import {parseNote, noteName, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
-
-let {PropTypes: types} = React;
+import * as types from "prop-types"
 
 export default class StaffSongNotes extends StaffNotes {
   static propTypes = {

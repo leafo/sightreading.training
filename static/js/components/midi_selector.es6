@@ -1,7 +1,6 @@
 import * as React from "react"
 import {classNames} from "lib"
-
-let {PropTypes: types} = React
+import * as types from "prop-types"
 
 export default class MidiSelector extends React.PureComponent {
   static propTypes = {

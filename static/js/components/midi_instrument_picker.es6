@@ -6,7 +6,7 @@ import Select from "st/components/select"
 
 import {MidiChannel} from "st/midi"
 
-let {PropTypes: types} = React
+import * as types from "prop-types"
 
 export default class MidiInstrumentPicker extends React.PureComponent {
   static propTypes = {

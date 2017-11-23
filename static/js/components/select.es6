@@ -1,8 +1,6 @@
 import * as React from "react"
 import {classNames} from "lib"
-
-let {PropTypes: types} = React
-
+import * as types from "prop-types"
 import {IconDownArrow} from "st/components/icons"
 
 export default class Select extends React.Component {

@@ -1,8 +1,7 @@
 
 import * as React from "react"
 import {classNames} from "lib"
-
-let {PropTypes: types} = React;
+import * as types from "prop-types"
 
 import NoteList from "st/note_list"
 import {SongNoteList} from "st/song_note_list"

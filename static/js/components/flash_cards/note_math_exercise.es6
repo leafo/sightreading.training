@@ -6,7 +6,7 @@ import * as React from "react"
 import {classNames, MersenneTwister} from "lib"
 import {shuffled} from "st/util"
 
-let {PropTypes: types} = React
+import * as types from "prop-types"
 
 export default class NoteMathExercise extends React.PureComponent {
   static exerciseName = "Note Math"

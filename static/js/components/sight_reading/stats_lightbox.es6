@@ -1,8 +1,7 @@
 
 import * as React from "react"
 import Lightbox from "st/components/lightbox"
-
-let {PropTypes: types} = React
+import * as types from "prop-types"
 
 export default class StatsLightbox extends Lightbox {
   static className = "stats_lightbox"

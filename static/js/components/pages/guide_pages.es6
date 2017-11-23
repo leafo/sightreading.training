@@ -1,8 +1,7 @@
 import * as React from "react"
 import {Link, NavLink} from "react-router-dom"
 import {setTitle} from "st/globals"
-
-let {PropTypes: types} = React
+import * as types from "prop-types"
 
 export default class GuidePage extends React.Component {
   static propTypes = {

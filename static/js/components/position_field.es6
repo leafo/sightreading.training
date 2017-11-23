@@ -1,5 +1,5 @@
 import * as React from "react"
-let {PropTypes: types} = React
+import * as types from "prop-types"
 
 export default class PositionField extends React.PureComponent {
   static propTypes = {

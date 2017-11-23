@@ -4,7 +4,7 @@ import {CardHolder} from "st/components/flash_cards/common"
 import * as React from "react"
 import {classNames, MersenneTwister} from "lib"
 
-let {PropTypes: types} = React
+import * as types from "prop-types"
 
 import NoteList from "st/note_list"
 

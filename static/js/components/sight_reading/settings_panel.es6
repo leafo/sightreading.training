@@ -8,8 +8,7 @@ import {trigger} from "st/events"
 import {generatorDefaultSettings, fixGeneratorSettings} from "st/generators"
 
 import {KeySignature, ChromaticKeySignature, noteName, parseNote} from "st/music"
-
-let {PropTypes: types} = React;
+import * as types from "prop-types"
 
 export class SettingsPanel extends React.Component {
   static propTypes = {

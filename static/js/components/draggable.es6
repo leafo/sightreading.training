@@ -2,7 +2,7 @@ import * as React from "react"
 import * as ReactDOM from "react-dom"
 
 import {classNames} from "lib"
-let {PropTypes: types} = React;
+import * as types from "prop-types"
 
 export default class Draggable extends React.Component {
   constructor(props) {

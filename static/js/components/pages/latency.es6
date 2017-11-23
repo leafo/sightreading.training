@@ -1,7 +1,6 @@
 import * as React from "react"
 import {NOTE_EVENTS} from "st/midi"
-
-let {PropTypes: types} = React
+import * as types from "prop-types"
 
 export default class LatencyPage extends React.Component {
   render() {

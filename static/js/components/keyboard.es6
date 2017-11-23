@@ -4,8 +4,7 @@ import {classNames} from "lib"
 
 import {parseNote, noteName, LETTER_OFFSETS} from "st/music"
 import {keyCodeToChar, noteForKey} from "st/keyboard_input"
-
-let {PropTypes: types} = React
+import * as types from "prop-types"
 
 export default class Keyboard extends React.PureComponent {
   static propTypes = {

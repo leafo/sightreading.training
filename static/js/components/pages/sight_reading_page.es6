@@ -21,7 +21,7 @@ import {classNames, NoSleep} from "lib"
 
 import {isMobile} from "st/browser"
 
-let {PropTypes: types} = React
+import * as types from "prop-types"
 let {CSSTransitionGroup} = React.addons || {}
 
 const DEFAULT_NOTE_WIDTH = 100
