@@ -160,19 +160,19 @@ export default class StaffNotes extends React.Component {
     }, opts.classes || {})
 
     let parts = [
-      <img className="primary" src="/static/svg/noteheads.s0.svg" />
+      <img key="head" className="primary" src="/static/svg/noteheads.s0.svg" />
     ]
 
     if (accidentals == 0) {
-      parts.push(<img className="accidental natural" src="/static/svg/natural.svg" />)
+      parts.push(<img key="natural" className="accidental natural" src="/static/svg/natural.svg" />)
     }
 
     if (accidentals == -1) {
-      parts.push(<img className="accidental flat" src="/static/svg/flat.svg" />)
+      parts.push(<img key="flat" className="accidental flat" src="/static/svg/flat.svg" />)
     }
 
     if (accidentals == 1) {
-      parts.push(<img className="accidental sharp" src="/static/svg/sharp.svg" />)
+      parts.push(<img key="sharp" className="accidental sharp" src="/static/svg/sharp.svg" />)
     }
 
     let noteEl = <div
@@ -181,7 +181,7 @@ export default class StaffNotes extends React.Component {
       data-note={note}
       data-midi-note={pitch}
       className={classes}
-      children={parts}></div>
+      >{parts}</div>
 
     if (outside) {
       return [
