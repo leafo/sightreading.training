@@ -45,8 +45,8 @@ export default class StaffSongNotes extends StaffNotes {
       lines.push(<div
         style={{ left: `${fromLeft - 2}px`}}
         data-label={m + 1}
+        key={`measure-${m}`}
         className="measure_line"></div>)
-
     }
 
     return lines
