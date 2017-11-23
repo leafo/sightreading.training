@@ -185,11 +185,11 @@ export default class StaffNotes extends React.Component {
 
     if (outside) {
       return [
-        this.renderLedgerLines(note, opts),
+        ...this.renderLedgerLines(note, opts),
         noteEl,
-      ];
+      ]
     } else {
-      return noteEl;
+      return noteEl
     }
   }
 
@@ -230,6 +230,7 @@ export default class StaffNotes extends React.Component {
       }
 
       lines.push(<div
+        key={`${opts.key}-leger-${i}`}
         className={classNames("ledger_line", {
           above: !below,
           below: below
