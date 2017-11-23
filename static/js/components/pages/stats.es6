@@ -22,6 +22,13 @@ export default class StatsPage extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    if (this.request) {
+      this.request.abort()
+      delete this.request
+    }
+  }
+
   loadStats() {
     this.setState({
       loading: true,
@@ -34,6 +41,7 @@ export default class StatsPage extends React.Component {
     request.open("GET", `/stats.json?offset=${offset}`)
     request.send()
     request.onload = (e) => {
+      delete this.request
       try {
         let res = JSON.parse(request.responseText)
         this.setState({loading: false, stats: res.stats || []})
@@ -41,6 +49,14 @@ export default class StatsPage extends React.Component {
         this.setState({loading: false, error_message: "Failed to fetch stats"})
       }
     }
+
+    if (this.request) {
+      this.request.abort()
+      delete this.request
+    }
+
+    this.request = request
+
   }
 
   dateStops(days=15) {

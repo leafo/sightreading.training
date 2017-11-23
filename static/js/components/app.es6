@@ -51,6 +51,13 @@ class Layout extends React.Component {
     }
   }
 
+  componentDidCatch(error, info) {
+    this.setState({
+      hasError: true,
+      error
+    })
+  }
+
   loadDefaultSettings() {
     let defaultMidiInput = readConfig("defaults:midiIn")
     if (defaultMidiInput) {
@@ -97,17 +104,40 @@ class Layout extends React.Component {
     }
   }
 
+  pageLayout(props) {
+    return <div className="page_layout">
+      <div className="header_spacer">
+        {this.renderHeader()}
+      </div>
+
+      {props.children}
+
+      <TransitionGroup>
+        {this.renderCurrentLightbox()}
+      </TransitionGroup>
+    </div>
+  }
+
   render() {
     let page = (C, moreProps) =>
       props => <C
         ref={comp => this.currentPage = comp}
         {...moreProps} {...this.childProps()} {...props} />
 
-    return <div className="page_layout">
-      <div className="header_spacer">
-        {this.renderHeader()}
-      </div>
+    let PageLayout = this.pageLayout.bind(this)
 
+    if (this.state.hasError) {
+      return <PageLayout>
+        <div className="page_container page_error">
+          <p>There was an error with the page, please try reloading</p>
+          <pre>{this.state.error.message}</pre>
+          <pre>{this.state.error.stack}</pre>
+          <p>Report bugs <a href="https://github.com/leafo/sightreading.training/issues">on GitHub</a></p>
+        </div>
+      </PageLayout>
+    }
+
+    return <PageLayout>
       <Route exact path="/" render={page(SightReadingPage)}/>
       <Route exact path="/login" render={page(LoginPage)} />
       <Route exact path="/register" render={page(RegisterPage)} />
@@ -131,11 +161,7 @@ class Layout extends React.Component {
         title: "Sight Reading Random Chords",
         pageSource: "chord_generators"
       })} />
-
-      <TransitionGroup>
-        {this.renderCurrentLightbox()}
-      </TransitionGroup>
-    </div>
+    </PageLayout>
   }
 
   renderCurrentLightbox() {
