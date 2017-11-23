@@ -36,7 +36,7 @@ let MidiButton = (props) =>
       </div>
   </button>
 
-class Layout extends React.Component {
+class Layout extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = {}
@@ -54,7 +54,16 @@ class Layout extends React.Component {
   componentDidCatch(error, info) {
     this.setState({
       hasError: true,
+      errorLocationKey: this.props.location.key,
       error
+    })
+  }
+
+  clearError() {
+    this.setState({
+      hasError: false,
+      errorLocationKey: undefined,
+      error: undefined,
     })
   }
 
@@ -138,6 +147,12 @@ class Layout extends React.Component {
           <pre>{this.state.error.stack}</pre>
           <p>Report bugs <a href="https://github.com/leafo/sightreading.training/issues">on GitHub</a></p>
         </div>
+        <Route path="/" render={p => {
+          if (p.location.key != this.state.errorLocationKey) {
+            this.clearError()
+          }
+          return null
+        }}/>
       </PageLayout>
     }
 
@@ -310,7 +325,7 @@ export default class App extends React.Component {
 
   render() {
     return <BrowserRouter>
-      <Layout />
+      <Route path="/" component={Layout} />
     </BrowserRouter>
   }
 }
