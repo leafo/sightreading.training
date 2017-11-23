@@ -4,7 +4,7 @@ import * as React from "react"
 import {moment, chartjs} from "lib"
 import {setTitle} from "st/globals"
 
-let {Line: LineChart} = chartjs
+import {Line} from 'react-chartjs-2';
 
 export default class StatsPage extends React.Component {
   constructor(props) {
@@ -92,7 +92,13 @@ export default class StatsPage extends React.Component {
       }
     }
 
-    let options = { }
+    let options = {
+      scales: {
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    }
 
     let data = {
       labels: stops.map((v, i) => {
@@ -103,23 +109,21 @@ export default class StatsPage extends React.Component {
         {
           label: "Misses",
           data: misses,
-          fillColor: "rgba(251,145,117,0.1)",
-          strokeColor: "rgba(251,145,117,0.8)",
-          pointColor: "rgba(251,145,117,0.8)",
+          backgroundColor: "rgba(251,145,117,0.1)",
+          borderColor: "rgba(251,145,117,0.8)",
         },
         {
           label: "Hits",
           data: hits,
-          fillColor: "rgba(170,218,128,0.1)",
-          strokeColor: "rgba(170,218,128,0.8)",
-          pointColor: "rgba(170,218,128,0.8)",
+          backgroundColor: "rgba(170,218,128,0.1)",
+          borderColor: "rgba(170,218,128,0.8)",
         },
       ]
     }
 
     return <div>
       <h2>Daily stats</h2>
-      <LineChart data={data} options={options} width="600" height="300" />
+      <Line data={data} options={options} width={600} height={300} />
     </div>
   }
 

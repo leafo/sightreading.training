@@ -13,3 +13,5 @@ define("react-router", ReactRouter);
 define("react-router-dom", ReactRouterDOM);
 define("prop-types", PropTypes);
 define("react-transition-group", ReactTransitionGroup);
+define("react-chartjs-2", ReactChartjs2);
+
