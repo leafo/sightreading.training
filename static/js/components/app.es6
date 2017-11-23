@@ -36,7 +36,7 @@ let MidiButton = (props) =>
       </div>
   </button>
 
-class Layout extends React.PureComponent {
+class Layout extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
@@ -49,22 +49,6 @@ class Layout extends React.PureComponent {
         },
         error => console.warn("failed to get MIDI"))
     }
-  }
-
-  componentDidCatch(error, info) {
-    this.setState({
-      hasError: true,
-      errorLocationKey: this.props.location.key,
-      error
-    })
-  }
-
-  clearError() {
-    this.setState({
-      hasError: false,
-      errorLocationKey: undefined,
-      error: undefined,
-    })
   }
 
   loadDefaultSettings() {
@@ -113,13 +97,13 @@ class Layout extends React.PureComponent {
     }
   }
 
-  pageLayout(props) {
+  pageLayout(children) {
     return <div className="page_layout">
       <div className="header_spacer">
         {this.renderHeader()}
       </div>
 
-      {props.children}
+      {children}
 
       <TransitionGroup>
         {this.renderCurrentLightbox()}
@@ -128,35 +112,18 @@ class Layout extends React.PureComponent {
   }
 
   renderRoutes(routes) {
+    let childProps = this.childProps()
+
     return routes.map(({page: C, props: moreProps, path}, i) =>
       <Route key={i} exact path={path} render={
         props =>
-          <C key={i} ref={comp => this.currentPage = comp} {...moreProps} {...this.childProps()} {...props} />
+          <C ref={comp => this.currentPage = comp} {...moreProps} {...childProps} {...props} />
       } />
     )
   }
 
   render() {
-    let PageLayout = this.pageLayout.bind(this)
-
-    if (this.state.hasError) {
-      return <PageLayout>
-        <div className="page_container page_error">
-          <p>There was an error with the page, please try reloading</p>
-          <pre>{this.state.error.message}</pre>
-          <pre>{this.state.error.stack}</pre>
-          <p>Report bugs <a href="https://github.com/leafo/sightreading.training/issues">on GitHub</a></p>
-        </div>
-        <Route path="/" render={p => {
-          if (p.location.key != this.state.errorLocationKey) {
-            this.clearError()
-          }
-          return null
-        }}/>
-      </PageLayout>
-    }
-
-    let routes = this.renderRoutes([
+    return this.pageLayout(this.renderRoutes([
       { path: "/", page: SightReadingPage },
       { path: "/login", page: LoginPage },
       { path: "/register", page: RegisterPage },
@@ -180,9 +147,7 @@ class Layout extends React.PureComponent {
         title: "Sight Reading Random Chords",
         pageSource: "chord_generators"
       }},
-    ])
-
-    return <PageLayout>{routes}</PageLayout>
+    ]))
   }
 
   renderCurrentLightbox() {
@@ -195,14 +160,14 @@ class Layout extends React.PureComponent {
 
     return <CSSTransition classNames="show_lightbox" timeout={{enter: 200, exit: 100}}>
       <div
-      className="lightbox_shroud"
-      onClick={(e) => {
-        if (e.target.classList.contains("lightbox_shroud")) {
-          this.refs.currentLightbox.close()
-          e.preventDefault();
-        }
-      }}
-      >{lb}</div>
+        className="lightbox_shroud"
+        onClick={(e) => {
+          if (e.target.classList.contains("lightbox_shroud")) {
+            this.refs.currentLightbox.close()
+            e.preventDefault();
+          }
+        }}
+        >{lb}</div>
     </CSSTransition>
   }
 
@@ -258,7 +223,11 @@ class Layout extends React.PureComponent {
 
       {userLinks}
       {userPanel}
-      <MidiButton {...this.childProps()} pickMidi={() => trigger(this, "pickMidi")} />
+      <MidiButton
+        {...this.childProps()}
+        pickMidi={() => {
+          trigger(this, "pickMidi")
+        }} />
     </div>
   }
 
@@ -325,7 +294,7 @@ export default class App extends React.Component {
 
   render() {
     return <BrowserRouter>
-      <Route path="/" component={Layout} />
+      <Layout />
     </BrowserRouter>
   }
 }
