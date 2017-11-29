@@ -452,7 +452,11 @@ export default class PlayAlongPage extends React.Component {
     if (recordHit) {
       this.stats.hitNotes([songNote.note])
     } else {
-      this.stats.missNotes([songNote.note])
+      if (songNote) {
+        this.stats.missNotes([songNote.note])
+      } else {
+        this.stats.missNotes([])
+      }
     }
 
     let heldNotes = {
