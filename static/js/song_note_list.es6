@@ -91,12 +91,14 @@ export class SongNoteList extends Array {
   matchNote(findNote, beat) {
     let found = null
 
-    for (let note of this) {
+    for (let idx=0; idx < this.length; idx++) {
+      let note = this[idx]
+
       if (parseNote(note.note) != parseNote(findNote)) {
         continue
       }
 
-      if (found) {
+      if (found != null) {
         if (Math.abs(found.start - beat) > Math.abs(note.start - beat)) {
           found = note
         }
