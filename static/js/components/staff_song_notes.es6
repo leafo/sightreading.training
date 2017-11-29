@@ -25,6 +25,10 @@ export default class StaffSongNotes extends StaffNotes {
     ]
   }
 
+  renderHeldNotes() {
+    // song staff doesn't have ghost held notes
+  }
+
   renderMeasureLines() {
     let beatsPerMeasure = 4
 
@@ -85,12 +89,14 @@ export default class StaffSongNotes extends StaffNotes {
       outsideLoop = songNote.start < this.props.loopLeft || songNote.start >= this.props.loopRight
     }
 
+    let held = this.props.heldNotes[songNote.note]
+
     let noteEl = <div
       className={classNames("note_bar", {
         is_flat: accidentals == -1,
         is_sharp: accidentals == 1,
         is_natural: accidentals == 0,
-        held: songNote.held,
+        held: held && held.songNoteIdx == opts.idx,
         outside_loop: outsideLoop,
       })}
       title={songNote.note}

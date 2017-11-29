@@ -44,6 +44,7 @@ export default class StaffNotes extends React.Component {
 
     return props.notes.map((note, idx) => {
       let opts = {
+        idx,
         goal: true,
         first: idx == 0,
       }

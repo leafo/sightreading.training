@@ -352,7 +352,6 @@ export default class PlayAlongPage extends React.Component {
   }
 
   render() {
-    let heldNotes = {}
     let keySignature = new KeySignature(0)
 
     if (this.state.song && this.state.song.metadata) {
@@ -366,7 +365,7 @@ export default class PlayAlongPage extends React.Component {
       let staffProps = {
         ref: "staff",
         notes: this.state.song || [],
-        heldNotes,
+        heldNotes: this.state.heldNotes,
         keySignature,
         pixelsPerBeat: this.state.pixelsPerBeat,
         children: <div className="time_bar"></div>,
@@ -436,15 +435,15 @@ export default class PlayAlongPage extends React.Component {
       this.state.songTimer.start(this.state.bpm)
     }
 
-    let songNote = this.state.song.matchNote(note, this.currentBeat)
+    let songNoteIdx = this.state.song.matchNote(note, this.currentBeat)
+    let songNote = this.state.song[songNoteIdx]
 
     let recordHit = false
 
     if (songNote) {
-      songNote.held = true
       let accuracy = this.state.songTimer.beatsToSeconds(this.currentBeat - songNote.start)
-      if (Math.abs(accuracy) < 1 && !this.hitNotes.get(songNote)) {
-        this.hitNotes.set(songNote, true)
+      if (Math.abs(accuracy) < 1 && !this.hitNotes.get(songNoteIdx)) {
+        this.hitNotes.set(songNoteIdx, true)
         recordHit = true
       }
     }
@@ -461,7 +460,7 @@ export default class PlayAlongPage extends React.Component {
 
     let heldNotes = {
       ...this.state.heldNotes,
-      [note]: { songNote }
+      [note]: { songNoteIdx }
     }
 
     this.setState({ heldNotes })
@@ -469,11 +468,7 @@ export default class PlayAlongPage extends React.Component {
 
   releaseNote(note) {
     let held = this.state.heldNotes[note]
-    let songNote = held.songNote
-
-    if (songNote) {
-      songNote.held = false
-    }
+    if (!held) return // song changed between press/relese
 
     let heldNotes = {...this.state.heldNotes}
     delete heldNotes[note]

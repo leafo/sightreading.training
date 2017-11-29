@@ -89,7 +89,7 @@ export class SongNoteList extends Array {
   // see if we're hitting a valid note
   // TODO: this is very slow
   matchNote(findNote, beat) {
-    let found = null
+    let foundIdx = null
 
     for (let idx=0; idx < this.length; idx++) {
       let note = this[idx]
@@ -98,16 +98,17 @@ export class SongNoteList extends Array {
         continue
       }
 
-      if (found != null) {
+      if (foundIdx != null) {
+        let found = this[foundIdx]
         if (Math.abs(found.start - beat) > Math.abs(note.start - beat)) {
-          found = note
+          foundIdx = idx
         }
       } else {
-        found = note
+        foundIdx = idx
       }
     }
 
-    return found
+    return foundIdx
   }
 }
 
