@@ -317,7 +317,15 @@ class MelodyRecognitionExercise extends React.Component {
     return <section className="interval_settings">
       <fieldset className="enabled_intervals">
         <legend>Intervals</legend>
-        <ul>{inputs}</ul>
+        <ul>
+          {inputs}
+          <li>
+            <button
+              type="button"
+              onClick={e => this.setState({ enabledIntervals: {} })}
+              >All off</button>
+          </li>
+        </ul>
       </fieldset>
     </section>
   }
