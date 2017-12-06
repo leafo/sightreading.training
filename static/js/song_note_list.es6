@@ -1,7 +1,7 @@
 
 import {parseNote, noteName, MIDDLE_C_PITCH} from "st/music"
 
-class SongNoteTimer {
+export class SongNoteTimer {
   constructor(opts={}) {
     this.bpm = opts.bpm || 60
     this.onTime = opts.onTime

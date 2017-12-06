@@ -21,6 +21,7 @@ import MidiButton from "st/components/midi_button"
 import SongParser from "st/song_parser"
 
 import {dispatch, trigger} from "st/events"
+import {SongNoteList} from "st/song_note_list"
 
 class MelodyRecognitionExercise extends React.Component {
   static exerciseName = "Interval Melodies"
@@ -105,6 +106,28 @@ class MelodyRecognitionExercise extends React.Component {
     })
   }
 
+  componentWillUnmount() {
+    if (this.state.playingTimer) {
+      this.state.playingTimer.stop()
+    }
+  }
+
+  playSong(song) {
+    let timer = song.play(this.props.midiOutput)
+
+    this.setState({
+      playing: true,
+      playingTimer: timer
+    })
+
+    timer.getPromise().then(() => {
+      this.setState({
+        playing: false,
+        playingTimer: null,
+      })
+    })
+  }
+
   render() {
     return <div className="melody_recognition">
       <div className="page_container">
@@ -131,28 +154,18 @@ class MelodyRecognitionExercise extends React.Component {
         <button 
           disabled={!!this.state.playing}
           type="button"
-          onClick={e =>
-            console.log("TODO: play the root")
-          }>Play root</button>
+          onClick={e => {
+            let song = this.state.melodySongs[current.interval]
+            let first = new SongNoteList()
+            first.push(song[0])
+            this.playSong(first)
+          }}>Play root</button>
 
         <button
           type="button"
           disabled={!!this.state.playing}
           onClick={e => {
-            let song = this.state.melodySongs[current.interval]
-            let timer = song.play(this.props.midiOutput)
-
-            this.setState({
-              playing: true,
-              playingTimer: timer
-            })
-
-            timer.getPromise().then(() => {
-              this.setState({
-                playing: false,
-                playingTimer: null,
-              })
-            })
+            this.playSong(this.state.melodySongs[current.interval])
         }}>Play song</button>
         {stopSong}
       </div>
