@@ -80,6 +80,7 @@ class MelodyRecognitionExercise extends React.Component {
       loading: true,
       playbackBpm: 60,
       playbackTranspose: 0,
+      enabledIntervals: {},
       rand: new MersenneTwister(),
     }
   }
@@ -92,16 +93,20 @@ class MelodyRecognitionExercise extends React.Component {
     })
 
     let melodySongs = {}
+    let enabled = {}
 
     MelodyRecognitionExercise.melodies.forEach((m) => {
       loadingCount += 1
       MelodyRecognitionExercise.fetchMelody(m.song).then(song => {
         loadingCount -= 1
         melodySongs[m.interval] = song
+        enabled[`${m.interval}-${m.direction}`] = true
+
         if (loadingCount == 0) {
           this.setState({
             loading: false,
-            melodySongs
+            melodySongs,
+            enabledIntervals: enabled
           })
         }
       }).catch(e => console.warn(e))
@@ -112,6 +117,18 @@ class MelodyRecognitionExercise extends React.Component {
     if (this.state.playingTimer) {
       this.state.playingTimer.stop()
     }
+  }
+
+  nextMelody() {
+    let intervals = MelodyRecognitionExercise.melodies.filter(m =>
+      this.state.enabledIntervals[`${m.interval}-${m.direction}`]
+    )
+
+    let interval = intervals[this.state.rand.int() % intervals.length]
+
+    this.setState({
+      currentMelody: interval
+    })
   }
 
   playSong(song) {
@@ -136,14 +153,18 @@ class MelodyRecognitionExercise extends React.Component {
 
   render() {
     return <div className="melody_recognition_exercise">
-      <div className="page_container">
-        {this.state.loading ? "Loading" : this.renderSongPlayer()}
-      </div>
+      {this.state.loading ?
+        <div className="page_container">Loading</div>
+      :
+        <div className="page_container">
+          {this.renderSongPlayer()}
+          {this.renderIntervalSettings()}
+        </div>
+      }
     </div>
   }
 
   renderSongPlayer() {
-    let intervals = MelodyRecognitionExercise.melodies
     let current = this.state.currentMelody
 
     let currentSongTools
@@ -187,12 +208,7 @@ class MelodyRecognitionExercise extends React.Component {
       <div className="global_controls">
         <button
           disabled={this.state.playing || false}
-          onClick={(e) => {
-            let interval = intervals[this.state.rand.int() % intervals.length]
-            this.setState({
-              currentMelody: interval
-            })
-          }}>Next melody</button>
+          onClick={(e) => { this.nextMelody() }}>Next melody</button>
 
         <label className="slider_group">
           <span>BPM</span>
@@ -220,6 +236,36 @@ class MelodyRecognitionExercise extends React.Component {
       </div>
       {currentSongTools}
     </div>
+  }
+
+  renderIntervalSettings() {
+    console.log(this.state.enabledIntervals)
+    let inputs = MelodyRecognitionExercise.melodies.map((m) => {
+      let key = `${m.interval}-${m.direction}`
+
+      return <li key={key}>
+        <label>
+          <input
+            type="checkbox"
+            onChange={e => {
+              this.setState({
+                enabledIntervals: {
+                  ...this.state.enabledIntervals,
+                  [key]: e.target.checked,
+                }
+              })
+            }}
+            checked={this.state.enabledIntervals[key] || false} />
+          {" "}
+          <span className="label">{m.interval} {m.name}</span>
+        </label>
+      </li>
+    })
+
+    return <fieldset className="enabled_intervals">
+      <legend>Intervals</legend>
+      <ul>{inputs}</ul>
+    </fieldset>
   }
 }
 
