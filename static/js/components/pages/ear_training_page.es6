@@ -14,13 +14,12 @@ import {STAVES} from "st/data"
 
 let ROOTS = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
 
-export default class EarTrainingPage extends React.Component {
-  componentDidMount() {
-    setTitle("Ear Training")
-  }
 
+class MelodyPlaybackExercise extends React.Component {
   constructor(props) {
     super(props)
+
+
     this.setNotesPerMelody = value => this.setState({ notesPerMelody: value })
 
     this.state = {
@@ -176,19 +175,6 @@ export default class EarTrainingPage extends React.Component {
   }
 
   render() {
-    let contents
-    if (this.props.midiOutput) {
-      contents = this.renderMeldoyGenerator()
-    } else {
-      contents = this.renderIntro()
-    }
-
-    return <div className="ear_training_page">
-      {contents}
-    </div>
-  }
-
-  renderMeldoyGenerator() {
     let locked = this.state.playing || this.state.locked || false
 
     let repeatButton
@@ -281,7 +267,7 @@ export default class EarTrainingPage extends React.Component {
 
       <fieldset>
         <legend>Scale</legend>
-        {this.renderScalPicker()}
+        {this.renderScalePicker()}
       </fieldset>
     </div>
 
@@ -296,7 +282,7 @@ export default class EarTrainingPage extends React.Component {
     </div>
   }
 
-  renderScalPicker() {
+  renderScalePicker() {
     if (!this.props.midi) {
       return;
     }
@@ -311,10 +297,47 @@ export default class EarTrainingPage extends React.Component {
         ]}/>
     </label>
   }
+}
+
+
+export default class EarTrainingPage extends React.Component {
+  componentDidMount() {
+    setTitle("Ear Training")
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+
+  render() {
+    let contents
+    if (this.props.midiOutput) {
+      contents = this.renderExercise()
+    } else {
+      contents = this.renderIntro()
+    }
+
+    return <div className="ear_training_page">
+      <div className="exercise_header">
+        <div className="exercise_label">Melody playback</div>
+        <button>Settings</button>
+      </div>
+      {contents}
+    </div>
+  }
+
+  renderExercise() {
+    return <MelodyPlaybackExercise
+      midi={this.props.midi}
+      midiOutput={this.props.midiOutput}
+      midiInput={this.props.midiInput}
+      />
+  }
 
   renderIntro() {
     if (!this.props.midi) {
-      return <div className="choose_device">
+      return <div className="page_container choose_device">
         <strong>No MIDI support detected in your browser, ensure you're using Chrome</strong>
       </div>
     }
