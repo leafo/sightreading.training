@@ -28,6 +28,16 @@ class MelodyRecognitionExercise extends React.Component {
   static exerciseId = "melody_recognition"
   static melodies = [
     {
+      interval: "m2",
+      direction: "asc",
+      song: "m2_jaws",
+      title: "Jaws"
+    }, {
+      interval: "M2",
+      direction: "asc",
+      song: "M2_silent_night",
+      title: "Silent Night"
+    }, {
       interval: "m3",
       direction: "asc",
       song: "m3_greensleves",
@@ -38,10 +48,45 @@ class MelodyRecognitionExercise extends React.Component {
       song: "M3_oh_when_the_saints",
       title: "On When The Saints",
     }, {
-      interval: "M4",
+      interval: "P4",
       direction: "asc",
       song: "P4_here_comes_the_bride",
       title: "Here Comes The Bride",
+    }, {
+      interval: "T",
+      direction: "asc",
+      song: "T_simpsons",
+      title: "The Simpsons",
+    }, {
+      interval: "P5",
+      direction: "asc",
+      song: "P5_star_wars",
+      title: "Star Wars",
+    }, {
+      interval: "m6",
+      direction: "asc",
+      song: "m6_entertainer",
+      title: "Entertainer",
+    }, {
+      interval: "M6",
+      direction: "asc",
+      song: "M6_nbc",
+      title: "NBC",
+    }, {
+      interval: "m7",
+      direction: "asc",
+      song: "m7_star_trek",
+      title: "Star Trek",
+    }, {
+      interval: "M7",
+      direction: "asc",
+      song: "M7_take_on_me",
+      title: "Take On Me",
+    }, {
+      interval: "P8",
+      direction: "asc",
+      song: "P8_somewhere_over_the_rainbow",
+      title: "Somewhere Over The Rainbow",
     }
   ]
 
@@ -78,7 +123,7 @@ class MelodyRecognitionExercise extends React.Component {
     super(props)
     this.state = {
       loading: true,
-      playbackBpm: 60,
+      playbackBpm: 90,
       playbackTranspose: 0,
       enabledIntervals: {},
       rand: new MersenneTwister(),
