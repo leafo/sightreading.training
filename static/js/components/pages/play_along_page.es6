@@ -333,7 +333,10 @@ export default class PlayAlongPage extends React.Component {
 
     if (this.state.metronome) {
       let mm = this.state.metronomeMultiplier
-      let beatsMeasure = this.state.song.metadata.beatsPerMeasure || 4
+      let beatsMeasure = 4
+      if (this.state.song && this.state.song.metadata.beatsPerMeasure) {
+        beatsMeasure = this.state.song.metadata.beatsPerMeasure
+      }
 
       if ("currentBeat" in this) {
         if (Math.floor(this.currentBeat * mm) < Math.floor(beat * mm)) {
