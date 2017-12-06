@@ -18,17 +18,136 @@ import {TransitionGroup, CSSTransition} from "react-transition-group"
 import Keyboard from "st/components/keyboard"
 import MidiButton from "st/components/midi_button"
 
+import SongParser from "st/song_parser"
+
 import {dispatch, trigger} from "st/events"
 
 class MelodyRecognitionExercise extends React.Component {
-  static exerciseName = "Melody Recognition"
+  static exerciseName = "Interval Melodies"
   static exerciseId = "melody_recognition"
+  static melodies = [
+    {
+      interval: "m3",
+      direction: "asc",
+      song: "m3_greensleves",
+      title: "Greensleves",
+    }, {
+      interval: "M3",
+      direction: "asc",
+      song: "M3_oh_when_the_saints",
+      title: "On When The Saints",
+    }, {
+      interval: "M4",
+      direction: "asc",
+      song: "P4_here_comes_the_bride",
+      title: "Here Comes The Bride",
+    }
+  ]
+
+  static melodyCache = {}
+  static fetchMelody(name) {
+    if (!this.melodyCache[name]) {
+      this.melodyCache[name] = new Promise((resolve, reject) => {
+        let request = new XMLHttpRequest()
+        request.open("GET", `/static/music/interval_melodies/${name}.lml?${+new Date()}`)
+        request.onerror = () => reject(request.statusText)
+        request.onload = (e) => {
+          let songText = request.responseText
+          let song
+
+          try {
+            song = SongParser.load(songText)
+          } catch (e) {
+            console.log(e)
+            return reject(`Failed to parse: ${name}`)
+          }
+
+          resolve(song)
+        }
+
+        request.send()
+      })
+
+    }
+
+    return this.melodyCache[name]
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      loading: true,
+      rand: new MersenneTwister(),
+    }
+  }
+
+  componentDidMount() {
+    let loadingCount = 0
+
+    this.setState({
+      loading: true
+    })
+
+    let melodySongs = {}
+
+    MelodyRecognitionExercise.melodies.forEach((m) => {
+      loadingCount += 1
+      MelodyRecognitionExercise.fetchMelody(m.song).then(song => {
+        loadingCount -= 1
+        melodySongs[m.interval] = song
+        if (loadingCount == 0) {
+          this.setState({
+            loading: false,
+            melodySongs
+          })
+        }
+      }).catch(e => console.warn(e))
+    })
+  }
 
   render() {
     return <div className="melody_recognition">
       <div className="page_container">
-        <h2>Hi</h2>
+        {this.state.loading ? "Loading" : this.renderSongPlayer()}
       </div>
+    </div>
+  }
+
+  renderSongPlayer() {
+    let intervals = MelodyRecognitionExercise.melodies
+    let current = this.state.currentMelody
+
+    let currentSongTools
+    if (current) {
+      currentSongTools = <div>
+        {current ? <span>{current.interval} - {current.title}</span> : ""}
+        <button 
+          disabled={!!this.state.playing}
+          type="button"
+          onClick={e =>
+            console.log("play the root")
+          }>Play root</button>
+        <button
+          type="button"
+          disabled={!!this.state.playing}
+          onClick={e => {
+            let song = this.state.melodySongs[current.interval]
+            this.setState({ playing: true })
+            song.play(this.props.midiOutput).then(() => this.setState({
+              playing: false
+            }))
+        }}>Play song</button>
+      </div>
+    }
+
+    return <div className="song_selector">
+      <button onClick={(e) => {
+        let interval = intervals[this.state.rand.int() % intervals.length]
+        this.setState({
+          currentMelody: interval
+        })
+      }}>Next melody</button>
+      {currentSongTools}
     </div>
   }
 }
@@ -431,8 +550,8 @@ export default class EarTrainingPage extends React.Component {
     super(props)
 
     this.exercises = [
+      MelodyRecognitionExercise,
       MelodyPlaybackExercise,
-      MelodyRecognitionExercise
     ]
 
     this.state = {
