@@ -8,7 +8,7 @@ import Select from "st/components/select"
 
 import {parseMidiMessage} from "st/midi"
 import {setTitle} from "st/globals"
-import {MajorScale, parseNote} from "st/music"
+import {MajorScale, parseNote, noteName} from "st/music"
 import {RandomNotes} from "st/generators"
 import {STAVES} from "st/data"
 
@@ -115,6 +115,8 @@ class MelodyRecognitionExercise extends React.Component {
   }
 
   playSong(song) {
+    song = song.transpose(this.state.playbackTranspose)
+
     let timer = song.play(this.props.midiOutput, {
       bpm: this.state.playbackBpm
     })
@@ -146,6 +148,8 @@ class MelodyRecognitionExercise extends React.Component {
 
     let currentSongTools
     if (current) {
+      let currentSong = this.state.melodySongs[current.interval]
+
       let stopSong
       if (this.state.playingTimer) {
         stopSong = <button
@@ -153,60 +157,67 @@ class MelodyRecognitionExercise extends React.Component {
           onClick={e => this.state.playingTimer.stop() }>Stop</button>
       }
 
-      currentSongTools = <div>
-        {current ? <span>{current.interval} - {current.title}</span> : ""}
-        <button 
-          disabled={!!this.state.playing}
-          type="button"
-          onClick={e => {
-            let song = this.state.melodySongs[current.interval]
-            let first = new SongNoteList()
-            first.push(song[0])
-            this.playSong(first)
-          }}>Play root</button>
+      let firstNote = noteName(parseNote(currentSong[0].note) + this.state.playbackTranspose)
 
-        <button
-          type="button"
-          disabled={!!this.state.playing}
-          onClick={e => {
-            this.playSong(this.state.melodySongs[current.interval])
-        }}>Play song</button>
-        {stopSong}
+      currentSongTools = <div className="current_song">
+        <div className="song_title">{current.interval} - {current.title} ({firstNote})</div>
+        <div className="song_controls">
+          <button
+            disabled={!!this.state.playing}
+            type="button"
+            onClick={e => {
+              let song = this.state.melodySongs[current.interval]
+              let first = new SongNoteList()
+              first.push(song[0])
+              this.playSong(first)
+            }}>Play root</button>
 
+          <button
+            type="button"
+            disabled={!!this.state.playing}
+            onClick={e => {
+              this.playSong(this.state.melodySongs[current.interval])
+          }}>Play song</button>
+          {stopSong}
+        </div>
       </div>
     }
 
     return <div className="song_selector">
-      <button onClick={(e) => {
-        let interval = intervals[this.state.rand.int() % intervals.length]
-        this.setState({
-          currentMelody: interval
-        })
-      }}>Next melody</button>
-      <label>
-        <span>BPM</span>
-        <Slider
-          min={40}
-          max={160}
-          onChange={(value) => {
-            this.setState({ playbackBpm: value })
-          }}
-          value={this.state.playbackBpm} />
-        <code>{this.state.playbackBpm}</code>
-      </label>
+      <div classNam="global_controls">
+        <button
+          disabled={this.state.playing || false}
+          onClick={(e) => {
+            let interval = intervals[this.state.rand.int() % intervals.length]
+            this.setState({
+              currentMelody: interval
+            })
+          }}>Next melody</button>
 
-      <label>
-        <span>Transpose</span>
-        <Slider
-          min={-12}
-          max={12}
-          onChange={(value) => {
-            this.setState({ playbackTranspose: value })
-          }}
-          value={this.state.playbackTranspose} />
-        <code>{this.state.playbackTranspose}</code>
-      </label>
+        <label className="slider_group">
+          <span>BPM</span>
+          <Slider
+            min={40}
+            max={160}
+            onChange={(value) => {
+              this.setState({ playbackBpm: value })
+            }}
+            value={this.state.playbackBpm} />
+          <code>{this.state.playbackBpm}</code>
+        </label>
 
+        <label className="slider_group">
+          <span>Transpose</span>
+          <Slider
+            min={-12}
+            max={12}
+            onChange={(value) => {
+              this.setState({ playbackTranspose: value })
+            }}
+            value={this.state.playbackTranspose} />
+          <code>{this.state.playbackTranspose}</code>
+        </label>
+      </div>
       {currentSongTools}
     </div>
   }
@@ -658,7 +669,7 @@ export default class EarTrainingPage extends React.Component {
 
     let Exercise = this.exercises[this.state.currentExerciseIdx]
 
-    let header = 
+    let header =
       <div className="exercise_header">
         <div className="exercise_label">{Exercise ? Exercise.exerciseName : ""}</div>
         <button

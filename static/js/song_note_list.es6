@@ -83,6 +83,15 @@ export class SongNoteList extends Array {
     return song
   }
 
+  clone() {
+    let song = new SongNoteList()
+
+    this.forEach(note =>
+      song.push(note.clone())
+    )
+
+    return song
+  }
 
   play(midiOutput, opts={}) {
     // organize all notes by their start beat
@@ -141,11 +150,29 @@ export class SongNoteList extends Array {
     return timer
   }
 
+  transpose(amount=0) {
+    if (amount == 0) {
+      return this
+    }
+
+    let song = new SongNoteList()
+
+    this.forEach(note =>
+      song.push(note.transpose(amount))
+    )
+
+    return song
+  }
+
   humanize(amount=1) {
-    for (let note of this) {
+    let song = this.clone()
+
+    for (let note of song) {
       note.start += Math.random() / 100 * amount
       note.duration -= 0.2
     }
+
+    return song
   }
 
   // find the notes that fall in the time range
@@ -243,6 +270,12 @@ export class SongNote {
     this.duration = duration
   }
 
+  clone() {
+    return new SongNote(
+      this.note, this.start, this.duration
+    )
+  }
+
   inRange(min, max) {
     let stop = this.start + this.duration
 
@@ -250,6 +283,12 @@ export class SongNote {
     if (max <= this.start) { return false }
 
     return true
+  }
+
+  transpose(semitones) {
+    return new SongNote(
+      noteName(parseNote(this.note) + semitones), this.start, this.duration
+    )
   }
 
   getStart() {
@@ -261,7 +300,6 @@ export class SongNote {
   }
 
   getRenderStop() {
-    // make it slightly shorter so it's easier to read
     return this.start + this.duration
   }
 
