@@ -12,10 +12,16 @@ import {MajorScale} from "st/music"
 import {RandomNotes} from "st/generators"
 import {STAVES} from "st/data"
 
+import * as types from "prop-types"
+import {TransitionGroup, CSSTransition} from "react-transition-group"
+
 let ROOTS = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
 
 
 class MelodyPlaybackExercise extends React.Component {
+  static exerciseName = "Melody Playback"
+  static exerciseId = "melody_playback"
+
   constructor(props) {
     super(props)
 
@@ -299,6 +305,26 @@ class MelodyPlaybackExercise extends React.Component {
   }
 }
 
+class SettingsPanel extends React.PureComponent {
+  static propTypes = {
+    close: types.func,
+    // updateSettings: types.func.isRequired,
+    // exercises: types.array.isRequired,
+    // currentExercise: types.func.isRequired, // class
+    // currentExerciseSettings: types.object.isRequired,
+  }
+
+  render() {
+    return <section className="settings_panel">
+      <div className="settings_header">
+        <button onClick={this.props.close}>Close</button>
+        <h3>Settings</h3>
+      </div>
+    </section>
+  }
+}
+
+
 
 export default class EarTrainingPage extends React.Component {
   componentDidMount() {
@@ -307,8 +333,39 @@ export default class EarTrainingPage extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {}
+
+    this.exercises = [
+      MelodyPlaybackExercise
+    ]
+
+    this.state = {
+      settingsPanelOpen: false,
+      currentExerciseIdx: 0,
+    }
+
+    this.setExercise = this.setExercise.bind(this)
+    this.closeSettingsPanel = () => this.setState({ settingsPanelOpen: false })
   }
+
+  setExercise(exerciseName) {
+    let exercise = this.exercises.find(e => e.exerciseId == exerciseName)
+
+    if (!exercise) {
+      // try by id
+      exercise = this.exercises[exerciseName]
+    }
+
+    if (!exercise) {
+      throw new Error(`Invalid exercise ${exerciseName}`)
+    }
+
+    let idx = this.exercises.indexOf(exercise)
+
+    this.setState({
+      currentExerciseIdx: idx,
+    })
+  }
+
 
   render() {
     let contents
@@ -318,17 +375,42 @@ export default class EarTrainingPage extends React.Component {
       contents = this.renderIntro()
     }
 
+    let Exercise = this.exercises[this.state.currentExerciseIdx]
+
     return <div className="ear_training_page">
       <div className="exercise_header">
-        <div className="exercise_label">Melody playback</div>
-        <button>Settings</button>
+        <div className="exercise_label">{Exercise ? Exercise.exerciseName : ""}</div>
+        <button
+          onClick={e => this.setState({
+            settingsPanelOpen: !this.state.settingsPanelOpen
+          })}
+          type="button">Settings</button>
       </div>
       {contents}
+      <TransitionGroup>
+        {this.renderSettings()}
+      </TransitionGroup>
     </div>
   }
 
+  renderSettings() {
+    if (!this.state.settingsPanelOpen) {
+      return
+    }
+
+    let Exercise = this.exercises[this.state.currentExerciseIdx]
+
+    return <CSSTransition classNames="slide_right" timeout={{enter: 200, exit: 100}}>
+      <SettingsPanel
+        close={this.closeSettingsPanel}
+      />
+    </CSSTransition>
+  }
+
   renderExercise() {
-    return <MelodyPlaybackExercise
+    let Exercise = this.exercises[this.state.currentExerciseIdx]
+
+    return <Exercise
       midi={this.props.midi}
       midiOutput={this.props.midiOutput}
       midiInput={this.props.midiInput}
