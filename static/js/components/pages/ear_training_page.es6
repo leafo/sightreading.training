@@ -200,21 +200,39 @@ class MelodyPlaybackExercise extends React.Component {
       ...STAVES.filter(s => s.mode == "notes")
     ]
 
-    let page = <div className="page_container">
-      <p>Click <em>New melody</em> to generate a random melody, then play it
-      back using the onscreen keyboard or your MIDI input device. You'll be given
-      a new melody automatically. You can trigger the melody to replay by
-      interacting with any of the sliders or pedals on your MIDI controller.</p>
+    let instructions
+    if (this.state.showInstructions) {
+      instructions = <p>Click <em>New melody</em> to generate a random melody, then play it
+        back using the onscreen keyboard or your MIDI input device. You'll be given
+        a new melody after figuring out what you heard. You can trigger current the
+        melody to replay by interacting with any of the sliders or pedals on your
+        MIDI controller.</p>
+    } else {
+      instructions = <p>
+        <a href="javascript:void(0)" onClick={e => {
+          e.preventDefault()
+          this.setState({ showInstructions: true })
+        }}>Show instructions...</a>
+      </p>
+    }
 
-      <div>
+
+    let page = <div className="page_container">
+      {instructions}
+      <div className="stat_controls">
         {repeatButton}
-        {" "}
         <button disabled={locked} onClick={(e) => {
           e.preventDefault()
           this.pushMelody()
         }}>New melody</button>
-        {" "}
         <span>{this.state.statusMessage}</span>
+
+        <div className="stats_row">
+          <div className="stat_container">
+            <div className="value">{this.state.successes}</div>
+            <div className="label">Melodies</div>
+          </div>
+        </div>
       </div>
 
       <fieldset>
@@ -278,12 +296,6 @@ class MelodyPlaybackExercise extends React.Component {
 
     return <div className="melody_playback_exercise keyboard_open">
       <div className="workspace">
-        <div className="stats_row">
-          <div className="stat_container">
-            <div className="value">{this.state.successes}</div>
-            <div className="label">Plays</div>
-          </div>
-        </div>
         {page}
       </div>
       {this.renderKeyboard()}
