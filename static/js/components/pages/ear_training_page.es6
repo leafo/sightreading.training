@@ -8,19 +8,25 @@ import Select from "st/components/select"
 
 import {parseMidiMessage} from "st/midi"
 import {setTitle} from "st/globals"
-import {MajorScale} from "st/music"
+import {MajorScale, parseNote} from "st/music"
 import {RandomNotes} from "st/generators"
 import {STAVES} from "st/data"
 
 import * as types from "prop-types"
 import {TransitionGroup, CSSTransition} from "react-transition-group"
 
+import Keyboard from "st/components/keyboard"
+
 class MelodyRecognitionExercise extends React.Component {
-  static exerciseName = "Meldoy Recognition"
+  static exerciseName = "Melody Recognition"
   static exerciseId = "melody_recognition"
 
   render() {
-    return <div>Hi</div>
+    return <div className="melody_recognition">
+      <div className="page_container">
+        <h2>Hi</h2>
+      </div>
+    </div>
   }
 }
 
@@ -39,6 +45,7 @@ class MelodyPlaybackExercise extends React.Component {
     this.state = {
       noteHistory: new NoteList([]),
       touchedNotes: {},
+      keyboardHeldNotes: {},
       notesPerMelody: 3,
       notesPerColumn: 1,
       continuousMelody: false,
@@ -49,6 +56,9 @@ class MelodyPlaybackExercise extends React.Component {
       rand: new MersenneTwister(),
       successes: 0,
     }
+
+    this.keyboardPressNote = this.keyboardPressNote.bind(this)
+    this.keyboardReleaseNote = this.keyboardReleaseNote.bind(this)
   }
 
   midiOutputs() {
@@ -75,34 +85,14 @@ class MelodyPlaybackExercise extends React.Component {
     }
 
     if (e == "noteOn") {
-      this.pressedNotes = this.pressedNotes || {}
-
-      let newColumn = Object.keys(this.pressedNotes) == 0
-
-      if (newColumn) {
-        this.state.noteHistory.push([note])
-      } else {
-        this.state.noteHistory[this.state.noteHistory.length - 1].push(note)
-      }
-
-      this.pressedNotes[note] = this.pressedNotes[note] || 0
-      this.pressedNotes[note] += 1
+      this.pressNote(note)
     }
 
     if (e == "noteOff") {
-      if (!this.pressedNotes) { return }
-      if (!this.pressedNotes[note]) { return }
-      this.pressedNotes[note] -= 1
-
-      if (this.pressedNotes[note] < 1) {
-        delete this.pressedNotes[note]
-      }
-
-      if (Object.keys(this.pressedNotes).length == 0) {
-        this.checkForMatch()
-      }
+      this.releaseNote(note)
     }
   }
+
 
   // see if the pressed notes buffer matches the melody
   checkForMatch() {
@@ -207,14 +197,7 @@ class MelodyPlaybackExercise extends React.Component {
       ...STAVES.filter(s => s.mode == "notes")
     ]
 
-    let warning
-
-    if (!this.props.midiInput) {
-      warning = <div className="warning">Select a MIDI input in the toolbar to enter notes.</div>
-    }
-
     let page = <div className="page_container">
-      {warning}
       <div>
         {repeatButton}
         {" "}
@@ -293,6 +276,7 @@ class MelodyPlaybackExercise extends React.Component {
         </div>
       </div>
       {page}
+      {this.renderKeyboard()}
     </div>
   }
 
@@ -310,6 +294,74 @@ class MelodyPlaybackExercise extends React.Component {
           ...MelodyPlaybackExercise.ROOTS.map((r) => ({ name: `${r} major`, value: r }))
         ]}/>
     </label>
+  }
+
+  keyboardPressNote(note) {
+    if (this.props.midiOutput) {
+      this.props.midiOutput.noteOn(parseNote(note), 100)
+    }
+
+    this.pressNote(note)
+  }
+
+  keyboardReleaseNote(note) {
+    if (this.props.midiOutput) {
+      this.props.midiOutput.noteOff(parseNote(note))
+    }
+
+    this.releaseNote(note)
+  }
+
+  pressNote(note) {
+    this.setState({
+      keyboardHeldNotes: {
+        ...this.state.keyboardHeldNotes,
+        [note]: true
+      }
+    })
+
+    this.pressedNotes = this.pressedNotes || {}
+
+    let newColumn = Object.keys(this.pressedNotes) == 0
+
+    if (newColumn) {
+      this.state.noteHistory.push([note])
+    } else {
+      this.state.noteHistory[this.state.noteHistory.length - 1].push(note)
+    }
+
+    this.pressedNotes[note] = this.pressedNotes[note] || 0
+    this.pressedNotes[note] += 1
+  }
+
+  releaseNote(note) {
+      if (!this.pressedNotes) { return }
+      if (!this.pressedNotes[note]) { return }
+      this.pressedNotes[note] -= 1
+
+      if (this.pressedNotes[note] < 1) {
+        delete this.pressedNotes[note]
+      }
+
+      if (Object.keys(this.pressedNotes).length == 0) {
+        this.checkForMatch()
+      }
+
+    this.setState({
+      keyboardHeldNotes: {
+        ...this.state.keyboardHeldNotes,
+        [note]: false
+      }
+    })
+  }
+
+  renderKeyboard() {
+    return <Keyboard
+      lower={this.state.melodyRange[0]}
+      upper={this.state.melodyRange[1]}
+      heldNotes={this.state.keyboardHeldNotes}
+      onKeyDown={this.keyboardPressNote}
+      onKeyUp={this.keyboardReleaseNote} />
   }
 }
 
@@ -389,6 +441,12 @@ export default class EarTrainingPage extends React.Component {
     })
   }
 
+  onMidiMessage(message) {
+    if (this.currentExercise) {
+      this.currentExercise.onMidiMessage(message)
+    }
+  }
+
   render() {
     let contents
     if (this.props.midiOutput) {
@@ -436,6 +494,7 @@ export default class EarTrainingPage extends React.Component {
     let Exercise = this.exercises[this.state.currentExerciseIdx]
 
     return <Exercise
+      ref={(e) => this.currentExercise = e}
       midi={this.props.midi}
       midiOutput={this.props.midiOutput}
       midiInput={this.props.midiInput}
