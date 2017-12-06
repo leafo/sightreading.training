@@ -119,24 +119,42 @@ class MelodyRecognitionExercise extends React.Component {
 
     let currentSongTools
     if (current) {
+      let stopSong
+      if (this.state.playingTimer) {
+        stopSong = <button
+          type="button"
+          onClick={e => this.state.playingTimer.stop() }>Stop</button>
+      }
+
       currentSongTools = <div>
         {current ? <span>{current.interval} - {current.title}</span> : ""}
         <button 
           disabled={!!this.state.playing}
           type="button"
           onClick={e =>
-            console.log("play the root")
+            console.log("TODO: play the root")
           }>Play root</button>
+
         <button
           type="button"
           disabled={!!this.state.playing}
           onClick={e => {
             let song = this.state.melodySongs[current.interval]
-            this.setState({ playing: true })
-            song.play(this.props.midiOutput).then(() => this.setState({
-              playing: false
-            }))
+            let timer = song.play(this.props.midiOutput)
+
+            this.setState({
+              playing: true,
+              playingTimer: timer
+            })
+
+            timer.getPromise().then(() => {
+              this.setState({
+                playing: false,
+                playingTimer: null,
+              })
+            })
         }}>Play song</button>
+        {stopSong}
       </div>
     }
 

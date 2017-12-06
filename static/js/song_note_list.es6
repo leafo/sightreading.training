@@ -10,13 +10,20 @@ class SongNoteTimer {
     this.onStart = opts.onStart
   }
 
+  getPromise() {
+    return this.running
+  }
+
   start() {
     if (this.running) {
-      console.error("already running")
+      console.error("timer already running")
       return
     }
 
-    this.running = true
+    this.running = new Promise((resolve, reject) => {
+      this.promiseResolve = resolve
+      this.promiseReject = reject
+    })
 
     if (this.onStart) {
       this.onStart()
@@ -40,10 +47,20 @@ class SongNoteTimer {
   }
 
   stop() {
+    if (!this.running) {
+      console.error("timer not running")
+      return
+    }
+
     if (this.onStop) {
       this.onStop()
     }
-    this.running = false
+
+    this.promiseResolve()
+
+    delete this.running
+    delete this.promiseResolve
+    delete this.promiseReject
   }
 }
 
@@ -66,63 +83,62 @@ export class SongNoteList extends Array {
     return song
   }
 
+
   play(midiOutput) {
-    return new Promise((resolve, reject) => {
-      // organize all notes by their start beat
-      let currentIdx = 0
-      let notes = [...this]
-      notes.sort((a,b) => a.start - b.start)
+    // organize all notes by their start beat
+    let currentIdx = 0
+    let notes = [...this]
+    notes.sort((a,b) => a.start - b.start)
 
-      if (!notes.length) {
-        return resolve()
-      }
+    if (!notes.length) {
+      return resolve()
+    }
 
-      let startBeat = notes[0].start
+    let startBeat = notes[0].start
 
-      let playingNotes = []
+    let playingNotes = []
 
-      let timer = new SongNoteTimer({
-        bpm: 60,
-        onStop: () => {
-          playingNotes.forEach(note => midiOutput.noteOff(parseNote(note.note)))
-          resolve()
-        },
-        onTime: (beat) => {
-          beat = beat + startBeat // start the melody immediately
-          while (notes[currentIdx] && (beat >= notes[currentIdx].start)) {
-            let note = notes[currentIdx]
-            midiOutput.noteOn(parseNote(note.note), 100)
-            playingNotes.push(note)
-            currentIdx += 1
-          }
+    let timer = new SongNoteTimer({
+      bpm: 60,
+      onStop: () => {
+        playingNotes.forEach(note => midiOutput.noteOff(parseNote(note.note)))
+      },
+      onTime: (beat) => {
+        beat = beat + startBeat // start the melody immediately
+        while (notes[currentIdx] && (beat >= notes[currentIdx].start)) {
+          let note = notes[currentIdx]
+          midiOutput.noteOn(parseNote(note.note), 100)
+          playingNotes.push(note)
+          currentIdx += 1
+        }
 
-          let haveFinished = false
-          for (let note of playingNotes) {
-            if (beat >= note.start + note.duration) {
-              haveFinished = true
-              break
-            }
-          }
-
-          if (haveFinished) {
-            playingNotes = playingNotes.filter(note => {
-              let finished = beat >= note.start + note.duration
-              if (finished) {
-                midiOutput.noteOff(parseNote(note.note))
-              }
-
-              return !finished
-            })
-          }
-
-          if (currentIdx >= notes.length && playingNotes.length == 0) {
-            timer.stop()
+        let haveFinished = false
+        for (let note of playingNotes) {
+          if (beat >= note.start + note.duration) {
+            haveFinished = true
+            break
           }
         }
-      })
 
-      timer.start()
+        if (haveFinished) {
+          playingNotes = playingNotes.filter(note => {
+            let finished = beat >= note.start + note.duration
+            if (finished) {
+              midiOutput.noteOff(parseNote(note.note))
+            }
+
+            return !finished
+          })
+        }
+
+        if (currentIdx >= notes.length && playingNotes.length == 0) {
+          timer.stop()
+        }
+      }
     })
+
+    timer.start()
+    return timer
   }
 
   humanize(amount=1) {
