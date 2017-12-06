@@ -15,17 +15,25 @@ import {STAVES} from "st/data"
 import * as types from "prop-types"
 import {TransitionGroup, CSSTransition} from "react-transition-group"
 
-let ROOTS = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
+class MelodyRecognitionExercise extends React.Component {
+  static exerciseName = "Meldoy Recognition"
+  static exerciseId = "melody_recognition"
 
+  render() {
+    return <div>Hi</div>
+  }
+}
 
 class MelodyPlaybackExercise extends React.Component {
   static exerciseName = "Melody Playback"
   static exerciseId = "melody_playback"
 
+  static ROOTS = [
+    "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"
+  ]
+
   constructor(props) {
     super(props)
-
-
     this.setNotesPerMelody = value => this.setState({ notesPerMelody: value })
 
     this.state = {
@@ -145,7 +153,7 @@ class MelodyPlaybackExercise extends React.Component {
     let scaleRoot = null
 
     if (this.state.meldoyScaleRoot == "random") {
-      scaleRoot = ROOTS[this.state.rand.int() % ROOTS.length]
+      scaleRoot = MelodyPlaybackExercise.ROOTS[this.state.rand.int() % MelodyPlaybackExercise.ROOTS.length]
     } else {
       scaleRoot = this.state.meldoyScaleRoot
     }
@@ -299,7 +307,7 @@ class MelodyPlaybackExercise extends React.Component {
         onChange={(val) => this.setState({ meldoyScaleRoot: val})}
         options={[
           { name: "Random", value: "random"},
-          ...ROOTS.map((r) => ({ name: `${r} major`, value: r }))
+          ...MelodyPlaybackExercise.ROOTS.map((r) => ({ name: `${r} major`, value: r }))
         ]}/>
     </label>
   }
@@ -308,23 +316,37 @@ class MelodyPlaybackExercise extends React.Component {
 class SettingsPanel extends React.PureComponent {
   static propTypes = {
     close: types.func,
+    // not settings yet
     // updateSettings: types.func.isRequired,
-    // exercises: types.array.isRequired,
-    // currentExercise: types.func.isRequired, // class
     // currentExerciseSettings: types.object.isRequired,
+    exercises: types.array.isRequired,
+    setExercise: types.func.isRequired,
+    currentExercise: types.func.isRequired, // class
   }
 
   render() {
+    const current = this.props.currentExercise
+
     return <section className="settings_panel">
       <div className="settings_header">
         <button onClick={this.props.close}>Close</button>
         <h3>Settings</h3>
       </div>
+
+      <section className="settings_group">
+        <Select
+          name="exercise"
+          className="exercise_selector"
+          value={current ? current.exerciseId : null}
+          onChange={this.props.setExercise}
+          options={this.props.exercises.map(e => ({
+            name: e.exerciseName,
+            value: e.exerciseId
+          }))}/>
+      </section>
     </section>
   }
 }
-
-
 
 export default class EarTrainingPage extends React.Component {
   componentDidMount() {
@@ -335,7 +357,8 @@ export default class EarTrainingPage extends React.Component {
     super(props)
 
     this.exercises = [
-      MelodyPlaybackExercise
+      MelodyPlaybackExercise,
+      MelodyRecognitionExercise
     ]
 
     this.state = {
@@ -365,7 +388,6 @@ export default class EarTrainingPage extends React.Component {
       currentExerciseIdx: idx,
     })
   }
-
 
   render() {
     let contents
@@ -403,6 +425,9 @@ export default class EarTrainingPage extends React.Component {
     return <CSSTransition classNames="slide_right" timeout={{enter: 200, exit: 100}}>
       <SettingsPanel
         close={this.closeSettingsPanel}
+        setExercise={this.setExercise}
+        exercises={this.exercises}
+        currentExercise={Exercise}
       />
     </CSSTransition>
   }
