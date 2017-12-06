@@ -135,7 +135,7 @@ class MelodyRecognitionExercise extends React.Component {
   }
 
   render() {
-    return <div className="melody_recognition">
+    return <div className="melody_recognition_exercise">
       <div className="page_container">
         {this.state.loading ? "Loading" : this.renderSongPlayer()}
       </div>
@@ -184,7 +184,7 @@ class MelodyRecognitionExercise extends React.Component {
     }
 
     return <div className="song_selector">
-      <div classNam="global_controls">
+      <div className="global_controls">
         <button
           disabled={this.state.playing || false}
           onClick={(e) => {
