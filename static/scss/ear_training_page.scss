@@ -27,19 +27,39 @@
         }
     }
 
-    .melody_generator {
-        max-width: 600px;
-        margin: 60px auto;
+    .melody_playback_exercise {
 
-        @media (max-width: 720px) {
-            margin: 0;
+        > .workspace {
+            top: 95px;
+            display: block;
+
+            > .stats_row  {
+                max-width: 600px;
+                margin: 20px auto;
+
+                @media (max-width: 720px) {
+                    display: none;
+                }
+            }
+
+            > .page_container {
+                width: 100%;
+                max-width: 600px;
+                margin: 20px auto;
+                box-sizing: border-box;
+
+                @media (max-width: 720px) {
+                    margin: 0;
+                }
+            }
         }
 
-
-        > .page_container {
-            margin: 0;
-            width: auto;
+        .page_container {
+            > p:first-child {
+                margin-top: 0;
+            }
         }
+
 
         .stats_row {
             text-align: right;

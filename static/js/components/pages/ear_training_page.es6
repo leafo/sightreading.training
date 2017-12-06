@@ -16,6 +16,9 @@ import * as types from "prop-types"
 import {TransitionGroup, CSSTransition} from "react-transition-group"
 
 import Keyboard from "st/components/keyboard"
+import MidiButton from "st/components/midi_button"
+
+import {dispatch, trigger} from "st/events"
 
 class MelodyRecognitionExercise extends React.Component {
   static exerciseName = "Melody Recognition"
@@ -198,6 +201,11 @@ class MelodyPlaybackExercise extends React.Component {
     ]
 
     let page = <div className="page_container">
+      <p>Click <em>New melody</em> to generate a random melody, then play it
+      back using the onscreen keyboard or your MIDI input device. You'll be given
+      a new melody automatically. You can trigger the melody to replay by
+      interacting with any of the sliders or pedals on your MIDI controller.</p>
+
       <div>
         {repeatButton}
         {" "}
@@ -268,14 +276,16 @@ class MelodyPlaybackExercise extends React.Component {
       </fieldset>
     </div>
 
-    return <div className="melody_generator">
-      <div className="stats_row">
-        <div className="stat_container">
-          <div className="value">{this.state.successes}</div>
-          <div className="label">Plays</div>
+    return <div className="melody_playback_exercise keyboard_open">
+      <div className="workspace">
+        <div className="stats_row">
+          <div className="stat_container">
+            <div className="value">{this.state.successes}</div>
+            <div className="label">Plays</div>
+          </div>
         </div>
+        {page}
       </div>
-      {page}
       {this.renderKeyboard()}
     </div>
   }
@@ -457,15 +467,18 @@ export default class EarTrainingPage extends React.Component {
 
     let Exercise = this.exercises[this.state.currentExerciseIdx]
 
-    return <div className="ear_training_page">
+    let header = 
       <div className="exercise_header">
         <div className="exercise_label">{Exercise ? Exercise.exerciseName : ""}</div>
         <button
           onClick={e => this.setState({
             settingsPanelOpen: !this.state.settingsPanelOpen
           })}
-          type="button">Settings</button>
+          type="button">Choose Exercise</button>
       </div>
+
+    return <div className="ear_training_page">
+      {this.props.midiOutput ? header : null}
       {contents}
       <TransitionGroup>
         {this.renderSettings()}
@@ -510,12 +523,14 @@ export default class EarTrainingPage extends React.Component {
 
     return <div className="page_container choose_device">
       <h3>Choose a MIDI output device for ear training</h3>
-      <p>This tool requires a MIDI device to play notes to. It will play you a
-      melody, then you'll need to replay it. Once you play the correct melody the
-      next melody will automatically play. You can trigger the melody to reply by
-      interacting with any of the sliders or pedals on your MIDI controller.</p>
+      <p>The ear training tools require a MIDI output device in order to play notes. Select your MIDI devices:</p>
 
-      <p>Select a MIDI output device by clicking the device selector in the top toolbar.</p>
+
+      <MidiButton
+        midiInput={this.props.midiOutput}
+        pickMidi={() => {
+          trigger(this, "pickMidi")
+        }} />
     </div>
   }
 }

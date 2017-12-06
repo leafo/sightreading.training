@@ -21,20 +21,7 @@ import {BrowserRouter, Route, Link, NavLink} from "react-router-dom"
 
 import {TransitionGroup, CSSTransition} from "react-transition-group"
 
-let MidiButton = (props) =>
-  <button
-    onClick={(e) => {
-      e.preventDefault()
-      props.pickMidi()
-    }}
-    className="midi_button">
-      <div>
-        <img src="/static/svg/midi.svg" alt="MIDI" />
-        <span className="current_input_name">
-          {props.midiInput ? props.midiInput.name : "Select device"}
-        </span>
-      </div>
-  </button>
+import MidiButton from "st/components/midi_button"
 
 class Layout extends React.Component {
   constructor(props) {
@@ -224,7 +211,7 @@ class Layout extends React.Component {
       {userLinks}
       {userPanel}
       <MidiButton
-        {...this.childProps()}
+        midiInput={this.state.midiInput}
         pickMidi={() => {
           trigger(this, "pickMidi")
         }} />
