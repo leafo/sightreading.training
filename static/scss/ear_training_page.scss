@@ -76,7 +76,11 @@
                     border-radius: 3px;
                     display: flex;
                     align-items: center;
-                    padding: 5px 7px;
+
+
+                    > * {
+                        padding: 5px 3px;
+                    }
 
                     > span {
                         font-size: 14px;
@@ -86,6 +90,14 @@
                     code {
                         min-width: 30px;
                         text-align: center;
+                    }
+
+                    > .shuffle_button {
+                        height: 100%;
+                        padding: 2px 8px;
+                        border: 0;
+                        border-radius: 0;
+                        font-size: 12px;
                     }
 
                     > .slider_component {

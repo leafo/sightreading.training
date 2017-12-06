@@ -225,13 +225,21 @@ class MelodyRecognitionExercise extends React.Component {
         <label className="slider_group">
           <span>Transpose</span>
           <Slider
-            min={-12}
-            max={12}
+            min={-24}
+            max={24}
             onChange={(value) => {
               this.setState({ playbackTranspose: value })
             }}
             value={this.state.playbackTranspose} />
           <code>{this.state.playbackTranspose}</code>
+          <button
+          type="button"
+            onClick={e=>
+              this.setState({
+                playbackTranspose: (this.state.rand.int() % 36) - 18
+              })
+            }
+            className="shuffle_button">🔀</button>
         </label>
       </div>
       {currentSongTools}
