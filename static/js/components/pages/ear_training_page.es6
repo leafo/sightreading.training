@@ -78,6 +78,8 @@ class MelodyRecognitionExercise extends React.Component {
     super(props)
     this.state = {
       loading: true,
+      playbackBpm: 60,
+      playbackTranspose: 0,
       rand: new MersenneTwister(),
     }
   }
@@ -113,7 +115,9 @@ class MelodyRecognitionExercise extends React.Component {
   }
 
   playSong(song) {
-    let timer = song.play(this.props.midiOutput)
+    let timer = song.play(this.props.midiOutput, {
+      bpm: this.state.playbackBpm
+    })
 
     this.setState({
       playing: true,
@@ -168,6 +172,7 @@ class MelodyRecognitionExercise extends React.Component {
             this.playSong(this.state.melodySongs[current.interval])
         }}>Play song</button>
         {stopSong}
+
       </div>
     }
 
@@ -178,6 +183,30 @@ class MelodyRecognitionExercise extends React.Component {
           currentMelody: interval
         })
       }}>Next melody</button>
+      <label>
+        <span>BPM</span>
+        <Slider
+          min={40}
+          max={160}
+          onChange={(value) => {
+            this.setState({ playbackBpm: value })
+          }}
+          value={this.state.playbackBpm} />
+        <code>{this.state.playbackBpm}</code>
+      </label>
+
+      <label>
+        <span>Transpose</span>
+        <Slider
+          min={-12}
+          max={12}
+          onChange={(value) => {
+            this.setState({ playbackTranspose: value })
+          }}
+          value={this.state.playbackTranspose} />
+        <code>{this.state.playbackTranspose}</code>
+      </label>
+
       {currentSongTools}
     </div>
   }

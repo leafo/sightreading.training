@@ -84,7 +84,7 @@ export class SongNoteList extends Array {
   }
 
 
-  play(midiOutput) {
+  play(midiOutput, opts={}) {
     // organize all notes by their start beat
     let currentIdx = 0
     let notes = [...this]
@@ -99,7 +99,7 @@ export class SongNoteList extends Array {
     let playingNotes = []
 
     let timer = new SongNoteTimer({
-      bpm: 60,
+      bpm: opts.bpm,
       onStop: () => {
         playingNotes.forEach(note => midiOutput.noteOff(parseNote(note.note)))
       },
