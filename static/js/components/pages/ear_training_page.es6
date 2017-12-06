@@ -239,7 +239,6 @@ class MelodyRecognitionExercise extends React.Component {
   }
 
   renderIntervalSettings() {
-    console.log(this.state.enabledIntervals)
     let inputs = MelodyRecognitionExercise.melodies.map((m) => {
       let key = `${m.interval}-${m.direction}`
 
@@ -262,10 +261,12 @@ class MelodyRecognitionExercise extends React.Component {
       </li>
     })
 
-    return <fieldset className="enabled_intervals">
-      <legend>Intervals</legend>
-      <ul>{inputs}</ul>
-    </fieldset>
+    return <section className="interval_settings">
+      <fieldset className="enabled_intervals">
+        <legend>Intervals</legend>
+        <ul>{inputs}</ul>
+      </fieldset>
+    </section>
   }
 }
 
