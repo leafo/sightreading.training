@@ -129,7 +129,7 @@ export default class PlayAlongPage extends React.Component {
     super(props)
 
     this.state = {
-      heldNotes: {},
+      heldNotes: {}, // notes by name, for the keyboard
       bpm: 60,
       pixelsPerBeat: StaffSongNotes.defaultPixelsPerBeat,
       loopLeft: 0,
@@ -211,7 +211,7 @@ export default class PlayAlongPage extends React.Component {
     }
 
     this.setState({loading: true})
-    var request = new XMLHttpRequest()
+    let request = new XMLHttpRequest()
 
     request.open("GET", `/static/music/${name}.lml?${+new Date()}`)
     request.send()
@@ -438,7 +438,7 @@ export default class PlayAlongPage extends React.Component {
       this.state.songTimer.start(this.state.bpm)
     }
 
-    let songNoteIdx = this.state.song.matchNote(note, this.currentBeat)
+    let songNoteIdx = this.state.song.matchNoteFast(note, this.currentBeat)
     let songNote = this.state.song[songNoteIdx]
 
     let recordHit = false

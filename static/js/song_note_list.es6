@@ -66,6 +66,8 @@ export class SongNoteTimer {
 
 // like note list but notes in time
 export class SongNoteList extends Array {
+  static bucketSize = 8 // bucket size in beats
+
   constructor() {
     super()
     Object.setPrototypeOf(this, SongNoteList.prototype)
@@ -91,6 +93,10 @@ export class SongNoteList extends Array {
     )
 
     return song
+  }
+
+  clearCache() {
+    delete this.buckets
   }
 
   play(midiOutput, opts={}) {
@@ -233,6 +239,73 @@ export class SongNoteList extends Array {
     }
   }
 
+  getBucketRange(start, stop) {
+    let bucketSize = SongNoteList.bucketSize
+
+    let left = Math.floor(start / bucketSize)
+    let right = Math.ceil(stop / bucketSize)
+    return [left, right]
+  }
+
+  buildBuckets() {
+    let buckets = {}
+    this.forEach((songNote, idx) => {
+      let [left, right] = this.getBucketRange(songNote.getStart(), songNote.getStop())
+      for (let i=left; i < right; i++) {
+        if (!buckets[i]) buckets[i] = []
+        buckets[i].push(idx)
+      }
+    })
+
+    return buckets
+  }
+
+  // get the buckets to scan to match notes for beat
+  adjacentBuckets(beat) {
+    return this.getBucketRange(beat - 1, beat + 1)
+  }
+
+  getBuckets() {
+    if (!this.buckets) {
+      this.buckets = this.buildBuckets()
+    }
+
+    return this.buckets
+  }
+
+  matchNoteFast(findNote, beat) {
+    let buckets = this.getBuckets()
+    let [left, right] = this.adjacentBuckets(beat)
+
+    let foundIdx = null
+
+    for (let bucketIdx = left; bucketIdx < right; bucketIdx ++) {
+      let bucket = buckets[bucketIdx]
+      if (!bucket) continue
+      for (let songNoteIdx of bucket) {
+        let note = this[songNoteIdx]
+
+        if (foundIdx == songNoteIdx) {
+          continue
+        }
+
+        if (parseNote(note.note) != parseNote(findNote)) {
+          continue
+        }
+
+        if (foundIdx != null) {
+          let found = this[foundIdx]
+          if (Math.abs(found.start - beat) > Math.abs(note.start - beat)) {
+            foundIdx = songNoteIdx
+          }
+        } else {
+          foundIdx = songNoteIdx
+        }
+      }
+    }
+
+    return foundIdx
+  }
 
   // see if we're hitting a valid note
   // TODO: this is very slow
