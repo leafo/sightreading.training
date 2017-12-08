@@ -108,6 +108,10 @@ class MelodyRecognitionExercise extends React.Component {
             return reject(`Failed to parse: ${name}`)
           }
 
+          // transpose to middle c
+          let root = parseNote(song[0].note)
+          song = song.transpose(60 - root)
+
           resolve(song)
         }
 
