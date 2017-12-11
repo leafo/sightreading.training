@@ -10,7 +10,7 @@ $default_width: 900px;
 $line_spacing: 30px;
 $body_background: #e7e7e7;
 
-$settings_panel_width: 250px;
+$settings_panel_width: 270px;
 
 $teal: #7ED6D7;
 $red: #fe4e50;
@@ -21,6 +21,8 @@ $yellow: #FDBF6C;
 $purple: #A287C0;
 
 $error_color: #D14343;
+
+$header_height: 50px;
 
 @mixin unselectable {
     -moz-user-select: none;

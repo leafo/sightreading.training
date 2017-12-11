@@ -13,6 +13,10 @@
     border-right: 2px solid $border_color;
     z-index: 1;
 
+    @media (min-height: 750px) {
+        top: $header_height;
+    }
+
     &.slide_right-enter {
         opacity: 0;
         transform: translate(-20%, 0);
