@@ -120,12 +120,6 @@ export class SongNoteList extends Array {
       },
       onTime: (beat) => {
         beat = beat + startBeat // start the melody immediately
-        while (notes[currentIdx] && (beat >= notes[currentIdx].start)) {
-          let note = notes[currentIdx]
-          midiOutput.noteOn(parseNote(note.note), 100)
-          playingNotes.push(note)
-          currentIdx += 1
-        }
 
         let haveFinished = false
         for (let note of playingNotes) {
@@ -144,6 +138,13 @@ export class SongNoteList extends Array {
 
             return !finished
           })
+        }
+
+        while (notes[currentIdx] && (beat >= notes[currentIdx].start)) {
+          let note = notes[currentIdx]
+          midiOutput.noteOn(parseNote(note.note), 100)
+          playingNotes.push(note)
+          currentIdx += 1
         }
 
         if (currentIdx >= notes.length && playingNotes.length == 0) {
