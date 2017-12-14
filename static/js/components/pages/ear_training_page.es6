@@ -238,7 +238,9 @@ class MelodyRecognitionExercise extends React.Component {
             onClick={e => {
               let song = this.state.melodySongs[current.interval]
               let first = new SongNoteList()
-              first.push(song[0])
+              let note = song[0].clone()
+              note.duration = 1
+              first.push(note)
               this.playSong(first)
             }}>Play root</button>
 
