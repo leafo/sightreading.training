@@ -116,6 +116,8 @@ export default class MelodyRecognitionExercise extends React.Component {
       playbackTranspose: 0,
       enabledIntervals: {},
       rand: new MersenneTwister(),
+
+      autoplay_randomize_root: true,
     }
   }
 
@@ -165,6 +167,51 @@ export default class MelodyRecognitionExercise extends React.Component {
     })
   }
 
+  playCurrentRoot() {
+    let current = this.state.currentMelody
+
+    if (!current) {
+      return
+    }
+
+    let song = this.state.melodySongs[current.interval]
+    let first = new SongNoteList()
+    let note = song[0].clone()
+    note.duration = 1
+    first.push(note)
+    this.playSong(first)
+  }
+
+  playCurrentInterval() {
+    let current = this.state.currentMelody
+
+    if (!current) {
+      return
+    }
+
+    let song = this.state.melodySongs[current.interval]
+    let first = new SongNoteList()
+    let note1 = song[0].clone()
+    note1.duration = 1
+
+    let note2 = song[1].clone()
+    noter2.duration = 1
+
+    first.push(note1)
+    first.push(note2)
+    this.playSong(first)
+  }
+
+  playCurrentSong() {
+    let current = this.state.currentMelody
+
+    if (!current) {
+      return
+    }
+
+    this.playSong(this.state.melodySongs[current.interval])
+  }
+
   playSong(song) {
     song = song.transpose(this.state.playbackTranspose)
 
@@ -193,9 +240,50 @@ export default class MelodyRecognitionExercise extends React.Component {
         <div className="page_container">
           {this.renderSongPlayer()}
           {this.renderIntervalSettings()}
+          {this.renderAutoplayer()}
         </div>
       }
     </div>
+  }
+
+  renderAutoplayer() {
+    return <section className="auto_player">
+      <h3>Autoplay mode</h3>
+      <fieldset>
+        <legend>Autoplay options</legend>
+        <label>
+          <input
+            checked={this.state.autoplay_randomize_root}
+            onChange={e => {
+              this.setState({
+                autoplay_randomize_root: e.target.checked
+              })
+            }}
+            type="checkbox" /> Randomize root
+        </label>
+      </fieldset>
+
+      <p>
+        <button
+          onClick={(e) => {
+            e.preventDefault()
+            if (this.state.autoplayTimer) {
+              window.clearTimeout(this.state.autoplayTimer)
+              this.setState({
+                autoplayTimer: undefined
+              })
+            } else {
+              this.nextMelody()
+              // play the interval
+              // wait a bit
+              // play the melody
+              // repeat
+
+            }
+          }}
+          >{this.state.autoplayTimer ? "Stop" : "Start autoplay"}</button>
+      </p>
+    </section>
   }
 
   renderSongPlayer() {
@@ -221,19 +309,14 @@ export default class MelodyRecognitionExercise extends React.Component {
             disabled={!!this.state.playing}
             type="button"
             onClick={e => {
-              let song = this.state.melodySongs[current.interval]
-              let first = new SongNoteList()
-              let note = song[0].clone()
-              note.duration = 1
-              first.push(note)
-              this.playSong(first)
+              this.playCurrentRoot()
             }}>Play root</button>
 
           <button
             type="button"
             disabled={!!this.state.playing}
             onClick={e => {
-              this.playSong(this.state.melodySongs[current.interval])
+              this.playCurrentSong()
           }}>Play song</button>
           {stopSong}
         </div>
