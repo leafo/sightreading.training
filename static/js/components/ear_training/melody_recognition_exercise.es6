@@ -250,7 +250,6 @@ export default class MelodyRecognitionExercise extends React.Component {
 
     timer = {
       stop: () => {
-        console.log("stopping delay");
         window.clearTimeout(t)
       }
     }
@@ -261,6 +260,12 @@ export default class MelodyRecognitionExercise extends React.Component {
   }
 
   autoplayNextInterval() {
+    if (this.state.autoplayRandomizeRoot) {
+      this.setState({
+        playbackTranspose: (this.state.rand.int() % 36) - 18
+      })
+    }
+
     this.nextMelody(() => {
       let timer = this.playCurrentInterval()
       this.setState({
