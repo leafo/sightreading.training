@@ -4,7 +4,7 @@ import * as React from "react"
 import {moment, chartjs} from "lib"
 import {setTitle} from "st/globals"
 
-import {Line} from 'react-chartjs-2';
+import {Line} from "react-chartjs-2";
 
 export default class StatsPage extends React.Component {
   constructor(props) {

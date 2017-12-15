@@ -13,6 +13,9 @@ include_rules
 : foreach components/flash_cards/*.es6 |> !babel_amd |> components/flash_cards/%B.js
 : components/flash_cards/*.js |> !join |> components_flash_cards.js
 
+: foreach components/ear_training/*.es6 |> !babel_amd |> components/ear_training/%B.js
+: components/ear_training/*.js |> !join |> components_ear_training.js
+
 : foreach *.es6 |> !babel_amd |> %B.js
 : foreach *.pegjs |> !pegjs |> %B.es6
 

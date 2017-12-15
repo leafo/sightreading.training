@@ -106,7 +106,7 @@ export class SongNoteList extends Array {
     notes.sort((a,b) => a.start - b.start)
 
     if (!notes.length) {
-      return resolve()
+      return null
     }
 
     let startBeat = notes[0].start

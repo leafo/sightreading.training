@@ -35,7 +35,7 @@ export default class PositionField extends React.PureComponent {
       return
     }
 
-    if (this.state.editValue.match(/[^0-9\.]/)) {
+    if (this.state.editValue.match(/[^0-9.]/)) {
       this.cancelEdit()
     }
 
