@@ -11,8 +11,8 @@ import MidiButton from "st/components/midi_button"
 
 import {dispatch, trigger} from "st/events"
 
-import MelodyRecognitionExercise from "st/ear_training/melody_recognition_exercise"
-import MelodyPlaybackExercise from "st/ear_training/melody_playback_exercise"
+import MelodyRecognitionExercise from "st/components/ear_training/melody_recognition_exercise"
+import MelodyPlaybackExercise from "st/components/ear_training/melody_playback_exercise"
 
 class SettingsPanel extends React.PureComponent {
   static propTypes = {
