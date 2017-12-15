@@ -116,8 +116,7 @@ export default class MelodyRecognitionExercise extends React.Component {
       playbackTranspose: 0,
       enabledIntervals: {},
       rand: new MersenneTwister(),
-
-      autoplay_randomize_root: true,
+      autoplayRandomizeRoot: true,
     }
   }
 
@@ -153,9 +152,13 @@ export default class MelodyRecognitionExercise extends React.Component {
     if (this.state.playingTimer) {
       this.state.playingTimer.stop()
     }
+
+    if (this.state.autoplayTimer) {
+      this.state.autoplayTimer.stop()
+    }
   }
 
-  nextMelody() {
+  nextMelody(fn) {
     let intervals = MelodyRecognitionExercise.melodies.filter(m =>
       this.state.enabledIntervals[`${m.interval}-${m.direction}`]
     )
@@ -164,7 +167,7 @@ export default class MelodyRecognitionExercise extends React.Component {
 
     this.setState({
       currentMelody: interval
-    })
+    }, fn)
   }
 
   playCurrentRoot() {
@@ -179,7 +182,7 @@ export default class MelodyRecognitionExercise extends React.Component {
     let note = song[0].clone()
     note.duration = 1
     first.push(note)
-    this.playSong(first)
+    return this.playSong(first)
   }
 
   playCurrentInterval() {
@@ -195,11 +198,11 @@ export default class MelodyRecognitionExercise extends React.Component {
     note1.duration = 1
 
     let note2 = song[1].clone()
-    noter2.duration = 1
+    note2.duration = 1
 
     first.push(note1)
     first.push(note2)
-    this.playSong(first)
+    return this.playSong(first)
   }
 
   playCurrentSong() {
@@ -209,7 +212,7 @@ export default class MelodyRecognitionExercise extends React.Component {
       return
     }
 
-    this.playSong(this.state.melodySongs[current.interval])
+    return this.playSong(this.state.melodySongs[current.interval])
   }
 
   playSong(song) {
@@ -228,6 +231,55 @@ export default class MelodyRecognitionExercise extends React.Component {
       this.setState({
         playing: false,
         playingTimer: null,
+      })
+    })
+
+    return timer
+  }
+
+  autoplayDelay(time, fn) {
+    let timer
+    let t = window.setTimeout(() => {
+      if (this.state.autoplayTimer == timer) {
+        this.setState({
+          autoplayTimer: undefined
+        })
+      }
+      fn()
+    }, time)
+
+    timer = {
+      stop: () => {
+        console.log("stopping delay");
+        window.clearTimeout(t)
+      }
+    }
+
+    this.setState({
+      autoplayTimer: timer
+    })
+  }
+
+  autoplayNextInterval() {
+    this.nextMelody(() => {
+      let timer = this.playCurrentInterval()
+      this.setState({
+        autoplayTimer: timer
+      })
+
+      timer.getPromise().then(() => {
+        this.autoplayDelay(2000, () => {
+          let timer = this.playCurrentSong()
+          this.setState({
+            autoplayTimer: timer
+          })
+
+          timer.getPromise().then(() => {
+            this.autoplayDelay(2000, () => {
+              this.autoplayNextInterval()
+            })
+          })
+        })
       })
     })
   }
@@ -253,10 +305,10 @@ export default class MelodyRecognitionExercise extends React.Component {
         <legend>Autoplay options</legend>
         <label>
           <input
-            checked={this.state.autoplay_randomize_root}
+            checked={this.state.autoplayRandomizeRoot}
             onChange={e => {
               this.setState({
-                autoplay_randomize_root: e.target.checked
+                autoplayRandomizeRoot: e.target.checked
               })
             }}
             type="checkbox" /> Randomize root
@@ -268,17 +320,12 @@ export default class MelodyRecognitionExercise extends React.Component {
           onClick={(e) => {
             e.preventDefault()
             if (this.state.autoplayTimer) {
-              window.clearTimeout(this.state.autoplayTimer)
+              this.state.autoplayTimer.stop()
               this.setState({
                 autoplayTimer: undefined
               })
             } else {
-              this.nextMelody()
-              // play the interval
-              // wait a bit
-              // play the melody
-              // repeat
-
+              this.autoplayNextInterval()
             }
           }}
           >{this.state.autoplayTimer ? "Stop" : "Start autoplay"}</button>
