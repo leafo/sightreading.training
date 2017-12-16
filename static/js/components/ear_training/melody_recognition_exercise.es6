@@ -1,5 +1,5 @@
 import * as React from "react"
-import {classNames, MersenneTwister} from "lib"
+import {classNames, MersenneTwister, NoSleep} from "lib"
 import * as types from "prop-types"
 
 import {SongNoteList} from "st/song_note_list"
@@ -7,6 +7,7 @@ import Slider from "st/components/slider"
 
 import {noteName, parseNote} from "st/music"
 import SongParser from "st/song_parser"
+import {isMobile} from "st/browser"
 
 export default class MelodyRecognitionExercise extends React.Component {
   static exerciseName = "Interval Melodies"
@@ -156,6 +157,11 @@ export default class MelodyRecognitionExercise extends React.Component {
     if (this.state.autoplayTimer) {
       this.state.autoplayTimer.stop()
     }
+
+    if (this.nosleep && this.nosleepEnabled) {
+      this.nosleep.disable()
+      this.nosleepEnabled = false
+    }
   }
 
   nextMelody(fn) {
@@ -262,6 +268,12 @@ export default class MelodyRecognitionExercise extends React.Component {
   }
 
   autoplayNextInterval() {
+    if (isMobile() && !this.nosleepEnabled) {
+      this.nosleep = this.nosleep || new NoSleep()
+      this.nosleep.enable()
+      this.nosleepEnabled = true
+    }
+
     if (this.state.autoplayRandomizeRoot) {
       this.setState({
         playbackTranspose: (this.state.rand.int() % 36) - 18
@@ -328,6 +340,12 @@ export default class MelodyRecognitionExercise extends React.Component {
             e.preventDefault()
             if (this.state.autoplayTimer) {
               this.state.autoplayTimer.stop()
+
+              if (this.nosleep && this.nosleepEnabled) {
+                this.nosleep.disable()
+                this.nosleepEnabled = false
+              }
+
               this.setState({
                 autoplayTimer: undefined
               })
