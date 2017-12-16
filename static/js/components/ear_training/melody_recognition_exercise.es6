@@ -284,7 +284,7 @@ export default class MelodyRecognitionExercise extends React.Component {
       let timer = this.playCurrentInterval()
       this.setState({
         autoplayTimer: timer,
-        autoplayState: "playing_interval"
+        autoplayState: "playingInterval"
       })
 
       timer.getPromise().then((reason) => {
@@ -296,7 +296,7 @@ export default class MelodyRecognitionExercise extends React.Component {
           let timer = this.playCurrentSong()
           this.setState({
             autoplayTimer: timer,
-            autoplayState: "playing_melody"
+            autoplayState: "playingMelody"
           })
 
           timer.getPromise().then((reason) => {
@@ -386,8 +386,13 @@ export default class MelodyRecognitionExercise extends React.Component {
 
       let disabled = !!(this.state.playing || this.state.autoplayTimer)
 
+      let title = `${current.interval} - ${current.title} (${firstNote})`
+      if (this.state.autoplayState == "playingInterval") {
+        title = "Listen to interval..."
+      }
+
       currentSongTools = <div className="current_song">
-        <div className="song_title">{current.interval} - {current.title} ({firstNote})</div>
+        <div className="song_title">{title}</div>
         <div className="song_controls">
           <button
             disabled={disabled}
