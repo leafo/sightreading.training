@@ -286,14 +286,22 @@ export default class MelodyRecognitionExercise extends React.Component {
         autoplayTimer: timer
       })
 
-      timer.getPromise().then(() => {
+      timer.getPromise().then((reason) => {
+        if (reason == "stop") {
+          return
+        }
+
         this.autoplayDelay(2000, () => {
           let timer = this.playCurrentSong()
           this.setState({
             autoplayTimer: timer
           })
 
-          timer.getPromise().then(() => {
+          timer.getPromise().then((reason) => {
+            if (reason == "stop") {
+              return
+            }
+
             this.autoplayDelay(2000, () => {
               this.autoplayNextInterval()
             })

@@ -46,7 +46,7 @@ export class SongNoteTimer {
     window.requestAnimationFrame(frameUpdate);
   }
 
-  stop() {
+  stop(val) {
     if (!this.running) {
       console.error("timer not running")
       return
@@ -56,7 +56,7 @@ export class SongNoteTimer {
       this.onStop()
     }
 
-    this.promiseResolve()
+    this.promiseResolve(val || "stop")
 
     delete this.running
     delete this.promiseResolve
@@ -148,7 +148,7 @@ export class SongNoteList extends Array {
         }
 
         if (currentIdx >= notes.length && playingNotes.length == 0) {
-          timer.stop()
+          timer.stop("finish")
         }
       }
     })
