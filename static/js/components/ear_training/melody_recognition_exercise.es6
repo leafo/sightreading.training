@@ -283,7 +283,8 @@ export default class MelodyRecognitionExercise extends React.Component {
     this.nextMelody(() => {
       let timer = this.playCurrentInterval()
       this.setState({
-        autoplayTimer: timer
+        autoplayTimer: timer,
+        autoplayState: "playing_interval"
       })
 
       timer.getPromise().then((reason) => {
@@ -294,7 +295,8 @@ export default class MelodyRecognitionExercise extends React.Component {
         this.autoplayDelay(2000, () => {
           let timer = this.playCurrentSong()
           this.setState({
-            autoplayTimer: timer
+            autoplayTimer: timer,
+            autoplayState: "playing_melody"
           })
 
           timer.getPromise().then((reason) => {
@@ -374,7 +376,7 @@ export default class MelodyRecognitionExercise extends React.Component {
       let currentSong = this.state.melodySongs[current.interval]
 
       let stopSong
-      if (this.state.playingTimer) {
+      if (this.state.playingTimer && !this.state.autoplayTimer) {
         stopSong = <button
           type="button"
           onClick={e => this.state.playingTimer.stop() }>Stop</button>
@@ -382,11 +384,13 @@ export default class MelodyRecognitionExercise extends React.Component {
 
       let firstNote = noteName(parseNote(currentSong[0].note) + this.state.playbackTranspose)
 
+      let disabled = !!(this.state.playing || this.state.autoplayTimer)
+
       currentSongTools = <div className="current_song">
         <div className="song_title">{current.interval} - {current.title} ({firstNote})</div>
         <div className="song_controls">
           <button
-            disabled={!!this.state.playing}
+            disabled={disabled}
             type="button"
             onClick={e => {
               this.playCurrentRoot()
@@ -394,7 +398,7 @@ export default class MelodyRecognitionExercise extends React.Component {
 
           <button
             type="button"
-            disabled={!!this.state.playing}
+            disabled={disabled}
             onClick={e => {
               this.playCurrentSong()
           }}>Play song</button>
@@ -403,10 +407,12 @@ export default class MelodyRecognitionExercise extends React.Component {
       </div>
     }
 
+    let disabled = !!(this.state.playing || this.state.autoplayTimer)
+
     return <div className="song_selector">
       <div className="global_controls">
         <button
-          disabled={this.state.playing || false}
+          disabled={disabled}
           onClick={(e) => { this.nextMelody() }}>Next melody</button>
 
         <label className="slider_group">
