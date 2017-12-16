@@ -257,8 +257,11 @@ export default class MelodyRecognitionExercise extends React.Component {
     }, time)
 
     timer = {
-      stop: () => {
+      stop: (reason) => {
         window.clearTimeout(t)
+        if (reason == "skip") {
+          fn()
+        }
       }
     }
 
@@ -328,6 +331,16 @@ export default class MelodyRecognitionExercise extends React.Component {
   }
 
   renderAutoplayer() {
+    let skipButton
+    if (this.state.autoplayTimer) {
+      skipButton = <button
+        onClick={(e) => {
+          this.state.autoplayTimer.stop("skip")
+        }}
+      >Skip</button>
+    }
+
+
     return <section className="auto_player">
       <h3>Autoplay mode</h3>
       <fieldset>
@@ -364,6 +377,8 @@ export default class MelodyRecognitionExercise extends React.Component {
             }
           }}
           >{this.state.autoplayTimer ? "Stop" : "Start autoplay"}</button>
+        {" "}
+        {skipButton}
       </p>
     </section>
   }
