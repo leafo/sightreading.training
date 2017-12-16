@@ -195,9 +195,11 @@ export default class MelodyRecognitionExercise extends React.Component {
     let song = this.state.melodySongs[current.interval]
     let first = new SongNoteList()
     let note1 = song[0].clone()
+    note1.start = 0
     note1.duration = 1
 
     let note2 = song[1].clone()
+    note2.start = 1
     note2.duration = 1
 
     first.push(note1)
