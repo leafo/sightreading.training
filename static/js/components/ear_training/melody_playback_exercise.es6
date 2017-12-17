@@ -34,6 +34,7 @@ export default class MelodyPlaybackExercise extends React.Component {
       notesPerMelody: 3,
       notesPerColumn: 1,
       continuousMelody: false,
+      melodyDirection: "any",
 
       melodyRange: ["C4", "C6"],
       melodyScaleRoot: "random",
@@ -153,6 +154,16 @@ export default class MelodyPlaybackExercise extends React.Component {
     let list = new NoteList([], { generator })
     list.fillBuffer(this.state.notesPerMelody)
 
+    if (this.state.melodyDirection == "asc") {
+      console.warn("sorted asc")
+      list.sort((rowA, rowB) => parseNote(rowA[0]) - parseNote(rowB[0]))
+    }
+
+    if (this.state.melodyDirection == "desc") {
+      console.warn("sorted desc")
+      list.sort((rowA, rowB) => parseNote(rowB[0]) - parseNote(rowA[0]))
+    }
+
     this.props.midiOutput.playNoteList(list).then(() => {
       this.setState({ playing: false })
     })
@@ -268,6 +279,24 @@ export default class MelodyPlaybackExercise extends React.Component {
             }}
             key={r.name}>{r.name}</button>
         })}
+      </fieldset>
+
+      <fieldset>
+        <legend>Direction</legend>
+        <Select
+          value={this.state.melodyDirection}
+          onChange={(val) => {
+            this.setState({
+              melodyDirection: val
+            })
+          }}
+          options={[
+            {name: "Any", value: "any"},
+            {name: "Ascending", value: "asc"},
+            {name: "Descending", value: "desc"},
+          ]}
+      />
+
       </fieldset>
 
       <fieldset>
