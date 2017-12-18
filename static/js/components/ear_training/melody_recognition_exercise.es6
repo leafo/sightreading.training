@@ -4,6 +4,7 @@ import * as types from "prop-types"
 
 import {SongNoteList} from "st/song_note_list"
 import Slider from "st/components/slider"
+import Select from "st/components/select"
 
 import {noteName, parseNote} from "st/music"
 import SongParser from "st/song_parser"
@@ -118,6 +119,7 @@ export default class MelodyRecognitionExercise extends React.Component {
       enabledIntervals: {},
       rand: new MersenneTwister(),
       autoplayRandomizeRoot: true,
+      autoplayIntervalOrder: "default",
     }
   }
 
@@ -354,6 +356,19 @@ export default class MelodyRecognitionExercise extends React.Component {
               })
             }}
             type="checkbox" /> Randomize root
+        </label>
+        {" "}
+        <label>
+          Order
+          <Select 
+            value={this.state.autoplayIntervalOrder}
+            onChange={(v) => this.setState({ autoplayIntervalOrder: v })}
+            options={[
+              {name: "Regular", value: "default"},
+              {name: "Reverse", value: "reverse"},
+              {name: "Harmonic", value: "harmonic"},
+            ]}
+          />
         </label>
       </fieldset>
 
