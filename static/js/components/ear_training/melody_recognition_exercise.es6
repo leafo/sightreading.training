@@ -202,16 +202,28 @@ export default class MelodyRecognitionExercise extends React.Component {
 
     let song = this.state.melodySongs[current.interval]
     let first = new SongNoteList()
-    let note1 = song[0].clone()
-    note1.start = 0
-    note1.duration = 1
 
+    let note1 = song[0].clone()
     let note2 = song[1].clone()
-    note2.start = 1
+
+    note1.duration = 1
     note2.duration = 1
+
+
+    if (this.state.autoplayIntervalOrder == "reverse") {
+      note1.start = 1
+      note2.start = 0
+    } else if (this.state.autoplayIntervalOrder == "harmonic") {
+      note1.start = 0
+      note2.start = 0
+    } else {
+      note1.start = 0
+      note2.start = 1
+    }
 
     first.push(note1)
     first.push(note2)
+
     return this.playSong(first)
   }
 
