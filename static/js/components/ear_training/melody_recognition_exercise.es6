@@ -40,6 +40,11 @@ export default class MelodyRecognitionExercise extends React.Component {
       song: "m3_greensleves",
       title: "Greensleves",
     }, {
+      interval: "m3",
+      direction: "desc",
+      song: "m3_desc",
+      title: "Hey Jude",
+    }, {
       interval: "M3",
       direction: "asc",
       song: "M3_oh_when_the_saints",
