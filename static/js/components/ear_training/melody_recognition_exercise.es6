@@ -50,6 +50,11 @@ export default class MelodyRecognitionExercise extends React.Component {
       song: "M3_oh_when_the_saints",
       title: "On When The Saints",
     }, {
+      interval: "M3",
+      direction: "desc",
+      song: "M3_desc",
+      title: "Swing Low Sweet Chariot",
+    }, {
       interval: "P4",
       direction: "asc",
       song: "P4_here_comes_the_bride",
