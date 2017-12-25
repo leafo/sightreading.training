@@ -61,7 +61,7 @@ export default class MelodyRecognitionExercise extends React.Component {
       title: "Here Comes The Bride",
     }, {
       interval: "P4",
-      direction: "asc",
+      direction: "desc",
       song: "P4_desc",
       title: "I've Been Working On The Rail Road",
     }, {
@@ -74,6 +74,11 @@ export default class MelodyRecognitionExercise extends React.Component {
       direction: "asc",
       song: "P5_star_wars",
       title: "Star Wars",
+    }, {
+      interval: "P5",
+      direction: "desc",
+      song: "P5_desc",
+      title: "Flintstones",
     }, {
       interval: "m6",
       direction: "asc",
