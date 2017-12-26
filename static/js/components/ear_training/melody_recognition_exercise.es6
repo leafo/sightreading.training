@@ -546,10 +546,23 @@ export default class MelodyRecognitionExercise extends React.Component {
             }}
             checked={this.state.enabledIntervals[key] || false} />
           {" "}
-          <span className="label">{m.interval} {m.name}</span>
+          <span className="label">{m.interval} {m.name} ({m.direction})</span>
         </label>
       </li>
     })
+
+    let enabledFiltered = fn => {
+      let keys = MelodyRecognitionExercise.melodies
+        .filter(fn)
+        .map(m => `${m.interval}-${m.direction}`)
+
+      let enabled = {}
+      for (let key of keys) {
+        enabled[key] = true
+      }
+
+      return enabled
+    }
 
     return <section className="interval_settings">
       <fieldset className="enabled_intervals">
@@ -561,6 +574,26 @@ export default class MelodyRecognitionExercise extends React.Component {
               type="button"
               onClick={e => this.setState({ enabledIntervals: {} })}
               >All off</button>
+          </li>
+          <li>
+            <button
+              type="button"
+              onClick={e =>
+                this.setState({
+                  enabledIntervals: enabledFiltered(m => m.direction == "asc")
+                })
+              }
+              >All Ascending</button>
+          </li>
+          <li>
+            <button
+              type="button"
+              onClick={e =>
+                this.setState({
+                  enabledIntervals: enabledFiltered(m => m.direction == "desc")
+                })
+              }
+              >All Descending</button>
           </li>
         </ul>
       </fieldset>
