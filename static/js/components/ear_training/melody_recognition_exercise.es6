@@ -104,6 +104,11 @@ export default class MelodyRecognitionExercise extends React.Component {
       direction: "asc",
       song: "P8_somewhere_over_the_rainbow",
       title: "Somewhere Over The Rainbow",
+    }, {
+      interval: "P8",
+      direction: "desc",
+      song: "P8_desc",
+      title: "To Zanarkand",
     }
   ]
 
