@@ -42,7 +42,10 @@ export default class StatsLightbox extends Lightbox {
     }
 
     if (availableNotes.length) {
-      var clearButton = <button onClick={() => this.props.resetStats()}>Clear stats</button>
+      var clearButton = <button onClick={() => {
+        this.props.resetStats()
+        this.close()
+      }}>Clear stats</button>
     }
 
 
