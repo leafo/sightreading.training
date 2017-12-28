@@ -48,13 +48,18 @@ export default class StatsLightbox extends Lightbox {
       }}>Clear stats</button>
     }
 
+    let statTabs
+    if (availableNotes.length) {
+      statTabs = <div className="stat_tabs">
+        <button onClick={(e) => { this.setState({tab: "ratios"}) }}>Ratios</button>
+        {" "}
+        <button onClick={(e) => { this.setState({tab: "timings"}) }}>Timings</button>
+      </div>
+    }
 
     return <div>
       <h2>Session stats</h2>
-      <button onClick={(e) => { this.setState({tab: "ratios"}) }}>Ratios</button>
-      {" "}
-      <button onClick={(e) => { this.setState({tab: "timings"}) }}>Timings</button>
-
+      {statTabs}
       {statsContent}
       {hitTime}
       <div className="footer_buttons">
