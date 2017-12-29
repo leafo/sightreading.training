@@ -17,7 +17,7 @@ export default class MelodyRecognitionExercise extends React.Component {
     {
       interval: "m2",
       direction: "asc",
-      song: "m2_jaws",
+      song: "m2_asc",
       title: "Jaws"
     }, {
       interval: "m2",
@@ -27,7 +27,7 @@ export default class MelodyRecognitionExercise extends React.Component {
     }, {
       interval: "M2",
       direction: "asc",
-      song: "M2_silent_night",
+      song: "M2_asc",
       title: "Silent Night"
     }, {
       interval: "M2",
@@ -37,7 +37,7 @@ export default class MelodyRecognitionExercise extends React.Component {
     }, {
       interval: "m3",
       direction: "asc",
-      song: "m3_greensleves",
+      song: "m3_asc",
       title: "Greensleves",
     }, {
       interval: "m3",
@@ -47,7 +47,7 @@ export default class MelodyRecognitionExercise extends React.Component {
     }, {
       interval: "M3",
       direction: "asc",
-      song: "M3_oh_when_the_saints",
+      song: "M3_asc",
       title: "On When The Saints",
     }, {
       interval: "M3",
@@ -57,7 +57,7 @@ export default class MelodyRecognitionExercise extends React.Component {
     }, {
       interval: "P4",
       direction: "asc",
-      song: "P4_here_comes_the_bride",
+      song: "P4_asc",
       title: "Here Comes The Bride",
     }, {
       interval: "P4",
@@ -67,12 +67,12 @@ export default class MelodyRecognitionExercise extends React.Component {
     }, {
       interval: "T",
       direction: "asc",
-      song: "T_simpsons",
+      song: "T_asc",
       title: "The Simpsons",
     }, {
       interval: "P5",
       direction: "asc",
-      song: "P5_star_wars",
+      song: "P5_asc",
       title: "Star Wars",
     }, {
       interval: "P5",
@@ -82,27 +82,27 @@ export default class MelodyRecognitionExercise extends React.Component {
     }, {
       interval: "m6",
       direction: "asc",
-      song: "m6_entertainer",
+      song: "m6_asc",
       title: "Entertainer",
     }, {
       interval: "M6",
       direction: "asc",
-      song: "M6_nbc",
+      song: "M6_asc",
       title: "NBC",
     }, {
       interval: "m7",
       direction: "asc",
-      song: "m7_star_trek",
+      song: "m7_asc",
       title: "Star Trek",
     }, {
       interval: "M7",
       direction: "asc",
-      song: "M7_take_on_me",
+      song: "M7_asc",
       title: "Take On Me",
     }, {
       interval: "P8",
       direction: "asc",
-      song: "P8_somewhere_over_the_rainbow",
+      song: "P8_asc",
       title: "Somewhere Over The Rainbow",
     }, {
       interval: "P8",
