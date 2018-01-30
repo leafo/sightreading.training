@@ -545,6 +545,13 @@ export class HarmonicMinorScale extends Scale {
   }
 }
 
+export class AscendingMelodicMinorScale extends Scale {
+  constructor(root) {
+    super(root)
+    this.steps = [2, 1, 2, 2, 2, 2, 1]
+  }
+}
+
 export class MajorBluesScale extends Scale {
   constructor(root) {
     super(root)

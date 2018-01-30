@@ -1,4 +1,4 @@
-import {Chord, MajorScale, MinorScale, MajorBluesScale, HarmonicMinorScale, KeySignature} from "st/music"
+import {Chord, MajorScale, MinorScale, MajorBluesScale, HarmonicMinorScale, AscendingMelodicMinorScale, KeySignature} from "st/music"
 import {MersenneTwister} from "lib"
 import {dithered, shuffled} from "st/util"
 
@@ -24,6 +24,9 @@ export class ChordGenerator {
           break
         case "harmonic minor":
           this.scale = new HarmonicMinorScale(keySignature.name())
+          break
+        case "melodic minor":
+          this.scale = new AscendingMelodicMinorScale(keySignature.name())
           break
         case "major blues":
           this.scale = new MajorBluesScale(keySignature.name())

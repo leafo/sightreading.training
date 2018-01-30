@@ -3,7 +3,7 @@ import "jasmine_boot"
 import {
   notesLessThan, notesGreaterThan, compareNotes, noteName, parseNote,
   noteStaffOffset,
-  MajorScale, MinorScale, HarmonicMinorScale, Chord, KeySignature, ChromaticScale
+  MajorScale, MinorScale, HarmonicMinorScale, AscendingMelodicMinorScale, Chord, KeySignature, ChromaticScale
 } from "st/music"
 
 describe("notes", function() {
@@ -233,6 +233,21 @@ describe("scales", function() {
         "G7",
         "G#M7",
         "Bdim7",
+      ])
+    })
+
+    it("gets all 7 chords in ascending melodic minor scale", function() {
+      let scale = new AscendingMelodicMinorScale("C")
+      let chords = scale.allChords(4)
+
+      expect(chords.map(chord => chord.toString())).toEqual([
+        "CmM7",
+        "Dm7",
+        "D#augM7",
+        "F7",
+        "G7",
+        "Am7b5",
+        "Bm7b5",
       ])
     })
 
