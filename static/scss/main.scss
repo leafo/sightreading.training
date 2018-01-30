@@ -305,6 +305,8 @@ form, .form {
     .workspace_wrapper {
         flex: 1;
         max-width: $default_width;
+        width: 100%;
+
         @include on_narrow_width {
             max-width: none;
         }
