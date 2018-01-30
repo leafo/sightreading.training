@@ -19,7 +19,7 @@ export class ChordGenerator {
         case "major":
           this.scale = new MajorScale(keySignature.name())
           break
-        case "minor":
+        case "natural minor":
           this.scale = new MinorScale(keySignature.name())
           break
         case "harmonic minor":

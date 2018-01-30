@@ -290,7 +290,7 @@ export const GENERATORS = [
         type: "select",
         values: [
           { name: "major" },
-          { name: "minor" },
+          { name: "natural minor" },
           { name: "harmonic minor"},
         ]
       },
