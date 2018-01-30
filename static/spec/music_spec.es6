@@ -3,7 +3,7 @@ import "jasmine_boot"
 import {
   notesLessThan, notesGreaterThan, compareNotes, noteName, parseNote,
   noteStaffOffset,
-  MajorScale, MinorScale, Chord, KeySignature, ChromaticScale
+  MajorScale, MinorScale, HarmonicMinorScale, Chord, KeySignature, ChromaticScale
 } from "st/music"
 
 describe("notes", function() {
@@ -176,7 +176,7 @@ describe("scales", function() {
   })
 
   describe("allChords", function() {
-    it("gets all triads in scale", function() {
+    it("gets all triads in major scale", function() {
       let scale = new MajorScale("C")
       let chords = scale.allChords(3)
 
@@ -191,7 +191,7 @@ describe("scales", function() {
       ])
     })
 
-    it("gets all 7 chords in scale", function() {
+    it("gets all 7 chords in major scale", function() {
       let scale = new MajorScale("C")
       let chords = scale.allChords(4)
 
@@ -205,6 +205,37 @@ describe("scales", function() {
         "Bm7b5",
       ])
     })
+
+    it("gets all triads in harmonic minor scale", function() {
+      let scale = new HarmonicMinorScale("C")
+      let chords = scale.allChords(3)
+
+      expect(chords.map(chord => chord.toString())).toEqual([
+        "Cm",
+        "Ddim",
+        "D#aug",
+        "Fm",
+        "G",
+        "G#",
+        "Bdim",
+      ])
+    })
+
+    it("gets all 7 chords in harmonic minor scale", function() {
+      let scale = new HarmonicMinorScale("C")
+      let chords = scale.allChords(4)
+
+      expect(chords.map(chord => chord.toString())).toEqual([
+        "CmM7",
+        "Dm7b5",
+        "D#augM7",
+        "Fm7",
+        "G7",
+        "G#M7",
+        "Bdim7",
+      ])
+    })
+
 
   })
 })

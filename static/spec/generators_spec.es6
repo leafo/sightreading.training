@@ -91,7 +91,6 @@ describe("chord generator", function() {
       let generator = new MultiKeyChordGenerator(new KeySignature(0))
       for (let i = 0; i < 10; i++) {
         let chord = generator.nextChord()
-        console.log(chord.toString())
         expect(chord).toBeTruthy()
       }
     })

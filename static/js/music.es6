@@ -530,6 +530,7 @@ export class MajorScale extends Scale {
   }
 }
 
+// natural minor
 export class MinorScale extends Scale {
   constructor(root) {
     super(root)
@@ -537,6 +538,12 @@ export class MinorScale extends Scale {
   }
 }
 
+export class HarmonicMinorScale extends Scale {
+  constructor(root) {
+    super(root)
+    this.steps = [2, 1, 2, 2, 1, 3, 1]
+  }
+}
 
 export class MajorBluesScale extends Scale {
   constructor(root) {
@@ -570,6 +577,9 @@ export class Chord extends Scale {
     "dimM7": [3,3,5],
     "dim7": [3,3,3],
 
+    "aug": [4, 4],
+    "augM7": [4,4,3],
+
     "M6": [4, 3, 2],
     "m6": [3, 4, 2],
 
@@ -577,6 +587,7 @@ export class Chord extends Scale {
     "7": [4, 3, 3],
     "m7": [3, 4, 3],
     "m7b5": [3, 3, 4],
+    "mM7": [3,4,4],
 
     // exotic
     "Q": [5, 5], // quartal

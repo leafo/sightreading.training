@@ -291,7 +291,7 @@ export const GENERATORS = [
         values: [
           { name: "major" },
           { name: "minor" },
-          // { name: "major blues"},
+          { name: "harmonic minor"},
         ]
       },
       {
