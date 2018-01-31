@@ -229,6 +229,9 @@ export class GeneratorSettings extends React.PureComponent {
           case "noteRange":
             fn = this.renderNoteRange
             break
+          case "note":
+            fn = this.renderNote
+            break
           case "bool":
             fn = this.renderBool
             break
@@ -274,6 +277,30 @@ export class GeneratorSettings extends React.PureComponent {
       onChange={ value => this.updateInputValue(input, value) }
       value={currentValue}
       options={options} />
+  }
+
+  renderNote(input, idx) {
+    let currentValue = this.cachedSettings[input.name]
+
+    let options = []
+
+    for (let i=input.max; i >= input.min; i--) {
+      options.push(noteName(i))
+    }
+
+    return <div className="note_range_row">
+      <label>
+        Note
+        <Select
+          onChange={value => {
+            this.updateInputValue(input, parseNote(value))
+          }}
+          value={noteName(currentValue)}
+          options={options.map(name => ({ value: name, name }))}
+        />
+      </label>
+    </div>
+
   }
 
   renderNoteRange(input, idx) {

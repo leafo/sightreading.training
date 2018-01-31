@@ -303,6 +303,14 @@ export const GENERATORS = [
         max: 4,
       },
       {
+        name: "ignoreAbove",
+        label: "ignore above",
+        type: "note",
+        default: 100,
+        min: 0,
+        max: 100,
+      },
+      {
         name: "commonNotes",
         label: "common notes",
         type: "select",
