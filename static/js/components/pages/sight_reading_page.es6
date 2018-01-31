@@ -8,7 +8,7 @@ import Slider from "st/components/slider"
 import Keyboard from "st/components/keyboard"
 import StatsLightbox from "st/components/sight_reading/stats_lightbox"
 
-import {KeySignature, noteName} from "st/music"
+import {KeySignature, noteName, parseNote} from "st/music"
 import {STAVES, GENERATORS} from "st/data"
 import {GeneratorSettings, SettingsPanel} from "st/components/sight_reading/settings_panel"
 import {setTitle, gaEvent, csrfToken} from "st/globals"
@@ -267,6 +267,19 @@ export default class SightReadingPage extends React.Component {
   }
 
   pressNote(note) {
+    switch (this.state.currentGenerator.mode) {
+      case "chords":
+        let ignoreAbove = this.state.currentGeneratorSettings.ignoreAbove
+        if (ignoreAbove != null) {
+          console.log(parseNote(note), ignoreAbove, parseNote(note) > ignoreAbove)
+          if (parseNote(note) > ignoreAbove) {
+            return
+          }
+        }
+        break
+    }
+
+
     this.state.heldNotes[note] = true;
     this.state.touchedNotes[note] = true;
 
