@@ -84,7 +84,7 @@ describe("scales", function() {
     let scale = new MajorScale("F");
     // TODO: should be Bb5
     expect(scale.getRange(5)).toEqual([
-      "F5", "G5", "A5", "A#5", "C6", "D6", "E6", "F6"
+      "F5", "G5", "A5", "Bb5", "C6", "D6", "E6", "F6"
     ]);
   });
 
@@ -136,9 +136,16 @@ describe("scales", function() {
 
   it("gets notes in C MinorScale", function() {
     let scale = new MinorScale("C");
+    expect(scale.getRange(5)).toEqual([
+      "C5", "D5", "Eb5", "F5", "G5", "Ab5", "Bb5", "C6"
+    ]);
+  });
+
+  it("gets notes in C HarmonicMinorScale", function() {
+    let scale = new HarmonicMinorScale("C");
     // TODO: this should be giving flats not sharps
     expect(scale.getRange(5)).toEqual([
-      "C5", "D5", "D#5", "F5", "G5", "G#5", "A#5", "C6"
+      "C5", "D5", "Eb5", "F5", "G5", "Ab5", "B5", "C6"
     ]);
   });
 

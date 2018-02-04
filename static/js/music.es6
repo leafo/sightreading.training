@@ -401,12 +401,39 @@ export class Scale {
 
     for (let i = 0; i < count + offset; i++) {
       if (i >= offset) {
-        range.push(noteName(current))
+        let name = noteName(current, this.chromatic || !this.isFlat())
+        range.push(name)
       }
+
       current += this.steps[k++ % this.steps.length]
     }
 
     return range;
+  }
+
+  isFlat() {
+    let idx = KeySignature.FIFTHS.indexOf(this.root)
+
+    if (idx == -1) {
+      // the root is sharp
+      let letter = this.root.charCodeAt(0) + 1
+
+      if (letter > 71) {
+        letter -= 5
+      }
+
+      let realRoot = String.fromCharCode(letter) + "#"
+      idx = KeySignature.FIFTHS.indexOf(realRoot)
+    }
+
+    if (this.minor) {
+      idx -= 3
+      if (idx < 0) {
+        idx += KeySignature.FIFTHS.length
+      }
+    }
+
+    return idx < 1 || idx > 6
   }
 
   containsNote(note) {
@@ -532,6 +559,7 @@ export class MajorScale extends Scale {
 
 // natural minor
 export class MinorScale extends Scale {
+  minor = true
   constructor(root) {
     super(root)
     this.steps = [2, 1, 2, 2, 1, 2, 2]
@@ -539,6 +567,7 @@ export class MinorScale extends Scale {
 }
 
 export class HarmonicMinorScale extends Scale {
+  minor = true
   constructor(root) {
     super(root)
     this.steps = [2, 1, 2, 2, 1, 3, 1]
@@ -546,6 +575,7 @@ export class HarmonicMinorScale extends Scale {
 }
 
 export class AscendingMelodicMinorScale extends Scale {
+  minor = true
   constructor(root) {
     super(root)
     this.steps = [2, 1, 2, 2, 2, 2, 1]
@@ -561,6 +591,7 @@ export class MajorBluesScale extends Scale {
 }
 
 export class MinorBluesScale extends Scale {
+  minor = true
   constructor(root) {
     super(root)
     // C, D♯/E♭, F, F♯/G♭, G, B♭
@@ -569,6 +600,8 @@ export class MinorBluesScale extends Scale {
 }
 
 export class ChromaticScale extends Scale {
+  chromatic = true
+
   constructor(root) {
     super(root)
     this.steps = [1,1,1,1,1,1,1,1,1,1,1,1]
