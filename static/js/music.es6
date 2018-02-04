@@ -385,6 +385,7 @@ export class Scale {
     let current = parseNote(`${this.root}${octave}`)
     const NoteList = require("st/note_list").default
 
+    let isFlat = this.isFlat()
     let range = new NoteList
 
     let k = 0;
@@ -401,8 +402,7 @@ export class Scale {
 
     for (let i = 0; i < count + offset; i++) {
       if (i >= offset) {
-        let name = noteName(current, this.chromatic || !this.isFlat())
-        range.push(name)
+        range.push(noteName(current, this.chromatic || !isFlat))
       }
 
       current += this.steps[k++ % this.steps.length]

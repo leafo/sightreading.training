@@ -220,10 +220,10 @@ describe("scales", function() {
       expect(chords.map(chord => chord.toString())).toEqual([
         "Cm",
         "Ddim",
-        "D#aug",
+        "Ebaug",
         "Fm",
         "G",
-        "G#",
+        "Ab",
         "Bdim",
       ])
     })
@@ -235,10 +235,10 @@ describe("scales", function() {
       expect(chords.map(chord => chord.toString())).toEqual([
         "CmM7",
         "Dm7b5",
-        "D#augM7",
+        "EbaugM7",
         "Fm7",
         "G7",
-        "G#M7",
+        "AbM7",
         "Bdim7",
       ])
     })
@@ -250,7 +250,7 @@ describe("scales", function() {
       expect(chords.map(chord => chord.toString())).toEqual([
         "CmM7",
         "Dm7",
-        "D#augM7",
+        "EbaugM7",
         "F7",
         "G7",
         "Am7b5",
