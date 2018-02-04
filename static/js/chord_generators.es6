@@ -122,6 +122,11 @@ export class MultiKeyChordGenerator extends ChordGenerator {
     // common key modulation
     let keys = this.chordToKeys[chord.toString()]
 
+    if (!keys) {
+      // chord doesn't have key, eg. A#m
+      return
+    }
+
     keys = keys.filter(key => key.name() != this.keySignature.name())
     if (!keys.length) {
       // some chords are only in one key
