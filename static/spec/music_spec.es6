@@ -80,6 +80,14 @@ describe("scales", function() {
     ]);
   });
 
+  it("gets notes in D MajorScale", function() {
+    let scale = new MajorScale("Gb");
+    // G♭, A♭, B♭, C♭, D♭, E♭, F
+    expect(scale.getRange(5)).toEqual([
+      "Gb5", "Ab5", "Bb5", "Cb6", "Db6", "Eb6", "F6", "Gb6"
+    ]);
+  });
+
   it("gets notes in F MajorScale", function() {
     let scale = new MajorScale("F");
     // TODO: should be Bb5
