@@ -9,6 +9,7 @@ import FlashCardPage from "st/components/pages/flash_card_page"
 import EarTrainingPage from "st/components/pages/ear_training_page"
 import PlayAlongPage from "st/components/pages/play_along_page"
 import LatencyPage from "st/components/pages/latency"
+import Header from "st/components/header"
 
 import IntroLightbox from "st/components/intro_lightbox"
 
@@ -21,7 +22,6 @@ import {BrowserRouter, Route, Link, NavLink} from "react-router-dom"
 
 import {TransitionGroup, CSSTransition} from "react-transition-group"
 
-import MidiButton from "st/components/midi_button"
 
 class Layout extends React.Component {
   constructor(props) {
@@ -172,50 +172,10 @@ class Layout extends React.Component {
   }
 
   renderHeader() {
-    let userLinks = [
-      <NavLink exact key="root" to="/" activeClassName="active">Staff</NavLink>,
-      <NavLink exact key="ear-training" to="/ear-training" activeClassName="active">Ear Training</NavLink>,
-      <NavLink exact key="flash-cards" to="/flash-cards" activeClassName="active">Flash Cards</NavLink>,
-      <NavLink exact key="play-along" to="/play-along" activeClassName="active">Play Along</NavLink>,
-      <NavLink exact key="about" to="/about" activeClassName="active">Guide</NavLink>,
-    ]
-
-    let userPanel = null
-
-    if (N.session.currentUser) {
-      userPanel = <div className="right_section">
-        {N.session.currentUser.username}
-        {" " }
-        <a href="#" onClick={this.doLogout.bind(this)}>Log out</a>
-      </div>
-
-      userLinks.push(<NavLink
-        exact
-        key="stats"
-        to="/stats"
-        activeClassName="active">Stats</NavLink>)
-
-    } else {
-      userPanel = <div className="right_section">
-        <NavLink to="/login" activeClassName="active">Log in</NavLink>
-        {" or "}
-        <NavLink to="/register" activeClassName="active">Register</NavLink>
-      </div>
-    }
-    return <div className="header">
-      <Link to="/" className="logo_link">
-        <img className="logo" src="/static/img/logo.svg" height="35" alt="" />
-        <img className="logo_small" src="/static/img/logo-small.svg" height="35" alt="" />
-      </Link>
-
-      {userLinks}
-      {userPanel}
-      <MidiButton
-        midiInput={this.state.midiInput}
-        pickMidi={() => {
-          trigger(this, "pickMidi")
-        }} />
-    </div>
+    return <Header
+      midiInput={this.state.midiInput}
+      doLogout={this.doLogout.bind(this)}
+      />
   }
 
   midiInputs() {
