@@ -53,7 +53,7 @@ class SizedElement extends React.Component {
 
   render() {
     return <div className={classNames("sized_element", this.props.className)}>
-      {this.props.children}
+      {this.state.width ? this.props.children : null}
     </div>
   }
 }
@@ -70,6 +70,7 @@ export default class Header extends React.Component {
     let userLinks = this.getPageLinks()
 
     let menu = null
+    let showMidiButton = !this.state.width || this.state.width < 450
 
     if (this.state.menuOpen) {
       let account_area = null
@@ -99,8 +100,9 @@ export default class Header extends React.Component {
             this.setState({ menuOpen: false })
           }
         }}
-        className="navigation_menu" tabIndex="0">
+        className="navigation_menu" tabIndex="-1">
         {account_area}
+        {showMidiButton ? <div className="midi_button_wrapper">{this.renderMidiButton()}</div> : null}
         <ul>
           {userLinks.map((link, i) => <li key={i}>{link}</li>)}
         </ul>
@@ -163,9 +165,18 @@ export default class Header extends React.Component {
     return links
   }
 
+  renderMidiButton() {
+    return <MidiButton
+      midiInput={this.props.midiInput}
+      pickMidi={() => {
+        trigger(this, "pickMidi")
+      }} />
+  }
+
   render() {
     let userPanel = null
     let enableDropdown = this.state.width && this.state.width < 700
+    let hideMidiButton = !this.state.width || this.state.width < 450
 
     return <div className="header">
       <Link to="/" className="logo_link">
@@ -179,11 +190,7 @@ export default class Header extends React.Component {
         {enableDropdown ? this.renderNavigationMenu() : this.renderHorizontalNavigation()}
       </SizedElement>
 
-      <MidiButton
-        midiInput={this.props.midiInput}
-        pickMidi={() => {
-          trigger(this, "pickMidi")
-        }} />
+      {hideMidiButton ? null : this.renderMidiButton()}
     </div>
 
   }
