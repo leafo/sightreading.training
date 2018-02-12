@@ -4,6 +4,55 @@ import {Link, NavLink} from "react-router-dom"
 import MidiButton from "st/components/midi_button"
 import {trigger} from "st/events"
 
+class SizedElement extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { }
+  }
+
+  componentDidMount() {
+    this.refreshWidth()
+
+    let timeout = null
+    this.resizeCallback = e => {
+      if (timeout) {
+        window.clearTimeout(timeout)
+        timeout = null
+      }
+
+      timeout = window.setTimeout(() => {
+        this.refreshWidth()
+        timeout = null
+      }, 100)
+    }
+
+    window.addEventListener("resize", this.resizeCallback)
+    this.resizeCallback()
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.resizeCallback)
+  }
+
+  refreshWidth() {
+    let el = ReactDOM.findDOMNode(this)
+    let width = el.getBoundingClientRect().width
+    if (this.state.width != width) {
+      this.setState({
+        width: width
+      }, function() {
+        if (this.props.onWidth) {
+          this.props.onWidth(this.state.width)
+        }
+      })
+    }
+  }
+
+  render() {
+    return <div className="sized_element">{this.props.children}</div>
+  }
+}
+
 export default class Header extends React.Component {
   render() {
     let userLinks = [
@@ -37,6 +86,10 @@ export default class Header extends React.Component {
       </div>
     }
     return <div className="header">
+      <SizedElement>
+        Hello world!
+      </SizedElement>
+
       <Link to="/" className="logo_link">
         <img className="logo" src="/static/img/logo.svg" height="35" alt="" />
         <img className="logo_small" src="/static/img/logo-small.svg" height="35" alt="" />
