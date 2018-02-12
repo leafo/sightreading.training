@@ -524,15 +524,15 @@ export default class SightReadingPage extends React.Component {
     }
 
     let header = <div className="workspace_header">
-      <button
-        onClick={this.toggleSettings.bind(this)}
-        className="settings_toggle">
-        Configure
-      </button>
-
-      {" "}
-
-      {fullscreenButton}
+      <div className="header_buttons">
+        <button
+          onClick={this.toggleSettings.bind(this)}
+          className="settings_toggle">
+          Configure
+        </button>
+        {" "}
+        {fullscreenButton}
+      </div>
 
       <div className="stats">
         {streak}
