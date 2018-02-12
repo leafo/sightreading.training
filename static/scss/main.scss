@@ -170,9 +170,9 @@ form, .form {
     top: 0;
     left: 0;
     right: 0;
+    z-index: 2;
 
     width: 100%;
-    overflow-x: auto;
 
     display: flex;
     align-items: center;
@@ -193,6 +193,65 @@ form, .form {
 
             &:last-child {
                 margin-right: 0;
+            }
+        }
+    }
+
+    .menu_toggle {
+        position: relative;
+        button {
+            background: transparent;
+            padding: 6px 8px;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            > svg {
+                fill: #333;
+                margin-left: 3px;
+            }
+        }
+        .menu_shroud {
+            position: fixed; 
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(white, 0.8);
+            z-index: 1;
+        }
+
+        .navigation_menu {
+            z-index: 2;
+        }
+    }
+
+    .navigation_menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        min-width: 150px;
+        background: white;
+        padding: 10px;
+        margin-top: 10px;
+
+        border: 1px solid lighten($border_color, 10%);
+        border-radius: 4px;
+        box-shadow: 0 0 20px rgba(black, 0.2);
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                margin-bottom: 5px;
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
+                a {
+                    display: block;
+                }
             }
         }
     }

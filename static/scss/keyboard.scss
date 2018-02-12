@@ -12,6 +12,7 @@
     left: 0;
     right: 0;
     height: $keyboard_height;
+    z-index: 1;
 
     .settings_open & {
         left: $settings_panel_width;
