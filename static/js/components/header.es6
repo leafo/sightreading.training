@@ -70,7 +70,25 @@ export default class Header extends React.Component {
     let userLinks = this.getPageLinks()
 
     let menu = null
+
     if (this.state.menuOpen) {
+
+
+      let account_area = null
+      if (N.session.currentUser) {
+        account_area = <div className="account_area logged_in">
+          <span className="username">
+            {N.session.currentUser.username}
+          </span>
+          <a href="#" onClick={this.props.doLogout}>Log out</a>
+        </div>
+      } else {
+        account_area = <div className="account_area logged_out">
+          <NavLink to="/login" activeClassName="active">Log in</NavLink>
+          <NavLink to="/register" activeClassName="active">Register</NavLink>
+        </div>
+      }
+
       menu = <div
         key="navigation_menu"
         ref={el => {
@@ -84,6 +102,7 @@ export default class Header extends React.Component {
           }
         }}
         className="navigation_menu" tabIndex="0">
+        {account_area}
         <ul>
           {userLinks.map((link, i) => <li key={i}>{link}</li>)}
         </ul>
