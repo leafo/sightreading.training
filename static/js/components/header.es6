@@ -72,8 +72,6 @@ export default class Header extends React.Component {
     let menu = null
 
     if (this.state.menuOpen) {
-
-
       let account_area = null
       if (N.session.currentUser) {
         account_area = <div className="account_area logged_in">
@@ -131,12 +129,6 @@ export default class Header extends React.Component {
         <a href="#" onClick={this.props.doLogout}>Log out</a>
       </div>
 
-      userLinks.push(<NavLink
-        exact
-        key="stats"
-        to="/stats"
-        activeClassName="active">Stats</NavLink>)
-
     } else {
       userPanel = <div className="right_section" key="user_out">
         <NavLink to="/login" activeClassName="active">Log in</NavLink>
@@ -152,13 +144,23 @@ export default class Header extends React.Component {
   }
 
   getPageLinks() {
-    return [
+    let links = [
       <NavLink exact key="root" to="/" activeClassName="active">Staff</NavLink>,
       <NavLink exact key="ear-training" to="/ear-training" activeClassName="active">Ear Training</NavLink>,
       <NavLink exact key="flash-cards" to="/flash-cards" activeClassName="active">Flash Cards</NavLink>,
       <NavLink exact key="play-along" to="/play-along" activeClassName="active">Play Along</NavLink>,
       <NavLink exact key="about" to="/about" activeClassName="active">Guide</NavLink>,
     ]
+
+    if (N.session.currentUser) {
+      links.push(<NavLink
+        exact
+        key="stats"
+        to="/stats"
+        activeClassName="active">Stats</NavLink>)
+    }
+
+    return links
   }
 
   render() {
