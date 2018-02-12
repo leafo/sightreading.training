@@ -3,6 +3,7 @@ import * as React from "react"
 import {Link, NavLink} from "react-router-dom"
 import MidiButton from "st/components/midi_button"
 import {trigger} from "st/events"
+import {classNames} from "lib"
 
 class SizedElement extends React.Component {
   constructor(props) {
@@ -49,7 +50,9 @@ class SizedElement extends React.Component {
   }
 
   render() {
-    return <div className="sized_element">{this.props.children}</div>
+    return <div className={classNames("sized_element", this.props.className)}>
+      {this.props.children}
+    </div>
   }
 }
 
@@ -86,17 +89,22 @@ export default class Header extends React.Component {
       </div>
     }
     return <div className="header">
-      <SizedElement>
-        Hello world!
-      </SizedElement>
 
       <Link to="/" className="logo_link">
         <img className="logo" src="/static/img/logo.svg" height="35" alt="" />
         <img className="logo_small" src="/static/img/logo-small.svg" height="35" alt="" />
       </Link>
 
-      {userLinks}
-      {userPanel}
+
+      <SizedElement className="user_links" onWidth={(w) => {
+        console.log("got width: ", w)
+        this.setState({
+          width: w
+        })
+      }}>
+        {userLinks}
+        {userPanel}
+      </SizedElement>
 
       <MidiButton
         midiInput={this.props.midiInput}

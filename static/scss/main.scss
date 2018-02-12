@@ -1,7 +1,7 @@
 @import "include/common";
 
 body {
-    color: #333;
+    color: $body_color;
     background: $body_background;
     font-family: 'Raleway', sans-serif;
     margin: 0;
@@ -177,6 +177,26 @@ form, .form {
     display: flex;
     align-items: center;
 
+    .user_links {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        margin: 0 20px;
+        color: #666;
+
+        > a, > .right_section {
+            white-space: nowrap;
+        }
+
+        > * {
+            margin-right: 20px;
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+
     .right_section {
         text-align: right;
         flex: 1;
@@ -221,24 +241,16 @@ form, .form {
         }
     }
 
-    > * {
-        margin-right: 20px;
-
-        &:last-child {
-            margin-right: 0;
-        }
-    }
 
     .logo_link {
         padding: 0;
     }
 
-    > a, > .right_section {
-        white-space: nowrap;
-    }
-
     a {
         padding: 3px 6px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #444;
 
         &:hover {
             color: $button_color;
