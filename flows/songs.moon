@@ -21,17 +21,20 @@ class SongsFlow extends Flow
 
     page = @params.page and tonumber(@params.page) or 0
 
-    songs = pager\get_page!
+    songs = pager\get_page page
 
     json: {
       success: true
       songs: for song in *songs
         {
           id: song.id
+          title: song.title
           user_id: song.user_id
           artist: song.artist
           album: song.album
           source: song.source
+          created_at: song.created_at
+          updated_at: song.updated_at
         }
     }
 

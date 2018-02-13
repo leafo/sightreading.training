@@ -9,6 +9,7 @@ import FlashCardPage from "st/components/pages/flash_card_page"
 import EarTrainingPage from "st/components/pages/ear_training_page"
 import PlayAlongPage from "st/components/pages/play_along_page"
 import LatencyPage from "st/components/pages/latency"
+import SongsPage from "st/components/pages/songs"
 import Header from "st/components/header"
 
 import IntroLightbox from "st/components/intro_lightbox"
@@ -119,6 +120,7 @@ class Layout extends React.Component {
       { path: "/play-along", page: PlayAlongPage },
       { path: "/stats", page: StatsPage },
       { path: "/latency", page: LatencyPage },
+      { path: "/play-along/songs", page: SongsPage },
 
       { path: "/about", page: GuidePage, props: {
         title: "About Sight Reading Trainer",
