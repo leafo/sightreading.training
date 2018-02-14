@@ -26,6 +26,7 @@ class SongsFlow extends Flow
     json: {
       success: true
       songs: for song in *songs
+        user = song\get_user!
         {
           id: song.id
           title: song.title
@@ -35,6 +36,10 @@ class SongsFlow extends Flow
           source: song.source
           created_at: song.created_at
           updated_at: song.updated_at
+          user: {
+            id: user.id
+            name: user\name_for_display!
+          }
         }
     }
 
