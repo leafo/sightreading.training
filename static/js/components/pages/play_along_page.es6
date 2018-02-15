@@ -213,11 +213,24 @@ export default class PlayAlongPage extends React.Component {
     this.setState({loading: true})
     let request = new XMLHttpRequest()
 
-    request.open("GET", `/static/music/${name}.lml?${+new Date()}`)
+    if (this.props.match.params.song_id) {
+      request.open("GET", `/songs/${this.props.match.params.song_id}.lml`)
+    } else {
+      request.open("GET", `/static/music/${name}.lml?${+new Date()}`)
+    }
+
     request.send()
     request.onload = (e) => {
       let songText = request.responseText
-      let song = SongParser.load(songText, this.songParserParams())
+      let song = null
+      try {
+        song = SongParser.load(songText, this.songParserParams())
+      } catch(e) {
+        this.setState({
+          songError: e.message
+        })
+        return
+      }
 
       this.setState({
         currentSongName: name,
@@ -364,7 +377,12 @@ export default class PlayAlongPage extends React.Component {
     let staff = null
     let staffType = STAVES.find(s => s.name == this.state.staffType)
 
-    if (staffType) {
+    if (this.state.songError) {
+      staff = <div className="song_error">
+        <strong>There was an error loading the song: </strong>
+        {this.state.songError}
+      </div>
+    } else if (staffType) {
       let staffProps = {
         ref: "staff",
         notes: this.state.song || [],
