@@ -30,6 +30,8 @@ class extends lapis.Application
   "/test": =>
     "hello world", layout: "test_layout"
 
+  [song: "/song/:song_id/:slug"]: =>
+
   "/(*)": =>
 
   "/logout.json": post =>
@@ -73,6 +75,10 @@ class extends lapis.Application
       assert_error @current_user, "must be logged in"
       @flow("songs")\create_song!
   }
+  
+  "/songs/:song_id.lml": =>
+    song = @flow("songs")\find_song!
+    song.source, layout: false
 
   "/songs/:song_id.json": multi {
     get: =>

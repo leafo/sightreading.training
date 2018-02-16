@@ -1,6 +1,8 @@
 /*global N*/
 import * as React from "react"
 
+import {Link, NavLink} from "react-router-dom"
+
 export default class SongsPage extends React.Component {
   constructor(props) {
     super(props)
@@ -53,7 +55,8 @@ export default class SongsPage extends React.Component {
     return <div className="songs_page page_container">
       <h2>Songs</h2>
       <ul>{this.state.songs.map(song =>
-        <li key={song.id}>{song.title} from {song.user.name}</li>
+        <li key={song.id}>
+        <Link to={song.url}>{song.title}</Link> from {song.user.name}</li>
       )}</ul>
     </div>
   }
