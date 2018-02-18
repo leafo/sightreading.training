@@ -214,7 +214,23 @@ export default class PlayAlongPage extends React.Component {
     let request = new XMLHttpRequest()
 
     if (this.props.match.params.song_id) {
-      request.open("GET", `/songs/${this.props.match.params.song_id}.lml`)
+      let songId = this.props.match.params.song_id
+      request.open("GET", `/songs/${songId}.lml`)
+      let metadataRequest = new XMLHttpRequest()
+      metadataRequest.open("GET", `/songs/${songId}.json`)
+      metadataRequest.send()
+      metadataRequest.onload = (e) => {
+        try {
+          let res = JSON.parse(metadataRequest.responseText)
+          this.setState({
+            songModel: res.song
+          })
+        } catch (e) {
+          console.error("Failed to fetch song data")
+        }
+      }
+
+
     } else {
       request.open("GET", `/static/music/${name}.lml?${+new Date()}`)
     }
@@ -514,6 +530,7 @@ export default class PlayAlongPage extends React.Component {
   renderEditor() {
     return <SongEditor
       parserParams={this.songParserParams()}
+      song={this.state.songModel}
       code={this.state.currentSongCode}
       onSong={song => this.setSong(song) } />
   }

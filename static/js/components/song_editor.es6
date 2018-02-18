@@ -6,15 +6,18 @@ import {JsonForm, TextInputRow} from "st/components/forms"
 export default class SongEditor extends React.Component {
   constructor(props) {
     super(props)
+
+    let song = this.props.song
+
     this.state = {
-      currentSong: this.props.currentSong,
+      song,
       loading: false,
 
-      title: "",
+      title: song ? song.title : "",
       code: this.props.code || "",
-      source: "",
-      album: "",
-      artist: "",
+      source: song ? song.source : "",
+      album: song ? song.album : "",
+      artist: song ? song.artist : "",
     }
   }
 
