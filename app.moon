@@ -78,7 +78,7 @@ class extends lapis.Application
   
   "/songs/:song_id.lml": =>
     song = @flow("songs")\find_song!
-    song.source, layout: false
+    song.song, layout: false
 
   "/songs/:song_id.json": multi {
     get: =>

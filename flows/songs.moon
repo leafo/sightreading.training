@@ -98,6 +98,10 @@ class SongsFlow extends Flow
     song\update {
       title: song_params.title
       song: song_params.song
+
+      source: song_params.source or db.NULL
+      album: song_params.album or db.NULL
+      artist: song_params.album or db.NULL
     }
 
     json: {

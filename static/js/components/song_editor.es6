@@ -87,7 +87,7 @@ export default class SongEditor extends React.Component {
       onChange={e => this.setState({
         [field]: e.target.value
       })}
-      value={this.state[field]}
+      value={this.state[field] || ""}
       name={`song[${field}]`}
       >{title}</TextInputRow>
   }
