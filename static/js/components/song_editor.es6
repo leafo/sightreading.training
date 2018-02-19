@@ -21,35 +21,6 @@ export default class SongEditor extends React.Component {
     }
   }
 
-  componentDidMount() {
-    if (this.props.songId) {
-      this.loadSong(this.props.songId)
-    }
-  }
-
-  loadSong(songId) {
-    if (this.state.loading) {
-      return
-    }
-
-    this.setState({ loading: true })
-
-    let request = new XMLHttpRequest()
-    request.open("GET", `/songs/${songId}.json`)
-    request.send()
-
-    request.onload = (e) => {
-      let res = JSON.parse(request.responseText)
-      console.warn(res.song)
-      this.setState({
-        loading: false,
-        song: res.song,
-        code: res.song.song,
-        title: res.song.title,
-      })
-    }
-  }
-
   beforeSubmit() {
     this.setState({
       errors: null,
@@ -66,23 +37,6 @@ export default class SongEditor extends React.Component {
     this.setState({
       song: res.song
     })
-  }
-
-  compileSong(code) {
-    let song = null
-
-    try {
-      song = SongParser.load(code, this.props.parserParams)
-    } catch(err) {
-      console.error(err.message)
-      if (this.props.onError) {
-        this.props.onError(err.message)
-      }
-    }
-
-    if (song && this.props.onSong) {
-      this.props.onSong(song, code)
-    }
   }
 
   render() {
@@ -106,7 +60,9 @@ export default class SongEditor extends React.Component {
           (e) => {
             let code = e.target.value
             this.setState({ code })
-            this.compileSong(code)
+            if (this.props.onCode) {
+              this.props.onCode(code)
+            }
           }
         }></textarea>
 

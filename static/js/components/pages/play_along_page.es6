@@ -238,22 +238,10 @@ export default class PlayAlongPage extends React.Component {
     request.send()
     request.onload = (e) => {
       let songText = request.responseText
-      let song = null
-      try {
-        song = SongParser.load(songText, this.songParserParams())
-      } catch(e) {
-        this.setState({
-          songError: e.message
-        })
-        return
-      }
-
       this.setState({
         currentSongName: name,
         currentSongCode: songText,
       })
-
-      this.setSong(song)
     }
   }
 
@@ -266,6 +254,7 @@ export default class PlayAlongPage extends React.Component {
 
     this.setState({
       loading: false,
+      songError: null,
       staffType: song.fittingStaff(),
       song,
       loopLeft: 0,
@@ -347,6 +336,22 @@ export default class PlayAlongPage extends React.Component {
         this.state.songTimer.setBpm(this.state.bpm)
       }
     }
+
+
+    if (prevState.currentSongCode != this.state.currentSongCode) {
+      let code = this.state.currentSongCode
+      console.log("compiling code:", code)
+      let song = null
+      try {
+        song = SongParser.load(code, this.songParserParams())
+        this.setSong(song)
+      } catch(e) {
+        this.setState({
+          songError: e.message
+        })
+        return
+      }
+    }
   }
 
   updateBeat(beat) {
@@ -356,7 +361,11 @@ export default class PlayAlongPage extends React.Component {
         this.state.songTimer.seek(this.state.loopLeft)
       }
 
-      this.refs.staff.setOffset(-beat * this.state.pixelsPerBeat + 100)
+      if (this.refs.staff) {
+        // if the staff isn't on the page yet then it will render with correct
+        // default?
+        this.refs.staff.setOffset(-beat * this.state.pixelsPerBeat + 100)
+      }
     }
 
 
@@ -391,14 +400,19 @@ export default class PlayAlongPage extends React.Component {
     }
 
     let staff = null
+    let songError = null
     let staffType = STAVES.find(s => s.name == this.state.staffType)
 
     if (this.state.songError) {
-      staff = <div className="song_error">
-        <strong>There was an error loading the song: </strong>
-        {this.state.songError}
+      songError = <div className="song_error">
+        <div>
+          <strong>There was an error loading the song: </strong>
+          {this.state.songError}
+        </div>
       </div>
-    } else if (staffType) {
+    }
+
+    if (staffType) {
       let staffProps = {
         ref: "staff",
         notes: this.state.song || [],
@@ -419,13 +433,14 @@ export default class PlayAlongPage extends React.Component {
       </Draggable>
     }
 
-    return <div className="play_along_page">
+    return <div className={classNames("play_along_page", { has_song: staff })}>
       <TransitionGroup>
         {this.renderSettings()}
       </TransitionGroup>
 
       <div className={classNames("play_along_workspace", {settings_open: this.state.settingsPanelOpen})}>
         <div className="staff_wrapper">
+          {songError}
           {staff}
           {this.renderTransportControls()}
         </div>
@@ -532,7 +547,9 @@ export default class PlayAlongPage extends React.Component {
       parserParams={this.songParserParams()}
       song={this.state.songModel}
       code={this.state.currentSongCode}
-      onSong={song => this.setSong(song) } />
+      onCode={code => this.setState({
+        currentSongCode: code
+      }) } />
   }
 
   renderTransportControls() {

@@ -57,6 +57,29 @@
             width: 240px;
         }
     }
+
+    &.has_song {
+        .staff_wrapper {
+            .song_error {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(white, 0.8);
+                z-index: 2;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+
+    &:not(.has_song) {
+        .song_error {
+            padding: 20px 0 ;
+        }
+    }
 }
 
 .settings_panel .song_list {
