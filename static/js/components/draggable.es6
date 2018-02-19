@@ -107,6 +107,8 @@ export default class Draggable extends React.Component {
 
 
   render() {
-    return this.props.children
+    return <div className="draggable">
+      {this.props.children}
+    </div>
   }
 }
