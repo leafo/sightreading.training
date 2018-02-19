@@ -22,8 +22,14 @@
             }
         }
 
-        > button {
+        .play_pause {
             min-width: 60px;
+        }
+
+        > button {
+            .svgicon {
+                fill: white;
+            }
         }
 
         input {

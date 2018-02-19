@@ -24,6 +24,8 @@ import NoteStats from "st/note_stats"
 import {setTitle} from "st/globals"
 import {classNames} from "lib"
 
+import {IconRewind} from "st/components/icons"
+
 import * as types from "prop-types"
 
 const DEFAULT_SONG = "over_the_rainbow"
@@ -340,7 +342,6 @@ export default class PlayAlongPage extends React.Component {
 
     if (prevState.currentSongCode != this.state.currentSongCode) {
       let code = this.state.currentSongCode
-      console.log("compiling code:", code)
       let song = null
       try {
         song = SongParser.load(code, this.songParserParams())
@@ -560,8 +561,23 @@ export default class PlayAlongPage extends React.Component {
 
     return <div className="transport_controls">
       {
+        this.state.songTimer ?
+        <button
+          type="button"
+          onClick={e => {
+            if (this.state.songTimer.running) {
+              this.state.songTimer.pause()
+            } else {
+              this.state.songTimer.reset()
+            }
+          }}
+        ><IconRewind width={15} /></button> :
+        null
+      }
+
+      {
         this.state.songTimer
-        ? <button onClick={e => this.togglePlay()}>
+        ? <button className="play_pause"type="button" onClick={e => this.togglePlay()}>
             {this.state.songTimer.running ? "Pause" : "Play"}
           </button>
         : null
