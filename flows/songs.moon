@@ -29,7 +29,7 @@ class SongsFlow extends Flow
         user = song\get_user!
         {
           id: song.id
-          url: @url_for "song", song_id: song.id, slug: "todo"
+          url: @url_for "song", song_id: song.id, slug: song\get_slug!
           title: song.title
           user_id: song.user_id
           artist: song.artist
@@ -62,7 +62,7 @@ class SongsFlow extends Flow
       success: true
       song: {
         id: song.id
-        url: @url_for "song", song_id: song.id, slug: "todo"
+        url: @url_for "song", song_id: song.id, slug: song\get_slug!
         user_id: song.user_id
         title: song.title
         artist: song.artist

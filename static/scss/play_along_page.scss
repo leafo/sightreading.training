@@ -4,6 +4,13 @@
     overflow: hidden;
 
     .play_along_workspace {
+        > h2 {
+            font-size: 20px;
+            background: white;
+            padding: 20px 20px 0 40px;
+            margin: 0;
+        }
+
         &.settings_open {
             margin-left: 250px;
         }

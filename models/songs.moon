@@ -27,8 +27,11 @@ class Songs extends Model
   }
 
   get_slug: =>
-    slugify @title
+    slug = slugify @title
+    if slug == ""
+      return "-"
 
+    slug
 
   allowed_to_edit: (user) =>
     return false unless user
