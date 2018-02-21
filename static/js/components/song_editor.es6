@@ -53,6 +53,7 @@ export default class SongEditor extends React.Component {
 
     return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
       <textarea
+        placeholder="Type some LML"
         disabled={this.state.loading}
         name="song[song]"
         value={this.state.code}

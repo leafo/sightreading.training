@@ -28,8 +28,6 @@ import {IconRewind} from "st/components/icons"
 
 import * as types from "prop-types"
 
-const DEFAULT_SONG = "over_the_rainbow"
-
 import {AutoChords} from "st/auto_chords"
 import {TransitionGroup, CSSTransition} from "react-transition-group"
 
@@ -51,10 +49,6 @@ class SettingsPanel extends React.Component {
         <button onClick={this.props.close}>Close</button>
         <h3>Settings</h3>
       </div>
-      <section className="settings_group">
-        <h4>Load Song</h4>
-        {this.renderSongPicker()}
-      </section>
 
       <section className="settings_group">
         <h4>Autochords</h4>
@@ -85,45 +79,6 @@ class SettingsPanel extends React.Component {
         </button>
     })
   }
-
-  renderSongPicker() {
-    let currentSong = this.props.currentSongName
-
-    let songs = [
-      "bartok_1",
-      "bartok_2",
-      "bartok_35",
-      "bartok_36",
-      "bartok_37",
-      "bartok_38",
-      "bartok_39",
-      "bartok_40",
-      "bartok_42",
-      "waltz_coordination_exercise",
-      "erfolg",
-      "mimiga",
-      "old_dan_tucker",
-      "good_vibrations"
-
-      // bossa_nova_test
-      // mary_had_a_little_lamb
-      // note_positioning_test
-    ]
-
-    return <section className="song_list">
-      <ul>
-        {songs.map(song => {
-          let loaded = currentSong == song
-          return <li key={song}>
-            <button className={classNames({selected: loaded})} onClick={e => {
-              trigger(this, "loadSong", song)
-            }}>{song}</button>
-          </li>
-          }
-        )}
-      </ul>
-    </section>
-  }
 }
 
 export default class PlayAlongPage extends React.Component {
@@ -139,7 +94,7 @@ export default class PlayAlongPage extends React.Component {
       playNotes: true,
       metronomeMultiplier: 1.0,
       autoChordType: 0,
-      enableEditor: false,
+      enableEditor: this.props.editorOpen || false,
       metronome: props.midiOutput ? props.midiOutput.getMetronome() : null
     }
 
@@ -207,7 +162,12 @@ export default class PlayAlongPage extends React.Component {
     }
   }
 
-  loadSong(name) {
+  // re-render the song with new autochords
+  refreshSong() {
+    throw "not yet"
+  }
+
+  loadSong() {
     if (this.state.loading) {
       return
     }
@@ -215,31 +175,23 @@ export default class PlayAlongPage extends React.Component {
     this.setState({loading: true})
     let request = new XMLHttpRequest()
 
-    if (this.props.match.params.song_id) {
-      let songId = this.props.match.params.song_id
+    let songId = this.props.match.params.song_id
 
-      request.open("GET", `/songs/${songId}.json`)
-      request.onload = (e) => {
-        try {
-          let res = JSON.parse(request.responseText)
-          this.setState({
-            songModel: res.song,
-            currentSongName: null,
-            currentSongCode: res.song.song,
-          })
-        } catch (e) {
-          this.setState({
-            songError: "Failed to fetch song"
-          })
-        }
-      }
-    } else {
-      request.open("GET", `/static/music/${name}.lml?${+new Date()}`)
-      request.onload = (e) => {
-        let songText = request.responseText
+    if (!songId) {
+      console.error("no song id to load")
+    }
+
+    request.open("GET", `/songs/${songId}.json`)
+    request.onload = (e) => {
+      try {
+        let res = JSON.parse(request.responseText)
         this.setState({
-          currentSongName: name,
-          currentSongCode: songText,
+          songModel: res.song,
+          currentSongCode: res.song.song,
+        })
+      } catch (e) {
+        this.setState({
+          songError: "Failed to fetch song"
         })
       }
     }
@@ -298,20 +250,16 @@ export default class PlayAlongPage extends React.Component {
   componentDidMount() {
     setTitle("Play along")
     this.updateBeat(0)
-    this.loadSong(DEFAULT_SONG)
     dispatch(this, {
-      loadSong: (e, songName) => {
-        this.loadSong(songName)
-      },
       setMinChordSpacing: (e, value) => {
         this.setState({
           chordMinSpacing: value
-        }, () => this.loadSong(this.state.currentSongName))
+        }, () => this.refreshSong())
       },
       setAutochords: (e, t) => {
         this.setState(
           {autoChordType: t},
-          () => this.loadSong(this.state.currentSongName)
+          () => this.refreshSong()
         )
       }
     })
@@ -440,6 +388,7 @@ export default class PlayAlongPage extends React.Component {
       </TransitionGroup>
 
       <div className={classNames("play_along_workspace", {settings_open: this.state.settingsPanelOpen})}>
+        {this.state.songModel ? <h2>{this.state.songModel.title}</h2> : null}
         <div className="staff_wrapper">
           {songError}
           {staff}
@@ -460,7 +409,6 @@ export default class PlayAlongPage extends React.Component {
       <SettingsPanel
         autoChordType={this.state.autoChordType}
         chordMinSpacing={this.state.chordMinSpacing}
-        currentSongName={this.state.currentSongName}
         close={() => this.setState({
           settingsPanelOpen: !this.state.settingsPanelOpen
         }) } />
