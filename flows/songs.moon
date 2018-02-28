@@ -9,6 +9,9 @@ import assert_error from require "lapis.application"
 import Songs from require "models"
 import Flow from require "lapis.flow"
 
+import types from require "tableshape"
+shapes = require "helpers.shapes"
+
 class SongsFlow extends Flow
   list_songs: =>
     pager = Songs\paginated {
@@ -55,7 +58,6 @@ class SongsFlow extends Flow
 
   get_song: =>
     trim_filter @params
-
     song = @find_song!
 
     json: {
@@ -72,50 +74,38 @@ class SongsFlow extends Flow
       }
     }
 
-  validate_song: =>
+  validate_song_params: =>
     trim_filter @params
     assert_valid @params, {
       {"song", type: "table"}
     }
 
-    new_song = @params.song
+    params = shapes.assert_params @params, {
+      song: types.shape {
+        title: shapes.truncated_text(160)
+        song: shapes.truncated_text(1024*10)
 
-    assert_valid new_song, {
-      {"title", type: "string", max_length: 160, exists: true}
-      {"song", type: "string", max_length: 1024*10, exists: true}
-      {"source", type: "string", optional: true, max_length: 250}
-      {"album", type: "string", optional: true, max_length: 250}
-      {"artist", type: "string", optional: true, max_length: 250}
+        source: shapes.db_nullable shapes.truncated_text(250)
+        album: shapes.db_nullable shapes.truncated_text(250)
+        artist: shapes.db_nullable shapes.truncated_text(250)
+      }, extra_fields: types.any / nil
     }
 
-    new_song
+    params.song
 
   update_song: =>
     song = @find_song!
     assert_error song\allowed_to_edit @current_user
-    song_params = @validate_song!
-
-    song\update {
-      title: song_params.title
-      song: song_params.song
-
-      source: song_params.source or db.NULL
-      album: song_params.album or db.NULL
-      artist: song_params.album or db.NULL
-    }
+    song\update @validate_song_params!
 
     json: {
       success: true
     }
 
   create_song: =>
-    song_params = @validate_song!
-
-    song = Songs\create {
-      title: song_params.title
-      song: song_params.song
-      user_id: @current_user.id
-    }
+    song_params = @validate_song_params!
+    song_params.user_id = @current_user.id
+    song = Songs\create song_params
 
     json: {
       success: true
