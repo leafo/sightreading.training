@@ -117,12 +117,12 @@ class Layout extends React.Component {
       { path: "/register", page: RegisterPage },
       { path: "/ear-training", page: EarTrainingPage },
       { path: "/flash-cards", page: FlashCardPage },
-      { path: "/play-along", page: PlayAlongPage },
+      { path: "/play-along", page: SongsPage },
       { path: "/stats", page: StatsPage },
       { path: "/latency", page: LatencyPage },
-      { path: "/play-along/songs", page: SongsPage },
       { path: "/new-song", page: PlayAlongPage, props: {
-        editorOpen: true
+        newSong: true,
+        editorOpen: true,
       }},
       { path: "/song/:song_id/:song_slug", page: PlayAlongPage },
 

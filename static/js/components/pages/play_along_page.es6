@@ -250,6 +250,10 @@ export default class PlayAlongPage extends React.Component {
   componentDidMount() {
     setTitle("Play along")
     this.updateBeat(0)
+    if (!this.props.newSong) {
+      this.loadSong()
+    }
+
     dispatch(this, {
       setMinChordSpacing: (e, value) => {
         this.setState({
