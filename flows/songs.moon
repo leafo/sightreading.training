@@ -24,27 +24,34 @@ class SongsFlow extends Flow
 
     page = @params.page and tonumber(@params.page) or 0
 
+    my_songs = if @current_user
+      Songs\select "where user_id = ? order by updated_at desc", @current_user.id
+
     songs = pager\get_page page
+
+    format_song = (song) ->
+      user = song\get_user!
+      {
+        id: song.id
+        url: @url_for "song", song_id: song.id, slug: song\get_slug!
+        title: song.title
+        user_id: song.user_id
+        artist: song.artist
+        album: song.album
+        created_at: song.created_at
+        updated_at: song.updated_at
+        user: {
+          id: user.id
+          name: user\name_for_display!
+        }
+      }
 
     json: {
       success: true
-      songs: for song in *songs
-        user = song\get_user!
-        {
-          id: song.id
-          url: @url_for "song", song_id: song.id, slug: song\get_slug!
-          title: song.title
-          user_id: song.user_id
-          artist: song.artist
-          album: song.album
-          source: song.source
-          created_at: song.created_at
-          updated_at: song.updated_at
-          user: {
-            id: user.id
-            name: user\name_for_display!
-          }
-        }
+      my_songs: if my_songs
+        [format_song song for song in *my_songs]
+
+      songs: [format_song song for song in *my_songs]
     }
 
   find_song: =>

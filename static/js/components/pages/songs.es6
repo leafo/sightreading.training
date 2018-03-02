@@ -20,7 +20,6 @@ export default class SongsPage extends React.Component {
     }
   }
 
-
   refreshSongs() {
     if (this.state.loading) {
       return
@@ -38,7 +37,11 @@ export default class SongsPage extends React.Component {
       try {
         let res = JSON.parse(request.responseText)
         console.log(res)
-        this.setState({loading: false, songs: res.songs || []})
+        this.setState({
+          loading: false,
+          songs: res.songs || [],
+          mySongs: res.my_songs || [],
+        })
       } catch (e) {
         this.setState({loading: false, error_message: "Failed to fetch stats"})
       }
@@ -52,12 +55,30 @@ export default class SongsPage extends React.Component {
       return <div className="page_container">Loading...</div>
     }
 
+    let mySongs
+    if (N.session.currentUser) {
+      mySongs = <section>
+        <h2>My songs</h2>
+        <p>
+          <Link to="/new-song" className="button">Create a new song</Link>
+        </p>
+        <ul>{this.state.mySongs.map(song =>
+          <li key={song.id}>
+          <Link to={song.url}>{song.title}</Link> updated at {song.updated_at}</li>
+        )}</ul>
+      </section>
+    }
+
     return <div className="songs_page page_container">
-      <h2>Songs</h2>
-      <ul>{this.state.songs.map(song =>
-        <li key={song.id}>
-        <Link to={song.url}>{song.title}</Link> from {song.user.name}</li>
-      )}</ul>
+      <section>
+        <h2>Songs</h2>
+        <ul>{this.state.songs.map(song =>
+          <li key={song.id}>
+          <Link to={song.url}>{song.title}</Link> from {song.user.name}</li>
+        )}</ul>
+      </section>
+
+      {mySongs}
     </div>
   }
 }
