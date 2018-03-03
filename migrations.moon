@@ -82,3 +82,6 @@ package.loaded.migrations =
     add_column "users", "admin", boolean default: false
 
 
+  [1520154640]: =>
+    add_column "songs", "publish_status", enum default: 1
+

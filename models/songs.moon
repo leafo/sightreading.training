@@ -1,5 +1,5 @@
 db = require "lapis.db"
-import Model from require "lapis.db.model"
+import Model, enum from require "lapis.db.model"
 import slugify from require "lapis.util"
 
 -- Generated schema dump: (do not edit)
@@ -24,6 +24,15 @@ class Songs extends Model
 
   @relations: {
     {"user", belongs_to: "Users"}
+  }
+
+  @create: (opts) =>
+    opts.publish_status = @publish_statuses\for_db opts.publish_status or "draft"
+    super opts
+
+  @publish_statuses: enum {
+    draft: 1
+    public: 2
   }
 
   get_slug: =>
