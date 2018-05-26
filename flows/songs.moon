@@ -51,7 +51,7 @@ class SongsFlow extends Flow
       my_songs: if my_songs
         [format_song song for song in *my_songs]
 
-      songs: [format_song song for song in *my_songs]
+      songs: [format_song song for song in *songs]
     }
 
   find_song: =>
