@@ -26,8 +26,26 @@ tup.rule({
   "../node_modules/moment/moment.js",
   "../node_modules/requirejs/require.js",
   "define_libs.js",
-}, join, "lib.js")
+}, join, "lib-dev.js")
 
+tup.rule({
+  "pre_libs.js",
+  "../node_modules/babel-polyfill/dist/polyfill.js",
+  "../node_modules/classnames/index.js",
+  "../node_modules/nosleep.js/dist/NoSleep.js",
+  "../node_modules/mersennetwister/src/MersenneTwister.js",
+  "../node_modules/react/umd/react.production.min.js",
+  "../node_modules/react-dom/umd/react-dom.production.min.js",
+  "../node_modules/prop-types/prop-types.js",
+  "../node_modules/react-transition-group/dist/react-transition-group.js",
+  "../node_modules/react-router/umd/react-router.min.js",
+  "../node_modules/react-router-dom/umd/react-router-dom.min.js",
+  "../node_modules/chart.js/dist/Chart.js",
+  "../node_modules/react-chartjs-2/dist/react-chartjs-2.js",
+  "../node_modules/moment/moment.js",
+  "../node_modules/requirejs/require.js",
+  "define_libs.js",
+}, join, "lib.js")
 
 tup.rule({
   "../node_modules/jasmine-core/lib/jasmine-core/boot.js"

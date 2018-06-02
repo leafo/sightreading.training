@@ -48,7 +48,7 @@ class Layout extends Widget
                     alt: ""
                   }
 
-        @include_js "lib", "main"
+        @include_js {"lib-dev", "lib.min"}, "main"
 
         if config.sentry_url
           script src: "https://cdn.ravenjs.com/3.9.1/raven.min.js"
@@ -69,10 +69,15 @@ class Layout extends Widget
 
   include_js: (...) =>
     for lib in *{...}
-      if config._name == "production"
-        script type: "text/javascript", src: "/static/#{lib}.min.js?#{buster}"
+      unless type(lib) == "table"
+        lib = {lib, "#{lib}.min"}
+
+      path = if config._name == "production"
+        lib[2]
       else
-        script type: "text/javascript", src: "/static/#{lib}.js?#{buster}"
+        lib[1]
+
+      script type: "text/javascript", src: "/static/#{path}.js?#{buster}"
 
   google_analytics: =>
     script type: "text/javascript", ->
