@@ -36,7 +36,7 @@ export default class StaffNotes extends React.Component {
         offsetLeft={keySignatureWidth}
         upperRow={this.props.upperRow}
         lowerRow={this.props.lowerRow}
-        notes={songNotes}
+        notes={songNotes.concat(heldSongNotes)}
         pixelsPerBeat={this.props.noteWidth}
       />
 
@@ -64,19 +64,36 @@ export default class StaffNotes extends React.Component {
 
   convertHeldToSongNotes() {
     if (!this.props.heldNotes) {
-      return null
+      return []
     }
 
     let notes = new SongNoteList()
+    let dur = 40 / this.props.noteWidth
 
     // notes that are held down but aren't correct
     Object.keys(this.props.heldNotes)
       .filter((note) => !this.props.notes.inHead(note))
       .forEach((note, idx) => {
-        notes.push(new SongNote(note, 0, 1))
+        notes.push(new SongNote(note, 0, dur))
       })
 
-    return notes
+    return this.filterVisibleNotes(notes)
+  }
+
+  filterVisibleNotes(notes) {
+    if (notes.length == 0) {
+      return notes
+    }
+
+    let out = new SongNoteList()
+    notes.forEach(n => {
+      let pitch = parseNote(n.note)
+      if (this.shouldRenderPitch(pitch)) {
+        out.push(n)
+      }
+    })
+
+    return out
   }
 
   convertToSongNotes() {
@@ -147,7 +164,7 @@ export default class StaffNotes extends React.Component {
       beat += 1
     })
 
-    return [notes, noteClasses]
+    return [this.filterVisibleNotes(notes), noteClasses]
   }
 
   classNames()  {
