@@ -72,7 +72,7 @@ class Layout extends Widget
       unless type(lib) == "table"
         lib = {lib, "#{lib}.min"}
 
-      path = if config._name == "production"
+      path = if config._name == "production" or @params.prod_assets
         lib[2]
       else
         lib[1]
