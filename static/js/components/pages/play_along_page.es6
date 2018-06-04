@@ -246,17 +246,27 @@ export default class PlayAlongPage extends React.Component {
   }
 
   onNoteStart(note) {
-    if (!this.state.playNotes) {
+    let noteStart = note.getStart()
+    if (noteStart >= this.state.loopRight) {
       return
     }
 
-    if (this.props.midiOutput) {
+    if (noteStart < this.state.loopLeft) {
+      return
+    }
+
+    if (this.state.playNotes && this.props.midiOutput) {
       this.props.midiOutput.noteOn(parseNote(note.note), 100)
     }
 
     if (this.state.enablePauseOnMiss) {
+      let currentSong = this.state.song
       if (!this.hitNotes.has(note)) {
         window.setTimeout(() => {
+          if (this.state.song != currentSong) {
+            return
+          }
+
           if (!this.state.songTimer.running) {
             return
           }
@@ -265,19 +275,19 @@ export default class PlayAlongPage extends React.Component {
             return
           }
 
+          if (noteStart > this.currentBeat) {
+            return
+          }
+
           this.state.songTimer.pause()
-          this.state.songTimer.seek(note.getStart())
+          this.state.songTimer.seek(noteStart)
         }, 100)
       }
     }
   }
 
   onNoteStop(note) {
-    if (!this.state.playNotes) {
-      return
-    }
-
-    if (this.props.midiOutput) {
+    if (this.state.playNotes && this.props.midiOutput) {
       this.props.midiOutput.noteOff(parseNote(note.note), 100)
     }
   }
