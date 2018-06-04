@@ -6,8 +6,13 @@ import {parseNote, noteStaffOffset} from "st/music"
 import * as types from "prop-types"
 
 export default class BarNotes extends React.PureComponent {
+  static defaultProps = {
+    heldNotes: {}
+  }
+
   static propTypes = {
     notes: types.array.isRequired,
+    heldNotes: types.object.isRequired,
   }
 
   render() {
@@ -46,14 +51,14 @@ export default class BarNotes extends React.PureComponent {
       outsideLoop = note.getStart() < this.props.loopLeft || note.getStart() >= this.props.loopRight
     }
 
-    let held = false // this.props.heldNotes[noteName]
+    let held = this.props.heldNotes[note.id]
 
     return <div
       className={classNames("note_bar", {
         is_flat: accidentals == -1,
         is_sharp: accidentals == 1,
         is_natural: accidentals == 0,
-        // held: held && held.songNoteIdx == opts.idx,
+        held,
         outside_loop: outsideLoop,
       })}
       title={noteName}

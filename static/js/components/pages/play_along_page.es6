@@ -90,6 +90,7 @@ export default class PlayAlongPage extends React.Component {
 
     this.state = {
       heldNotes: {}, // notes by name, for the keyboard
+      heldSongNotes: {},
       bpm: 60,
       pixelsPerBeat: StaffSongNotes.defaultPixelsPerBeat,
       loopLeft: 0,
@@ -372,7 +373,7 @@ export default class PlayAlongPage extends React.Component {
       let staffProps = {
         ref: "staff",
         notes: this.state.song || EmptySong,
-        heldNotes: this.state.heldNotes,
+        heldNotes: this.state.heldSongNotes,
         keySignature,
         pixelsPerBeat: this.state.pixelsPerBeat,
         children: TimeBar,
@@ -466,12 +467,14 @@ export default class PlayAlongPage extends React.Component {
       }
     }
 
-    let heldNotes = {
-      ...this.state.heldNotes,
-      [note]: { songNoteIdx }
+    let heldNotes = { ...this.state.heldNotes, [note]: { songNoteIdx } }
+    let heldSongNotes = this.state.heldSongNotes
+
+    if (songNote) {
+      heldSongNotes = {...heldSongNotes, [songNote.id]: songNote}
     }
 
-    this.setState({ heldNotes })
+    this.setState({ heldNotes, heldSongNotes })
   }
 
   releaseNote(note) {
@@ -481,7 +484,13 @@ export default class PlayAlongPage extends React.Component {
     let heldNotes = {...this.state.heldNotes}
     delete heldNotes[note]
 
-    this.setState({ heldNotes })
+    let heldSongNotes = this.state.heldSongNotes
+    if (held.songNoteIdx) {
+      heldSongNotes = {...heldSongNotes}
+      delete heldSongNotes[this.state.song[held.songNoteIdx].id]
+    }
+
+    this.setState({ heldNotes, heldSongNotes })
   }
 
   onMidiMessage(message) {
