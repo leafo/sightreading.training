@@ -6,7 +6,10 @@ import StaffNotes from "st/components/staff_notes"
 import {parseNote, noteName, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 import * as types from "prop-types"
 
-export default class StaffSongNotes extends StaffNotes {
+import LedgerLines from "st/components/staff/ledger_lines"
+import BarNotes from "st/components/staff/bar_notes"
+
+export default class StaffSongNotes extends React.PureComponent {
   static propTypes = {
     loopLeft: types.number,
     loopRight: types.number,
@@ -18,15 +21,34 @@ export default class StaffSongNotes extends StaffNotes {
 
   static defaultPixelsPerBeat = 100
 
-  renderNotes() {
-    return [
-      this.renderMeasureLines(),
-      super.renderNotes()
-    ]
+  render() {
+    let count = Math.abs(this.props.keySignature.count)
+    let keySignatureWidth = count > 0 ? count * 20 + 20 : 0;
+
+    return <div ref="notes" className={this.classNames()}>
+      {this.renderMeasureLines()}
+
+      <LedgerLines key="ledger_lines"
+        offsetLeft={keySignatureWidth}
+        upperRow={this.props.upperRow}
+        lowerRow={this.props.lowerRow}
+        notes={this.props.notes}
+        pixelsPerBeat={this.props.pixelsPerBeat}
+      />
+
+      <BarNotes
+        offsetLeft={keySignatureWidth}
+        keySignature={this.props.keySignature}
+        upperRow={this.props.upperRow}
+        lowerRow={this.props.lowerRow}
+        notes={this.props.notes}
+        pixelsPerBeat={this.props.pixelsPerBeat}
+      />
+    </div>
   }
 
-  renderHeldNotes() {
-    // song staff doesn't have ghost held notes
+  setOffset(amount) {
+    this.refs.notes.style.transform = `translate3d(${amount}px, 0, 0)`;
   }
 
   renderMeasureLines() {
@@ -41,7 +63,7 @@ export default class StaffSongNotes extends StaffNotes {
 
     let lines = []
 
-    let pixelsPerBeat = this.props.pixelsPerBeat || this.constructor.defaultPixelsPerBeat
+    let pixelsPerBeat = this.props.pixelsPerBeat
 
     for (let m = 0; m <= measures; m++) {
       let fromLeft = m * beatsPerMeasure * pixelsPerBeat
@@ -54,66 +76,5 @@ export default class StaffSongNotes extends StaffNotes {
     }
 
     return lines
-  }
-
-  renderNote(songNote, opts) {
-    const key = this.props.keySignature
-    let note = songNote.note
-    let pitch = parseNote(note)
-
-    if (!this.shouldRenderPitch(pitch)) {
-      return
-    }
-
-    let pixelsPerBeat = this.props.pixelsPerBeat || this.constructor.defaultPixelsPerBeat
-
-    let row = noteStaffOffset(note)
-
-    let fromTop = this.props.upperRow - row
-    let fromLeft = songNote.start * pixelsPerBeat + 2
-    let width = songNote.getRenderStop() * pixelsPerBeat - fromLeft - 4
-
-    let accidentals = key.accidentalsForNote(note)
-
-    let style = {
-      top: `${Math.floor(fromTop * 25/2)}%`,
-      left: `${fromLeft}px`,
-      width: `${width}px`
-    }
-
-    let outside = row > this.props.upperRow || row < this.props.lowerRow
-
-    let outsideLoop = false
-
-    if (this.props.loopLeft != null && this.props.loopRight != null) {
-      outsideLoop = songNote.start < this.props.loopLeft || songNote.start >= this.props.loopRight
-    }
-
-    let held = this.props.heldNotes[songNote.note]
-
-    let noteEl = <div
-      className={classNames("note_bar", {
-        is_flat: accidentals == -1,
-        is_sharp: accidentals == 1,
-        is_natural: accidentals == 0,
-        held: held && held.songNoteIdx == opts.idx,
-        outside_loop: outsideLoop,
-      })}
-      title={songNote.note}
-      style={style}
-      key={opts.key}></div>
-
-    if (outside) {
-      return [
-        this.renderLedgerLines(note, {
-          offset: fromLeft,
-          width: width,
-        }),
-        noteEl,
-      ]
-    } else {
-      return noteEl
-    }
-
   }
 }
