@@ -4,6 +4,9 @@ import {classNames} from "lib"
 import * as types from "prop-types"
 import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
+import {SongNoteList, SongNote} from "st/song_note_list"
+import LedgerLines from "st/components/staff/ledger_lines"
+
 export default class StaffNotes extends React.Component {
   static propTypes = {
     keySignature: types.object.isRequired,
@@ -20,9 +23,35 @@ export default class StaffNotes extends React.Component {
 
   render() {
     return <div ref="notes" className={this.classNames()}>
+      <LedgerLines key="ledger_lines"
+        upperRow={this.props.upperRow}
+        lowerRow={this.props.lowerRow}
+        notes={this.convertToSongNotes()}
+        pixelsPerBeat={this.props.noteWidth}
+      />
       {this.renderNotes()}
       {this.renderHeldNotes()}
     </div>
+  }
+
+  convertToSongNotes() {
+    let notes = new SongNoteList()
+    let beat = 0
+    let dur = 40 / this.props.noteWidth
+
+    this.props.notes.forEach(column => {
+      if (Array.isArray(column)) {
+        column.forEach(n => {
+          notes.push(new SongNote(n, beat, dur))
+        })
+      } else {
+        notes.push(new SongNote(column, beat, dur))
+      }
+
+      beat += 1
+    })
+
+    return notes
   }
 
   classNames()  {
@@ -184,61 +213,6 @@ export default class StaffNotes extends React.Component {
       className={classes}
       >{parts}</div>
 
-    if (outside) {
-      return [
-        ...this.renderLedgerLines(note, opts),
-        noteEl,
-      ]
-    } else {
-      return noteEl
-    }
-  }
-
-  renderLedgerLines(note, opts={}) {
-    const props = this.props
-
-    let key = props.keySignature
-    let fromLeft =  opts.offset || 0
-    let letterDelta = 0
-    let below = false
-
-    let offset = noteStaffOffset(note)
-
-    // above
-    if (offset > props.upperRow) {
-      letterDelta = offset - props.upperRow;
-    }
-
-    // below
-    if (offset < props.lowerRow) {
-      letterDelta = props.lowerRow - offset;
-      below = true;
-    }
-
-    let numLines = Math.floor(letterDelta / 2);
-
-    let lines = [];
-    for (let i = 0; i < numLines; i++) {
-      let style = {
-        left: `${(opts.offset || 0) - 10}px`,
-        width: `${(opts.width || 40) + 20}px`,
-      }
-
-      if (below) {
-        style.top = `${100 + 25*(i + 1)}%`;
-      } else {
-        style.bottom = `${100 + 25*(i + 1)}%`;
-      }
-
-      lines.push(<div
-        key={`${opts.key}-leger-${i}`}
-        className={classNames("ledger_line", {
-          above: !below,
-          below: below
-        })}
-        style={style} />);
-    }
-
-    return lines;
+    return noteEl
   }
 }
