@@ -85,10 +85,14 @@ export default class StaffNotes extends React.Component {
       return notes
     }
 
+    if (!this.props.filterPitch) {
+      return notes
+    }
+
     let out = new SongNoteList()
     notes.forEach(n => {
       let pitch = parseNote(n.note)
-      if (this.shouldRenderPitch(pitch)) {
+      if (this.props.filterPitch(pitch)) {
         out.push(n)
       }
     })
@@ -173,28 +177,6 @@ export default class StaffNotes extends React.Component {
 
   setOffset(amount) {
     this.refs.notes.style.transform = `translate3d(${amount}px, 0, 0)`;
-  }
-
-  // TODO: move this out
-  shouldRenderPitch(pitch) {
-    const props = this.props
-
-    if (props.inGrand) {
-      switch (props.staffClass) {
-        case "f_staff":  // lower
-          if (pitch >= MIDDLE_C_PITCH) {
-            return false
-          }
-          break;
-        case "g_staff":  // upper
-          if (pitch < MIDDLE_C_PITCH) {
-            return false
-          }
-          break;
-      }
-    }
-
-    return true
   }
 
   renderAnnotations() {

@@ -7,7 +7,7 @@ import NoteList from "st/note_list"
 import {SongNoteList} from "st/song_note_list"
 import ChordList from "st/chord_list"
 
-import {parseNote, noteStaffOffset} from "st/music"
+import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
 import StaffNotes from "st/components/staff_notes"
 import StaffSongNotes from "st/components/staff_song_notes"
@@ -78,15 +78,6 @@ export class Staff extends React.Component {
     </div>
   }
 
-  renderHeld(notes) {
-    // notes that are held down but aren't correct
-    return Object.keys(this.props.heldNotes).map((note, idx) =>
-      !this.props.notes.inHead(note) && this.noteRenderer.renderHeldNote(this, note, {
-        key: `held-${idx}`,
-      })
-    );
-  }
-
   renderKeySignature() {
     let keySignature = this.props.keySignature
 
@@ -126,7 +117,6 @@ export class Staff extends React.Component {
       })}
     </div>;
   }
-
 }
 
 export class GStaff extends Staff {
@@ -151,31 +141,52 @@ export class FStaff extends Staff {
 }
 
 export class GrandStaff extends React.Component {
+  constructor(props) {
+    super(props)
+    this.gstaff = React.createRef()
+    this.fstaff = React.createRef()
+
+    this.filterGStaff = this.filterGStaff.bind(this)
+    this.filterFStaff = this.filterFStaff.bind(this)
+  }
+
   // skips react for performance
   setOffset(amount) {
-    if (!this.staves) {
-      return;
+    if (this.gstaff.current) {
+      this.gstaff.current.setOffset(amount)
     }
 
-    this.staves.forEach(s => {
-      if (s) {
-        s.setOffset(amount)
-      }
-    })
+    if (this.fstaff.current) {
+      this.fstaff.current.setOffset(amount)
+    }
+  }
+
+  filterGStaff(pitch) {
+    if (pitch < MIDDLE_C_PITCH) {
+      return false
+    }
+
+    return true
+  }
+
+  filterFStaff(pitch) {
+    if (pitch >= MIDDLE_C_PITCH) {
+      return false
+    }
+
+    return true
   }
 
   render() {
-    this.staves = []
-
     return <div className="grand_staff">
       <GStaff
-        ref={(s) => this.staves.push(s)}
-        inGrand={true}
+        ref={this.gstaff}
+        filterPitch={this.filterGStaff}
         {...this.props} />
       <FStaff
-        ref={(s) => this.staves.push(s)}
+        ref={this.fstaff}
+        filterPitch={this.filterFStaff}
         showAnnotations={false}
-        inGrand={true}
         {...this.props} />
     </div>;
   }
