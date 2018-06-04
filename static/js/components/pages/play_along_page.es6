@@ -639,7 +639,10 @@ export default class PlayAlongPage extends React.Component {
 
       <input
         checked={this.state.playNotes || false}
-        onChange={this.getToggler("playNotes")}
+        onChange={(e) => {
+          this.state.songTimer.clearPlayingNotes()
+          this.getToggler("playNotes")(e)
+        }}
         title="Play notes to MIDI output"
         type="checkbox" />
 
