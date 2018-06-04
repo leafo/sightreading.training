@@ -34,19 +34,22 @@
         }
 
         > button {
+            height: 28px;
             .svgicon {
                 fill: white;
             }
         }
 
-        input {
+        input[type=text] {
             margin-left: 10px;
             @include border_box;
             border: 1px solid lighten($border_color, 10%);
             font-family: 'Raleway', sans-serif;
             font-size: 13px;
             padding: 4px 4px;
-            width: 40px;
+            height: 28px;
+            width: 45px;
+            border-radius: 2px;
             text-align: center;
         }
 
@@ -67,7 +70,8 @@
         }
 
         .transport_slider {
-            width: 240px;
+            width: 200px;
+            height: 28px;
         }
     }
 

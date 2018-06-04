@@ -546,6 +546,7 @@ export default class PlayAlongPage extends React.Component {
         this.state.songTimer ?
         <button
           type="button"
+          title="Rewind to beginning"
           onClick={e => {
             if (this.state.songTimer.running) {
               this.state.songTimer.pause()
@@ -570,6 +571,7 @@ export default class PlayAlongPage extends React.Component {
         max={stop}
         value={this.currentBeat}
         onUpdate={this.seekBpm}
+        title="Play position (in beats)"
       />
 
       <span className="loop_controls">
@@ -582,6 +584,7 @@ export default class PlayAlongPage extends React.Component {
           max={this.state.loopRight}
           resetValue={0}
           value={this.state.loopLeft}
+          title="Loop left"
           onUpdate={this.getSetter("loopLeft")}
         />
 
@@ -590,6 +593,7 @@ export default class PlayAlongPage extends React.Component {
           max={stop}
           resetValue={stop}
           value={this.state.loopRight}
+          title="Loop right"
           onUpdate={this.getSetter("loopRight")}
         />
       </span>
@@ -599,6 +603,7 @@ export default class PlayAlongPage extends React.Component {
       <PositionField
         min={1}
         max={10}
+        title="Metronome multiplier"
         value={this.state.metronomeMultiplier}
         onUpdate={this.getSetter("metronomeMultiplier")}
       />
@@ -606,6 +611,7 @@ export default class PlayAlongPage extends React.Component {
       <input
         checked={this.state.playNotes || false}
         onChange={(e) => this.setState({playNotes: e.target.checked}) }
+        title="Play notes to MIDI output"
         type="checkbox" />
 
       <button onClick={e =>

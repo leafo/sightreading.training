@@ -76,6 +76,7 @@ export default class PositionField extends React.PureComponent {
     return <input
       className="position_field_input"
       type="text"
+      title={this.props.title}
       readOnly={this.props.readOnly}
       value={displayValue}
       onKeyDown={e => {
