@@ -12,7 +12,7 @@ export default class WholeNotes extends React.PureComponent {
     lowerRow: types.number,
     pixelsPerBeat: types.number,
     offsetLeft: types.number,
-    // noteClasses
+    // noteClasses, staticNoteClasses
   }
 
   render() {
@@ -76,10 +76,7 @@ export default class WholeNotes extends React.PureComponent {
       is_sharp: accidentals == 1,
       is_natural: accidentals == 0,
       outside: outside,
-      // noteshake: props.noteShaking && opts.first,
-      // TODO:
-      // held: opts.goal && opts.first && props.heldNotes[note],
-    }, noteClasses)
+    }, noteClasses, props.staticNoteClasses)
 
     let parts = [
       <img key="head" className="primary" src="/static/svg/noteheads.s0.svg" />
@@ -97,14 +94,12 @@ export default class WholeNotes extends React.PureComponent {
       parts.push(<img key="sharp" className="accidental sharp" src="/static/svg/sharp.svg" />)
     }
 
-    let noteEl = <div
+    return <div
       key={`note-${idx}`}
       style={style}
-      data-note={note}
+      data-note={note.note}
       data-midi-note={pitch}
       className={classes}
       >{parts}</div>
-
-    return noteEl
   }
 }

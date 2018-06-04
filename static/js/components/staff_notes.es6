@@ -24,6 +24,9 @@ export default class StaffNotes extends React.Component {
 
   render() {
     let [songNotes, noteClasses] = this.convertToSongNotes()
+    let heldSongNotes = this.convertHeldToSongNotes()
+
+    // TODO: annotations are missing
 
     return <div ref="notes" className={this.classNames()}>
       <LedgerLines key="ledger_lines"
@@ -42,8 +45,32 @@ export default class StaffNotes extends React.Component {
         pixelsPerBeat={this.props.noteWidth}
       />
 
-      {this.renderHeldNotes()}
+      <WholeNotes key="held_notes"
+        keySignature={this.props.keySignature}
+        upperRow={this.props.upperRow}
+        lowerRow={this.props.lowerRow}
+        notes={heldSongNotes}
+        staticNoteClasses="held"
+        pixelsPerBeat={this.props.noteWidth}
+      />
     </div>
+  }
+
+  convertHeldToSongNotes() {
+    if (!this.props.heldNotes) {
+      return null
+    }
+
+    let notes = new SongNoteList()
+
+    // notes that are held down but aren't correct
+    Object.keys(this.props.heldNotes)
+      .filter((note) => !this.props.notes.inHead(note))
+      .forEach((note, idx) => {
+        notes.push(new SongNote(note, 0, 1))
+      })
+
+    return notes
   }
 
   convertToSongNotes() {
@@ -125,21 +152,7 @@ export default class StaffNotes extends React.Component {
     this.refs.notes.style.transform = `translate3d(${amount}px, 0, 0)`;
   }
 
-  renderHeldNotes(note, opts={}) {
-    if (!this.props.heldNotes) {
-      return null
-    }
-
-    // notes that are held down but aren't correct
-    return Object.keys(this.props.heldNotes).map((note, idx) =>
-      !this.props.notes.inHead(note) && this.renderNote(note, {
-        ...opts,
-        key: `held-${idx}`,
-        classes: { held: true }
-      })
-    )
-  }
-
+  // TODO: move this out
   shouldRenderPitch(pitch) {
     const props = this.props
 
@@ -159,75 +172,5 @@ export default class StaffNotes extends React.Component {
     }
 
     return true
-  }
-
-  renderNote(note, opts={}) {
-    const props = this.props
-    let key = props.keySignature
-    note = key.enharmonic(note)
-
-    let pitch = parseNote(note)
-
-    if (!this.shouldRenderPitch(pitch)) {
-      return
-    }
-
-    let row = noteStaffOffset(note)
-
-    let fromTop = props.upperRow - row;
-    let fromLeft = opts.offset || 0
-
-    if (opts.rowOffsets) {
-      let rowOffset = 1
-      while (opts.rowOffsets[row - 1] == rowOffset || opts.rowOffsets[row + 1] == rowOffset) {
-        rowOffset += 1
-      }
-      opts.rowOffsets[row] = rowOffset
-
-      fromLeft += (rowOffset - 1) * 28
-    }
-
-    let style = {
-      top: `${Math.floor(fromTop * 25/2)}%`,
-      left: `${fromLeft}px`
-    }
-
-    let outside = row > props.upperRow || row < props.lowerRow
-    let accidentals = key.accidentalsForNote(note)
-
-    let classes = classNames("whole_note", "note", {
-      is_flat: accidentals == -1,
-      is_sharp: accidentals == 1,
-      is_natural: accidentals == 0,
-      outside: outside,
-      noteshake: props.noteShaking && opts.first,
-      held: opts.goal && opts.first && props.heldNotes[note],
-    }, opts.classes || {})
-
-    let parts = [
-      <img key="head" className="primary" src="/static/svg/noteheads.s0.svg" />
-    ]
-
-    if (accidentals == 0) {
-      parts.push(<img key="natural" className="accidental natural" src="/static/svg/natural.svg" />)
-    }
-
-    if (accidentals == -1) {
-      parts.push(<img key="flat" className="accidental flat" src="/static/svg/flat.svg" />)
-    }
-
-    if (accidentals == 1) {
-      parts.push(<img key="sharp" className="accidental sharp" src="/static/svg/sharp.svg" />)
-    }
-
-    let noteEl = <div
-      key={opts.key}
-      style={style}
-      data-note={note}
-      data-midi-note={pitch}
-      className={classes}
-      >{parts}</div>
-
-    return noteEl
   }
 }
