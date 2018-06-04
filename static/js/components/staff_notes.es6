@@ -28,8 +28,12 @@ export default class StaffNotes extends React.Component {
 
     // TODO: annotations are missing
 
+    let count = Math.abs(this.props.keySignature.count)
+    let keySignatureWidth = count > 0 ? count * 20 + 20 : 0;
+
     return <div ref="notes" className={this.classNames()}>
       <LedgerLines key="ledger_lines"
+        offsetLeft={keySignatureWidth}
         upperRow={this.props.upperRow}
         lowerRow={this.props.lowerRow}
         notes={songNotes}
@@ -37,6 +41,7 @@ export default class StaffNotes extends React.Component {
       />
 
       <WholeNotes key="notes"
+        offsetLeft={keySignatureWidth}
         keySignature={this.props.keySignature}
         upperRow={this.props.upperRow}
         lowerRow={this.props.lowerRow}
@@ -46,6 +51,7 @@ export default class StaffNotes extends React.Component {
       />
 
       <WholeNotes key="held_notes"
+        offsetLeft={keySignatureWidth}
         keySignature={this.props.keySignature}
         upperRow={this.props.upperRow}
         lowerRow={this.props.lowerRow}
