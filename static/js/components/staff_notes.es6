@@ -17,8 +17,6 @@ export default class StaffNotes extends React.Component {
     upperRow: types.number.isRequired,
     lowerRow: types.number.isRequired,
     heldNotes: types.object.isRequired,
-    inGrand: types.bool,
-    staffClass: types.string,
     noteShaking: types.bool,
   }
 
@@ -80,6 +78,7 @@ export default class StaffNotes extends React.Component {
     return this.filterVisibleNotes(notes)
   }
 
+  // filter notes so only the ones visible for this staff returned
   filterVisibleNotes(notes) {
     if (notes.length == 0) {
       return notes

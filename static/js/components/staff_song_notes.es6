@@ -8,22 +8,48 @@ import * as types from "prop-types"
 
 import LedgerLines from "st/components/staff/ledger_lines"
 import BarNotes from "st/components/staff/bar_notes"
+import {SongNoteList} from "st/song_note_list"
 
-export default class StaffSongNotes extends React.PureComponent {
+export default class StaffSongNotes extends React.Component {
+  static defaultPixelsPerBeat = 100
+
   static propTypes = {
+    keySignature: types.object.isRequired,
     loopLeft: types.number,
     loopRight: types.number,
+    pixelsPerBeat: types.number.isRequired,
+    heldNotes: types.object.isRequired,
   }
 
   classNames()  {
     return "staff_notes staff_song_notes"
   }
 
-  static defaultPixelsPerBeat = 100
+  filterVisibleNotes() {
+    const props = this.props
+    if (props.notes.length == 0) {
+      return props.notes
+    }
+
+    if (!props.filterPitch) {
+      return props.notes
+    }
+
+    let out = new SongNoteList()
+    props.notes.forEach(n => {
+      let pitch = parseNote(n.note)
+      if (this.props.filterPitch(pitch)) {
+        out.push(n)
+      }
+    })
+
+    return out
+  }
 
   render() {
     let count = Math.abs(this.props.keySignature.count)
     let keySignatureWidth = count > 0 ? count * 20 + 20 : 0;
+    let notes = this.filterVisibleNotes()
 
     return <div ref="notes" className={this.classNames()}>
       {this.renderMeasureLines()}
@@ -32,7 +58,7 @@ export default class StaffSongNotes extends React.PureComponent {
         offsetLeft={keySignatureWidth}
         upperRow={this.props.upperRow}
         lowerRow={this.props.lowerRow}
-        notes={this.props.notes}
+        notes={notes}
         pixelsPerBeat={this.props.pixelsPerBeat}
       />
 
@@ -41,7 +67,7 @@ export default class StaffSongNotes extends React.PureComponent {
         keySignature={this.props.keySignature}
         upperRow={this.props.upperRow}
         lowerRow={this.props.lowerRow}
-        notes={this.props.notes}
+        notes={notes}
         pixelsPerBeat={this.props.pixelsPerBeat}
       />
     </div>
