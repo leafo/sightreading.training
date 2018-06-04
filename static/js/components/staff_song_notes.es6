@@ -123,6 +123,8 @@ export default class StaffSongNotes extends React.PureComponent {
         keySignature={this.props.keySignature}
         upperRow={this.props.upperRow}
         lowerRow={this.props.lowerRow}
+        loopLeft={this.props.loopLeft}
+        loopRight={this.props.loopRight}
         notes={notes}
         pixelsPerBeat={this.props.pixelsPerBeat}
       />
