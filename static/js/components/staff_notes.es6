@@ -26,8 +26,6 @@ export default class StaffNotes extends React.Component {
     let [songNotes, noteClasses] = this.convertToSongNotes()
     let heldSongNotes = this.convertHeldToSongNotes()
 
-    // TODO: annotations are missing
-
     let count = Math.abs(this.props.keySignature.count)
     let keySignatureWidth = count > 0 ? count * 20 + 20 : 0;
 
@@ -59,6 +57,8 @@ export default class StaffNotes extends React.Component {
         staticNoteClasses="held"
         pixelsPerBeat={this.props.noteWidth}
       />
+
+      {this.renderAnnotations()}
     </div>
   }
 
@@ -195,5 +195,29 @@ export default class StaffNotes extends React.Component {
     }
 
     return true
+  }
+
+  renderAnnotations() {
+    if (this.props.showAnnotations === false) {
+      return null
+    }
+
+    let out = []
+    this.props.notes.forEach((column, idx) => {
+      if (column.annotation) {
+        let style = {
+          top: "-60%",
+          left: `${idx * this.props.noteWidth}px`
+        }
+        out.push(<div
+          style={style}
+          className="annotation"
+          key={`annotation-${idx}`}>
+          {column.annotation}
+        </div>)
+      }
+    })
+
+    return out
   }
 }

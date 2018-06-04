@@ -174,6 +174,7 @@ export class GrandStaff extends React.Component {
         {...this.props} />
       <FStaff
         ref={(s) => this.staves.push(s)}
+        showAnnotations={false}
         inGrand={true}
         {...this.props} />
     </div>;
