@@ -21,6 +21,8 @@ export default class Keyboard extends React.PureComponent {
     this.state = {
       heldKeyboardKeys: {}
     }
+
+    this.onKeyDown = this.onKeyDown.bind(this)
   }
 
   isBlack(pitch) {
@@ -128,7 +130,7 @@ export default class Keyboard extends React.PureComponent {
 
       keys.push(<div key={pitch} className="key_wrapper">
         <div
-          onMouseDown={this.onKeyDown.bind(this)}
+          onMouseDown={this.onKeyDown}
           data-note={name}
           className={classes} />
       </div>);
