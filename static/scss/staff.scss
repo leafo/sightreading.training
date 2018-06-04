@@ -229,6 +229,10 @@
                 height: 100%;
             }
 
+            &.group_offset {
+                margin-left: 30px;
+            }
+
             &.held {
                 opacity: 0.2;
                 transform: scale3d(1.1, 1.1, 1) translate(0, -47%);

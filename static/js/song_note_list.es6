@@ -339,6 +339,7 @@ export class SongNoteList extends Array {
 // duration: how long note is in beats
 export class SongNote {
   constructor(note, start, duration) {
+    this.id = Symbol()
     this.note = note
     this.start = start
     this.duration = duration

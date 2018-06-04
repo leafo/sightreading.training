@@ -2,7 +2,17 @@ import * as React from "react"
 import {classNames} from "lib"
 import {noteStaffOffset} from "st/music"
 
+import * as types from "prop-types"
+
 export default class LedgerLines extends React.PureComponent {
+  static propTypes = {
+    notes: types.array.isRequired,
+    upperRow: types.number,
+    lowerRow: types.number,
+    pixelsPerBeat: types.number,
+    offsetLeft: types.number,
+  }
+
   render() {
     let out = []
     let append = line => out.push(line)

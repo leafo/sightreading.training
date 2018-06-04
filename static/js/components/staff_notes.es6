@@ -6,6 +6,7 @@ import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
 import {SongNoteList, SongNote} from "st/song_note_list"
 import LedgerLines from "st/components/staff/ledger_lines"
+import WholeNotes from "st/components/staff/whole_notes"
 
 export default class StaffNotes extends React.Component {
   static propTypes = {
@@ -22,14 +23,25 @@ export default class StaffNotes extends React.Component {
   }
 
   render() {
+    let [songNotes, noteClasses] = this.convertToSongNotes()
+
     return <div ref="notes" className={this.classNames()}>
       <LedgerLines key="ledger_lines"
         upperRow={this.props.upperRow}
         lowerRow={this.props.lowerRow}
-        notes={this.convertToSongNotes()}
+        notes={songNotes}
         pixelsPerBeat={this.props.noteWidth}
       />
-      {this.renderNotes()}
+
+      <WholeNotes key="notes"
+        keySignature={this.props.keySignature}
+        upperRow={this.props.upperRow}
+        lowerRow={this.props.lowerRow}
+        notes={songNotes}
+        noteClasses={noteClasses}
+        pixelsPerBeat={this.props.noteWidth}
+      />
+
       {this.renderHeldNotes()}
     </div>
   }
@@ -39,19 +51,70 @@ export default class StaffNotes extends React.Component {
     let beat = 0
     let dur = 40 / this.props.noteWidth
 
-    this.props.notes.forEach(column => {
-      if (Array.isArray(column)) {
-        column.forEach(n => {
-          notes.push(new SongNote(n, beat, dur))
-        })
+    let noteClasses = {}
+
+    let toRow = n =>
+      noteStaffOffset(this.props.keySignature.enharmonic(n))
+
+    let appendClass = (note, cls) => {
+      if (noteClasses[note.id]) {
+        noteClasses[note.id].push(cls)
       } else {
-        notes.push(new SongNote(column, beat, dur))
+        noteClasses[note.id] = [cls]
+      }
+    }
+
+    this.props.notes.forEach((column, columnIdx) => {
+      let withClasses = (note) => {
+        if (columnIdx == 0) {
+          if (this.props.noteShaking) {
+            appendClass(note, "noteshake")
+          }
+
+          if (this.props.heldNotes[note.note]) {
+            appendClass(note, "held")
+          }
+        }
+
+        return note
+      }
+
+      if (Array.isArray(column)) {
+        let tuples = column.map(n =>
+          [toRow(n), n]
+        )
+
+        let lastRow = null
+        let offset = 0
+        tuples.forEach(([row, n]) => {
+          if (lastRow && Math.abs(lastRow - row) == 1) {
+            if (offset == 0) {
+              offset = 1
+            } else {
+              offset = 0
+            }
+          } else {
+            offset = 0
+          }
+
+          let sNote = new SongNote(n, beat, dur)
+
+          if (offset == 1) {
+            appendClass(sNote, "group_offset")
+          }
+
+          lastRow = row
+          notes.push(withClasses(sNote))
+        })
+
+      } else {
+        notes.push(withClasses(new SongNote(column, beat, dur)))
       }
 
       beat += 1
     })
 
-    return notes
+    return [notes, noteClasses]
   }
 
   classNames()  {
@@ -60,54 +123,6 @@ export default class StaffNotes extends React.Component {
 
   setOffset(amount) {
     this.refs.notes.style.transform = `translate3d(${amount}px, 0, 0)`;
-  }
-
-  renderNotes() {
-    const props = this.props
-    let keySignatureWidth = 0
-
-    if (props.keySignature) {
-      let count = Math.abs(props.keySignature.count)
-      keySignatureWidth = count > 0 ? count * 20 + 20 : 0;
-    }
-
-    return props.notes.map((note, idx) => {
-      let opts = {
-        idx,
-        goal: true,
-        first: idx == 0,
-      }
-
-      if (props.noteWidth) {
-        opts.offset= keySignatureWidth + props.noteWidth * idx
-      }
-
-      if (Array.isArray(note)) {
-        opts.rowOffsets = {}
-
-        let noteEls = note.map((sub_note, col_idx) => {
-          opts.key = `${idx}-${col_idx}`
-          return this.renderNote(sub_note, opts)
-        })
-
-        if (note.annotation && opts.offset) {
-          let style = {
-            top: "-66%",
-            left: `${opts.offset}px`
-          }
-
-          // TODO: this is being double rendered with two staves?
-          noteEls.push(<div style={style} className="annotation">
-            {note.annotation}
-          </div>)
-        }
-
-        return noteEls
-      } else {
-        opts.key = idx
-        return this.renderNote(note, opts)
-      }
-    });
   }
 
   renderHeldNotes(note, opts={}) {
