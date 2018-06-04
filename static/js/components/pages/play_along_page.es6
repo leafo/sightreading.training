@@ -99,6 +99,7 @@ export default class PlayAlongPage extends React.Component {
       metronomeMultiplier: 1.0,
       autoChordType: 0,
       enableEditor: this.props.editorOpen || false,
+      enablePauseOnMiss: false,
       metronome: props.midiOutput ? props.midiOutput.getMetronome() : null
     }
 
@@ -140,7 +141,7 @@ export default class PlayAlongPage extends React.Component {
   }
 
   resetHitNotes() {
-    this.hitNotes = new Map
+    this.hitNotes = new Set
   }
 
   getSetter(name) {
@@ -238,6 +239,23 @@ export default class PlayAlongPage extends React.Component {
 
     if (this.props.midiOutput) {
       this.props.midiOutput.noteOn(parseNote(note.note), 100)
+    }
+
+    if (this.state.enablePauseOnMiss) {
+      if (!this.hitNotes.has(note)) {
+        window.setTimeout(() => {
+          if (!this.state.songTimer.running) {
+            return
+          }
+
+          if (this.hitNotes.has(note)) {
+            return
+          }
+
+          this.state.songTimer.pause()
+          this.state.songTimer.seek(note.getStart())
+        }, 100)
+      }
     }
   }
 
@@ -451,8 +469,8 @@ export default class PlayAlongPage extends React.Component {
 
     if (songNote) {
       let accuracy = this.state.songTimer.beatsToSeconds(this.currentBeat - songNote.start)
-      if (Math.abs(accuracy) < 1 && !this.hitNotes.get(songNoteIdx)) {
-        this.hitNotes.set(songNoteIdx, true)
+      if (Math.abs(accuracy) < 1 && !this.hitNotes.has(songNote)) {
+        this.hitNotes.add(songNote)
         recordHit = true
       }
     }
