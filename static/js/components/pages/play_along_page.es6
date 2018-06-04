@@ -156,6 +156,19 @@ export default class PlayAlongPage extends React.Component {
     return this.setters[name]
   }
 
+  getToggler(name) {
+    if (!this.setters) {
+      this.setters = {}
+    }
+
+    if (!this.setters[name]) {
+      this.setters[name] = (e) =>
+        this.setState({ [name]: e.target.checked })
+    }
+
+    return this.setters[name]
+  }
+
   songParserParams() {
     let autoChordIdx = this.state.autoChordType % AutoChords.allGenerators.length
 
@@ -574,6 +587,12 @@ export default class PlayAlongPage extends React.Component {
         title="Play position (in beats)"
       />
 
+      <input
+        checked={this.state.enablePauseOnMiss || false}
+        onChange={this.getToggler("enablePauseOnMiss")}
+        title="Automatically pause on miss"
+        type="checkbox" />
+
       <span className="loop_controls">
         <span className="label_text">
           Loop
@@ -610,7 +629,7 @@ export default class PlayAlongPage extends React.Component {
 
       <input
         checked={this.state.playNotes || false}
-        onChange={(e) => this.setState({playNotes: e.target.checked}) }
+        onChange={this.getToggler("playNotes")}
         title="Play notes to MIDI output"
         type="checkbox" />
 
