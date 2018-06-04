@@ -485,7 +485,7 @@ export default class PlayAlongPage extends React.Component {
     delete heldNotes[note]
 
     let heldSongNotes = this.state.heldSongNotes
-    if (held.songNoteIdx) {
+    if (held.songNoteIdx != null) {
       heldSongNotes = {...heldSongNotes}
       delete heldSongNotes[this.state.song[held.songNoteIdx].id]
     }
