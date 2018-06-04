@@ -646,7 +646,7 @@ export default class PlayAlongPage extends React.Component {
       }>Settings</button>
 
       <span className="slider_input transport_slider">
-        <span className="slider_label">BPM</span>
+        <span className="slider_label" title="Beats per minute (how fast the songs plays)">BPM</span>
         <Slider
           min={10}
           max={300}
@@ -656,7 +656,7 @@ export default class PlayAlongPage extends React.Component {
       </span>
 
       <span className="slider_input transport_slider">
-        <span className="slider_label">PPB</span>
+        <span className="slider_label" title="Pixels per beat (how spaced out the notes are)">PPB</span>
         <Slider
           min={50}
           max={300}
