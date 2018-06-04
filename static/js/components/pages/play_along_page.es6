@@ -31,6 +31,9 @@ import * as types from "prop-types"
 import {AutoChords} from "st/auto_chords"
 import {TransitionGroup, CSSTransition} from "react-transition-group"
 
+const TimeBar = <div className="time_bar"></div>
+const EmptySong = []
+
 class SettingsPanel extends React.Component {
   static propTypes = {
     autoChordType: types.number.isRequired,
@@ -346,10 +349,10 @@ export default class PlayAlongPage extends React.Component {
   }
 
   render() {
-    let keySignature = new KeySignature(0)
+    let keySignature = KeySignature.forCount(0)
 
     if (this.state.song && this.state.song.metadata) {
-      keySignature = new KeySignature(this.state.song.metadata.keySignature)
+      keySignature = KeySignature.forCount(this.state.song.metadata.keySignature)
     }
 
     let staff = null
@@ -368,11 +371,11 @@ export default class PlayAlongPage extends React.Component {
     if (staffType) {
       let staffProps = {
         ref: "staff",
-        notes: this.state.song || [],
+        notes: this.state.song || EmptySong,
         heldNotes: this.state.heldNotes,
         keySignature,
         pixelsPerBeat: this.state.pixelsPerBeat,
-        children: <div className="time_bar"></div>,
+        children: TimeBar,
         loopLeft: this.state.loopLeft,
         loopRight: this.state.loopRight,
       }

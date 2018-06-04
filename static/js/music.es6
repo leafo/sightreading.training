@@ -157,6 +157,18 @@ export class KeySignature {
     ].map(key => new KeySignature(key))
   }
 
+  static forCount(count) {
+    if (!this.cache) {
+      this.cache = this.allKeySignatures()
+    }
+
+    for (let key of this.cache) {
+      if (key.count == count) {
+        return key
+      }
+    }
+  }
+
   // count: the number of accidentals in the key
   constructor(count) {
     this.count = count;

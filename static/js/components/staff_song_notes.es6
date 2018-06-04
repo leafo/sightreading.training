@@ -57,24 +57,28 @@ export default class StaffSongNotes extends React.PureComponent {
     heldNotes: types.object.isRequired,
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {}
+  }
+
   classNames()  {
     return "staff_notes staff_song_notes"
   }
 
-  filterVisibleNotes() {
-    const props = this.props
-    if (props.notes.length == 0) {
-      return props.notes
+  static filterNotes(notes, filter) {
+    if (notes.length == 0) {
+      return notes
     }
 
-    if (!props.filterPitch) {
-      return props.notes
+    if (!filter) {
+      return notes
     }
 
     let out = new SongNoteList()
-    props.notes.forEach(n => {
+    notes.forEach(n => {
       let pitch = parseNote(n.note)
-      if (this.props.filterPitch(pitch)) {
+      if (filter(pitch)) {
         out.push(n)
       }
     })
@@ -82,10 +86,22 @@ export default class StaffSongNotes extends React.PureComponent {
     return out
   }
 
+  static getDerivedStateFromProps(props, state) {
+    if (props.notes != state.notes || props.filterPitch != state.filterPitch) {
+      return {
+        notes: props.notes,
+        filterPitch: props.filterPitch,
+        filteredNotes: StaffSongNotes.filterNotes(props.notes, props.filterPitch),
+      }
+    }
+
+    return null
+  }
+
   render() {
     let count = Math.abs(this.props.keySignature.count)
     let keySignatureWidth = count > 0 ? count * 20 + 20 : 0;
-    let notes = this.filterVisibleNotes()
+    let notes = this.state.filteredNotes
 
     return <div ref="notes" className={this.classNames()}>
       <MeasureLines
@@ -101,7 +117,7 @@ export default class StaffSongNotes extends React.PureComponent {
         pixelsPerBeat={this.props.pixelsPerBeat}
       />
 
-      <BarNotes
+      <BarNotes key="bar_notes"
         offsetLeft={keySignatureWidth}
         keySignature={this.props.keySignature}
         upperRow={this.props.upperRow}
