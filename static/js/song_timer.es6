@@ -104,8 +104,10 @@ export default class SongTimer {
   }
 
   start(bpm=60) {
-    // TODO: calling start on a running thing will cause double timers
-    if (this.running) { this.reset() }
+    if (this.running) {
+      console.warn("attempted to start timer while running again")
+      return
+    }
 
     if (bpm) {
       this.bpm = bpm
