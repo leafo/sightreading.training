@@ -22,12 +22,13 @@ import * as React from "react"
 import {BrowserRouter, Route, Link, NavLink} from "react-router-dom"
 
 import {TransitionGroup, CSSTransition} from "react-transition-group"
-
+import {SampleOutput} from "st/sample_output"
 
 class Layout extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
+    this.sampleOutput = new SampleOutput()
 
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then(
@@ -81,7 +82,7 @@ class Layout extends React.Component {
     return {
       midi: this.state.midi,
       midiInput: this.state.midiInput,
-      midiOutput: this.state.midiOutputChannel,
+      midiOutput: this.state.midiOutputChannel || this.sampleOutput,
     }
   }
 
