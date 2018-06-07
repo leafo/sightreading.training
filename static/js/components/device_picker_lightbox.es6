@@ -5,6 +5,7 @@ import Lightbox from "st/components/lightbox"
 import MidiSelector from "st/components/midi_selector"
 import MidiInstrumentPicker from "st/components/midi_instrument_picker"
 import Select from "st/components/select"
+import {MidiChannel} from "st/midi"
 
 export default class DevicePickerLightbox extends Lightbox {
   static className = "device_picker_lightbox"
@@ -46,11 +47,27 @@ export default class DevicePickerLightbox extends Lightbox {
     let outputDetails
 
     if (this.state.outputDeviceType == "midi") {
+      let channel = this.props.selectedOutputChannel
+
+      // don't let sample output go into midi picker
+      if (!(channel instanceof MidiChannel)) {
+        channel = null
+      }
+
       outputDetails = <MidiInstrumentPicker
         midi={this.props.midi}
-        defaultChannel={this.props.selectedOutputChannel}
+        defaultChannel={channel}
         ref={this.instrumentPickerRef}
       />
+    }
+
+    let devices = [
+      {value: "internal", name: "Internal piano"},
+      {value: "none", name: "None"},
+    ]
+
+    if (this.props.midi) {
+      devices.push({value: "midi", name: "MIDI Device"})
     }
 
     return <section>
@@ -62,11 +79,7 @@ export default class DevicePickerLightbox extends Lightbox {
         <Select
           value={this.state.outputDeviceType}
           onChange={(value) => this.setState({outputDeviceType: value})}
-          options={[
-            {value: "internal", name: "Internal piano"},
-            {value: "none", name: "None"},
-            {value: "midi", name: "MIDI Device"},
-          ]}
+          options={devices}
         />
       </div>
 
