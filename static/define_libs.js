@@ -2,6 +2,7 @@ define("window", window);
 define("lib", {
   classNames: classNames,
   moment: moment,
+  Soundfont: Soundfont,
   MersenneTwister: MersenneTwister,
   chartjs: window["react-chartjs"],
   NoSleep: NoSleep

@@ -24,6 +24,7 @@ tup.rule({
   "../node_modules/chart.js/dist/Chart.js",
   "../node_modules/react-chartjs-2/dist/react-chartjs-2.js",
   "../node_modules/moment/moment.js",
+  "../node_modules/soundfont-player/dist/soundfont-player.js",
   "../node_modules/requirejs/require.js",
   "define_libs.js",
 }, join, "lib-dev.js")
@@ -42,7 +43,8 @@ tup.rule({
   "../node_modules/react-router-dom/umd/react-router-dom.min.js",
   "../node_modules/chart.js/dist/Chart.js",
   "../node_modules/react-chartjs-2/dist/react-chartjs-2.js",
-  "../node_modules/moment/moment.js",
+  "../node_modules/moment/min/moment.min.js",
+  "../node_modules/soundfont-player/dist/soundfont-player.min.js",
   "../node_modules/requirejs/require.js",
   "define_libs.js",
 }, join, "lib.js")
