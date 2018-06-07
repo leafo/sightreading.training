@@ -110,7 +110,11 @@ class SongsFlow extends Flow
   update_song: =>
     song = @find_song!
     assert_error song\allowed_to_edit @current_user
-    song\update @validate_song_params!
+    update = @validate_song_params!
+
+    diff = shapes.difference update, song
+    if next diff
+      song\update {k, update[k] for k in pairs diff}
 
     json: {
       success: true
