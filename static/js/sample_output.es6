@@ -3,6 +3,13 @@ import {noteName, parseNote} from "st/music"
 import {Soundfont} from "lib"
 
 export class SampleOutput {
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new SampleOutput()
+    }
+    return this.instance
+  }
+
   constructor(instrumentName="acoustic_grand_piano") {
     this.loading = true
     this.currentlyPlaying = {}
