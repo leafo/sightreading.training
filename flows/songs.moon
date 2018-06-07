@@ -27,6 +27,9 @@ class SongsFlow extends Flow
     my_songs = if @current_user
       Songs\select "where user_id = ? order by updated_at desc", @current_user.id
 
+    if my_songs
+      preload my_songs, "user"
+
     songs = pager\get_page page
 
     format_song = (song) ->
