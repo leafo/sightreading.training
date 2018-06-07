@@ -16,7 +16,7 @@ export class SampleOutput {
 
     this.promise = Soundfont.instrument(
       new AudioContext(),
-      instrumentName
+      `/static/soundfonts/MusyngKite/${instrumentName}-mp3.js`
     )
       
     this.promise.then((instrument) => {
