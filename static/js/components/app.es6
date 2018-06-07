@@ -27,8 +27,9 @@ import {SampleOutput} from "st/sample_output"
 class Layout extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {}
-    this.sampleOutput = SampleOutput.getInstance()
+    this.state = {
+      outputDeviceType: "none"
+    }
 
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then(
@@ -82,7 +83,7 @@ class Layout extends React.Component {
     return {
       midi: this.state.midi,
       midiInput: this.state.midiInput,
-      midiOutput: this.state.midiOutputChannel || this.sampleOutput,
+      midiOutput: this.state.midiOutputChannel,
     }
   }
 
@@ -227,15 +228,23 @@ class Layout extends React.Component {
       selectedInputIdx={this.state.midiInputIdx}
       selectedOutputChannel={this.state.midiOutputChannel}
       selectedOutputIdx={this.state.midiOutputIdx}
+      selectedOutputDeviceType={this.state.outputDeviceType}
 
       onClose={lb => {
         let config = lb.midiConfiguration()
         let input = this.setInput(config.inputIdx)
 
+        let output = config.outputChannel
+
+        if (config.outputDeviceType == "internal") {
+          output = SampleOutput.getInstance()
+        }
+
         this.setState({
           forwardMidi: config.forwardMidi,
-          midiOutputChannel: config.outputChannel,
-          midiOutputIdx: config.outputIdx
+          midiOutputChannel: output,
+          midiOutputIdx: config.outputIdx,
+          outputDeviceType: config.outputDeviceType,
         })
 
         writeConfig("defaults:midiIn", input ? input.name : undefined)

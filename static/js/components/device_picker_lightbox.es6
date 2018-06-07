@@ -4,6 +4,7 @@ import * as types from "prop-types"
 import Lightbox from "st/components/lightbox"
 import MidiSelector from "st/components/midi_selector"
 import MidiInstrumentPicker from "st/components/midi_instrument_picker"
+import Select from "st/components/select"
 
 export default class DevicePickerLightbox extends Lightbox {
   static className = "device_picker_lightbox"
@@ -17,16 +18,22 @@ export default class DevicePickerLightbox extends Lightbox {
     this.state = {
       selectedInput: this.props.selectedInputIdx,
       selectedOutput: this.props.selectedOutputIdx,
+      outputDeviceType: this.props.selectedOutputDeviceType,
       forwardMidi: this.props.forwardMidi || false,
     }
+
+    this.instrumentPickerRef = React.createRef()
   }
 
   midiConfiguration() {
+    let instrumentPicker = this.instrumentPickerRef.current
+
     return {
       forwardMidi: this.state.forwardMidi,
       inputIdx: this.state.selectedInput,
-      outputIdx: this.refs.instrumentPicker.getSelectedIdx(),
-      outputChannel: this.refs.instrumentPicker.getCurrentChannel(),
+      outputIdx: instrumentPicker ? instrumentPicker.getSelectedIdx() : null,
+      outputChannel: instrumentPicker ? instrumentPicker.getCurrentChannel() : null,
+      outputDeviceType: this.state.outputDeviceType,
     }
   }
 
@@ -35,12 +42,47 @@ export default class DevicePickerLightbox extends Lightbox {
     return [...this.props.midi.inputs.values()]
   }
 
+  renderOutputPicker() {
+    let outputDetails
+
+    if (this.state.outputDeviceType == "midi") {
+      outputDetails = <MidiInstrumentPicker
+        midi={this.props.midi}
+        defaultChannel={this.props.selectedOutputChannel}
+        ref={this.instrumentPickerRef}
+      />
+    }
+
+    return <section>
+      <h4>Select output device</h4>
+      <p>Used for the onscreen keyboard, ear training, and play-along mode.</p>
+      <div className="input_row device_type_picker">
+        <span className="label">Output type</span>
+        {" "}
+        <Select
+          value={this.state.outputDeviceType}
+          onChange={(value) => this.setState({outputDeviceType: value})}
+          options={[
+            {value: "internal", name: "Internal piano"},
+            {value: "none", name: "None"},
+            {value: "midi", name: "MIDI Device"},
+          ]}
+        />
+      </div>
+
+      {outputDetails}
+    </section>
+  }
+
   renderContent() {
     let midiSetup
 
     if (this.props.midi) {
       midiSetup = <div>
-        <h4>Select MIDI input device:</h4>
+        <h4>Select MIDI input device</h4>
+        <p>An input device will allow you to play notes and chords on your
+        keyboard into this website.</p>
+
         <MidiSelector
           defaultIdx={this.state.selectedInput}
           onChange={idx => this.setState({ selectedInput: idx })}
@@ -55,15 +97,6 @@ export default class DevicePickerLightbox extends Lightbox {
             <span className="label">Forward MIDI input to output</span>
           </label>
         </div>
-        <h4>Select MIDI output device:</h4>
-        <p>A MIID output device is only used for play along & ear training mode.</p>
-
-        <MidiInstrumentPicker
-          midi={this.props.midi}
-          defaultChannel={this.props.selectedOutputChannel}
-          ref={"instrumentPicker"}
-        />
-
       </div>
     } else {
       midiSetup = <p>
@@ -73,11 +106,10 @@ export default class DevicePickerLightbox extends Lightbox {
     }
 
     return <div>
-      <h2>Select MIDI device</h2>
-      <p>This tool works best with Chrome and a MIDI keyboard
-      plugged into your computer.</p>
+      <h2>Device Setup</h2>
 
       {midiSetup}
+      {this.renderOutputPicker()}
 
       <p>
         <button onClick={this.close.bind(this)}>Save selections</button>
