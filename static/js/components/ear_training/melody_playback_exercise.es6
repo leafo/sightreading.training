@@ -393,6 +393,7 @@ export default class MelodyPlaybackExercise extends React.Component {
       lower={this.state.melodyRange[0]}
       upper={this.state.melodyRange[1]}
       heldNotes={this.state.keyboardHeldNotes}
+      midiOutput={this.props.midiOutput}
       onKeyDown={this.keyboardPressNote}
       onKeyUp={this.keyboardReleaseNote} />
   }

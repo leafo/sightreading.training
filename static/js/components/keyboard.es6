@@ -88,12 +88,21 @@ export default class Keyboard extends React.PureComponent {
       this.props.onKeyDown(note);
     }
 
+    if (this.props.midiOutput) {
+      this.props.midiOutput.noteOn(parseNote(note), 100)
+    }
+
     if (this.props.onKeyUp) {
       let onUp = function(e) {
         e.preventDefault();
         if (this.props.onKeyUp) {
           this.props.onKeyUp(note);
         }
+
+        if (this.props.midiOutput) {
+          this.props.midiOutput.noteOff(parseNote(note), 100)
+        }
+
         document.removeEventListener("mouseup", onUp);
       }.bind(this);
       document.addEventListener("mouseup", onUp);

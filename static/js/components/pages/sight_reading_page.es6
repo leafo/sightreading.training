@@ -279,7 +279,6 @@ export default class SightReadingPage extends React.Component {
         break
     }
 
-
     this.state.heldNotes[note] = true;
     this.state.touchedNotes[note] = true;
 
@@ -292,6 +291,7 @@ export default class SightReadingPage extends React.Component {
     // note might no longer be considered held if we just moved to next note
     if (this.state.heldNotes[note]) {
       delete this.state.heldNotes[note];
+
       if (Object.keys(this.state.heldNotes).length == 0) {
         this.checkRelease();
       }
@@ -502,6 +502,7 @@ export default class SightReadingPage extends React.Component {
     return <Keyboard
       lower={lower}
       upper={upper}
+      midiOutput={this.props.midiOutput}
       heldNotes={this.state.heldNotes}
       onKeyDown={this.pressNote}
       onKeyUp={this.releaseNote} />;
