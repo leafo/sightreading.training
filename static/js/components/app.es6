@@ -220,7 +220,7 @@ class Layout extends React.Component {
   onMidiMessage(message) {
     // forward to output if necessary
     if (this.state.forwardMidi && this.state.midiOutputChannel) {
-      this.state.midiOutputChannel.output.send(message.data)
+      this.state.midiOutputChannel.sendMessage(message.data)
     }
 
     // proxy message to the current page

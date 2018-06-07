@@ -184,6 +184,10 @@ export class MidiChannel extends BaseOutputChannel {
     this.channel = channel
   }
 
+  sendMessage(message) {
+    this.output.send(message)
+  }
+
   setInstrument(programNumber) {
     this.lastProgramNumber = +programNumber
 

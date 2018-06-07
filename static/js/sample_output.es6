@@ -1,7 +1,7 @@
 
 import {noteName, parseNote} from "st/music"
 import {Soundfont} from "lib"
-import {BaseOutputChannel} from "st/midi"
+import {BaseOutputChannel, MidiInput} from "st/midi"
 
 export class SampleOutput extends BaseOutputChannel {
   static getInstance() {
@@ -25,6 +25,17 @@ export class SampleOutput extends BaseOutputChannel {
       this.loading = false
       this.instrument = instrument
     })
+  }
+
+  sendMessage(message) {
+    if (!this.midiInput) {
+      this.midiInput = new MidiInput({
+        noteOn: (note, v) => this.noteOn(parseNote(note), v),
+        noteOff: (note) => this.noteOff(parseNote(note))
+      })
+    }
+
+    this.midiInput.onMidiMessage({ data: message })
   }
 
   noteOn(pitch, velocity) {
