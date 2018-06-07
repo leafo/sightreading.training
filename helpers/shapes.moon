@@ -13,6 +13,17 @@ empty = types.one_of {
   types.pattern("^%s*$") / nil
 }, describe: -> "empty"
 
+integer = (types.one_of {
+  types.number
+  types.string / tonumber * types.number
+}, describe: -> "integer") / math.floor
+
+number = (types.one_of {
+  types.number
+  types.string / tonumber * types.number
+}, describe: -> "number")
+
+
 db_nullable = (t) ->
   t + empty / db.NULL
 
@@ -49,4 +60,20 @@ assert_params = (tbl, shape) ->
     error "coroutine did not yield"
 
 
-{:trimmed_text, :empty, :truncated_text, :params, :assert_params, :db_nullable}
+-- create a table representing the difference in fields
+difference = (update, source) ->
+  s = {}
+  for field, new_value in pairs update
+    if new_value == db.NULL
+      new_value = nil
+
+    matcher = types.equivalent(new_value) + types.any\tag (state, v) ->
+      state.before = v
+      state.after = new_value
+
+    s[field] = types.scope matcher, tag: field
+
+  assert types.shape(s, open: true) source
+
+
+{:trimmed_text, :empty, :integer, :number, :truncated_text, :params, :assert_params, :db_nullable, :difference}

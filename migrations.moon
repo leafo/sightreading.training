@@ -85,3 +85,7 @@ package.loaded.migrations =
   [1520154640]: =>
     add_column "songs", "publish_status", enum default: 1
 
+  [1528359105]: =>
+    add_column "songs", "notes_count", integer null: true, default: db.NULL
+    add_column "songs", "beats_duration", double null: true, default: db.NULL
+

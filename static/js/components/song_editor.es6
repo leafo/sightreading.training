@@ -9,6 +9,9 @@ export default class SongEditor extends React.Component {
 
     let song = this.props.song
 
+    this.notesCountInputRef = React.createRef()
+    this.beatsLengthInputRef = React.createRef()
+
     this.state = {
       song,
       loading: false,
@@ -22,6 +25,12 @@ export default class SongEditor extends React.Component {
   }
 
   beforeSubmit() {
+    if (this.props.songNotes) {
+      this.notesCountInputRef.current.value = this.props.songNotes.length
+      let duration = Math.max(...this.props.songNotes.map((n) => n.getStop()))
+      this.beatsLengthInputRef.current.value = duration
+    }
+
     this.setState({
       errors: null,
     })
@@ -34,9 +43,11 @@ export default class SongEditor extends React.Component {
       })
     }
 
-    this.setState({
-      song: res.song
-    })
+    if (res.song) {
+      this.setState({
+        song: res.song
+      })
+    }
   }
 
   render() {
@@ -52,6 +63,9 @@ export default class SongEditor extends React.Component {
     }
 
     return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
+      <input type="hidden" ref={this.notesCountInputRef} name="song[notes_count]" />
+      <input type="hidden" ref={this.beatsLengthInputRef} name="song[beats_duration]" />
+
       <textarea
         placeholder="Type some LML"
         disabled={this.state.loading}

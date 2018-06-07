@@ -552,6 +552,7 @@ export default class PlayAlongPage extends React.Component {
   renderEditor() {
     return <SongEditor
       parserParams={this.songParserParams()}
+      songNotes={this.state.song}
       song={this.state.songModel}
       code={this.state.currentSongCode}
       onCode={code => this.setState({
