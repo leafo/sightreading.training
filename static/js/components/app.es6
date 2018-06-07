@@ -12,7 +12,7 @@ import LatencyPage from "st/components/pages/latency"
 import SongsPage from "st/components/pages/songs"
 import Header from "st/components/header"
 
-import IntroLightbox from "st/components/intro_lightbox"
+import DevicePickerLightbox from "st/components/device_picker_lightbox"
 
 import {dispatch, trigger} from "st/events"
 import {readConfig, writeConfig} from "st/config"
@@ -28,7 +28,7 @@ class Layout extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
-    this.sampleOutput = new SampleOutput()
+    this.sampleOutput = SampleOutput.getInstance()
 
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then(
@@ -222,7 +222,7 @@ class Layout extends React.Component {
   }
 
   renderMidiLightbox() {
-    return <IntroLightbox
+    return <DevicePickerLightbox
       forwardMidi={this.state.forwardMidi}
       selectedInputIdx={this.state.midiInputIdx}
       selectedOutputChannel={this.state.midiOutputChannel}

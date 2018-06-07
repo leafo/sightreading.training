@@ -5,8 +5,8 @@ import Lightbox from "st/components/lightbox"
 import MidiSelector from "st/components/midi_selector"
 import MidiInstrumentPicker from "st/components/midi_instrument_picker"
 
-export default class IntroLightbox extends Lightbox {
-  static className = "intro_lightbox"
+export default class DevicePickerLightbox extends Lightbox {
+  static className = "device_picker_lightbox"
 
   static propTypes = {
     midi: types.object,
