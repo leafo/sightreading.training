@@ -27,8 +27,15 @@ import {SampleOutput} from "st/sample_output"
 class Layout extends React.Component {
   constructor(props) {
     super(props)
+    let device = readConfig("defaults:outputDeviceType") || "none"
+    let midiOutputChannel
+    if (device == "internal") {
+      midiOutputChannel = SampleOutput.getInstance()
+    }
+
     this.state = {
-      outputDeviceType: "none"
+      outputDeviceType: device,
+      midiOutputChannel
     }
 
     if (navigator.requestMIDIAccess) {
@@ -248,6 +255,7 @@ class Layout extends React.Component {
         })
 
         writeConfig("defaults:midiIn", input ? input.name : undefined)
+        writeConfig("defaults:outputDeviceType", config.outputDeviceType || undefined)
       }} />
   }
 }
