@@ -132,26 +132,7 @@ export class MidiInput {
 }
 
 
-export class MidiChannel {
-  constructor(output, channel) {
-    this.output = output
-
-    if (channel > 15 || channel < 0) {
-      throw "invalid channel:" + channel
-    }
-
-    this.channel = channel
-  }
-
-  setInstrument(programNumber) {
-    this.lastProgramNumber = +programNumber
-
-    this.output.send([
-      (12 << 4) + this.channel,
-      programNumber
-    ])
-  }
-
+export class BaseOutputChannel {
   playNoteList(list, delay=500) {
     list = [...list] // copy to avoid edits
     let idx = 0
@@ -188,6 +169,28 @@ export class MidiChannel {
       console.log("stopping test note")
       this.noteOff(MIDDLE_C_PITCH)
     }, 500)
+  }
+}
+
+export class MidiChannel extends BaseOutputChannel {
+  constructor(output, channel) {
+    super()
+    this.output = output
+
+    if (channel > 15 || channel < 0) {
+      throw "invalid channel:" + channel
+    }
+
+    this.channel = channel
+  }
+
+  setInstrument(programNumber) {
+    this.lastProgramNumber = +programNumber
+
+    this.output.send([
+      (12 << 4) + this.channel,
+      programNumber
+    ])
   }
 
   noteOn(pitch, velocity) {

@@ -1,8 +1,9 @@
 
 import {noteName, parseNote} from "st/music"
 import {Soundfont} from "lib"
+import {BaseOutputChannel} from "st/midi"
 
-export class SampleOutput {
+export class SampleOutput extends BaseOutputChannel {
   static getInstance() {
     if (!this.instance) {
       this.instance = new SampleOutput()
@@ -11,6 +12,7 @@ export class SampleOutput {
   }
 
   constructor(instrumentName="acoustic_grand_piano") {
+    super()
     this.loading = true
     this.currentlyPlaying = {}
 
