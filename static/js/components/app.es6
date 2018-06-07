@@ -35,6 +35,7 @@ class Layout extends React.Component {
 
     this.state = {
       outputDeviceType: device,
+      forwardMidi: readConfig("defaults:forwardMidi") == 1,
       midiOutputChannel
     }
 
@@ -255,6 +256,7 @@ class Layout extends React.Component {
         })
 
         writeConfig("defaults:midiIn", input ? input.name : undefined)
+        writeConfig("defaults:forwardMidi", config.forwardMidi ? "1" : undefined)
         writeConfig("defaults:outputDeviceType", config.outputDeviceType || undefined)
       }} />
   }
