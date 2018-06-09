@@ -12,6 +12,8 @@ import BarNotes from "st/components/staff/bar_notes"
 import {SongNoteList} from "st/song_note_list"
 
 class MeasureLines extends React.PureComponent {
+  static bucketSize = 4 // how many beats each chunk of rendering is
+
   static propTypes = {
     pixelsPerBeat: types.number.isRequired,
     notes: types.array.isRequired,
@@ -105,9 +107,12 @@ export default class StaffSongNotes extends React.PureComponent {
       let el = ReactDOM.findDOMNode(this)
       let rect = el.getBoundingClientRect()
 
-      this.setState({
-        width: rect.width
-      })
+      if (rect.width != this.state.width) {
+        this.setState({
+          width: rect.width
+        })
+        this.refreshRenderBuckets(rect.width)
+      }
     }
 
     this.resizeHandler()
@@ -127,7 +132,16 @@ export default class StaffSongNotes extends React.PureComponent {
 
     let count = Math.abs(this.props.keySignature.count)
     let keySignatureWidth = count > 0 ? count * 20 + 20 : 0;
-    let notes = this.state.filteredNotes
+
+    let renderLeft = this.state.chunkLeft * MeasureLines.bucketSize
+    let renderRight = this.state.chunkRight * MeasureLines.bucketSize
+
+    let notes = this.state.filteredNotes.filter((note) => {
+      let left = note.getStart()
+      let right = note.getStop()
+
+      return right > renderLeft && left <= renderRight
+    })
 
     let style = {}
     if (this.offset) {
@@ -162,9 +176,29 @@ export default class StaffSongNotes extends React.PureComponent {
     </div>
   }
 
+  refreshRenderBuckets(width=this.state.width) {
+    if (!width) {
+      return
+    }
+
+    let offset = this.offset ? -this.offset : 0
+
+    let beatLeft = -4 + offset / this.props.pixelsPerBeat
+    let beatRight = (width + offset) / this.props.pixelsPerBeat
+
+    let chunkLeft = Math.floor(beatLeft / MeasureLines.bucketSize)
+    let chunkRight = Math.floor(beatRight / MeasureLines.bucketSize) + 1
+
+    if (this.state.chunkLeft != chunkLeft || this.state.chunkRight != chunkRight) {
+      this.setState({ chunkLeft, chunkRight })
+    }
+  }
+
   setOffset(amount) {
     this.offset = amount
     let el = ReactDOM.findDOMNode(this)
     el.style.transform = `translate3d(${amount}px, 0, 0)`;
+
+    this.refreshRenderBuckets()
   }
 }
