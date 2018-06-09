@@ -1,5 +1,6 @@
 
 import * as React from "react"
+import * as ReactDOM from "react-dom"
 import {classNames} from "lib"
 
 import StaffNotes from "st/components/staff_notes"
@@ -60,6 +61,7 @@ export default class StaffSongNotes extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = {}
+    this.notesRef = React.createRef()
   }
 
   classNames()  {
@@ -98,12 +100,41 @@ export default class StaffSongNotes extends React.PureComponent {
     return null
   }
 
+  componentDidMount() {
+    this.resizeHandler = () => {
+      let el = ReactDOM.findDOMNode(this)
+      let rect = el.getBoundingClientRect()
+
+      this.setState({
+        width: rect.width
+      })
+    }
+
+    this.resizeHandler()
+    window.addEventListener("resize", this.resizeHandler);
+  }
+
+  componentWillUnmount() {
+    if (this.resizeHandler) {
+      window.removeEventListener("resize", this.resizeHandler)
+    }
+  }
+
   render() {
+    if (!this.state.width) {
+      return <div></div>
+    }
+
     let count = Math.abs(this.props.keySignature.count)
     let keySignatureWidth = count > 0 ? count * 20 + 20 : 0;
     let notes = this.state.filteredNotes
 
-    return <div ref="notes" className={this.classNames()}>
+    let style = {}
+    if (this.offset) {
+      style.transform = `translate3d(${this.offset}px, 0, 0)`;
+    }
+
+    return <div style={style} className={this.classNames()}>
       <MeasureLines
         notes={this.props.notes}
         pixelsPerBeat={this.props.pixelsPerBeat}
@@ -132,6 +163,8 @@ export default class StaffSongNotes extends React.PureComponent {
   }
 
   setOffset(amount) {
-    this.refs.notes.style.transform = `translate3d(${amount}px, 0, 0)`;
+    this.offset = amount
+    let el = ReactDOM.findDOMNode(this)
+    el.style.transform = `translate3d(${amount}px, 0, 0)`;
   }
 }
