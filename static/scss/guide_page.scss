@@ -52,5 +52,12 @@
     li img {
         vertical-align: middle;
     }
+    
+    pre {
+        padding: 10px;
+        border-radius: 4px;
+        background: rgba(black, 0.05);
+        box-shadow: 0 0 0 1px inset rgba(black, 0.1);
+    }
 }
 
