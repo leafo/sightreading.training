@@ -68,10 +68,10 @@ export default class SongTimer {
     this.clearPlayingNotes()
   }
 
-  reset() {
+  reset(beat=0) {
     this.running = false
     this.clearPlayingNotes()
-    this.beat = 0
+    this.beat = beat
     this.onUpdate(this.beat);
   }
 

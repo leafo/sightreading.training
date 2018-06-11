@@ -125,7 +125,7 @@ export default class PlayAlongPage extends React.Component {
         if (this.state.songTimer.running) {
           this.state.songTimer.pause()
         } else {
-          this.state.songTimer.reset()
+          this.state.songTimer.reset(this.state.loopLeft || 0)
         }
       },
 
@@ -576,7 +576,7 @@ export default class PlayAlongPage extends React.Component {
             if (this.state.songTimer.running) {
               this.state.songTimer.pause()
             } else {
-              this.state.songTimer.reset()
+              this.state.songTimer.reset(this.state.loopLeft || 0)
             }
           }}
         ><IconRewind width={15} /></button> :
