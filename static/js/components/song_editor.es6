@@ -61,12 +61,11 @@ class SongDetailsLightbox extends Lightbox {
       case "details":
         return this.renderDetails()
       case "delete":
-        return <DeleteSongForm action={this.props.action}/>
+        return <DeleteSongForm lightbox={this} action={this.props.action}/>
     }
   }
 
   renderDetails() {
-    console.log(this.props.song)
     return<div>
       <p>
         <strong>Created at: </strong>
