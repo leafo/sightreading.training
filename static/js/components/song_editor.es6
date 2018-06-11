@@ -6,16 +6,17 @@ import {JsonForm, TextInputRow} from "st/components/forms"
 import {withRouter} from "react-router"
 
 import Lightbox from "st/components/lightbox"
+import Tabs from "st/components/tabs"
 
-class DeleteSongConfirmLightbox extends Lightbox {
+class DeleteSongForm extends React.Component {
   afterSubmit(res) {
-    this.close()
+    this.props.lightbox.close()
     if (res.redirect_to) {
       this.history.push(res.redirect_to)
     }
   }
 
-  renderContent() {
+  render() {
     // TODO: this is gross
     let Router = withRouter(({history}) => {
       this.history = history
@@ -30,9 +31,53 @@ class DeleteSongConfirmLightbox extends Lightbox {
         <Router/>
         <p>Are you sure you want to delete this song? You can't un-delete</p>
         <button>Delete</button>
-        {" "}
-        <button className="outline" type="button" onClick={this.close.bind(this)}>Cancel</button>
     </JsonForm>
+  }
+}
+
+class SongDetailsLightbox extends Lightbox {
+  constructor(opts) {
+    super(opts)
+    this.state = { tab: "details" }
+  }
+
+  renderContent() {
+    return <React.Fragment>
+      <h2>More options</h2>
+      <Tabs
+        currentTab={this.state.tab}
+        onChangeTab={t => this.setState({tab: t.name})}
+        tabs={[
+          {name: "details", label: "Details"},
+          {name: "delete", label: "Delete"},
+        ]}
+      />
+      {this.renderCurrentTab()}
+    </React.Fragment>
+  }
+
+  renderCurrentTab() {
+    switch (this.state.tab) {
+      case "details":
+        return this.renderDetails()
+      case "delete":
+        return <DeleteSongForm action={this.props.action}/>
+    }
+  }
+
+  renderDetails() {
+    console.log(this.props.song)
+    return<div>
+      <p>
+        <strong>Created at: </strong>
+        {this.props.song.created_at}
+      </p>
+
+      <p>
+        <strong>Updated at: </strong>
+        {this.props.song.updated_at}
+      </p>
+    </div>
   }
 }
 
@@ -101,9 +146,9 @@ export default class SongEditor extends React.Component {
       deleteButton = <button
         onClick={e => {
           trigger(this, "showLightbox",
-            <DeleteSongConfirmLightbox action={action} song={this.props.song}/>)
+            <SongDetailsLightbox action={action} song={this.props.song}/>)
         }}
-        type="button" className="outline">Delete...</button>
+        type="button" className="outline">More...</button>
     }
 
     return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
