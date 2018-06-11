@@ -1,6 +1,8 @@
 
 import * as React from "react"
 import Lightbox from "st/components/lightbox"
+import Tabs from "st/components/tabs"
+
 import * as types from "prop-types"
 
 export default class StatsLightbox extends Lightbox {
@@ -50,11 +52,14 @@ export default class StatsLightbox extends Lightbox {
 
     let statTabs
     if (availableNotes.length) {
-      statTabs = <div className="stat_tabs">
-        <button onClick={(e) => { this.setState({tab: "ratios"}) }}>Ratios</button>
-        {" "}
-        <button onClick={(e) => { this.setState({tab: "timings"}) }}>Timings</button>
-      </div>
+      statTabs = <Tabs
+        onChangeTab={opt => this.setState({ tab: opt.name })}
+        currentTab={this.state.tab}
+        tabs={[
+          {name: "ratios", label: "Ratios"},
+          {name: "timings", label: "Timings"},
+        ]}
+      />
     }
 
     return <div>
