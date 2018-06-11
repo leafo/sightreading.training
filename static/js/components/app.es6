@@ -155,6 +155,11 @@ class Layout extends React.Component {
         title: "Programming a song with LML",
         pageSource: "lml"
       }},
+
+      { path: "/guide/ear-training", page: GuidePage, props: {
+        title: "Ear Training Tools",
+        pageSource: "ear_training"
+      }},
     ]))
   }
 

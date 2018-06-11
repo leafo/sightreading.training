@@ -50,6 +50,7 @@ export default class GuidePage extends React.Component {
             <li>{link("/about", "About")}</li>
             <li>{link("/guide/generators", "Generators")}</li>
             <li>{link("/guide/chords", "Chords")}</li>
+            <li>{link("/guide/ear-training", "Ear Training")}</li>
           </ul>
         </section>
         <section>
