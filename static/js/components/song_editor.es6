@@ -31,7 +31,7 @@ class DeleteSongConfirmLightbox extends Lightbox {
         <p>Are you sure you want to delete this song? You can't un-delete</p>
         <button>Delete</button>
         {" "}
-        <button type="button" onClick={this.close.bind(this)}>Cancel</button>
+        <button className="outline" type="button" onClick={this.close.bind(this)}>Cancel</button>
     </JsonForm>
   }
 }
@@ -103,7 +103,7 @@ export default class SongEditor extends React.Component {
           trigger(this, "showLightbox",
             <DeleteSongConfirmLightbox action={action} song={this.props.song}/>)
         }}
-        type="button">Delete...</button>
+        type="button" className="outline">Delete...</button>
     }
 
     return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
