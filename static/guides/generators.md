@@ -1,10 +1,10 @@
-## Note Generators
+# Note Generators
 
 In order to provide unique sheet music to read, Sight Reading Trainer uses a random music generator. You can customize the generator to control the difficulty, and the types of things you want to practice.
 
 Access the generator settings by clicking the **Configure** button on the main screen.
 
-### Choosing a staff
+## Choosing a staff
 
 The staff you choose configures the range of notes that are available to be read. The on-screen keyboard will display only the valid notes that can be played. Any notes generated will fall within the range of the staff chosen.
 
@@ -14,7 +14,7 @@ You can choose from the following:
 * <img src="/static/svg/clefs.F_change.svg" alt="F Cleff" width=25 height=20 /> Bass
 * Grand — A combination of treble and bass at the same time
 
-### Choosing a generator type
+## Choosing a generator type
 
 Sight Reading Trainer tries to generate something musical based on the parameters you've provided. The **generator type** is the function that picks which notes to show next. Each generator type can be customized using a series of parameters.
 
@@ -26,7 +26,7 @@ The available generator types:
 *   **Progression** — Chooses a random chord from a popular progression within the key signature
 *   **Position** — Generates notes in a way that encourages you to use all of your fingers. See below for more information
 
-### The smoothness parameter
+## The smoothness parameter
 
 Every generator has a **smoothness** setting. The smoothness setting makes the randomness less apparent by minimizing the movements of notes for each column of the generated notes. (It is never possible to get the sames notes repeated though).
 
@@ -34,7 +34,7 @@ If there are multiple notes, then it will minimize the average position of the n
 
 The higher you set the smoothnesss, the more iterations the generator will perform to find a next set of notes, the smoother the movements will be.
 
-### The Random generator
+## The Random generator
 
 The following parameters are available for the **Random** generator:
 

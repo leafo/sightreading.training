@@ -42,8 +42,8 @@ export default class GuidePage extends React.Component {
     const link = (url, label) =>
       <NavLink activeClassName="active" to={url}>{label}</NavLink>
 
-    return <div className="guide_page">
-      <div className="page_navigation">
+    return <main className="guide_page">
+      <section className="page_navigation">
         <section>
           <div className="nav_header">Overview</div>
           <ul>
@@ -58,14 +58,14 @@ export default class GuidePage extends React.Component {
             <li>{link("/guide/lml", "LML")}</li>
           </ul>
         </section>
-      </div>
+      </section>
       {this.renderContents()}
-    </div>
+    </main>
   }
 
   renderContents() {
     if (this.state.contents) {
-      return <div className="page_container" dangerouslySetInnerHTML={{
+      return <section className="page_container" dangerouslySetInnerHTML={{
         __html: this.state.contents
       }} />
     } else {

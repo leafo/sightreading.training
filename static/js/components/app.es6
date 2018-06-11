@@ -103,7 +103,7 @@ class Layout extends React.Component {
 
       {children}
 
-      <TransitionGroup>
+      <TransitionGroup className="lightboxes">
         {this.renderCurrentLightbox()}
       </TransitionGroup>
     </div>

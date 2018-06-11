@@ -1,14 +1,14 @@
-## LML
+# LML Programming Guide
 
-`LML` is a programming language for coding songs that can be played in the
-*Play Along* mode. LML was designed to be easy to write by hand. LML is in
-early development, but any code you write today will be future compatible. As
-new functionality is added to *Play Along* mode, LML will get new syntax.
+`LML` is a language for coding songs that can be played in the *Play Along*
+mode. LML was designed to be easy to write by hand. LML is in early
+development, but any code you write today will be future compatible. As new
+functionality is added to *Play Along* mode, LML will get new syntax.
 
 Every song on this app is written in LML. Click the **Editor** button to see
 how a particular song is written.
 
-### Notes
+## Notes
 
 A note can be added to a song by writing the note's name followed by the
 octave. Notes are placed after the last note added, or the beginning of an
@@ -54,7 +54,7 @@ note modifiers appear after the note's name, but before the octave.
 
     c+5 c-5
 
-### Rests
+## Rests
 
 You can insert silence using the rest command, `r`. You can specify a duration
 multiplier by including a number after the `r` command. The duration of rests
@@ -64,7 +64,7 @@ they have a default base duration of 1 beat.
     c5 r d5.2
     d5 r2 a4
 
-### Blocks
+## Blocks
 
 A block is delimited with a `{` and `}`. Blocks can be nested. Blocks adjust
 how some of the commands work:
@@ -85,7 +85,7 @@ Example:
     }
 
 
-### Measure movements
+## Measure movements
 
 The measure command, `m`, can be used to move the current position to a
 specific measure. It's common to use the `m` command followed by a block to
@@ -102,7 +102,7 @@ organize a piece:
       | f4.4
     }
 
-### Key Signature
+## Key Signature
 
 You can specify the number of sharps or flats to use with the `ks` command
 followed by a positive or negative number. Notes you write will automatically
@@ -112,7 +112,7 @@ modifier to remove the sharp or flat.
     ks-2
     b5 c5 b=5
 
-### Time Signature
+## Time Signature
 
 Set the time signature using the `ts` command. This will set 3/4 time.
 
@@ -120,7 +120,7 @@ Set the time signature using the `ts` command. This will set 3/4 time.
 
     c5 g5 g5
 
-### Chords
+## Chords
 
 The `$` command can be used to specify a chord using a chord symbol. The chord
 will take up the entire duration of the block it is placed in. Chords do not
@@ -132,7 +132,7 @@ The following is a short melody over a G Major and D Minor chord progression.
     {$g c5.2 a5 d5}
     {$dm e5 f5 g5.2}
 
-### Comments
+## Comments
 
 If a `#` appears, then it and any text will be ignored. You can use this to add
 notes to anyone reading the code (aka comments).
