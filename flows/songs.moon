@@ -133,8 +133,6 @@ class SongsFlow extends Flow
 
     json: {
       success: true
-      song: {
-        id: song.id
-      }
+      song: @format_song song
     }
 

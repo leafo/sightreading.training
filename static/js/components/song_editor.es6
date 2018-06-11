@@ -145,7 +145,7 @@ export default class SongEditor extends React.Component {
       deleteButton = <button
         onClick={e => {
           trigger(this, "showLightbox",
-            <SongDetailsLightbox action={action} song={this.props.song}/>)
+            <SongDetailsLightbox action={action} song={this.state.song}/>)
         }}
         type="button" className="outline">More...</button>
     }
@@ -171,7 +171,9 @@ export default class SongEditor extends React.Component {
 
       <div className="song_editor_tools">
         {errors}
-        {this.textInput("Title", "title")}
+        {this.textInput("Title", "title", {
+          required: true
+        })}
         {this.textInput("Source", "source")}
         {this.textInput("Artist", "artist")}
         {this.textInput("Album", "album")}
@@ -186,8 +188,9 @@ export default class SongEditor extends React.Component {
     </JsonForm>
   }
 
-  textInput(title, field) {
+  textInput(title, field, opts={}) {
     return <TextInputRow
+      required={opts.required}
       disabled={this.state.loading}
       onChange={e => this.setState({
         [field]: e.target.value
