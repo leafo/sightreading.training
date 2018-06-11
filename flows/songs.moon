@@ -13,6 +13,28 @@ import types from require "tableshape"
 shapes = require "helpers.shapes"
 
 class SongsFlow extends Flow
+  format_song: (song, for_render=false) =>
+    user = song\get_user!
+
+    {
+      id: song.id
+      url: @url_for "song", song_id: song.id, slug: song\get_slug!
+      title: song.title
+
+      song: for_render and song.song or nil
+
+      user_id: song.user_id
+      artist: song.artist
+      album: song.album
+      source: song.source
+      created_at: song.created_at
+      updated_at: song.updated_at
+      user: {
+        id: user.id
+        name: user\name_for_display!
+      }
+    }
+
   list_songs: =>
     pager = Songs\paginated {
       per_page: 10
@@ -32,29 +54,12 @@ class SongsFlow extends Flow
 
     songs = pager\get_page page
 
-    format_song = (song) ->
-      user = song\get_user!
-      {
-        id: song.id
-        url: @url_for "song", song_id: song.id, slug: song\get_slug!
-        title: song.title
-        user_id: song.user_id
-        artist: song.artist
-        album: song.album
-        created_at: song.created_at
-        updated_at: song.updated_at
-        user: {
-          id: user.id
-          name: user\name_for_display!
-        }
-      }
-
     json: {
       success: true
       my_songs: if my_songs
-        [format_song song for song in *my_songs]
+        [@format_song song for song in *my_songs]
 
-      songs: [format_song song for song in *songs]
+      songs: [@format_song song for song in *songs]
     }
 
   find_song: =>
@@ -72,16 +77,7 @@ class SongsFlow extends Flow
 
     json: {
       success: true
-      song: {
-        id: song.id
-        url: @url_for "song", song_id: song.id, slug: song\get_slug!
-        user_id: song.user_id
-        title: song.title
-        artist: song.artist
-        album: song.album
-        source: song.source
-        song: song.song
-      }
+      song: @format_song song, true
     }
 
   validate_song_params: =>
