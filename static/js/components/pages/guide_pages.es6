@@ -52,6 +52,12 @@ export default class GuidePage extends React.Component {
             <li>{link("/guide/chords", "Chords")}</li>
           </ul>
         </section>
+        <section>
+          <div className="nav_header">Play Along</div>
+          <ul>
+            <li>{link("/guide/lml", "LML")}</li>
+          </ul>
+        </section>
       </div>
       {this.renderContents()}
     </div>

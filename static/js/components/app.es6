@@ -150,6 +150,11 @@ class Layout extends React.Component {
         title: "Sight Reading Random Chords",
         pageSource: "chord_generators"
       }},
+
+      { path: "/guide/lml", page: GuidePage, props: {
+        title: "Programming a song with LML",
+        pageSource: "lml"
+      }},
     ]))
   }
 
