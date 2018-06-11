@@ -32,11 +32,16 @@ export class TextInputRow extends React.Component {
 }
 
 export class JsonForm extends React.Component {
+  static defaultProps = {
+    method: "POST"
+  }
+
   static propTypes = {
     action: types.string.isRequired,
     validate: types.func,
     beforeSubmit: types.func,
-    afterSubmit: types.func
+    afterSubmit: types.func,
+    method: types.string
   }
 
   constructor() {
@@ -63,7 +68,7 @@ export class JsonForm extends React.Component {
     let url = this.refs.form.getAttribute("action")
 
     let request = new XMLHttpRequest()
-    request.open("POST", url)
+    request.open(this.props.method, url)
     request.send(formData)
 
     request.onload = (e) => {
@@ -75,6 +80,7 @@ export class JsonForm extends React.Component {
           this.props.afterSubmit(res)
         }
       } catch (e) {
+        console.error(e)
         if (this.props.afterSubmit) {
           this.props.afterSubmit({
             errors: ["Server error, please try again later"]
@@ -87,7 +93,7 @@ export class JsonForm extends React.Component {
   }
 
   render() {
-    return <form ref="form" className={this.props.className} action={this.props.action} method="post" onSubmit={this.submitHandler.bind(this)}>
+    return <form ref="form" className={this.props.className} action={this.props.action} method={this.props.method} onSubmit={this.submitHandler.bind(this)}>
       {this.props.children}
     </form>
   }

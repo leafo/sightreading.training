@@ -18,6 +18,11 @@ get = (fn) ->
 multi = (tbl) ->
   capture_errors_json respond_to {
     GET: tbl.get
+
+    DELETE: tbl.delete and =>
+      assert_csrf @
+      tbl.delete @
+
     POST: tbl.post and =>
       assert_csrf @
       tbl.post @

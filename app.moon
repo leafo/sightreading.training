@@ -31,6 +31,7 @@ class extends lapis.Application
     "hello world", layout: "test_layout"
 
   [song: "/song/:song_id/:slug"]: =>
+  [play_along: "/play-along"]: =>
 
   "/(*)": =>
 
@@ -83,6 +84,10 @@ class extends lapis.Application
   "/songs/:song_id.json": multi {
     get: =>
       @flow("songs")\get_song!
+
+    delete: =>
+      assert_error @current_user, "must be logged in"
+      @flow("songs")\delete_song!
 
     post: =>
       assert_error @current_user, "must be logged in"

@@ -120,6 +120,16 @@ class SongsFlow extends Flow
       success: true
     }
 
+  delete_song: =>
+    song = @find_song!
+    assert_error song\allowed_to_edit @current_user
+    song\delete!
+
+    json: {
+      success: true
+      redirect_to: @url_for "play_along"
+    }
+
   create_song: =>
     song_params = @validate_song_params!
     song_params.user_id = @current_user.id

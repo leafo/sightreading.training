@@ -1,7 +1,40 @@
 import * as React from "react"
 import SongParser from "st/song_parser"
+import {trigger} from "st/events"
 
 import {JsonForm, TextInputRow} from "st/components/forms"
+import {withRouter} from "react-router"
+
+import Lightbox from "st/components/lightbox"
+
+class DeleteSongConfirmLightbox extends Lightbox {
+  afterSubmit(res) {
+    this.close()
+    if (res.redirect_to) {
+      this.history.push(res.redirect_to)
+    }
+  }
+
+  renderContent() {
+    // TODO: this is gross
+    let Router = withRouter(({history}) => {
+      this.history = history
+      return null
+    })
+
+    return <JsonForm
+      method="DELETE"
+      action={this.props.action}
+      afterSubmit={this.afterSubmit.bind(this)}
+      className="delete_song_form">
+        <Router/>
+        <p>Are you sure you want to delete this song? You can't un-delete</p>
+        <button>Delete</button>
+        {" "}
+        <button type="button" onClick={this.close.bind(this)}>Cancel</button>
+    </JsonForm>
+  }
+}
 
 export default class SongEditor extends React.Component {
   constructor(props) {
@@ -62,6 +95,17 @@ export default class SongEditor extends React.Component {
       errors = <ul>{this.state.errors.map(e => <li key={e}>{e}</li>)}</ul>
     }
 
+    let deleteButton
+
+    if (this.state.song) {
+      deleteButton = <button
+        onClick={e => {
+          trigger(this, "showLightbox",
+            <DeleteSongConfirmLightbox action={action} song={this.props.song}/>)
+        }}
+        type="button">Delete...</button>
+    }
+
     return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
       <input type="hidden" ref={this.notesCountInputRef} name="song[notes_count]" />
       <input type="hidden" ref={this.beatsLengthInputRef} name="song[beats_duration]" />
@@ -90,6 +134,8 @@ export default class SongEditor extends React.Component {
 
         <div className="input_row">
           <button>Save</button>
+          {" "}
+          {deleteButton}
         </div>
       </div>
 
