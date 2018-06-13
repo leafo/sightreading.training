@@ -155,7 +155,6 @@ export default class StaffSongNotes extends React.PureComponent {
         />
 
       <LedgerLines key="ledger_lines"
-        offsetLeft={keySignatureWidth}
         upperRow={this.props.upperRow}
         lowerRow={this.props.lowerRow}
         notes={notes}
@@ -163,7 +162,6 @@ export default class StaffSongNotes extends React.PureComponent {
       />
 
       <BarNotes key="bar_notes"
-        offsetLeft={keySignatureWidth}
         heldNotes={this.props.heldNotes}
         keySignature={this.props.keySignature}
         upperRow={this.props.upperRow}
