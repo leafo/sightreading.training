@@ -129,7 +129,7 @@ export default class SongEditor extends React.Component {
 
   render() {
     let action = "/songs.json"
-    if (this.state.song) {
+    if (this.state.song && this.state.song.allowed_to_edit) {
       action = `/songs/${this.state.song.id}.json`
     }
 
@@ -139,15 +139,23 @@ export default class SongEditor extends React.Component {
       errors = <ul>{this.state.errors.map(e => <li key={e}>{e}</li>)}</ul>
     }
 
-    let deleteButton
+    let moreButton, saveButton
 
-    if (this.state.song) {
-      deleteButton = <button
+    if (this.state.song && this.state.song.allowed_to_edit) {
+      moreButton = <button
         onClick={e => {
           trigger(this, "showLightbox",
             <SongDetailsLightbox action={action} song={this.state.song}/>)
         }}
         type="button" className="outline">More...</button>
+    }
+
+    if (this.state.song && !this.state.song.allowed_to_edit) {
+      saveButton = <button>Save copy</button>
+    } else if (this.state.song) {
+      saveButton = <button>Save</button>
+    } else {
+      saveButton = <button>Save new song</button>
     }
 
     return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
@@ -179,9 +187,9 @@ export default class SongEditor extends React.Component {
         {this.textInput("Album", "album")}
 
         <div className="input_row">
-          <button>Save</button>
+          {saveButton}
           {" "}
-          {deleteButton}
+          {moreButton}
         </div>
       </div>
 

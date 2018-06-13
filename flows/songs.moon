@@ -26,6 +26,7 @@ class SongsFlow extends Flow
       song: for_render and song.song or nil
 
       user_id: song.user_id
+      allowed_to_edit: not not song\allowed_to_edit @current_user
       artist: song.artist
       album: song.album
       source: song.source
