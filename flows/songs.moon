@@ -83,7 +83,7 @@ class SongsFlow extends Flow
       song: @format_song song, true
     }
 
-  validate_song_params: =>
+  validate_song_params: (create=false) =>
     trim_filter @params
     assert_valid @params, {
       {"song", type: "table"}
@@ -100,6 +100,8 @@ class SongsFlow extends Flow
 
         notes_count: shapes.db_nullable shapes.integer
         beats_duration: shapes.db_nullable shapes.number
+
+        original_song_id: create and shapes.db_nullable(shapes.db_id) or nil
 
       }, extra_fields: types.any / nil
     }
@@ -130,7 +132,7 @@ class SongsFlow extends Flow
     }
 
   create_song: =>
-    song_params = @validate_song_params!
+    song_params = @validate_song_params true
     song_params.user_id = @current_user.id
     song = Songs\create song_params
 

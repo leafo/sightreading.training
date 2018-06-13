@@ -23,6 +23,10 @@ number = (types.one_of {
   types.string / tonumber * types.number
 }, describe: -> "number")
 
+db_id = types.one_of({
+  types.number * types.custom (v) -> v == math.floor(v)
+  types.string / trim * types.pattern("^%d+$") / tonumber
+}, describe: -> "integer") * types.range(0, 2147483647)
 
 db_nullable = (t) ->
   t + empty / db.NULL
@@ -76,4 +80,4 @@ difference = (update, source) ->
   assert types.shape(s, open: true) source
 
 
-{:trimmed_text, :empty, :integer, :number, :truncated_text, :params, :assert_params, :db_nullable, :difference}
+{:trimmed_text, :empty, :integer, :number, :truncated_text, :params, :assert_params, :db_nullable, :db_id, :difference}

@@ -158,9 +158,16 @@ export default class SongEditor extends React.Component {
       saveButton = <button>Save new song</button>
     }
 
+    let originalSongIdInput
+
+    if (this.state.song && !this.state.song.allowed_to_edit) {
+      originalSongIdInput = <input type="hidden" name="song[original_song_id]" value={this.state.song.id} />
+    }
+
     return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
       <input type="hidden" ref={this.notesCountInputRef} name="song[notes_count]" />
       <input type="hidden" ref={this.beatsLengthInputRef} name="song[beats_duration]" />
+      {originalSongIdInput}
 
       <textarea
         placeholder="Type some LML"

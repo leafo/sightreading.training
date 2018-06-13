@@ -89,3 +89,6 @@ package.loaded.migrations =
     add_column "songs", "notes_count", integer null: true, default: db.NULL
     add_column "songs", "beats_duration", double null: true, default: db.NULL
 
+  [1528871228]: =>
+    add_column "songs", "original_song_id", foreign_key null: true
+    create_index "songs", "original_song_id", where: "original_song_id is not null"
