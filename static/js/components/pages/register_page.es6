@@ -45,7 +45,7 @@ export default class RegisterPage extends React.Component {
         <TextInputRow name="password_repeat" type="password" required={true}>Confirm password</TextInputRow>
 
         <div className="form_buttons">
-          <button>Submit</button>
+          <button className="big_button">Submit</button>
           {" or "}
           <Link to="/login">Log in to existing account</Link>
         </div>

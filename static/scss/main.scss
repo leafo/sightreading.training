@@ -42,6 +42,11 @@ button, .button {
         background: white;
         color: darken($button_color, 10%);
     }
+
+    &.big_button {
+        font-size: 18px;
+        padding: 10px 18px;
+    }
 }
 
 blockquote {
@@ -92,10 +97,6 @@ form, .form {
         margin-bottom: 20px;
     }
 
-    button {
-        font-size: 18px;
-        padding: 10px 18px;
-    }
 
     .input_row {
         margin-bottom: 15px;

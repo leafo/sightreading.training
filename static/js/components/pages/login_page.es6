@@ -41,7 +41,7 @@ export default class LoginPage extends React.Component {
         <TextInputRow name="username" required={true}>Username</TextInputRow>
         <TextInputRow name="password" type="password" required={true}>Password</TextInputRow>
         <div className="form_buttons">
-          <button>Submit</button>
+          <button className="big_button">Submit</button>
           {" or "}
           <Link to="/register">Register</Link>
         </div>
