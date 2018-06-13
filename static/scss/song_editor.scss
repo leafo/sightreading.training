@@ -6,8 +6,9 @@
     display: flex;
 
     .song_editor_tools {
-        width: 20%;
-        max-width: 300px;
+        width: 25%;
+        max-width: 350px;
+        min-width: 220px;
         margin-left: 20px;
         flex-basis: 1;
 
@@ -20,6 +21,27 @@
     > textarea {
         flex-basis: 1;
         flex-grow: 1;
+    }
+
+    .form_tools {
+        display: flex;
+        align-items:  center;
+
+        .select_component {
+            height: 28px;
+            padding: 0 10px;
+            display: flex;
+            box-sizing: border-box;
+        }
+
+        > * {
+            margin-left: 5px;
+        }
+
+        > :first-child {
+            margin-left: 0;
+            flex: 1;
+        }
     }
 }
 

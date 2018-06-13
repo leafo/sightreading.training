@@ -7,6 +7,7 @@ import {withRouter} from "react-router"
 
 import Lightbox from "st/components/lightbox"
 import Tabs from "st/components/tabs"
+import Select from "st/components/select"
 
 class DeleteSongForm extends React.Component {
   afterSubmit(res) {
@@ -164,6 +165,18 @@ export default class SongEditor extends React.Component {
       originalSongIdInput = <input type="hidden" name="song[original_song_id]" value={this.state.song.id} />
     }
 
+    let songVisibility
+
+    if (!this.state.song || this.state.song.allowed_to_edit) {
+      songVisibility = <Select
+        name="song[visibility]"
+        options={[
+          {value: "public", name: "Public"},
+          {value: "unlisted", name: "Unlisted"},
+        ]}
+        />
+    }
+
     return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
       <input type="hidden" ref={this.notesCountInputRef} name="song[notes_count]" />
       <input type="hidden" ref={this.beatsLengthInputRef} name="song[beats_duration]" />
@@ -193,8 +206,10 @@ export default class SongEditor extends React.Component {
         {this.textInput("Artist", "artist")}
         {this.textInput("Album", "album")}
 
-        <div className="input_row">
+        <div className="form_tools">
           {saveButton}
+          {" "}
+          {songVisibility}
           {" "}
           {moreButton}
         </div>
