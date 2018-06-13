@@ -107,7 +107,7 @@ class SongsFlow extends Flow
 
   update_song: =>
     song = @find_song!
-    assert_error song\allowed_to_edit @current_user
+    assert_error song\allowed_to_edit(@current_user), "you are not allowed to edit this song"
     update = @validate_song_params!
 
     diff = shapes.difference update, song
