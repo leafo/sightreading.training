@@ -12,6 +12,8 @@ import Flow from require "lapis.flow"
 import types from require "tableshape"
 shapes = require "helpers.shapes"
 
+arrayify = ((types.equivalent({}) / nil) + types.any)\transform
+
 class SongsFlow extends Flow
   format_song: (song, for_render=false) =>
     user = song\get_user!
@@ -57,9 +59,9 @@ class SongsFlow extends Flow
     json: {
       success: true
       my_songs: if my_songs
-        [@format_song song for song in *my_songs]
+        arrayify [@format_song song for song in *my_songs]
 
-      songs: [@format_song song for song in *songs]
+      songs: arrayify [@format_song song for song in *songs]
     }
 
   find_song: =>
