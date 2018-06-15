@@ -182,7 +182,16 @@ export default class PlayAlongPage extends React.Component {
 
   // re-render the song with new autochords
   refreshSong() {
-    throw "not yet"
+    let code = this.state.currentSongCode
+    try {
+      let song = SongParser.load(code, this.songParserParams())
+      this.setSong(song)
+    } catch(e) {
+      this.setState({
+        songError: e.message
+      })
+      return
+    }
   }
 
   loadSong() {
@@ -338,17 +347,7 @@ export default class PlayAlongPage extends React.Component {
 
 
     if (prevState.currentSongCode != this.state.currentSongCode) {
-      let code = this.state.currentSongCode
-      let song = null
-      try {
-        song = SongParser.load(code, this.songParserParams())
-        this.setSong(song)
-      } catch(e) {
-        this.setState({
-          songError: e.message
-        })
-        return
-      }
+      this.refreshSong()
     }
   }
 
