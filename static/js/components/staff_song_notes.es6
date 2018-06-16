@@ -35,8 +35,10 @@ class MeasureLines extends React.PureComponent {
     let lines = []
 
     let pixelsPerBeat = props.pixelsPerBeat
+    let measureLeft = Math.max(0, Math.floor(this.props.renderLeft / beatsPerMeasure))
+    let measureRight = Math.min(measures, Math.ceil(this.props.renderRight / beatsPerMeasure))
 
-    for (let m = Math.max(0, this.props.renderLeft); m <= Math.min(this.props.renderRight, measures); m++) {
+    for (let m = measureLeft; m <= measureRight; m++) {
       let fromLeft = m * beatsPerMeasure * pixelsPerBeat
 
       lines.push(<div
