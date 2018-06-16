@@ -17,6 +17,8 @@ class MeasureLines extends React.PureComponent {
   static propTypes = {
     pixelsPerBeat: types.number.isRequired,
     notes: types.array.isRequired,
+    renderLeft: types.number.isRequired,
+    renderRight: types.number.isRequired,
   }
 
   render() {
@@ -34,7 +36,7 @@ class MeasureLines extends React.PureComponent {
 
     let pixelsPerBeat = props.pixelsPerBeat
 
-    for (let m = 0; m <= measures; m++) {
+    for (let m = Math.max(0, this.props.renderLeft); m <= Math.min(this.props.renderRight, measures); m++) {
       let fromLeft = m * beatsPerMeasure * pixelsPerBeat
 
       lines.push(<div
@@ -151,6 +153,8 @@ export default class StaffSongNotes extends React.PureComponent {
     return <div style={style} className={this.classNames()}>
       <MeasureLines
         notes={this.props.notes}
+        renderLeft={Math.max(0, renderLeft)}
+        renderRight={renderRight}
         pixelsPerBeat={this.props.pixelsPerBeat}
         />
 
