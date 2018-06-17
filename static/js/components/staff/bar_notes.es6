@@ -7,12 +7,14 @@ import * as types from "prop-types"
 
 export default class BarNotes extends React.PureComponent {
   static defaultProps = {
-    heldNotes: {}
+    heldNotes: {},
+    offsetLeft: 0,
   }
 
   static propTypes = {
     notes: types.array.isRequired,
     heldNotes: types.object.isRequired,
+    offsetLeft: types.number.isRequired,
   }
 
   render() {
@@ -41,7 +43,7 @@ export default class BarNotes extends React.PureComponent {
 
     let style = {
       top: `${Math.floor(fromTop * 25/2)}%`,
-      left: `${fromLeft}px`,
+      left: `${this.props.offsetLeft + fromLeft}px`,
       width: `${width}px`
     }
 

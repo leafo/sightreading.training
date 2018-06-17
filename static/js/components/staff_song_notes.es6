@@ -14,11 +14,16 @@ import {SongNoteList} from "st/song_note_list"
 class MeasureLines extends React.PureComponent {
   static bucketSize = 4 // how many beats each chunk of rendering is
 
+  static defaultProps = {
+    offsetLeft: 0,
+  }
+
   static propTypes = {
     pixelsPerBeat: types.number.isRequired,
     notes: types.array.isRequired,
     renderLeft: types.number.isRequired,
     renderRight: types.number.isRequired,
+    offsetLeft: types.number.isRequired,
   }
 
   render() {
@@ -38,11 +43,13 @@ class MeasureLines extends React.PureComponent {
     let measureLeft = Math.max(0, Math.floor(this.props.renderLeft / beatsPerMeasure))
     let measureRight = Math.min(measures, Math.ceil(this.props.renderRight / beatsPerMeasure))
 
+    let offsetLeft = this.props.offsetLeft
+
     for (let m = measureLeft; m <= measureRight; m++) {
       let fromLeft = m * beatsPerMeasure * pixelsPerBeat
 
       lines.push(<div
-        style={{ left: `${fromLeft - 2}px`}}
+        style={{ left: `${offsetLeft + fromLeft - 2}px`}}
         data-label={m + 1}
         key={`measure-${m}`}
         className="measure_line"></div>)
@@ -135,7 +142,7 @@ export default class StaffSongNotes extends React.PureComponent {
     }
 
     let count = Math.abs(this.props.keySignature.count)
-    let keySignatureWidth = count > 0 ? count * 20 + 20 : 0;
+    let offsetLeft = 0
 
     let renderLeft = this.state.chunkLeft * MeasureLines.bucketSize
     let renderRight = this.state.chunkRight * MeasureLines.bucketSize
@@ -158,13 +165,15 @@ export default class StaffSongNotes extends React.PureComponent {
         renderLeft={Math.max(0, renderLeft)}
         renderRight={renderRight}
         pixelsPerBeat={this.props.pixelsPerBeat}
-        />
+        offsetLeft={offsetLeft}
+      />
 
       <LedgerLines key="ledger_lines"
         upperRow={this.props.upperRow}
         lowerRow={this.props.lowerRow}
         notes={notes}
         pixelsPerBeat={this.props.pixelsPerBeat}
+        offsetLeft={offsetLeft}
       />
 
       <BarNotes key="bar_notes"
@@ -176,6 +185,7 @@ export default class StaffSongNotes extends React.PureComponent {
         loopRight={this.props.loopRight}
         notes={notes}
         pixelsPerBeat={this.props.pixelsPerBeat}
+        offsetLeft={offsetLeft}
       />
     </div>
   }
