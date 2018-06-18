@@ -106,8 +106,7 @@
             background: #666;
             top: 0;
             bottom: 0;
-
-            &:nth-child(2n) {
+            &[data-label] {
                 &:before {
                     position: absolute;
                     content: attr(data-label);
