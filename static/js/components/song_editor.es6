@@ -9,6 +9,8 @@ import Lightbox from "st/components/lightbox"
 import Tabs from "st/components/tabs"
 import Select from "st/components/select"
 
+import {readConfig, writeConfig} from "st/config"
+
 class DeleteSongForm extends React.Component {
   afterSubmit(res) {
     this.props.lightbox.close()
@@ -90,15 +92,44 @@ export default class SongEditor extends React.Component {
     this.notesCountInputRef = React.createRef()
     this.beatsLengthInputRef = React.createRef()
 
+    this.fieldUpdaters = {
+      code: e => {
+        let code = e.target.value
+        let update = { code }
+        this.setState(update)
+        this.updateWip(update)
+
+        if (this.props.onCode) {
+          this.props.onCode(code)
+        }
+      }
+    }
+
+    let initial = song
+    if (!song) {
+      initial = readConfig("wip:newSong")
+      // render the initial song
+      if (initial) {
+        window.setTimeout(() => {
+          if (this.state.code == initial.code) {
+            if (this.props.onCode) {
+              this.props.onCode(initial.code)
+            }
+          }
+        }, 0)
+      }
+    }
+
     this.state = {
       song,
+      newSong: !song,
       loading: false,
 
-      title: song ? song.title : "",
-      code: this.props.code || "",
-      source: song ? song.source : "",
-      album: song ? song.album : "",
-      artist: song ? song.artist : "",
+      title: initial ? initial.title : "",
+      code: this.props.code || (initial ? initial.code : null) || "",
+      source: initial ? initial.source : "",
+      album: initial ? initial.album : "",
+      artist: initial ? initial.artist : "",
     }
   }
 
@@ -123,9 +154,22 @@ export default class SongEditor extends React.Component {
 
     if (res.song) {
       this.setState({
+        newSong: false,
         song: res.song
       })
+      writeConfig("wip:newSong", undefined)
     }
+  }
+
+  updateWip(update) {
+    if (!this.state.newSong) {
+      return false
+    }
+
+    let wip = readConfig("wip:newSong") || {}
+    wip = Object.assign({}, wip, update)
+    writeConfig("wip:newSong", wip)
+    return true
   }
 
   render() {
@@ -187,15 +231,7 @@ export default class SongEditor extends React.Component {
         disabled={this.state.loading}
         name="song[song]"
         value={this.state.code}
-        onChange={
-          (e) => {
-            let code = e.target.value
-            this.setState({ code })
-            if (this.props.onCode) {
-              this.props.onCode(code)
-            }
-          }
-        }></textarea>
+        onChange={this.fieldUpdaters.code}></textarea>
 
       <div className="song_editor_tools">
         {errors}
@@ -219,12 +255,20 @@ export default class SongEditor extends React.Component {
   }
 
   textInput(title, field, opts={}) {
+    if (!this.fieldUpdaters[field]) {
+      this.fieldUpdaters[field] = e => {
+        let update = {
+          [field]: e.target.value
+        }
+        this.setState(update)
+        this.updateWip(update)
+      }
+    }
+
     return <TextInputRow
       required={opts.required}
       disabled={this.state.loading}
-      onChange={e => this.setState({
-        [field]: e.target.value
-      })}
+      onChange={this.fieldUpdaters[field]}
       value={this.state[field] || ""}
       name={`song[${field}]`}
       >{title}</TextInputRow>

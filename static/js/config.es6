@@ -12,6 +12,11 @@ export function storageAvailable(type) {
 
 export function writeConfig(name, value) {
   if (storageAvailable("localStorage")) {
+    if (value == undefined) {
+      console.warn("Removing config", name)
+      return window.localStorage.removeItem(name)
+    }
+
     if (typeof value != "string") {
       value = JSON.stringify(value)
     }
