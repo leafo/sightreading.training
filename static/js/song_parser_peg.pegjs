@@ -7,7 +7,7 @@ commands
   }
 
 command
-  = note / rest / keySignature / timeSignature / halfTime / doubleTime / measure / block / restoreStartPosition / setTrack / macro
+  = note / rest / keySignature / timeSignature / halfTime / doubleTime / tripleTime / measure / block / restoreStartPosition / setTrack / macro
 
 keySignature
   = "ks" mod:$( "-"? [0-9]+) {
@@ -82,6 +82,9 @@ halfTime
 
 doubleTime
   = "dt" { return ["doubleTime"] }
+
+tripleTime
+  = "tt" { return ["tripleTime"] }
 
 measure
   = "m" measure:$([0-9]+) {

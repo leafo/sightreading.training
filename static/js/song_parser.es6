@@ -90,6 +90,10 @@ export default class SongParser {
           state.timeScale *= 0.5
           break
         }
+        case "tripleTime": {
+          state.timeScale *= 1/3
+          break
+        }
         case "measure": {
           let [, measure] = command
           state.position =  measure * state.beatsPerMeasure
@@ -174,6 +178,9 @@ export default class SongParser {
           }
 
           break
+        }
+        default: {
+          console.warn("Got unknown command when parsing song", command)
         }
       }
     }
