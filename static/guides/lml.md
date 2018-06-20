@@ -22,9 +22,9 @@ a note. The default duration multiplier is `1`, and the default base duration is
 
     c5.2 d5 d5 e5.4
 
-You can change the base duration using the `dt` (double time) or `ht` (half
-time) commands. These take effect until the end of the song (or block). For
-example, we can easily write 8th notes with `dt`:
+You can change the base duration using the `dt` (double time), `ht` (half
+time), or `tt` (triple time) commands. These take effect until the end of the
+song (or block). For example, we can easily write 8th notes with `dt`:
 
     dt
     c5 d5 c5 d5 c5 d5 e5.2
@@ -84,7 +84,6 @@ Example:
       { ht g4 f4 }
     }
 
-
 ## Measure movements
 
 The measure command, `m`, can be used to move the current position to a
@@ -114,11 +113,40 @@ modifier to remove the sharp or flat.
 
 ## Time Signature
 
-Set the time signature using the `ts` command. This will set 3/4 time.
+Set the time signature using the `ts` command. This will set `3/4` time.
 
     ts3/4
 
     c5 g5 g5
+
+The time signature will change where measure lines appear, and affect how many
+*beats* fill up an entire measure. The time signature also affects where
+measure movements will place the note position.
+
+## Time Commands
+
+Time commands change the current time multiplier until the end of the song or
+block. The time commands are multiplied against the current time multiplier, so
+you can repeat the commands to stack the effect.
+
+Notes have a duration in beats from 1 to any number you wish. Time commands
+change the duration multiplier which affects the actual length of the note.
+
+When a note is written without a duration specified, it has a length of 1 beat.
+Otherwise, any whole number can be specified as the length of a note.
+
+By default, the time multiplier is `1`. In `4/4` time this means each 1 beat
+note will be 1 beat long, so a quarter note.
+
+Using **double time**, the multiplier is halved, so each written note of 1 beat
+will become a eigth note: `(1 * 0.5) = 0.5`, each note is half a beat.
+
+Here are the time commands:
+
+* `dt` -- Double time
+* `ht` -- Double time
+* `tt` -- Triple Time
+
 
 ## Chords
 
@@ -134,5 +162,5 @@ The following is a short melody over a G Major and D Minor chord progression.
 
 ## Comments
 
-If a `#` appears, then it and any text will be ignored. You can use this to add
-notes to anyone reading the code (aka comments).
+If a `#` appears, then it and any text following will be ignored. You can use
+this to add notes to anyone reading the code (aka comments).

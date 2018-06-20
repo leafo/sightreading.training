@@ -69,6 +69,13 @@
     li img {
         vertical-align: middle;
     }
+
+    p {
+        > code {
+            background: rgba(black, 0.05);
+        }
+
+    }
     
     pre {
         padding: 10px;
