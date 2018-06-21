@@ -18,9 +18,8 @@ export default class Keyboard extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = {
-      heldKeyboardKeys: {}
-    }
+    this.state = {}
+    this.heldKeyboardKeys = {}
 
     this.onKeyDown = this.onKeyDown.bind(this)
   }
@@ -46,9 +45,15 @@ export default class Keyboard extends React.PureComponent {
       const key = keyCodeToChar(event.keyCode)
       const note = noteForKey("C5", key)
 
-      if (note && this.props.onKeyDown) {
-        this.state.heldKeyboardKeys[note] = true
-        this.props.onKeyDown(note);
+      if (note && !this.heldKeyboardKeys[note]) {
+        this.heldKeyboardKeys[note] = true
+        if (this.props.onKeyDown) {
+          this.props.onKeyDown(note)
+        }
+
+        if (this.props.midiOutput) {
+          this.props.midiOutput.noteOn(parseNote(note), 100)
+        }
       }
     }
 
@@ -56,10 +61,14 @@ export default class Keyboard extends React.PureComponent {
       const key = keyCodeToChar(event.keyCode)
       const note = noteForKey("C5", key)
 
-      if (note && this.props.onKeyUp) {
-        if (this.state.heldKeyboardKeys[note]) {
-          this.state.heldKeyboardKeys[note] = false
-          this.props.onKeyUp(note);
+      if (note && this.heldKeyboardKeys[note]) {
+        this.heldKeyboardKeys[note] = false
+        if (this.props.onKeyUp) {
+          this.props.onKeyUp(note)
+        }
+
+        if (this.props.midiOutput) {
+          this.props.midiOutput.noteOff(parseNote(note), 100)
         }
       }
     }
