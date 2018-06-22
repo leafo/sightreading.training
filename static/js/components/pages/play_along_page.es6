@@ -484,7 +484,7 @@ export default class PlayAlongPage extends React.Component {
       this.state.songTimer.start(this.state.bpm)
     }
 
-    let songNoteIdx = this.state.song.matchNoteFast(note, this.currentBeat)
+    let songNoteIdx = this.state.song.matchNoteFast(note, this.currentBeat, this.state.loopRight, this.state.loopLeft)
     let songNote = this.state.song[songNoteIdx]
 
     let recordHit = false
