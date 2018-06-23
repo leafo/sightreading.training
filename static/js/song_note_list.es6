@@ -311,9 +311,12 @@ export class SongNoteList extends Array {
         let wrapFoundIdx = this.matchNoteFast(findNote, wrapLeft - delta)
         if (wrapFoundIdx != null) {
           let found = this[wrapFoundIdx]
-          let current = this[foundIdx]
-
-          if (Math.abs(found.start - (wrapLeft - delta)) < Math.abs(current.start - beat)) {
+          if (foundIdx != null) {
+            let current = this[foundIdx]
+            if (Math.abs(found.start - (wrapLeft - delta)) < Math.abs(current.start - beat)) {
+              foundIdx = wrapFoundIdx
+            }
+          } else {
             foundIdx = wrapFoundIdx
           }
         }
