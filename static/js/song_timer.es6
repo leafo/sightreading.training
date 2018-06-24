@@ -1,4 +1,6 @@
 
+// this is used to play the play along page
+
 export default class SongTimer {
   constructor(opts={}) {
     this.beat = 0
@@ -65,11 +67,13 @@ export default class SongTimer {
 
   pause() {
     this.running = false
+    delete this.frameUpdate
     this.clearPlayingNotes()
   }
 
   reset(beat=0) {
     this.running = false
+    delete this.frameUpdate
     this.clearPlayingNotes()
     this.beat = beat
     this.onUpdate(this.beat);
@@ -125,6 +129,9 @@ export default class SongTimer {
       if (!this.running) { return }
       if (dt == 0) { return }
 
+      // a new timer was started
+      if (frameUpdate != this.frameUpdate) { return }
+
       if (lastBeat != this.beat) {
         // there was a seek, update position
         searchOffset = this.findSearchOffset(this.beat)
@@ -168,6 +175,7 @@ export default class SongTimer {
     }
 
     this.running = true
+    this.frameUpdate = frameUpdate
     window.requestAnimationFrame(frameUpdate);
   }
 }
