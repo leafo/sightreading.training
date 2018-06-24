@@ -327,7 +327,7 @@ export default class SongEditor extends React.Component {
       // make the modification using execCommand to ensure undo works
       input.value = code
       input.selectionStart = selectionStart
-      input.selectionEnd = selectionStart
+      input.selectionEnd = selectionEnd
       input.focus()
       document.execCommand("insertText", false, noteCode)
     })
