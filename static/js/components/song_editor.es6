@@ -9,6 +9,7 @@ import Lightbox from "st/components/lightbox"
 import Tabs from "st/components/tabs"
 import Select from "st/components/select"
 
+import { KeySignature } from "st/music"
 import {readConfig, writeConfig} from "st/config"
 
 class DeleteSongForm extends React.Component {
@@ -291,7 +292,28 @@ export default class SongEditor extends React.Component {
     let before = code.substring(0, input.selectionStart)
     let after = code.substring(input.selectionEnd, code.length)
 
-    let noteCode = note.toLowerCase()
+    let keySignature = KeySignature.forCount(0)
+    if (this.props.songNotes && this.props.songNotes.metadata) {
+      keySignature = KeySignature.forCount(this.props.songNotes.metadata.keySignature || 0)
+    }
+
+    let [, noteName, , octave] = note.match(/([A-G])(#|b)?(\d+)/)
+
+    let accidental = ""
+    switch (keySignature.accidentalsForNote(note)) {
+      case 0: {
+        accidental = "="
+        break
+      }
+      case 1: {
+        accidental = "-"
+      }
+      case -1: {
+        accidental = "+"
+      }
+    }
+
+    let noteCode = noteName.toLowerCase() + accidental + octave
 
     if (before && !before.match(/\s$/)) {
       noteCode = " " + noteCode
