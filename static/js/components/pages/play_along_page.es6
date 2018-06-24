@@ -88,6 +88,8 @@ export default class PlayAlongPage extends React.Component {
   constructor(props) {
     super(props)
 
+    this.songEditorRef = React.createRef()
+
     this.state = {
       heldNotes: {}, // notes by name, for the keyboard
       heldSongNotes: {},
@@ -479,6 +481,11 @@ export default class PlayAlongPage extends React.Component {
   pressNote(note) {
     if (!this.state.song) return
 
+    if (this.songEditorRef.current) {
+      this.songEditorRef.current.pressNote(note)
+      return
+    }
+
     if (!this.state.songTimer.running) {
       this.resetHitNotes()
       this.state.songTimer.start(this.state.bpm)
@@ -551,6 +558,7 @@ export default class PlayAlongPage extends React.Component {
   renderEditor() {
     return <SongEditor
       parserParams={this.songParserParams()}
+      ref={this.songEditorRef}
       songNotes={this.state.song}
       song={this.state.songModel}
       code={this.state.currentSongCode}

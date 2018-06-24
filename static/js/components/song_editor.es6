@@ -91,18 +91,10 @@ export default class SongEditor extends React.Component {
 
     this.notesCountInputRef = React.createRef()
     this.beatsLengthInputRef = React.createRef()
+    this.codeInputRef = React.createRef()
 
     this.fieldUpdaters = {
-      code: e => {
-        let code = e.target.value
-        let update = { code }
-        this.setState(update)
-        this.updateWip(update)
-
-        if (this.props.onCode) {
-          this.props.onCode(code)
-        }
-      }
+      code: e => this.updateCode(e.target.value)
     }
 
     let initial = song
@@ -130,6 +122,16 @@ export default class SongEditor extends React.Component {
       source: initial ? initial.source : "",
       album: initial ? initial.album : "",
       artist: initial ? initial.artist : "",
+    }
+  }
+
+  updateCode(code, callback) {
+    let update = { code }
+    this.setState(update, callback)
+    this.updateWip(update)
+
+    if (this.props.onCode) {
+      this.props.onCode(code)
     }
   }
 
@@ -227,6 +229,7 @@ export default class SongEditor extends React.Component {
       {originalSongIdInput}
 
       <textarea
+        ref={this.codeInputRef}
         placeholder="Type some LML"
         disabled={this.state.loading}
         name="song[song]"
@@ -272,5 +275,39 @@ export default class SongEditor extends React.Component {
       value={this.state[field] || ""}
       name={`song[${field}]`}
       >{title}</TextInputRow>
+  }
+
+  pressNote(note) {
+    let input = this.codeInputRef.current
+    if (!input) {
+      return
+    }
+
+    let code = this.state.code
+
+    let selectionStart = input.selectionStart
+    let selectionEnd = input.selectionEnd
+
+    let before = code.substring(0, input.selectionStart)
+    let after = code.substring(input.selectionEnd, code.length)
+
+    let noteCode = note.toLowerCase()
+
+    if (before && !before.match(/\s$/)) {
+      noteCode = " " + noteCode
+    }
+
+    if (after && !after.match(/^\s/)) {
+      noteCode = noteCode + " "
+    }
+
+    this.updateCode(before + noteCode + after, () => {
+      // make the modification using execCommand to ensure undo works
+      input.value = code
+      input.selectionStart = selectionStart
+      input.selectionEnd = selectionStart
+      input.focus()
+      document.execCommand("insertText", false, noteCode)
+    })
   }
 }
