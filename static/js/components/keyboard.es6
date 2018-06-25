@@ -18,10 +18,16 @@ export default class Keyboard extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      // used for showing :active effect on keys when using touch device
+      activeNotes: {}
+    }
     this.heldKeyboardKeys = {}
+    this.activeTouches = {}
 
-    this.onKeyDown = this.onKeyDown.bind(this)
+    this.onMouseDown = this.onMouseDown.bind(this)
+    this.onTouchStart = this.onTouchStart.bind(this)
+    this.onTouchEnd = this.onTouchEnd.bind(this)
   }
 
   isBlack(pitch) {
@@ -47,13 +53,7 @@ export default class Keyboard extends React.PureComponent {
 
       if (note && !this.heldKeyboardKeys[note]) {
         this.heldKeyboardKeys[note] = true
-        if (this.props.onKeyDown) {
-          this.props.onKeyDown(note)
-        }
-
-        if (this.props.midiOutput) {
-          this.props.midiOutput.noteOn(parseNote(note), 100)
-        }
+        this.triggerNoteDown(note)
       }
     }
 
@@ -63,13 +63,7 @@ export default class Keyboard extends React.PureComponent {
 
       if (note && this.heldKeyboardKeys[note]) {
         this.heldKeyboardKeys[note] = false
-        if (this.props.onKeyUp) {
-          this.props.onKeyUp(note)
-        }
-
-        if (this.props.midiOutput) {
-          this.props.midiOutput.noteOff(parseNote(note), 100)
-        }
+        this.triggerNoteUp(note)
       }
     }
 
@@ -82,17 +76,7 @@ export default class Keyboard extends React.PureComponent {
     window.removeEventListener("keyup", this.upListener)
   }
 
-  onClickKey(e) {
-    e.preventDefault();
-    if (this.props.onClickKey) {
-      this.props.onClickKey(e.target.dataset.note);
-    }
-  }
-
-  onKeyDown(e) {
-    e.preventDefault();
-    let note = e.target.dataset.note;
-
+  triggerNoteDown(note) {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(note);
     }
@@ -100,20 +84,67 @@ export default class Keyboard extends React.PureComponent {
     if (this.props.midiOutput) {
       this.props.midiOutput.noteOn(parseNote(note), 100)
     }
+  }
+
+  triggerNoteUp(note) {
+    if (this.props.onKeyUp) {
+      this.props.onKeyUp(note);
+    }
+
+    if (this.props.midiOutput) {
+      this.props.midiOutput.noteOff(parseNote(note), 100)
+    }
+  }
+
+  onTouchStart(e) {
+    let note = e.target.dataset.note;
+
+    this.setState((s) => ({
+      activeNotes: Object.assign({}, s.activeNotes, { [note]: true })
+    }))
+
+    for (let i = 0; i < e.changedTouches.length; i++) {
+      let touch = e.changedTouches[i]
+      this.activeTouches[note] = touch.identifier
+    }
+
+    this.triggerNoteDown(note)
+  }
+
+  onTouchEnd(e) {
+    e.preventDefault()
+
+    for (let i = 0; i < e.changedTouches.length; i++) {
+      let touch = e.changedTouches[i]
+      for (let [note, tid] of Object.entries(this.activeTouches)) {
+        if (tid == touch.identifier) {
+          delete this.activeTouches[note]
+
+          this.setState((s) => {
+            let activeNotes = Object.assign({}, s.activeNotes)
+            delete activeNotes[note]
+            return { activeNotes }
+          })
+
+          this.triggerNoteUp(note)
+        }
+      }
+    }
+  }
+
+  onMouseDown(e) {
+    e.preventDefault();
+    let note = e.target.dataset.note;
+    this.triggerNoteDown(note)
 
     if (this.props.onKeyUp) {
-      let onUp = function(e) {
+      let onUp = e => {
         e.preventDefault();
-        if (this.props.onKeyUp) {
-          this.props.onKeyUp(note);
-        }
-
-        if (this.props.midiOutput) {
-          this.props.midiOutput.noteOff(parseNote(note), 100)
-        }
+        this.triggerNoteUp(note)
 
         document.removeEventListener("mouseup", onUp);
-      }.bind(this);
+      }
+
       document.addEventListener("mouseup", onUp);
     }
   }
@@ -139,19 +170,23 @@ export default class Keyboard extends React.PureComponent {
       let black = this.isBlack(pitch);
       let name = noteName(pitch);
 
+
       let classes = classNames("key", {
         labeled: this.isC(pitch),
         white: !black,
         black: black,
-        held: this.props.heldNotes && this.props.heldNotes[name]
-      });
+        held: this.props.heldNotes && this.props.heldNotes[name],
+        active: this.state.activeNotes[name]
+      })
 
       keys.push(<div key={pitch} className="key_wrapper">
         <div
-          onMouseDown={this.onKeyDown}
+          onMouseDown={this.onMouseDown}
+          onTouchStart={this.onTouchStart}
+          onTouchEnd={this.onTouchEnd}
           data-note={name}
           className={classes} />
-      </div>);
+      </div>)
     }
 
     return <div className="keyboard">{keys}</div>
