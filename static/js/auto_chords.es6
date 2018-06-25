@@ -128,10 +128,16 @@ export class AutoChords {
     let left = start
 
     let k = 0
-    while (left + chunkSize <= stop) {
-      fn(left, Math.min(stop, left + chunkSize), k)
+    while (true) {
+      let right = Math.min(stop, left + chunkSize)
+
+      fn(left, right, k)
       left += chunkSize
       k += 1
+
+      if (right >= stop) {
+        break
+      }
     }
   }
 }
