@@ -97,42 +97,26 @@
             padding: 20px 0 ;
         }
     }
-}
 
-.settings_panel .song_list {
-    background: white;
-    border: 2px solid rgba($border_color, 0.8);
-    max-height: 200px;
-    overflow-y: auto;
+    .settings_panel {
 
-    ul {
-        list-style: none;
-        padding: 10px;
-        margin: 0;
-
-        button {
+        .slider_row {
+            display: flex;
+            .slider_component {
+                flex: 1;
+            }
+        }
+        label {
             display: block;
-            width: 100%;
-            background: transparent;
-            border: 0;
-            box-shadow: none;
-            color: #444;
-            text-align: left;
-            border-radius: 0;
+            margin: 0 10px 10px 10px;
 
-            &:hover {
-                background: #f5f5f5;
+            .input_label {
+                font-size: 13px;
+                color: #666;
+                font-weight: bold;
+                margin-bottom: 5px;
             }
-
-            &.selected {
-                background: $button_color_highlight;
-            }
-
-            &:active {
-                background: darken($button_color_highlight, 5%);
-            }
-
         }
     }
-
 }
+
