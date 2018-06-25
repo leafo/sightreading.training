@@ -391,32 +391,40 @@ export default class MelodyRecognitionExercise extends React.Component {
 
 
     return <section className="auto_player">
-      <h3>Autoplay mode</h3>
-      <fieldset>
+      <h3>Autoplay Mode</h3>
+      <p>Repeatedly plays a random interval, a pause, then the associated melody. No input required, listen along and try to identify the intervals.</p>
+
+      <fieldset className="autoplay_options">
         <legend>Autoplay options</legend>
-        <label>
-          <input
-            checked={this.state.autoplayRandomizeRoot}
-            onChange={e => {
-              this.setState({
-                autoplayRandomizeRoot: e.target.checked
-              })
-            }}
-            type="checkbox" /> Randomize root
-        </label>
-        {" "}
-        <label>
-          Order
-          <Select 
-            value={this.state.autoplayIntervalOrder}
-            onChange={(v) => this.setState({ autoplayIntervalOrder: v })}
-            options={[
-              {name: "Regular", value: "default"},
-              {name: "Reverse", value: "reverse"},
-              {name: "Harmonic", value: "harmonic"},
-            ]}
-          />
-        </label>
+        <ul >
+          <li>
+            <label>
+              <input
+                checked={this.state.autoplayRandomizeRoot}
+                onChange={e => {
+                  this.setState({
+                    autoplayRandomizeRoot: e.target.checked
+                  })
+                }}
+                type="checkbox" />
+                <span className="input_label">Randomly transpose</span>
+            </label>
+          </li>
+          <li>
+            <label>
+              <span className="input_label">Playback mode</span>
+              <Select 
+                value={this.state.autoplayIntervalOrder}
+                onChange={(v) => this.setState({ autoplayIntervalOrder: v })}
+                options={[
+                  {name: "In order", value: "default"},
+                  {name: "Reverse", value: "reverse"},
+                  {name: "Harmonic", value: "harmonic"},
+                ]}
+              />
+            </label>
+          </li>
+        </ul>
       </fieldset>
 
       <p>
@@ -432,7 +440,8 @@ export default class MelodyRecognitionExercise extends React.Component {
               }
 
               this.setState({
-                autoplayTimer: undefined
+                autoplayTimer: undefined,
+                autoplayState: undefined,
               })
             } else {
               this.autoplayNextInterval()
@@ -483,9 +492,13 @@ export default class MelodyRecognitionExercise extends React.Component {
             disabled={disabled}
             onClick={e => {
               this.playCurrentSong()
-          }}>Play song</button>
+          }}>Play melody</button>
           {stopSong}
         </div>
+      </div>
+    } else {
+      currentSongTools = <div className="current_song">
+        Press <strong>Next melody</strong> to randomly pick a interval to practice
       </div>
     }
 
@@ -537,7 +550,7 @@ export default class MelodyRecognitionExercise extends React.Component {
     let inputs = MelodyRecognitionExercise.melodies.map((m) => {
       let key = `${m.interval}-${m.direction}`
 
-      return <li key={key}>
+      return <li key={key} title={m.title}>
         <label>
           <input
             type="checkbox"
@@ -572,35 +585,35 @@ export default class MelodyRecognitionExercise extends React.Component {
     return <section className="interval_settings">
       <fieldset className="enabled_intervals">
         <legend>Intervals</legend>
+
         <ul>
           {inputs}
-          <li>
-            <button
-              type="button"
-              onClick={e => this.setState({ enabledIntervals: {} })}
-              >All off</button>
-          </li>
-          <li>
-            <button
-              type="button"
-              onClick={e =>
-                this.setState({
-                  enabledIntervals: enabledFiltered(m => m.direction == "asc")
-                })
-              }
-              >All Ascending</button>
-          </li>
-          <li>
-            <button
-              type="button"
-              onClick={e =>
-                this.setState({
-                  enabledIntervals: enabledFiltered(m => m.direction == "desc")
-                })
-              }
-              >All Descending</button>
-          </li>
         </ul>
+
+        <div className="button_toggles">
+          <button
+            type="button"
+            onClick={e => this.setState({ enabledIntervals: {} })}
+            >All off</button>
+          {" "}
+          <button
+            type="button"
+            onClick={e =>
+              this.setState({
+                enabledIntervals: enabledFiltered(m => m.direction == "asc")
+              })
+            }
+            >All Ascending</button>
+          {" "}
+          <button
+            type="button"
+            onClick={e =>
+              this.setState({
+                enabledIntervals: enabledFiltered(m => m.direction == "desc")
+              })
+            }
+            >All Descending</button>
+        </div>
       </fieldset>
     </section>
   }
