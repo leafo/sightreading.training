@@ -42,10 +42,12 @@ class SettingsPanel extends React.Component {
   constructor(props) {
     super(props)
     this.setMinChordSpacing = (value) => trigger(this, "setMinChordSpacing", value)
+    this.setAutochordsRate = (value) => trigger(this, "setAutochordsRate", value)
   }
 
   render() {
     let chordMinSpacing = this.props.chordMinSpacing || 0
+    let autochordsRate = this.props.autochordsRate || 1
 
     return <section className="settings_panel">
       <div className="settings_header">
@@ -55,14 +57,30 @@ class SettingsPanel extends React.Component {
 
       <section className="settings_group">
         <h4>Autochords</h4>
-        <div className="slider_row">
-          <Slider
-            min={-5}
-            max={10}
-            onChange={this.setMinChordSpacing}
-            value={chordMinSpacing} />
-          <span className="current_value">{chordMinSpacing}</span>
-        </div>
+        <label>
+          <div className="input_label">Note spacing</div>
+          <div className="slider_row">
+            <Slider
+              min={-5}
+              max={10}
+              onChange={this.setMinChordSpacing}
+              value={chordMinSpacing} />
+            <span className="current_value">{chordMinSpacing}</span>
+          </div>
+        </label>
+
+        <label>
+          <div className="input_label">Multiplier</div>
+          <div className="slider_row">
+            <Slider
+              min={1}
+              max={4}
+              onChange={this.setAutochordsRate}
+              value={autochordsRate} />
+            <span className="current_value">{autochordsRate}</span>
+          </div>
+        </label>
+
         {this.renderAutochords()}
       </section>
     </section>
@@ -177,7 +195,8 @@ export default class PlayAlongPage extends React.Component {
     return {
       autoChords: AutoChords.allGenerators[autoChordIdx],
       autoChordsSettings: {
-        chordMinSpacing: this.state.chordMinSpacing
+        chordMinSpacing: this.state.chordMinSpacing,
+        rate: this.state.autochordsRate,
       }
     }
   }
@@ -315,6 +334,12 @@ export default class PlayAlongPage extends React.Component {
         this.setState({
           chordMinSpacing: value
         }, () => this.refreshSong())
+      },
+      setAutochordsRate: (e, value) => {
+        this.setState(
+          {autochordsRate: value},
+          () => this.refreshSong()
+        )
       },
       setAutochords: (e, t) => {
         this.setState(
@@ -459,6 +484,7 @@ export default class PlayAlongPage extends React.Component {
       <SettingsPanel
         autoChordType={this.state.autoChordType}
         chordMinSpacing={this.state.chordMinSpacing}
+        autochordsRate={this.state.autochordsRate}
         close={() => this.setState({
           settingsPanelOpen: !this.state.settingsPanelOpen
         }) } />
