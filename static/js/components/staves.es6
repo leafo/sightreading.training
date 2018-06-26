@@ -37,6 +37,33 @@ export class Staff extends React.Component {
     this.refs.notes.setOffset(amount * noteWidth * scale)
   }
 
+  // find the min/max note range
+  pitchRange() {
+    let min, max
+
+    if (this.props.notes instanceof SongNoteList) {
+      this.props.notes.forEach(note => {
+        let pitch = parseNote(note.note)
+
+        if (this.props.filterPitch) {
+          if (!this.props.filterPitch(pitch)) {
+            return
+          }
+        }
+
+        if (min == null || pitch < min) {
+          min = pitch
+        }
+
+        if (max == null || pitch > max) {
+          max = pitch
+        }
+      })
+    }
+
+    return [min, max]
+  }
+
   render() {
     let staffNotes = null
 
@@ -55,6 +82,8 @@ export class Staff extends React.Component {
     }
 
     let height = DEFAULT_HEIGHT * (this.props.scale || 1)
+
+    let [minPitch, maxPitch] = this.pitchRange()
 
     return <div
       style={{
