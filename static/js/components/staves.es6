@@ -13,6 +13,7 @@ import StaffNotes from "st/components/staff_notes"
 import StaffSongNotes from "st/components/staff_song_notes"
 
 const DEFAULT_HEIGHT = 120
+const DEFAULT_MARGIN = 60
 
 export class Staff extends React.Component {
   static propTypes = {
@@ -37,26 +38,27 @@ export class Staff extends React.Component {
     this.refs.notes.setOffset(amount * noteWidth * scale)
   }
 
-  // find the min/max note range
-  pitchRange() {
+  // find the min/max note range in rows
+  notesRowRange() {
     let min, max
 
     if (this.props.notes instanceof SongNoteList) {
       this.props.notes.forEach(note => {
-        let pitch = parseNote(note.note)
-
         if (this.props.filterPitch) {
+          let pitch = parseNote(note.note)
           if (!this.props.filterPitch(pitch)) {
             return
           }
         }
 
-        if (min == null || pitch < min) {
-          min = pitch
+        let row = noteStaffOffset(note.note)
+
+        if (min == null || row < min) {
+          min = row
         }
 
-        if (max == null || pitch > max) {
-          max = pitch
+        if (max == null || row > max) {
+          max = row
         }
       })
     }
@@ -83,11 +85,33 @@ export class Staff extends React.Component {
 
     let height = DEFAULT_HEIGHT * (this.props.scale || 1)
 
-    let [minPitch, maxPitch] = this.pitchRange()
+    let noteHeight = height * 0.2 // height of 1 bar
+
+    let [minRow, maxRow] = this.notesRowRange()
+
+    let marginTop, marginBottom
+
+    if (minRow != null && minRow < this.props.lowerRow) {
+      marginBottom = noteHeight * (this.props.lowerRow - minRow)
+
+      if (marginBottom < DEFAULT_MARGIN) {
+        marginBottom = null
+      }
+    }
+
+    if (maxRow != null && maxRow > this.props.upperRow) {
+      marginTop = noteHeight * (maxRow - this.props.upperRow)
+
+      if (marginTop < DEFAULT_MARGIN) {
+        marginTop = null
+      }
+    }
 
     return <div
       style={{
-        height: `${height}px`
+        height: `${height}px`,
+        marginTop: marginTop ? `${marginTop}px` : null,
+        marginBottom: marginBottom ? `${marginBottom}px` : null,
       }}
       className={classNames("staff", this.props.staffClass)}
     >
