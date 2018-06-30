@@ -92,7 +92,7 @@ export class Staff extends React.Component {
     let marginTop, marginBottom
 
     if (minRow != null && minRow < this.props.lowerRow) {
-      marginBottom = noteHeight * (this.props.lowerRow - minRow)
+      marginBottom = noteHeight * (this.props.lowerRow - minRow) / 2 + noteHeight
 
       if (marginBottom < DEFAULT_MARGIN) {
         marginBottom = null
@@ -100,7 +100,7 @@ export class Staff extends React.Component {
     }
 
     if (maxRow != null && maxRow > this.props.upperRow) {
-      marginTop = noteHeight * (maxRow - this.props.upperRow)
+      marginTop = noteHeight * (maxRow - this.props.upperRow) / 2 + noteHeight
 
       if (marginTop < DEFAULT_MARGIN) {
         marginTop = null
