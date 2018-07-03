@@ -25,6 +25,10 @@ class SongsFlow extends Flow
 
       song: for_render and song.song or nil
 
+      notes_count: song.notes_count
+      beats_duration: song.beats_duration
+      publish_status: Songs.publish_statuses\to_name song.publish_status
+
       user_id: song.user_id
       allowed_to_edit: not not song\allowed_to_edit @current_user
       artist: song.artist

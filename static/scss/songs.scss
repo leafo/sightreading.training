@@ -1,0 +1,107 @@
+$body_color: #333; // TODO: use common
+
+.songs_page {
+    background: transparent;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    max-width: none;
+    display: flex;
+
+    min-height: calc(100vh - 50px);
+
+    .sidebar {
+        width: 250px;
+        box-sizing: border-box;
+        background: #EFEFEF;
+        padding: 20px;
+
+        .new_song_button {
+            display: block;
+            text-align: center;
+        }
+
+        nav {
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 20px 0;
+            }
+
+            li {
+                margin-bottom: 5px;
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            a.active {
+                text-decoration: none;
+                font-weight: bold;
+            }
+        }
+    }
+
+    .content_column {
+        flex: 1;
+        padding: 20px;
+
+        > section {
+            h2 {
+                margin-top: 0;
+            }
+
+            margin-bottom: 40px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .song_cell {
+        background: white;
+        padding: 10px;
+
+        .publish_status {
+            float: right;
+            background: #ddd;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            padding: 3px 6px;
+            margin-left: 5px;
+            color: rgba($body_color, 0.8);
+        }
+
+        .song_title {
+            font-size: 20px;
+            a {
+                text-decoration: none;
+            }
+            margin-bottom: 5px;
+        }
+
+        .song_creator {
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .song_stats {
+            display: flex;
+            font-size: 14px;
+            opacity: 0.5;
+            justify-content: space-between;
+        }
+    }
+
+    .song_cell_list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+
+        grid-gap: 15px;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+}
