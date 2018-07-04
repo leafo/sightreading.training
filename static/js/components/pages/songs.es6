@@ -86,31 +86,52 @@ export default class SongsPage extends React.Component {
           <li>
             <NavLink activeClassName="active" to="/play-along">Overview</NavLink>
           </li>
-          <li>All songs</li>
+          <li>All Songs</li>
         </ul>
       </nav>
     </section>
   }
 
+  renderMySongs() {
+    if (!N.session.currentUser) {
+      return null
+    }
+
+    let songList
+    if (this.state.mySongs && this.state.mySongs.length) {
+      songList = <ul className="song_cell_list">{this.state.mySongs.map(song =>
+        <li key={song.id}>
+          <SongCell song={song} key={song.id}/>
+        </li>
+      )}</ul>
+    }
+
+    if (!songList) {
+      songList = <React.Fragment>
+        <p>Any songs you create or edit will show up here.</p>
+        <p>
+          <Link to="/new-song" className="button new_song_button">Create a new song</Link>
+        </p>
+      </React.Fragment>
+    }
+
+    return <section>
+      <h2>My Songs</h2>
+      {songList}
+    </section>
+  }
+
+
   renderContent() {
-    let mySongs
-    if (N.session.currentUser) {
-      mySongs = <section>
-        <h2>My songs</h2>
-        <ul className="song_cell_list">{this.state.mySongs.map(song =>
-          <li key={song.id}>
-            <SongCell song={song} key={song.id}/>
-          </li>
-        )}</ul>
+    let recentlyPlayed
+    if (false) {
+      recentlyPlayed = <section>
+        <h2>Recently Played</h2>
       </section>
     }
 
     return <section className="content_column">
-      <section>
-        <h2>Recently Played</h2>
-      </section>
-
-
+      {recentlyPlayed}
       <section>
         <h2>Songs</h2>
         <ul className="song_cell_list">{this.state.songs.map(song =>
@@ -120,7 +141,7 @@ export default class SongsPage extends React.Component {
         )}</ul>
       </section>
 
-      {mySongs}
+      {this.renderMySongs()}
     </section>
   }
 

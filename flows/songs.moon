@@ -43,13 +43,14 @@ class SongsFlow extends Flow
     }
 
   list_songs: =>
-    pager = Songs\paginated {
-      per_page: 10
-      order: "id desc"
-      prepare_results: (songs) ->
-        preload songs, "user"
-        songs
-    }
+    pager = Songs\paginated "where publish_status = ?",
+      Songs.publish_statuses.public, {
+        per_page: 10
+        order: "id desc"
+        prepare_results: (songs) ->
+          preload songs, "user"
+          songs
+      }
 
     page = @params.page and tonumber(@params.page) or 0
 
