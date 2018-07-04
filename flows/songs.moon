@@ -102,6 +102,8 @@ class SongsFlow extends Flow
         album: shapes.db_nullable shapes.truncated_text(250)
         artist: shapes.db_nullable shapes.truncated_text(250)
 
+        publish_status: shapes.db_enum(Songs.publish_statuses)
+
         notes_count: shapes.db_nullable shapes.integer
         beats_duration: shapes.db_nullable shapes.number
 

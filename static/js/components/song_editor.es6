@@ -216,12 +216,12 @@ export default class SongEditor extends React.Component {
 
     if (!this.state.song || this.state.song.allowed_to_edit) {
       songVisibility = <Select
-        name="song[visibility]"
+        name="song[publish_status]"
         options={[
+          {value: "draft", name: "Unlisted"},
           {value: "public", name: "Public"},
-          {value: "unlisted", name: "Unlisted"},
         ]}
-        />
+      />
     }
 
     return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">

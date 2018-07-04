@@ -31,6 +31,15 @@ db_id = types.one_of({
 db_nullable = (t) ->
   t + empty / db.NULL
 
+db_enum = (e) ->
+  names = {unpack e}
+
+  types.one_of {
+    types.one_of(names) / e\for_db
+    integer / (v) -> e[v] and e\for_db v
+  }, describe: ->
+    "enum(#{table.concat names, ", "})"
+
 truncated_text = (len) ->
   trimmed_text * types.string\length(1,len)\on_repair (s) -> s\sub 1, len
 
@@ -80,4 +89,4 @@ difference = (update, source) ->
   assert types.shape(s, open: true) source
 
 
-{:trimmed_text, :empty, :integer, :number, :truncated_text, :params, :assert_params, :db_nullable, :db_id, :difference}
+{:trimmed_text, :empty, :integer, :number, :truncated_text, :params, :assert_params, :db_nullable, :db_id, :db_enum, :difference}
