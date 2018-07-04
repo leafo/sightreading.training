@@ -103,6 +103,11 @@ class SongsFlow extends Flow
         album: shapes.db_nullable shapes.truncated_text(250)
         artist: shapes.db_nullable shapes.truncated_text(250)
 
+        has_autochords: types.one_of {
+          types.literal("true") / true
+          types.any / false
+        }
+
         publish_status: shapes.db_enum(Songs.publish_statuses)
 
         notes_count: shapes.db_nullable shapes.integer

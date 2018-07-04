@@ -92,3 +92,7 @@ package.loaded.migrations =
   [1528871228]: =>
     add_column "songs", "original_song_id", foreign_key null: true
     create_index "songs", "original_song_id", where: "original_song_id is not null"
+
+  [1530722873]: =>
+    add_column "songs", "has_autochords", boolean null: true
+

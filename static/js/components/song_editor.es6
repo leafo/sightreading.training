@@ -231,9 +231,17 @@ export default class SongEditor extends React.Component {
       />
     }
 
+
+    let hasAutochords = false
+
+    if (this.props.songNotes && this.props.songNotes.autoChords) {
+      hasAutochords = true
+    }
+
     return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
       <input type="hidden" ref={this.notesCountInputRef} name="song[notes_count]" />
       <input type="hidden" ref={this.beatsLengthInputRef} name="song[beats_duration]" />
+      <input type="hidden" value={hasAutochords ? "true" : ""} name="song[has_autochords]" />
       {originalSongIdInput}
 
       <textarea
