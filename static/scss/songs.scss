@@ -77,6 +77,8 @@ $body_color: #333; // TODO: use common
         .song_title {
             font-size: 20px;
             a {
+                // alternate dark link color
+                color: #55556b;
                 text-decoration: none;
             }
             margin-bottom: 5px;

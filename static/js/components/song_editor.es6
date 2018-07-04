@@ -123,6 +123,7 @@ export default class SongEditor extends React.Component {
       source: initial ? initial.source : "",
       album: initial ? initial.album : "",
       artist: initial ? initial.artist : "",
+      publishStatus: initial ? initial.publish_status : undefined,
     }
   }
 
@@ -217,6 +218,12 @@ export default class SongEditor extends React.Component {
     if (!this.state.song || this.state.song.allowed_to_edit) {
       songVisibility = <Select
         name="song[publish_status]"
+        value={this.state.publishStatus}
+        onChange={value => {
+          this.setState({
+            publishStatus: value
+          })
+        }}
         options={[
           {value: "draft", name: "Unlisted"},
           {value: "public", name: "Public"},
