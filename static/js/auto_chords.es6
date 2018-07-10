@@ -168,9 +168,17 @@ export class TriadAutoChords extends AutoChords {
     let maxPitch = this.minPitchInRange(blockStart, blockStop)
     let chordRoot = this.rootBelow(root, maxPitch)
 
-    return Chord.notes(chordRoot, shape).map((note) =>
-      new SongNote(note, blockStart, blockStop - blockStart)
-    )
+    let rate = this.options.rate || 1
+
+    let out = []
+
+    this.inDivisions(blockStart, blockStop, rate, (start, stop) => {
+      Chord.notes(chordRoot, shape).map((note) =>
+        out.push(new SongNote(note, start, stop - start))
+      )
+    })
+
+    return out
   }
 }
 
