@@ -189,27 +189,27 @@ export class Root5AutoChords extends AutoChords {
     let chordRoot = this.rootBelow(root, maxPitch)
     let chordNotes = Chord.notes(chordRoot, shape)
 
-    let out = []
-    this.inDivisions(blockStart, blockStop, 2, (start, stop, k) => {
-      let d = (stop - start) / 2
+    let rate = this.options.rate || 1
 
-      switch (k) {
-        case 0:
-          out.push(
-            new SongNote(chordNotes[0], start, stop - start)
-          )
-          break
-        case 1:
-        case 2:
-          out.push(
-            new SongNote(chordNotes[2], start, stop - start)
-          )
-          break
+    console.log(this)
+    let bpm = this.song.metadata.beatsPerMeasure || 2
+
+    let out = []
+    this.inDivisions(blockStart, blockStop, 1 + rate, (start, stop, k) => {
+      if (k % bpm == 0) {
+        // root on beat
+        out.push(
+          new SongNote(chordNotes[0], start, stop - start)
+        )
+      } else {
+        // 5 on everything else
+        out.push(
+          new SongNote(chordNotes[2], start, stop - start)
+        )
       }
     })
 
     return out
-
   }
 }
 
