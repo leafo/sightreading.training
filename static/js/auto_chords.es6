@@ -1,5 +1,8 @@
 
-import {Chord, parseNote, noteName, MIDDLE_C_PITCH} from "st/music"
+import {
+  Chord, parseNote, noteName, addInterval, MIDDLE_C_PITCH, OCTAVE_SIZE
+} from "st/music"
+
 import {SongNote} from "st/song_note_list"
 
 export class AutoChords {
@@ -189,9 +192,13 @@ export class Root5AutoChords extends AutoChords {
     let chordRoot = this.rootBelow(root, maxPitch)
     let chordNotes = Chord.notes(chordRoot, shape)
 
+    if (parseNote(chordNotes[2]) > maxPitch) {
+      chordRoot = addInterval(chordRoot, -OCTAVE_SIZE)
+      chordNotes = Chord.notes(chordRoot, shape)
+    }
+
     let rate = this.options.rate || 1
 
-    console.log(this)
     let bpm = this.song.metadata.beatsPerMeasure || 2
 
     let out = []
