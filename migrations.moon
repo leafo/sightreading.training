@@ -96,3 +96,16 @@ package.loaded.migrations =
   [1530722873]: =>
     add_column "songs", "has_autochords", boolean null: true
 
+  [1531767217]: =>
+    create_table "song_user_time", {
+      {"user_id", foreign_key}
+      {"song_id", foreign_key}
+
+      {"time_spent", integer default: 0}
+
+      {"created_at", time}
+      {"updated_at", time}
+
+      "PRIMARY KEY (user_id, song_id)"
+    }
+
