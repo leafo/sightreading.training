@@ -44,10 +44,12 @@ describe "app", ->
     it "gets songs with no results", ->
       status, res = request "/songs.json", expect: "json"
       assert.same 200, status
-      assert.same { success: true, songs: {} },res
+      assert.same { success: true },res
 
     it "gets song with result", ->
-      song = factory.Songs!
+      song = factory.Songs{
+        publish_status: "public"
+      }
       status, res = request "/songs.json", expect: "json"
       assert.same 200, status
 
@@ -90,6 +92,7 @@ describe "app", ->
         post: {
           "song[title]": "the new title"
           "song[song]": "g5 a5"
+          "song[publish_status]": "public"
         }
       }
 
@@ -100,4 +103,30 @@ describe "app", ->
       assert.same "the new title", song.title
       assert.same "g5 a5", song.song
 
+    it "increments song user time", ->
+      user = factory.Users!
+      song = factory.Songs user_id: user.id
+
+      status, res = request_as user, "/songs/#{song.id}/stats.json", {
+        expect: "json"
+        post: { }
+      }
+
+      assert.same 200, status
+
+      assert.same {
+        time_spent: 30
+        success: true
+      }, res
+
+      status, res = request_as user, "/songs/#{song.id}/stats.json", {
+        expect: "json"
+        post: { }
+      }
+
+      assert.same {
+        errors: {
+          "time just updated"
+        }
+      }, res
 

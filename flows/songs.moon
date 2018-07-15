@@ -153,3 +153,27 @@ class SongsFlow extends Flow
       song: @format_song song
     }
 
+  update_song_user_time: =>
+    song = @find_song!
+    import SongUserTime from require "models"
+    user_time = SongUserTime\find {
+      user_id: @current_user.id
+      song_id: song.id
+    }
+
+    assert_error not user_time or not user_time\just_updated!,
+      "time just updated"
+
+    out = SongUserTime\increment {
+      user_id: @current_user.id
+      song_id: song.id
+      time_spent: 30
+    }
+
+    json: {
+      success: true
+      time_spent: out.time_spent
+    }
+
+
+

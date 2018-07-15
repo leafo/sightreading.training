@@ -22,4 +22,9 @@ class SongUserTime extends Model
       time_spent: db.raw db.interpolate_query "#{db.escape_identifier @table_name!}.time_spent + excluded.time_spent"
     }
 
+  just_updated: =>
+    date = require "date"
+    sec = date.diff(date(true), date(@updated_at))\spanseconds!
+    sec <= 20
+
 

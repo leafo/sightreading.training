@@ -94,4 +94,11 @@ class extends lapis.Application
       @flow("songs")\update_song!
   }
 
+  "/songs/:song_id/stats.json": multi {
+    post: =>
+      assert_error @current_user, "must be logged in"
+      @flow("songs")\update_song_user_time!
+  }
+
+
 
