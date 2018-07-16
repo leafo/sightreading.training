@@ -2,7 +2,9 @@
 import {csrfToken} from "st/globals"
 
 export default class NoteStats {
-  constructor(currentUser) {
+  static TIMER_SIZE = 30*1000
+
+  constructor(currentUser, opts={}) {
     this.currentUser = currentUser
     this.noteHitStats = {}
     this.streak = 0
@@ -22,12 +24,45 @@ export default class NoteStats {
     }
   }
 
+  setTimerUrl(url) {
+    this.flushTimer()
+    this.timerUrl = url
+  }
+
+  startTimer() {
+    console.log("start timer...", this.timerUrl)
+    if (!this.timerUrl) {
+      return
+    }
+
+    this.lastActivity = +new Date
+
+    if (this.timerFlushTimeout) {
+      return
+    }
+
+    console.log("starting timer")
+    this.timerFlushTimeout = setTimeout(() => {
+      console.log("doing flush")
+      this.flushTimer()
+      let now = +new Date
+      delete this.timerFlushTimeout
+
+      if ((now - this.lastHitTime) < NoteStats.TIMER_SIZE / 2) {
+        this.startTimer()
+      }
+    }, NoteStats.TIMER_SIZE)
+  }
+
+
   hitNotes(notes) {
     for (let note of notes) {
       this.incrementNote(note, 1);
     }
 
     let now = +new Date;
+
+    this.startTimer()
 
     if (this.lastHitTime) {
       let timeTaken = now - this.lastHitTime;
@@ -53,6 +88,8 @@ export default class NoteStats {
     for (let note of notes) {
       this.incrementNote(note, -1);
     }
+
+    this.startTimer()
 
     this.streak = 0;
     this.misses += 1;
@@ -110,6 +147,19 @@ export default class NoteStats {
     request.open("POST", "/hits.json")
     request.send(d)
     this.resetBuffer()
+  }
+
+  flushTimer() {
+    if (!this.timerUrl) {
+      return
+    }
+
+    let d = new FormData()
+    d.append("csrf_token", csrfToken())
+
+    var request = new XMLHttpRequest()
+    request.open("POST", this.timerUrl)
+    request.send(d)
   }
 
   isOutlierTime(timeTaken) {

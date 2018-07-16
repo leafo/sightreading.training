@@ -237,6 +237,8 @@ export default class PlayAlongPage extends React.Component {
           songModel: res.song,
           currentSongCode: res.song.song,
         })
+
+        this.stats.setTimerUrl(`/songs/${res.song.id}/stats.json`)
       } catch (e) {
         this.setState({
           songError: "Failed to fetch song"
