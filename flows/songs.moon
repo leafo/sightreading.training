@@ -15,6 +15,18 @@ shapes = require "helpers.shapes"
 arrayify = ((types.equivalent({}) / nil) + types.any)\transform
 
 class SongsFlow extends Flow
+  preload_songs: (songs) =>
+    preload songs, "user"
+    if @current_user and next songs
+      import SongUserTime from require "models"
+      song_user_times = SongUserTime\select "where user_id = ?", @current_user.id, db.list [s.id for s in *songs]
+      by_song_id  = {sut.song_id, sut for sut in *song_user_times}
+
+      for song in *songs
+        song.current_user_time = by_song_id[song.id]
+
+    songs
+
   format_song: (song, for_render=false) =>
     user = song\get_user!
 
@@ -28,6 +40,13 @@ class SongsFlow extends Flow
       notes_count: song.notes_count
       beats_duration: song.beats_duration
       publish_status: Songs.publish_statuses\to_name song.publish_status
+
+      current_user_time: if cut = song.current_user_time
+        {
+          created_at: cut.created_at
+          updated_at: cut.updated_at
+          time_spent: cut.time_spent
+        }
 
       user_id: song.user_id
       allowed_to_edit: not not song\allowed_to_edit @current_user
@@ -48,7 +67,7 @@ class SongsFlow extends Flow
         per_page: 10
         order: "id desc"
         prepare_results: (songs) ->
-          preload songs, "user"
+          @preload_songs songs
           songs
       }
 
@@ -58,7 +77,7 @@ class SongsFlow extends Flow
       Songs\select "where user_id = ? order by updated_at desc", @current_user.id
 
     if my_songs
-      preload my_songs, "user"
+      @preload_songs my_songs
 
     songs = pager\get_page page
 
