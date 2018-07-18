@@ -10,7 +10,7 @@ import Flow from require "lapis.flow"
 
 class HitsFlow extends Flow
   register_hits: =>
-    assert_error @current_user
+    assert_error @current_user, "not logged in"
 
     assert_valid @params, {
       {"hits", is_integer: true, optional: true}

@@ -70,7 +70,11 @@ class extends lapis.Application
 
   "/songs.json": multi {
     get: =>
-      @flow("songs")\list_songs!
+      switch @params.filter
+        when "played"
+          @flow("songs")\list_played_songs!
+        else
+          @flow("songs")\list_songs!
 
     post: =>
       assert_error @current_user, "must be logged in"

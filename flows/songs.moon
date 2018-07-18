@@ -61,6 +61,30 @@ class SongsFlow extends Flow
       }
     }
 
+  list_played_songs: =>
+    assert_error @current_user, "not logged in"
+
+    res = db.query "
+      select songs.*
+        from song_user_time
+
+      inner join songs on songs.id = song_id
+      where song_user_time.user_id = ?
+      order by updated_at desc
+      limit 50
+    ", @current_user.id
+
+    songs = for r in *res
+      Songs\load r
+
+    @preload_songs songs
+
+    json: {
+      success: true
+      songs: arrayify [@format_song song for song in *songs]
+    }
+
+
   list_songs: =>
     pager = Songs\paginated "where publish_status = ?",
       Songs.publish_statuses.public, {
