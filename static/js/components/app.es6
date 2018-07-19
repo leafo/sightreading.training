@@ -128,6 +128,9 @@ class Layout extends React.Component {
       { path: "/ear-training", page: EarTrainingPage },
       { path: "/flash-cards", page: FlashCardPage },
       { path: "/play-along", page: SongsPage },
+      { path: "/play-along/recent", page: SongsPage, props: {
+        filter: "played"
+      }},
       { path: "/stats", page: StatsPage },
       { path: "/latency", page: LatencyPage },
       { path: "/new-song", page: PlayAlongPage, props: {

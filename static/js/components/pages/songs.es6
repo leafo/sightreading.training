@@ -57,7 +57,12 @@ export default class SongsPage extends React.Component {
     })
 
     let request = new XMLHttpRequest()
-    request.open("GET", `/songs.json`)
+    let url = "/songs.json"
+    if (this.props.filter) {
+      url += `?filter=${this.props.filter}`
+    }
+
+    request.open("GET", url)
     request.send()
     request.onload = (e) => {
       delete this.request
@@ -84,9 +89,11 @@ export default class SongsPage extends React.Component {
       <nav>
         <ul>
           <li>
-            <NavLink activeClassName="active" to="/play-along">Overview</NavLink>
+            <NavLink exact activeClassName="active" to="/play-along">Overview</NavLink>
           </li>
-          <li>All Songs</li>
+          <li>
+            <NavLink exact activeClassName="active" to="/play-along/recent">Recently played</NavLink>
+          </li>
         </ul>
       </nav>
     </section>
@@ -122,16 +129,8 @@ export default class SongsPage extends React.Component {
   }
 
 
-  renderContent() {
-    let recentlyPlayed
-    if (false) {
-      recentlyPlayed = <section>
-        <h2>Recently Played</h2>
-      </section>
-    }
-
+  renderOverview() {
     return <section className="content_column">
-      {recentlyPlayed}
       <section>
         <h2>Songs</h2>
         <ul className="song_cell_list">{this.state.songs.map(song =>
@@ -145,14 +144,36 @@ export default class SongsPage extends React.Component {
     </section>
   }
 
+  renderRecent() {
+    return <section className="content_column">
+      <section>
+        <h2>Recently played</h2>
+        <ul className="song_cell_list">{this.state.songs.map(song =>
+          <li key={song.id}>
+            <SongCell song={song} key={song.id}/>
+          </li>
+        )}</ul>
+      </section>
+    </section>
+  }
+
   render() {
     if (!this.state.songs) {
       return <div className="page_container">Loading...</div>
     }
 
+    let inside
+    switch (this.props.filter) {
+      case "played":
+        inside = this.renderRecent()
+        break
+      default:
+        inside = this.renderOverview()
+    }
+
     return <div className="songs_page page_container">
       {this.renderSidebar()}
-      {this.renderContent()}
+      {inside}
     </div>
   }
 }
