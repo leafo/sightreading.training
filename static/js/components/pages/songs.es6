@@ -7,9 +7,18 @@ class SongCell extends React.PureComponent {
   render() {
     let song = this.props.song
     let publishStatus
+    let timePlayed
 
     if (song.publish_status == "draft") {
       publishStatus = <div className="publish_status">Draft</div>
+    }
+
+    if (song.current_user_time) {
+      let minutes = song.current_user_time.time_spent / 60
+
+      timePlayed = <div className="time_played">
+        Played for {minutes.toFixed(2).replace(/0+$/, "").replace(/\.$/, "")} {minutes == 1 ? "minute" : "minutes"}
+      </div>
     }
 
     return <div className="song_cell">
@@ -21,6 +30,7 @@ class SongCell extends React.PureComponent {
       <div className="song_creator">
         {song.user.name}
       </div>
+      {timePlayed}
       <div className="song_stats">
         <span>Notes: {song.notes_count}</span>
         <span>Duration: {song.beats_duration}</span>
