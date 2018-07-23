@@ -30,7 +30,6 @@ export default class NoteStats {
   }
 
   startTimer() {
-    console.log("start timer...", this.timerUrl)
     if (!this.timerUrl) {
       return
     }
@@ -41,16 +40,19 @@ export default class NoteStats {
       return
     }
 
-    console.log("starting timer")
+    let timerStart = +new Date
     this.timerFlushTimeout = setTimeout(() => {
-      console.log("doing flush")
-      this.flushTimer()
       let now = +new Date
+      let activityTime = this.lastActivity - timerStart
+
+      this.flushTimer(activityTime)
       delete this.timerFlushTimeout
 
-      if ((now - this.lastHitTime) < NoteStats.TIMER_SIZE / 2) {
+      let sinceLastActivity = now - this.lastActivity
+      if (sinceLastActivity < NoteStats.TIMER_SIZE / 2) {
         this.startTimer()
       }
+
     }, NoteStats.TIMER_SIZE)
   }
 
@@ -149,13 +151,28 @@ export default class NoteStats {
     this.resetBuffer()
   }
 
-  flushTimer() {
+  flushTimer(activityTime) {
     if (!this.timerUrl) {
       return
     }
 
+
     let d = new FormData()
     d.append("csrf_token", csrfToken())
+
+    let sendTime = NoteStats.TIMER_SIZE
+
+    if (activityTime < sendTime / 2) {
+      sendTime = activityTime
+    }
+
+    sendTime = Math.round(sendTime / 1000)
+
+    if (sendTime < 2) {
+      return
+    }
+
+    d.append("time_spent", `${sendTime}`)
 
     var request = new XMLHttpRequest()
     request.open("POST", this.timerUrl)
