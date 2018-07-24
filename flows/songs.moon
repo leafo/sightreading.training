@@ -204,6 +204,13 @@ class SongsFlow extends Flow
       song_id: song.id
     }
 
+    assert_valid @params, {
+      {"time_spent", optional: true, is_integer: true}
+    }
+
+    time_spent = tonumber @params.time_spent or 30
+    assert_error time_spent <= 30, "Time can only be incremented in 30 second intervals"
+
     assert_error not user_time or not user_time\just_updated!,
       "time just updated"
 
@@ -216,7 +223,8 @@ class SongsFlow extends Flow
     json: {
       success: true
       time_spent: out.time_spent
+      added: if user_time
+        out.time_spent - user_time.time_spent
     }
-
 
 

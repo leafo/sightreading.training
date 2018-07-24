@@ -19,12 +19,15 @@ class SongUserTime extends Model
     }, {
       time_spent: opts.time_spent
     }, {
-      time_spent: db.raw db.interpolate_query "#{db.escape_identifier @table_name!}.time_spent + excluded.time_spent"
+      time_spent: db.raw db.interpolate_query "#{db.escape_identifier @table_name!}.time_spent + least(
+        (select extract(epoch from (date_trunc('second', now() at time zone 'utc') - updated_at)) from song_user_time inside where inside.user_id = excluded.user_id and inside.song_id = excluded.song_id),
+        excluded.time_spent
+      )"
     }
 
   just_updated: =>
     date = require "date"
     sec = date.diff(date(true), date(@updated_at))\spanseconds!
-    sec <= 20
+    sec <= 3
 
 
