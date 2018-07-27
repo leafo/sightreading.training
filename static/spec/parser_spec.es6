@@ -3,6 +3,12 @@ import "jasmine_boot"
 import SongParser from "st/song_parser"
 import {SongNoteList, SongNote} from "st/song_note_list"
 
+let stripIds = notes =>
+  notes.map(n => Object.assign({}, n, {id: undefined}))
+
+let matchNotes = (have, expected) =>
+  expect(stripIds(have)).toEqual(stripIds(expected))
+
 describe("song parser", function() {
   it("parses single note song", function() {
     expect(new SongParser().parse("a5")).toEqual([
@@ -139,7 +145,9 @@ describe("load song", function() {
       a6 a6 a6.2
     `)
 
-    expect([...song]).toEqual([
+    console.log(song)
+
+    matchNotes(song, [
       new SongNote("B6", 0, 1),
       new SongNote("A6", 1, 1),
       new SongNote("G6", 2, 1),
@@ -160,7 +168,7 @@ describe("load song", function() {
       r1 g5 r2 a5 r3 r1.1 f6
     `)
 
-    expect([...song]).toEqual([
+    matchNotes(song, [
       new SongNote("G5", 1, 1),
       new SongNote("A5", 4, 1),
       new SongNote("F6", 8, 1),
@@ -176,7 +184,7 @@ describe("load song", function() {
       m1 c6
     `)
 
-    expect([...song]).toEqual([
+    matchNotes(song, [
       // first measure
       new SongNote("C5", 0, 0.5),
       new SongNote("C5", 0.5, 0.5),
@@ -207,7 +215,7 @@ describe("load song", function() {
       a5
     `)
 
-    expect([...song]).toEqual([
+    matchNotes(song, [
       new SongNote("A5", 0, 4),
       new SongNote("B5", 4, 2),
       new SongNote("C5", 6, 1),
@@ -241,7 +249,7 @@ describe("load song", function() {
       b5
     `)
 
-    expect([...song]).toEqual([
+    matchNotes(song, [
       new SongNote("C#5", 0, 1),
       new SongNote("D5", 1, 1),
       new SongNote("E5", 2, 1),
@@ -250,7 +258,6 @@ describe("load song", function() {
       new SongNote("A5", 5, 1),
       new SongNote("B5", 6, 1),
     ])
-
 
     let song2 = SongParser.load(`
       ks-2
@@ -263,7 +270,7 @@ describe("load song", function() {
       b5
     `)
 
-    expect([...song2]).toEqual([
+    matchNotes(song2, [
       new SongNote("C5", 0, 1),
       new SongNote("D5", 1, 1),
       new SongNote("Eb5", 2, 1),
@@ -272,8 +279,6 @@ describe("load song", function() {
       new SongNote("A5", 5, 1),
       new SongNote("Bb5", 6, 1),
     ])
-
-
   })
 
 
@@ -287,7 +292,7 @@ describe("load song", function() {
       g6
     `)
 
-    expect([...song]).toEqual([
+    matchNotes(song, [
       new SongNote("A5", 0, 0.5),
       new SongNote("A5", 0.5, 1),
       new SongNote("G6", 1.5, 1),
@@ -300,7 +305,7 @@ describe("load song", function() {
       a6
     `)
 
-    expect([...song]).toEqual([
+    matchNotes(song, [
       new SongNote("C5", 0, 1),
       new SongNote("E5", 0, 1),
       new SongNote("G5", 0, 1),
@@ -325,7 +330,7 @@ describe("load song", function() {
       }
     `)
 
-    expect([...song]).toEqual([
+    matchNotes(song, [
       new SongNote("C5", 0, 1),
       new SongNote("D5", 1, 2),
       new SongNote("G4", 0, 3),
@@ -351,7 +356,7 @@ describe("load song", function() {
       }
     `)
 
-    expect([...song]).toEqual([
+    matchNotes(song, [
       new SongNote("C5", 0, 0.5),
       new SongNote("D5", 0.5, 1),
       new SongNote("G4", 0, 1.5),
