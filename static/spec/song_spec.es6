@@ -3,6 +3,12 @@ import "jasmine_boot"
 import {SongNoteList, SongNote} from "st/song_note_list"
 import {AutoChords} from "st/auto_chords"
 
+let stripIds = notes =>
+  notes.map(n => Object.assign({}, n, {id: undefined}))
+
+let matchNotes = (have, expected) =>
+  expect(stripIds(have)).toEqual(stripIds(expected))
+
 describe("song", function() {
   it("creates an empty song notes", function() {
     let song = new SongNoteList()
@@ -31,7 +37,7 @@ describe("song", function() {
     ])
 
     let range = song.notesInRange(3,5)
-    expect(range).toEqual([
+    matchNotes(range, [
       new SongNote("E5", 3, 1),
       new SongNote("F5", 1, 5),
       new SongNote("F5", 1, 3),
