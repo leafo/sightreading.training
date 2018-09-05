@@ -22,7 +22,7 @@ include_rules
 : foreach *.es6 |> !babel_amd |> %B.js
 : foreach *.pegjs |> !pegjs |> %B.es6
 
-: song_parser_peg.es6 |> !babel_amd |> %B.js
+: song_parser_peg.es6 |> !babel |> %B.js
 
 
 
