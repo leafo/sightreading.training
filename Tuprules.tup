@@ -5,7 +5,7 @@ TOP = $(TUP_CWD)
 !scss = |> ^ scss %o^ sassc -I scss/ < %f > %o |>
 !join = |> ^ join %o^ cat %f > %o |>
 
-!pegjs = |> $(TOP)/node_modules/.bin/pegjs --format amd -o %o %f  |>
+!pegjs = |> cat %f | $(TOP)/node_modules/.bin/pegjs --format amd  | sed -e 's/^define(/define("st\/%O", /' > %o  |>
 
 : foreach *.scss |> !scss |> %B.css
 : foreach *.moon |> moonc %f |> %B.lua
