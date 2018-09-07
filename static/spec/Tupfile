@@ -1,5 +1,6 @@
 include_rules
 
-!babel = |> $(TOP)/node_modules/.bin/babel --plugins transform-es2015-modules-amd %f > %o |>
+!babel = |> $(TOP)/node_modules/.bin/babel --plugins @babel/plugin-transform-modules-amd %f > %o |>
+
 : foreach *.es6 |> !babel |> %B.js
 

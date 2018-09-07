@@ -51,7 +51,7 @@ tup.rule({
 
 tup.rule({
   "../node_modules/jasmine-core/lib/jasmine-core/boot.js"
-}, "../node_modules/.bin/babel --plugins transform-es2015-modules-amd --module-id 'jasmine_boot' %f > %o", "jasmine_boot.js")
+}, "../node_modules/.bin/babel --plugins @babel/plugin-transform-modules-amd --module-id 'jasmine_boot' %f > %o", "jasmine_boot.js")
 
 tup.rule({
   "../node_modules/jasmine-core/lib/jasmine-core/jasmine.js",
