@@ -11,7 +11,7 @@ tup.rule({
 
 tup.rule({
   "pre_libs.js",
-  "../node_modules/babel-polyfill/dist/polyfill.js",
+  -- "../node_modules/babel-polyfill/dist/polyfill.js",
   "../node_modules/classnames/index.js",
   "../node_modules/nosleep.js/dist/NoSleep.js",
   "../node_modules/mersennetwister/src/MersenneTwister.js",
@@ -31,7 +31,7 @@ tup.rule({
 
 tup.rule({
   "pre_libs.js",
-  "../node_modules/babel-polyfill/dist/polyfill.js",
+  -- "../node_modules/babel-polyfill/dist/polyfill.js",
   "../node_modules/classnames/index.js",
   "../node_modules/nosleep.js/dist/NoSleep.js",
   "../node_modules/mersennetwister/src/MersenneTwister.js",
