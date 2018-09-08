@@ -66,6 +66,6 @@ tup.foreach_rule({
   "lib.js",
   "main.js",
   "service_worker.js",
-}, "uglifyjs %f > %o", "%B.min.js")
+}, "../node_modules/.bin/uglifyjs %f > %o", "%B.min.js")
 
 -- vim: set expandtab ts=2 sw=2 ft=lua:
