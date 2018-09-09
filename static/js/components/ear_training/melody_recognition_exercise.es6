@@ -172,7 +172,7 @@ export default class MelodyRecognitionExercise extends React.Component {
       loadingCount += 1
       MelodyRecognitionExercise.fetchMelody(m.song).then(song => {
         loadingCount -= 1
-        melodySongs[m.interval] = song
+        melodySongs[m.song] = song
         enabled[`${m.interval}-${m.direction}`] = true
 
         if (loadingCount == 0) {
@@ -220,7 +220,7 @@ export default class MelodyRecognitionExercise extends React.Component {
       return
     }
 
-    let song = this.state.melodySongs[current.interval]
+    let song = this.state.melodySongs[current.song]
     let first = new SongNoteList()
     let note = song[0].clone()
     note.duration = 1
@@ -235,7 +235,7 @@ export default class MelodyRecognitionExercise extends React.Component {
       return
     }
 
-    let song = this.state.melodySongs[current.interval]
+    let song = this.state.melodySongs[current.song]
     let first = new SongNoteList()
 
     let note1 = song[0].clone()
@@ -269,7 +269,7 @@ export default class MelodyRecognitionExercise extends React.Component {
       return
     }
 
-    return this.playSong(this.state.melodySongs[current.interval])
+    return this.playSong(this.state.melodySongs[current.song])
   }
 
   playSong(song) {
@@ -459,7 +459,7 @@ export default class MelodyRecognitionExercise extends React.Component {
 
     let currentSongTools
     if (current) {
-      let currentSong = this.state.melodySongs[current.interval]
+      let currentSong = this.state.melodySongs[current.song]
 
       let stopSong
       if (this.state.playingTimer && !this.state.autoplayTimer) {
