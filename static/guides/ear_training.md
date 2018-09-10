@@ -32,7 +32,7 @@ Correctly play the melody and to automatically get the next melody.
 
 The timing of the notes is not considered, only the pitches you play are
 checked. You can skip the melody by clicking *Next Melody* or hear it again by
-clicking *Repeat meldoy*. You can trigger the melody to repeat also by using
+clicking *Repeat melody*. You can trigger the melody to repeat also by using
 any of the sliders, knobs, or pedals on your MIDI controller.
 
 The following options are available:

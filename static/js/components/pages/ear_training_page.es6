@@ -14,6 +14,8 @@ import {dispatch, trigger} from "st/events"
 import MelodyRecognitionExercise from "st/components/ear_training/melody_recognition_exercise"
 import MelodyPlaybackExercise from "st/components/ear_training/melody_playback_exercise"
 
+import {Link, NavLink} from "react-router-dom"
+
 class SettingsPanel extends React.PureComponent {
   static propTypes = {
     close: types.func,
@@ -21,13 +23,9 @@ class SettingsPanel extends React.PureComponent {
     // updateSettings: types.func.isRequired,
     // currentExerciseSettings: types.object.isRequired,
     exercises: types.array.isRequired,
-    setExercise: types.func.isRequired,
-    currentExercise: types.func.isRequired, // class
   }
 
   render() {
-    const current = this.props.currentExercise
-
     return <section className="settings_panel">
       <div className="settings_header">
         <button onClick={this.props.close}>Close</button>
@@ -35,15 +33,10 @@ class SettingsPanel extends React.PureComponent {
       </div>
 
       <section className="settings_group">
-        <Select
-          name="exercise"
-          className="exercise_selector"
-          value={current ? current.exerciseId : null}
-          onChange={this.props.setExercise}
-          options={this.props.exercises.map(e => ({
-            name: e.exerciseName,
-            value: e.exerciseId
-          }))}/>
+        <ul>
+          <li><NavLink to="/ear-training/interval-melodies" activeClassName="active">Interval Melodies</NavLink></li>
+          <li><NavLink to="/ear-training/melody-playback" activeClassName="active">Melody Playback</NavLink></li>
+        </ul>
       </section>
     </section>
   }
@@ -64,30 +57,18 @@ export default class EarTrainingPage extends React.Component {
 
     this.state = {
       settingsPanelOpen: false,
-      currentExerciseIdx: 0,
     }
 
-    this.setExercise = this.setExercise.bind(this)
     this.closeSettingsPanel = () => this.setState({ settingsPanelOpen: false })
   }
 
-  setExercise(exerciseName) {
-    let exercise = this.exercises.find(e => e.exerciseId == exerciseName)
-
+  getExercise() {
+    let exercise = this.exercises.find(e => e.exerciseId == this.props.exercise)
     if (!exercise) {
-      // try by id
-      exercise = this.exercises[exerciseName]
+      exercise = this.exercises[0]
     }
 
-    if (!exercise) {
-      throw new Error(`Invalid exercise ${exerciseName}`)
-    }
-
-    let idx = this.exercises.indexOf(exercise)
-
-    this.setState({
-      currentExerciseIdx: idx,
-    })
+    return exercise
   }
 
   onMidiMessage(message) {
@@ -104,7 +85,7 @@ export default class EarTrainingPage extends React.Component {
       contents = this.renderIntro()
     }
 
-    let Exercise = this.exercises[this.state.currentExerciseIdx]
+    let Exercise = this.getExercise()
 
     let header =
       <div className="exercise_header">
@@ -130,20 +111,16 @@ export default class EarTrainingPage extends React.Component {
       return
     }
 
-    let Exercise = this.exercises[this.state.currentExerciseIdx]
-
     return <CSSTransition classNames="slide_right" timeout={{enter: 200, exit: 100}}>
       <SettingsPanel
         close={this.closeSettingsPanel}
-        setExercise={this.setExercise}
         exercises={this.exercises}
-        currentExercise={Exercise}
       />
     </CSSTransition>
   }
 
   renderExercise() {
-    let Exercise = this.exercises[this.state.currentExerciseIdx]
+    let Exercise = this.getExercise()
 
     return <Exercise
       ref={(e) => this.currentExercise = e}
@@ -163,7 +140,6 @@ export default class EarTrainingPage extends React.Component {
     return <div className="page_container choose_device">
       <h3>Choose a MIDI output device for ear training</h3>
       <p>The ear training tools require a MIDI output device in order to play notes. Select your MIDI devices:</p>
-
 
       <MidiButton
         midiInput={this.props.midiOutput}

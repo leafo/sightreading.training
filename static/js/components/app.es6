@@ -125,7 +125,15 @@ class Layout extends React.Component {
       { path: "/", page: SightReadingPage },
       { path: "/login", page: LoginPage },
       { path: "/register", page: RegisterPage },
-      { path: "/ear-training", page: EarTrainingPage },
+
+      { path: "/ear-training/interval-melodies", page: EarTrainingPage, props: {
+        exercise: "melody_recognition"
+      }},
+
+      { path: "/ear-training/melody-playback", page: EarTrainingPage, props: {
+        exercise: "melody_playback"
+      }},
+
       { path: "/flash-cards", page: FlashCardPage },
       { path: "/play-along", page: SongsPage },
       { path: "/play-along/recent", page: SongsPage, props: {
