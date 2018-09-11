@@ -10,6 +10,8 @@ import {noteName, parseNote} from "st/music"
 import SongParser from "st/song_parser"
 import {isMobile} from "st/browser"
 
+import {IconShuffle} from "st/components/icons"
+
 export default class MelodyRecognitionExercise extends React.Component {
   static exerciseName = "Interval Melodies"
   static exerciseId = "melody_recognition"
@@ -539,7 +541,9 @@ export default class MelodyRecognitionExercise extends React.Component {
                 playbackTranspose: (this.state.rand.int() % 36) - 18
               })
             }
-            className="shuffle_button">🔀</button>
+            className="shuffle_button">
+              <IconShuffle width="16" height="16" />
+            </button>
         </label>
       </div>
       {currentSongTools}

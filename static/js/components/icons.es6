@@ -12,6 +12,7 @@ export class IconBase extends React.Component {
     let height = this.props.height || width / this.width * this.height
 
     return <svg
+      {...this.svgOpts || {}}
       viewBox={`0 0 ${this.width} ${this.height}`}
       aria-hidden="true"
       width={width}
@@ -36,4 +37,18 @@ export class IconRewind extends IconBase {
   width = 512
   height = 512
   path = `<path d="M128 448v-384h64v176l160-160v352l-160-160v176z" />`
+}
+
+export class IconShuffle extends IconBase {
+  width = 24
+  height = 24
+  svgOpts = {
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+  }
+
+  path = `<polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line>`
 }
