@@ -134,7 +134,14 @@ class Layout extends React.Component {
         exercise: "melody_playback"
       }},
 
-      { path: "/flash-cards", page: FlashCardPage },
+      { path: "/flash-cards/note-math", page: FlashCardPage, props: {
+        exercise: "note_math"
+      }},
+
+      { path: "/flash-cards/chord-identification", page: FlashCardPage, props: {
+        exercise: "chord_identification"
+      }},
+
       { path: "/play-along", page: SongsPage },
       { path: "/play-along/recent", page: SongsPage, props: {
         filter: "played"
