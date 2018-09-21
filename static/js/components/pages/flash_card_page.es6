@@ -11,18 +11,17 @@ import Select from "st/components/select"
 import NoteMathExercise from "st/components/flash_cards/note_math_exercise"
 import ChordIdentificationExercise from "st/components/flash_cards/chord_identification_exercise"
 
+import {Link, NavLink} from "react-router-dom"
+
 class SettingsPanel extends React.PureComponent {
   static propTypes = {
     close: types.func,
     updateSettings: types.func.isRequired,
-    exercises: types.array.isRequired,
     currentExercise: types.func.isRequired, // class
     currentExerciseSettings: types.object.isRequired,
   }
 
   render() {
-    let current = this.props.currentExercise
-
     return <section className="settings_panel">
       <div className="settings_header">
         <button onClick={this.props.close}>Close</button>
@@ -30,15 +29,10 @@ class SettingsPanel extends React.PureComponent {
       </div>
 
       <section className="settings_group">
-        <Select
-          name="exercise"
-          className="exercise_selector"
-          value={current ? current.exerciseId : null}
-          onChange={this.props.setExercise}
-          options={this.props.exercises.map(e => ({
-            name: e.exerciseName,
-            value: e.exerciseId
-          }))}/>
+        <ul>
+          <li><NavLink to="/flash-cards/chord-identification" activeClassName="active">Chord Identification</NavLink></li>
+          <li><NavLink to="/flash-cards/note-math" activeClassName="active">Note Math</NavLink></li>
+        </ul>
       </section>
       {this.renderExerciseOptions()}
     </section>
@@ -133,7 +127,6 @@ export default class FlashCardPage extends React.PureComponent {
     return <CSSTransition classNames="slide_right" timeout={{enter: 200, exit: 100}}>
       <SettingsPanel
         close={this.closeSettingsPanel}
-        exercises={this.exercises}
         setExercise={function() { alert("fix me") }}
         currentExercise={Exercise}
         currentExerciseSettings={this.state.currentExerciseSettings}
