@@ -58,6 +58,10 @@ class SettingsPanel extends React.PureComponent {
 
 
 export default class FlashCardPage extends React.PureComponent {
+  static defaultProps = {
+    exercise: "chord_identification"
+  }
+
   constructor(props) {
     super(props)
 
@@ -67,35 +71,22 @@ export default class FlashCardPage extends React.PureComponent {
     ]
 
     this.state = {
-      currentExerciseIdx: 0,
       currentExerciseSettings: {},
       settingsPanelOpen: false,
     }
 
-    this.state.currentExerciseSettings = this.exercises[this.state.currentExerciseIdx].defaultSettings()
+    this.state.currentExerciseSettings = this.getExercise().defaultSettings()
     this.updateExerciseSettings = this.updateExerciseSettings.bind(this)
     this.closeSettingsPanel = () => this.setState({ settingsPanelOpen: false })
-    this.setExercise = this.setExercise.bind(this)
   }
 
-  setExercise(exerciseName) {
-    let exercise = this.exercises.find(e => e.exerciseId == exerciseName)
-
+  getExercise() {
+    let exercise = this.exercises.find(e => e.exerciseId == this.props.exercise)
     if (!exercise) {
-      // try by id
-      exercise = this.exercises[exerciseName]
+      exercise = this.exercises[0]
     }
 
-    if (!exercise) {
-      throw new Error(`Invalid exercise ${exerciseName}`)
-    }
-
-    let idx = this.exercises.indexOf(exercise)
-
-    this.setState({
-      currentExerciseIdx: idx,
-      currentExerciseSettings: exercise.defaultSettings()
-    })
+    return exercise
   }
 
   updateExerciseSettings(settings) {
@@ -109,7 +100,7 @@ export default class FlashCardPage extends React.PureComponent {
   }
 
   render() {
-    let Exercise = this.exercises[this.state.currentExerciseIdx]
+    let Exercise = this.getExercise()
 
     return <div className="flash_card_page">
       <div className="flash_card_header">
@@ -128,7 +119,7 @@ export default class FlashCardPage extends React.PureComponent {
   }
 
   renderExercise() {
-    let Exercise = this.exercises[this.state.currentExerciseIdx]
+    let Exercise = this.getExercise()
     return <Exercise settings={this.state.currentExerciseSettings} />
   }
 
@@ -137,13 +128,13 @@ export default class FlashCardPage extends React.PureComponent {
       return
     }
 
-    let Exercise = this.exercises[this.state.currentExerciseIdx]
+    let Exercise = this.getExercise()
 
     return <CSSTransition classNames="slide_right" timeout={{enter: 200, exit: 100}}>
       <SettingsPanel
         close={this.closeSettingsPanel}
         exercises={this.exercises}
-        setExercise={this.setExercise}
+        setExercise={function() { alert("fix me") }}
         currentExercise={Exercise}
         currentExerciseSettings={this.state.currentExerciseSettings}
         updateSettings={this.updateExerciseSettings}
