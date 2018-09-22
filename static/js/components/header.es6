@@ -149,7 +149,7 @@ export default class Header extends React.Component {
     let links = [
       <NavLink exact key="root" to="/" activeClassName="active">Staff</NavLink>,
       <NavLink exact key="ear-training" to="/ear-training/interval-melodies" activeClassName="active">Ear Training</NavLink>,
-      <NavLink exact key="flash-cards" to="/flash-cards" activeClassName="active">Flash Cards</NavLink>,
+      <NavLink exact key="flash-cards" to="/flash-cards/note-math" activeClassName="active">Flash Cards</NavLink>,
       <NavLink exact key="play-along" to="/play-along" activeClassName="active">Play Along</NavLink>,
       <NavLink exact key="about" to="/about" activeClassName="active">Guide</NavLink>,
     ]
