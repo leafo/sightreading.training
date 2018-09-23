@@ -542,7 +542,7 @@ export default class MelodyRecognitionExercise extends React.Component {
               })
             }
             className="shuffle_button">
-              <IconShuffle width="16" height="16" />
+              <IconShuffle width={16} height={16} />
             </button>
         </label>
       </div>
