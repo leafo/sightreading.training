@@ -121,11 +121,11 @@
                     border: 1px solid $border_color;
                     border-radius: 3px;
                     display: flex;
-                    align-items: center;
-
 
                     > * {
                         padding: 5px 3px;
+                        display: flex;
+                        align-items: center;
                     }
 
                     > span {
@@ -139,7 +139,6 @@
                     }
 
                     > .shuffle_button {
-                        height: 100%;
                         padding: 2px 8px;
                         border: 0;
                         border-radius: 0;
@@ -148,6 +147,9 @@
 
                     > .slider_component {
                         flex: 1;
+                        .slider_track {
+                            flex: 1;
+                        }
                     }
                 }
             }
