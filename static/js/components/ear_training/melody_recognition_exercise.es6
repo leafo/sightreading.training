@@ -415,7 +415,7 @@ export default class MelodyRecognitionExercise extends React.Component {
           <li>
             <label>
               <span className="input_label">Playback mode</span>
-              <Select 
+              <Select
                 value={this.state.autoplayIntervalOrder}
                 onChange={(v) => this.setState({ autoplayIntervalOrder: v })}
                 options={[
@@ -488,6 +488,14 @@ export default class MelodyRecognitionExercise extends React.Component {
             onClick={e => {
               this.playCurrentRoot()
             }}>Play root</button>
+
+          <button
+            disabled={disabled}
+            type="button"
+            onClick={e => {
+              this.playCurrentInterval()
+            }}
+            >Play interval</button>
 
           <button
             type="button"
