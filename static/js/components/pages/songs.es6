@@ -121,6 +121,8 @@ export default class SongsPage extends React.Component {
           <SongCell song={song} key={song.id}/>
         </li>
       )}</ul>
+    } else {
+      songList = <p className="empty_message">No results</p>
     }
 
     if (!songList) {
@@ -140,29 +142,44 @@ export default class SongsPage extends React.Component {
 
 
   renderOverview() {
+    let songList
+
+    if (this.state.songs.length) {
+      songList = <ul className="song_cell_list">{this.state.songs.map(song =>
+        <li key={song.id}>
+          <SongCell song={song} key={song.id}/>
+        </li>
+      )}</ul>
+    } else {
+      songList = <p className="empty_message">No results</p>
+    }
+
     return <section className="content_column">
       <section>
         <h2>Songs</h2>
-        <ul className="song_cell_list">{this.state.songs.map(song =>
-          <li key={song.id}>
-            <SongCell song={song} key={song.id}/>
-          </li>
-        )}</ul>
+      {songList}
       </section>
-
       {this.renderMySongs()}
     </section>
   }
 
   renderRecent() {
+    let songList
+
+    if (this.state.songs.length) {
+      songList = <ul className="song_cell_list">{this.state.songs.map(song =>
+        <li key={song.id}>
+          <SongCell song={song} key={song.id}/>
+        </li>
+      )}</ul>
+    } else {
+      songList = <p className="empty_message">No results</p>
+    }
+
     return <section className="content_column">
       <section>
         <h2>Recently played</h2>
-        <ul className="song_cell_list">{this.state.songs.map(song =>
-          <li key={song.id}>
-            <SongCell song={song} key={song.id}/>
-          </li>
-        )}</ul>
+        {songList}
       </section>
     </section>
   }
