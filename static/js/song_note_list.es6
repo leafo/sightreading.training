@@ -64,24 +64,6 @@ export class SongNoteTimer {
   }
 }
 
-export class Song {
-  constructor(metadata)  {
-    this.metadata = metadata
-    this.tracks = []
-  }
-
-  getTrack(idx) {
-    let noteList = this.tracks[idx]
-    if (!noteList) {
-      noteList = new SongNoteList()
-      this.tracks[idx] = noteList
-    }
-
-    return noteList
-  }
-}
-
-
 // like note list but notes in time
 export class SongNoteList extends Array {
   static bucketSize = 8 // bucket size in beats
@@ -367,6 +349,29 @@ export class SongNoteList extends Array {
     }
 
     return foundIdx
+  }
+}
+
+export class MultiTrackSong extends SongNoteList {
+  constructor()  {
+    super()
+    Object.setPrototypeOf(this, MultiTrackSong.prototype)
+    this.tracks = []
+  }
+
+  pushWithTrack(note, trackIdx) {
+    this.push(note)
+    let track = this.getTrack(trackIdx)
+    track.push(note)
+    return note
+  }
+
+  getTrack(idx) {
+    if (!this.tracks[idx]) {
+      this.tracks[idx] = new SongNoteList()
+    }
+
+    return this.tracks[idx]
   }
 }
 

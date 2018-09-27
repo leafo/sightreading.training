@@ -2,7 +2,7 @@
 import peg from "st/song_parser_peg"
 import {parseNote, noteName, KeySignature} from "st/music"
 
-import {SongNoteList, SongNote} from "st/song_note_list"
+import {SongNoteList, MultiTrackSong, SongNote} from "st/song_note_list"
 import {AutoChords} from "st/auto_chords"
 
 // tokens are separated by whitepace
@@ -39,9 +39,10 @@ export default class SongParser {
       beatsPerMeasure: 4,
       timeScale: 1,
       keySignature: new KeySignature(0),
+      currentTrack: 1,
     }
 
-    let song = new SongNoteList()
+    let song = new MultiTrackSong()
     this.compileCommands(ast, state, song)
 
     song.metadata = {
@@ -135,7 +136,7 @@ export default class SongParser {
             state.position += duration
           }
 
-          song.push(new SongNote(name, start, duration))
+          song.pushWithTrack(new SongNote(name, start, duration), state.currentTrack)
           break
         }
         case "rest": {
