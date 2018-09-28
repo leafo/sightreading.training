@@ -97,7 +97,12 @@ export default class SongParser {
         }
         case "measure": {
           let [, measure] = command
-          state.position =  measure * state.beatsPerMeasure
+          state.position = measure * state.beatsPerMeasure
+          break
+        }
+        case "setTrack": {
+          let [, track] = command
+          state.currentTrack = +track
           break
         }
         case "note": {
