@@ -259,7 +259,6 @@ export default class PlayAlongPage extends React.Component {
     this.setState({
       loading: false,
       songError: null,
-      staffType: song.fittingStaff(),
       song,
       loopLeft: 0,
       loopRight: song.getStopInBeats(),
@@ -387,6 +386,14 @@ export default class PlayAlongPage extends React.Component {
         this.state.songTimer.seek(this.state.loopLeft)
       }
 
+      if (this.trackRefs) {
+        this.trackRefs.forEach(r => {
+          if (r.current) {
+            r.current.setOffset(-beat * this.state.pixelsPerBeat + 100)
+          }
+        })
+      }
+
       if (this.refs.staff) {
         // if the staff isn't on the page yet then it will render with correct
         // default?
@@ -418,6 +425,65 @@ export default class PlayAlongPage extends React.Component {
     this.refs.currentBeatField.setState({ value: beat })
   }
 
+  getTrackRef(idx) {
+    if (!this.trackRefs) {
+      this.trackRefs = []
+    }
+
+    if (!this.trackRefs[idx]) {
+      this.trackRefs[idx] = React.createRef()
+    }
+
+    return this.trackRefs[idx]
+  }
+
+  renderTracks() {
+    if (!this.state.song) {
+      return null
+    }
+
+    let keySignature = KeySignature.forCount(0)
+
+    if (this.state.song && this.state.song.metadata) {
+      keySignature = KeySignature.forCount(this.state.song.metadata.keySignature)
+    }
+
+    let renderedTracks = this.state.song.tracks.filter(t => !!t).map((track, idx) => {
+      let staff = track.fittingStaff()
+      let staffType = STAVES.find(s => s.name == staff)
+
+      if (!staffType) {
+        return
+      }
+
+      let staffProps = {
+        ref: this.getTrackRef(idx),
+        key: `track-${idx}`,
+        notes: track,
+        heldNotes: this.state.heldSongNotes,
+        keySignature,
+        pixelsPerBeat: this.state.pixelsPerBeat,
+        children: TimeBar,
+        loopLeft: this.state.loopLeft,
+        loopRight: this.state.loopRight,
+      }
+
+      return staffType.render.call(this, staffProps)
+    })
+
+    if (!renderedTracks.find(t => !!t)) {
+      return null
+    }
+
+    return <Draggable
+      onDrag={(dx, dy) => {
+        this.state.songTimer.scrub(-dx / this.state.pixelsPerBeat)
+      }}
+    >
+      {renderedTracks}
+    </Draggable>
+  }
+
   render() {
     let keySignature = KeySignature.forCount(0)
 
@@ -425,9 +491,7 @@ export default class PlayAlongPage extends React.Component {
       keySignature = KeySignature.forCount(this.state.song.metadata.keySignature)
     }
 
-    let staff = null
     let songError = null
-    let staffType = STAVES.find(s => s.name == this.state.staffType)
 
     if (this.state.songError) {
       songError = <div className="song_error">
@@ -438,28 +502,9 @@ export default class PlayAlongPage extends React.Component {
       </div>
     }
 
-    if (staffType) {
-      let staffProps = {
-        ref: "staff",
-        notes: this.state.song || EmptySong,
-        heldNotes: this.state.heldSongNotes,
-        keySignature,
-        pixelsPerBeat: this.state.pixelsPerBeat,
-        children: TimeBar,
-        loopLeft: this.state.loopLeft,
-        loopRight: this.state.loopRight,
-      }
+    let renderedTracks = this.renderTracks()
 
-      staff = <Draggable
-        onDrag={(dx, dy) => {
-          this.state.songTimer.scrub(-dx / this.state.pixelsPerBeat)
-        }}
-      >
-        {staffType.render.call(this, staffProps)}
-      </Draggable>
-    }
-
-    return <div className={classNames("play_along_page", { has_song: staff })}>
+    return <div className={classNames("play_along_page", { has_song: !!renderedTracks })}>
       <TransitionGroup>
         {this.renderSettings()}
       </TransitionGroup>
@@ -468,7 +513,7 @@ export default class PlayAlongPage extends React.Component {
         {this.state.songModel ? <h2>{this.state.songModel.title}</h2> : null}
         <div className="staff_wrapper">
           {songError}
-          {staff}
+          {renderedTracks}
           {this.renderTransportControls()}
         </div>
         {this.state.enableEditor ? this.renderEditor() : this.renderKeyboard()}
