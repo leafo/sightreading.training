@@ -120,6 +120,7 @@ export default class PlayAlongPage extends React.Component {
       autoChordType: 0,
       enableEditor: this.props.editorOpen || false,
       enablePauseOnMiss: false,
+      enabledTracks: {},
       metronome: props.midiOutput ? props.midiOutput.getMetronome() : null
     }
 
@@ -456,6 +457,10 @@ export default class PlayAlongPage extends React.Component {
         return
       }
 
+      if (this.state.enabledTracks[idx] == false) {
+        return
+      }
+
       let staffProps = {
         ref: this.getTrackRef(idx),
         key: `track-${idx}`,
@@ -472,7 +477,7 @@ export default class PlayAlongPage extends React.Component {
     })
 
     if (!renderedTracks.find(t => !!t)) {
-      return null
+      return <div className="empty_tracks">No tracks to display</div>
     }
 
     return <Draggable
@@ -511,6 +516,7 @@ export default class PlayAlongPage extends React.Component {
 
       <div className={classNames("play_along_workspace", {settings_open: this.state.settingsPanelOpen})}>
         {this.state.songModel ? <h2>{this.state.songModel.title}</h2> : null}
+        {this.renderSongTrackTools()}
         <div className="staff_wrapper">
           {songError}
           {renderedTracks}
@@ -520,6 +526,43 @@ export default class PlayAlongPage extends React.Component {
       </div>
       <Hotkeys keyMap={this.keyMap} />
     </div>
+  }
+
+  renderSongTrackTools() {
+    if (!this.state.song || !this.state.song.tracks) {
+      return
+    }
+
+    let tracks = this.state.song.tracks.filter(t => !!t)
+
+    console.log("rendering song track tools:", tracks)
+
+    if (tracks.length <= 1) {
+      return
+    }
+
+    return <ul className="song_tracks">
+      {tracks.map((t, idx) => {
+        let trackEnabled = this.state.enabledTracks[idx]
+        if (trackEnabled == undefined) {
+          trackEnabled = true
+        }
+
+        return <li key={idx}>
+          <label>
+            <input checked={trackEnabled} type="checkbox" onChange={e => {
+              this.setState({
+                enabledTracks: Object.assign({}, this.state.enabledTracks, {
+                  [idx]: e.target.checked
+                })
+              })
+            }}/>
+            {" "}
+            Track {idx}
+          </label>
+        </li>
+      })}
+    </ul>
   }
 
   renderSettings() {

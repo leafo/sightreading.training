@@ -75,6 +75,28 @@
         }
     }
 
+    .song_tracks {
+        background: white;
+        margin: 0;
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        list-style: none;
+        > * {
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+
+    .empty_tracks {
+        margin: 20px 0;
+    }
+
     &.has_song {
         .staff_wrapper {
             .song_error {
@@ -99,7 +121,6 @@
     }
 
     .settings_panel {
-
         .slider_row {
             display: flex;
             .slider_component {
