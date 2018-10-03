@@ -16,6 +16,8 @@
 
     .cleff {
         z-index: 1;
+        user-select: none;
+        -webkit-user-drag: none;
     }
 
     &.g_staff {

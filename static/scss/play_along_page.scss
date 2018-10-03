@@ -3,6 +3,11 @@
 .play_along_page {
     overflow: hidden;
 
+    .draggable {
+        user-select: none;
+        -webkit-user-drag: none;
+    }
+
     .play_along_workspace {
         > h2 {
             font-size: 20px;
