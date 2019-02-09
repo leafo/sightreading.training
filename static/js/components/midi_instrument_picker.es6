@@ -104,7 +104,13 @@ export default class MidiInstrumentPicker extends React.PureComponent {
 
   midiOutputs() {
     if (!this.props.midi) return []
-    return [...this.props.midi.outputs.values()]
+
+    var outputs = [];
+    var iter = this.props.midi.outputs.values();
+    for (var o = iter.next(); !o.done; o = iter.next()) {
+      outputs.push(o.value);
+    }
+    return outputs;
   }
 
 }
