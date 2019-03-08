@@ -4,13 +4,13 @@ set -o pipefail
 set -o xtrace
 
 # setup lua
-luarocks-5.1 install https://luarocks.org/manifests/leafo/lapis-dev-1.rockspec
-luarocks-5.1 install moonscript
-luarocks-5.1 install busted
-luarocks-5.1 install https://raw.githubusercontent.com/mikejsavage/lua-bcrypt/master/rockspec/bcrypt-1.5-1.rockspec
-luarocks-5.1 install https://raw.githubusercontent.com/leafo/lua-date/master/date-dev-1.rockspec
-luarocks-5.1 install https://luarocks.org/manifests/leafo/tableshape-dev-1.rockspec
-eval $(luarocks-4.1 path)
+luarocks --lua-version=5.1 install https://luarocks.org/manifests/leafo/lapis-dev-1.rockspec
+luarocks --lua-version=5.1 install moonscript
+luarocks --lua-version=5.1 install busted
+luarocks --lua-version=5.1 install bcrypt
+luarocks --lua-version=5.1 install date
+luarocks --lua-version=5.1 install tableshape
+eval $(luarocks --lua-version=5.1 path)
 
 # js
 npm install
