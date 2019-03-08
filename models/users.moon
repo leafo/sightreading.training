@@ -5,6 +5,9 @@ import slugify, from_json from require "lapis.util"
 bcrypt = require "bcrypt"
 date = require "date"
 
+unless bcrypt.salt
+  bcrypt.salt = (v) -> v
+
 strip_non_ascii = do
   filter_chars = (c, ...) ->
     return unless c
