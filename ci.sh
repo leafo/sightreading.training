@@ -5,10 +5,7 @@ set -o xtrace
 
 # setup lua
 luarocks --lua-version=5.1 install https://luarocks.org/manifests/leafo/lapis-dev-1.rockspec
-luarocks --lua-version=5.1 install moonscript
-luarocks --lua-version=5.1 install busted
 luarocks --lua-version=5.1 install bcrypt
-luarocks --lua-version=5.1 install date
 luarocks --lua-version=5.1 install tableshape
 eval $(luarocks --lua-version=5.1 path)
 
