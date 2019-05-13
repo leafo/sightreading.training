@@ -7,7 +7,7 @@ let stripIds = notes =>
   notes.map(n => Object.assign({}, n, {id: undefined}))
 
 let matchNotes = (have, expected) =>
-  expect(stripIds(have)).toEqual(stripIds(expected))
+  expect(stripIds([...have])).toEqual(stripIds(expected))
 
 describe("song parser", function() {
   it("parses single note song", function() {
@@ -144,8 +144,6 @@ describe("load song", function() {
       b6 b6 b6.2
       a6 a6 a6.2
     `)
-
-    console.log(song)
 
     matchNotes(song, [
       new SongNote("B6", 0, 1),
