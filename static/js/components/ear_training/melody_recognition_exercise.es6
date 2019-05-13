@@ -544,6 +544,7 @@ export default class MelodyRecognitionExercise extends React.Component {
           <code>{this.state.playbackTranspose}</code>
           <button
           type="button"
+          title="Randomize Transpose"
             onClick={e=>
               this.setState({
                 playbackTranspose: (this.state.rand.int() % 36) - 18

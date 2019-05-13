@@ -139,7 +139,7 @@ export default class EarTrainingPage extends React.Component {
 
     return <div className="page_container choose_device">
       <h3>Choose a MIDI output device for ear training</h3>
-      <p>The ear training tools require a MIDI output device in order to play notes. Select your MIDI devices:</p>
+      <p>The ear training tools require an output device to be configured.</p>
 
       <MidiButton
         midiInput={this.props.midiOutput}
