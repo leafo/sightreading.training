@@ -146,14 +146,14 @@
             &.is_sharp {
                 &:before {
                     background: #a25d5d;
-                    border-radius: 0 0 12px 12px;
+                    border-radius: 12px 12px 0 0;
                 }
             }
 
             &.is_flat {
                 &:before {
                     background: #5d92a2;
-                    border-radius: 12px 12px 0 0;
+                    border-radius: 0 0 12px 12px;
                 }
             }
 

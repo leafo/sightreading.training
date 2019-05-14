@@ -6,6 +6,8 @@
     .draggable {
         user-select: none;
         -webkit-user-drag: none;
+        display: flex;
+        flex-direction: column;
     }
 
     .play_along_workspace {
