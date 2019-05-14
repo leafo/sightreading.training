@@ -137,33 +137,37 @@
                 bottom: 4px;
                 left: 0;
 
-                background: green;
-                box-shadow: 0 0 0 2px blue;
+                background: #69a25d;
+                box-shadow: 0 0 0 2px #2f3a35;
                 border-radius: 12px;
 
             }
 
             &.is_sharp {
                 &:before {
-                    background: red;
+                    background: #a25d5d;
+                    border-radius: 0 0 12px 12px;
                 }
             }
 
             &.is_flat {
                 &:before {
-                    background: orange;
+                    background: #5d92a2;
+                    border-radius: 12px 12px 0 0;
                 }
             }
 
             &.is_natural {
                 &:before {
-                    background: purple;
+                    background: #915da2;
+                    border-radius: 0;
                 }
             }
 
             &.held {
                 &:before {
-                    background: lighten(green, 20%);
+                    background: #94e085;
+                    box-shadow: 0 0 0 2px lighten(#2f3a35, 10%);
                 }
             }
 
