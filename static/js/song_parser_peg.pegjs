@@ -7,7 +7,7 @@ commands
   }
 
 command
-  = note / rest / keySignature / timeSignature / halfTime / doubleTime / tripleTime / measure / block / restoreStartPosition / setTrack / macro
+  = note / rest / keySignature / timeSignature / halfTime / doubleTime / tripleTime / measure / block / restoreStartPosition / setTrack / macro /setCleff
 
 keySignature
   = "ks" mod:$( "-"? [0-9]+) {
@@ -22,6 +22,11 @@ timeSignature
 setTrack
   = "t" track:$[0-9]+ {
     return ["setTrack", +track]
+  }
+
+setCleff
+  = "/" cleff:[gcfGCF] {
+    return ["cleff", cleff.toLowerCase()]
   }
 
 macro

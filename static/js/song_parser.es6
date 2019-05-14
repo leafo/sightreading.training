@@ -105,6 +105,16 @@ export default class SongParser {
           state.currentTrack = +track
           break
         }
+        case "cleff": {
+          let [, cleff] = command
+          let track = song.getTrack(state.currentTrack)
+          if (!track.cleffs) {
+            track.cleffs = []
+          }
+
+          track.cleffs.push([state.position, cleff])
+          break
+        }
         case "note": {
           let [, name, noteOpts] = command
           let duration = state.beatsPerNote * state.timeScale
