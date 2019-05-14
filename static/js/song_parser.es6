@@ -39,7 +39,7 @@ export default class SongParser {
       beatsPerMeasure: 4,
       timeScale: 1,
       keySignature: new KeySignature(0),
-      currentTrack: 1,
+      currentTrack: 0,
     }
 
     let song = new MultiTrackSong()

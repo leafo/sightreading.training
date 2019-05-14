@@ -535,14 +535,17 @@ export default class PlayAlongPage extends React.Component {
 
     let tracks = this.state.song.tracks.filter(t => !!t)
 
-    console.log("rendering song track tools:", tracks)
-
     if (tracks.length <= 1) {
       return
     }
 
     return <ul className="song_tracks">
       {tracks.map((t, idx) => {
+        let title = `Track ${idx + 1}`
+        if (t.trackName) {
+          title = t.trackName
+        }
+
         let trackEnabled = this.state.enabledTracks[idx]
         if (trackEnabled == undefined) {
           trackEnabled = true
@@ -558,7 +561,7 @@ export default class PlayAlongPage extends React.Component {
               })
             }}/>
             {" "}
-            Track {idx}
+            {title}
           </label>
         </li>
       })}

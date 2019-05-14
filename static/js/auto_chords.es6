@@ -88,10 +88,15 @@ export class AutoChords {
       }
     }
 
+    let trackId = this.song.findEmptyTrackIdx()
+
     // just mutate the song for now
     for (let note of notesToAdd) {
-      this.song.push(note)
+      this.song.pushWithTrack(note, trackId)
     }
+
+    let track = this.song.getTrack(trackId)
+    track.trackName = "Autochords"
   }
 
   minPitchInRange(start, stop) {

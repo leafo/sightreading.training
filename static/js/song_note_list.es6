@@ -366,6 +366,11 @@ export class MultiTrackSong extends SongNoteList {
     return note
   }
 
+  // find an empty track to put autochords in
+  findEmptyTrackIdx() {
+    return this.tracks.length + 1
+  }
+
   getTrack(idx) {
     if (!this.tracks[idx]) {
       this.tracks[idx] = new SongNoteList()
