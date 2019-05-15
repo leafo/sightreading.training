@@ -219,6 +219,20 @@ export class SongNoteList extends Array {
   }
 
   fittingStaff() {
+    if (this.cleffs && this.cleffs.length == 1) {
+      let firstNote = this[0]
+      // it is at the start
+      if (!firstNote || firstNote.getStart() >= this.cleffs[0][0]) {
+        // return the staff that was assigned
+        switch (this.cleffs[0][1]) {
+          case "f":
+            return "bass"
+          case "g":
+            return "treble"
+        }
+      }
+    }
+
     let [min, max] = this.noteRange()
     let useBase = false
     let useTreble = false
