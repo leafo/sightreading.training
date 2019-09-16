@@ -4,6 +4,8 @@
 
 [![Build Status](https://travis-ci.org/leafo/sightreading.training.svg?branch=master)](https://travis-ci.org/leafo/sightreading.training)
 
+[![Twitch Link](http://leafo.net/dump/twitch-banner.svg)](https://www.twitch.tv/moonscript)
+
 A tool for practicing sight reading, learning songs, and training other musical skills in your browser. The successor to <https://github.com/leafo/mursic>.
 
 Learn more on [the guide](https://sightreading.training/about).
