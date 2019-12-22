@@ -199,25 +199,16 @@ export default class MelodyPlaybackExercise extends React.Component {
       ...STAVES.filter(s => s.mode == "notes")
     ]
 
-    let instructions
-    if (this.state.showInstructions) {
-      instructions = <p>Click <em>New melody</em> to generate a random melody, then play it
-        back using the on-screen keyboard or your MIDI input device. You'll be given
-        a new melody after figuring out what you heard. You can trigger current the
-        melody to replay by interacting with any of the sliders or pedals on your
-        MIDI controller.</p>
-    } else {
-      instructions = <p>
-        <a href="#" onClick={e => {
-          e.preventDefault()
-          this.setState({ showInstructions: true })
-        }}>Show instructions...</a>
-      </p>
-    }
-
 
     let page = <div className="page_container">
-      {instructions}
+      <details className="instructions">
+        <summary>How does this work?</summary>
+        <p>Click <em>New melody</em> to generate a random melody, then play it
+          back using the on-screen keyboard or your MIDI input device. You'll be given
+          a new melody after figuring out what you heard. You can trigger current the
+          melody to replay by interacting with any of the sliders or pedals on your
+          MIDI controller.</p>
+      </details>
       <div className="stat_controls">
         {repeatButton}
         <button disabled={locked} onClick={(e) => {

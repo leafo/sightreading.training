@@ -229,6 +229,15 @@
         display: flex;
         flex-direction: column;
 
+        details.instructions {
+            margin-bottom: 10px;
+            summary {
+                display: inline;
+                cursor: pointer;
+                font-weight: bold;
+            }
+        }
+
         .keyboard {
             margin-top: auto;
             position: static;
