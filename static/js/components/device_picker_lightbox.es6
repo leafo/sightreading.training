@@ -71,8 +71,8 @@ export default class DevicePickerLightbox extends Lightbox {
     }
 
     return <section>
-      <h4>Select output device</h4>
-      <p>Used for the onscreen keyboard, ear training, and play-along mode.</p>
+      <h4>Select Output Device</h4>
+      <p>Used for the on-screen keyboard, ear training, and play-along mode.</p>
       <div className="input_row device_type_picker">
         <span className="label">Output type</span>
         {" "}
@@ -112,10 +112,11 @@ export default class DevicePickerLightbox extends Lightbox {
         </div>
       </div>
     } else {
-      midiSetup = <p>
-        MIDI support not detected on your computer. You'll only be able to use
-      the on-srcreen keyboard.
-        </p>
+      midiSetup = <div>
+        <h4>Select MIDI input device</h4>
+        <p><strong>MIDI support not detected on your computer.</strong> You'll only be able to use the on-srcreen keyboard and build in synthesizer. (Try Chrome for MIDI device support)</p>
+      </div>
+
     }
 
     return <div>
