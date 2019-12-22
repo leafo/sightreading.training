@@ -66,6 +66,11 @@
     }
 
     .melody_recognition_exercise {
+        .page_container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
         .interval_settings {
             margin: 20px 0;
 
@@ -230,6 +235,9 @@
         }
 
         .page_container {
+            margin-top: 20px;
+            margin-bottom: 20px;
+
             > p:first-child {
                 margin-top: 0;
             }
