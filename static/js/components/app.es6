@@ -201,8 +201,20 @@ class Layout extends React.Component {
   }
 
   setInput(idx) {
+    if (idx === undefined) {
+      return
+    }
+
     let input = this.midiInputs()[idx]
-    if (!input) { return }
+
+    if (!input) {
+      this.setState({
+        midiInput: null,
+        midiInputIdx: null,
+      })
+      return
+    }
+
     if (this.state.midiInput) {
       console.log(`Unbinding: ${this.state.midiInput.name}`)
       this.state.midiInput.onmidimessage = undefined
