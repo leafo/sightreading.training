@@ -10,6 +10,7 @@ import EarTrainingPage from "st/components/pages/ear_training_page"
 import PlayAlongPage from "st/components/pages/play_along_page"
 import LatencyPage from "st/components/pages/latency"
 import SongsPage from "st/components/pages/songs"
+import NotFoundPage from "st/components/pages/not_found"
 import Header from "st/components/header"
 
 import DevicePickerLightbox from "st/components/device_picker_lightbox"
@@ -19,7 +20,7 @@ import {readConfig, writeConfig} from "st/config"
 import {csrfToken} from "st/globals"
 
 import * as React from "react"
-import {BrowserRouter, Route, Link, NavLink} from "react-router-dom"
+import {BrowserRouter, Route, Switch} from "react-router-dom"
 
 import {TransitionGroup, CSSTransition} from "react-transition-group"
 import {SampleOutput} from "st/sample_output"
@@ -101,7 +102,12 @@ class Layout extends React.Component {
         {this.renderHeader()}
       </div>
 
-      {children}
+      <Switch>
+        {children}
+        <Route>
+          <NotFoundPage />
+        </Route>
+      </Switch>
 
       <TransitionGroup className="lightboxes">
         {this.renderCurrentLightbox()}
@@ -112,8 +118,8 @@ class Layout extends React.Component {
   renderRoutes(routes) {
     let childProps = this.childProps()
 
-    return routes.map(({page: C, props: moreProps, path}, i) =>
-      <Route key={i} exact path={path} render={
+    return routes.map(({page: C, props: moreProps, path, exact}, i) =>
+      <Route key={i} exact={exact} path={path} render={
         props =>
           <C ref={comp => this.currentPage = comp} {...moreProps} {...childProps} {...props} />
       } />
@@ -122,59 +128,59 @@ class Layout extends React.Component {
 
   render() {
     return this.pageLayout(this.renderRoutes([
-      { path: "/", page: SightReadingPage },
-      { path: "/login", page: LoginPage },
-      { path: "/register", page: RegisterPage },
+      { path: "/", page: SightReadingPage, exact: true },
+      { path: "/login", page: LoginPage, exact: true },
+      { path: "/register", page: RegisterPage, exact: true },
 
-      { path: "/ear-training/interval-melodies", page: EarTrainingPage, props: {
+      { path: "/ear-training/interval-melodies", page: EarTrainingPage, exact: true, props: {
         exercise: "melody_recognition"
       }},
 
-      { path: "/ear-training/melody-playback", page: EarTrainingPage, props: {
+      { path: "/ear-training/melody-playback", page: EarTrainingPage, exact: true, props: {
         exercise: "melody_playback"
       }},
 
-      { path: "/flash-cards/note-math", page: FlashCardPage, props: {
+      { path: "/flash-cards/note-math", page: FlashCardPage, exact: true, props: {
         exercise: "note_math"
       }},
 
-      { path: "/flash-cards/chord-identification", page: FlashCardPage, props: {
+      { path: "/flash-cards/chord-identification", page: FlashCardPage, exact: true, props: {
         exercise: "chord_identification"
       }},
 
-      { path: "/play-along", page: SongsPage },
-      { path: "/play-along/recent", page: SongsPage, props: {
+      { path: "/play-along", page: SongsPage,exact: true },
+      { path: "/play-along/recent", page: SongsPage, exact: true, props: {
         filter: "played"
       }},
-      { path: "/stats", page: StatsPage },
-      { path: "/latency", page: LatencyPage },
-      { path: "/new-song", page: PlayAlongPage, props: {
+      { path: "/stats", page: StatsPage, exact: true },
+      { path: "/latency", page: LatencyPage, exact: true },
+      { path: "/new-song", page: PlayAlongPage, exact: true, props: {
         newSong: true,
         editorOpen: true,
       }},
-      { path: "/song/:song_id/:song_slug", page: PlayAlongPage },
+      { path: "/song/:song_id/:song_slug", page: PlayAlongPage, exact: true },
 
-      { path: "/about", page: GuidePage, props: {
+      { path: "/about", page: GuidePage, exact: true, props: {
         title: "About Sight Reading Trainer",
         pageSource: "about"
       }},
 
-      { path: "/guide/generators", page: GuidePage, props: {
+      { path: "/guide/generators", page: GuidePage, exact: true, props: {
         title: "Sight Reading Random Notes",
         pageSource: "generators"
       }},
 
-      { path: "/guide/chords", page: GuidePage, props: {
+      { path: "/guide/chords", page: GuidePage, exact: true, props: {
         title: "Sight Reading Random Chords",
         pageSource: "chord_generators"
       }},
 
-      { path: "/guide/lml", page: GuidePage, props: {
+      { path: "/guide/lml", page: GuidePage, exact: true, props: {
         title: "Programming a song with LML",
         pageSource: "lml"
       }},
 
-      { path: "/guide/ear-training", page: GuidePage, props: {
+      { path: "/guide/ear-training", page: GuidePage, exact: true, props: {
         title: "Ear Training Tools",
         pageSource: "ear_training"
       }},
