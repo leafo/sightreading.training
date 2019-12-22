@@ -202,7 +202,7 @@ export default class MelodyPlaybackExercise extends React.Component {
         MIDI controller.</p>
     } else {
       instructions = <p>
-        <a href="javascript:void(0)" onClick={e => {
+        <a href="#" onClick={e => {
           e.preventDefault()
           this.setState({ showInstructions: true })
         }}>Show instructions...</a>
