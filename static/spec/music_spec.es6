@@ -1,7 +1,7 @@
 import "jasmine_boot"
 
 import {
-  notesLessThan, notesGreaterThan, compareNotes, noteName, parseNote,
+  notesLessThan, notesGreaterThan, compareNotes, noteName, parseNote, notesSame,
   noteStaffOffset,
   MajorScale, MinorScale, HarmonicMinorScale, AscendingMelodicMinorScale, Chord, KeySignature, ChromaticScale
 } from "st/music"
@@ -11,6 +11,25 @@ describe("notes", function() {
     expect(notesLessThan("C5", "C#5")).toBe(true);
     expect(notesLessThan("B5", "D6")).toBe(true);
     expect(notesLessThan("B5", "B5")).toBe(false);
+  });
+
+  it("notesSame", function() {
+    expect(notesSame("C5", "C6")).toBe(true);
+    expect(notesSame("C5", "C5")).toBe(true);
+
+    expect(notesSame("C5", "D5")).toBe(false);
+    expect(notesSame("C#5", "C5")).toBe(false);
+    expect(notesSame("Ab5", "A3")).toBe(false);
+
+    expect(notesSame("Db5", "Db6")).toBe(true);
+    expect(notesSame("G#5", "G#7")).toBe(true);
+
+    // wrapping
+    expect(notesSame("B#5", "C6")).toBe(true);
+    expect(notesSame("B#5", "C7")).toBe(true);
+
+    expect(notesSame("B3", "Cb5")).toBe(true);
+    expect(notesSame("B5", "Cb3")).toBe(true);
   });
 
   it("greater than", function() {

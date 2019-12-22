@@ -86,7 +86,8 @@ function parseNoteOffset(note) {
   let n = OFFSETS[letter];
   if (accidental == "#") { n += 1 }
   if (accidental == "b") { n -= 1 }
-  return n;
+
+  return (n + 12) % 12; // wrap around for Cb and B#
 }
 
 export function parseNote(note) {
@@ -116,7 +117,7 @@ export function noteStaffOffset(note) {
 
 // octaveless note comparison
 export function notesSame(a, b) {
-  return a.replace(/\d+$/, "") == b.replace(/\d+$/, "")
+  return parseNoteOffset(a) == parseNoteOffset(b)
 }
 
 export function addInterval(note, halfSteps) {
