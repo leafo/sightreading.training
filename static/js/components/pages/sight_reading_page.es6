@@ -56,18 +56,6 @@ export default class SightReadingPage extends React.Component {
     }
   }
 
-  componentWillMount() {
-    let state = this.setStaff(STAVES[0])
-
-    // manually copy state because set state hasn't applied yet
-    for (let key in state) {
-      this.state[key] = state[key]
-    }
-
-    this.refreshNoteList()
-    this.enterWaitMode()
-  }
-
   componentDidUpdate(prevProps, prevState) {
     // transitioning to new staff or generator or key signature
     if (prevState.currentStaff != this.state.currentStaff ||
@@ -81,6 +69,11 @@ export default class SightReadingPage extends React.Component {
 
   componentDidMount() {
     setTitle()
+
+    this.setStaff(STAVES[0], () => {
+      this.enterWaitMode()
+    })
+
     dispatch(this, {
       saveGeneratorPreset: (e, form) => {
         if (this.state.savingPreset) {
@@ -375,7 +368,7 @@ export default class SightReadingPage extends React.Component {
     });
   }
 
-  setStaff(staff) {
+  setStaff(staff, callback) {
     let update = {currentStaff: staff}
 
     // if the current generator is not compatible with new staff change it
@@ -385,7 +378,7 @@ export default class SightReadingPage extends React.Component {
       update.currentGeneratorSettings = {}
     }
 
-    this.setState(update)
+    this.setState(update, callback)
     return update
   }
 
@@ -456,6 +449,7 @@ export default class SightReadingPage extends React.Component {
   }
 
   renderKeyboardToggle() {
+    if (!this.state.currentStaff) { return }
     if (this.state.currentStaff.mode != "notes") { return }
 
     return <button
@@ -494,6 +488,7 @@ export default class SightReadingPage extends React.Component {
   }
 
   renderKeyboard() {
+    if (!this.state.currentStaff) { return }
     if (this.state.currentStaff.mode != "notes") { return }
     if (!this.state.keyboardOpen) { return }
 
@@ -585,7 +580,7 @@ export default class SightReadingPage extends React.Component {
     </div>
 
     let staff
-    if (this.state.currentStaff) {
+    if (this.state.currentStaff && this.state.notes) {
       staff = this.state.currentStaff.render.call(this, {
         heldNotes: this.state.heldNotes,
         notes: this.state.notes,
