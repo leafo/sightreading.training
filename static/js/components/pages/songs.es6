@@ -1,7 +1,7 @@
 /*global N*/
 import * as React from "react"
 
-import {Link, NavLink} from "react-router-dom"
+import {Link, NavLink, Route, Switch} from "react-router-dom"
 
 class SongCell extends React.PureComponent {
   render() {
@@ -142,6 +142,10 @@ export default class SongsPage extends React.Component {
 
 
   renderOverview() {
+    if (!this.state.songs) {
+      return <div className="page_container">Loading...</div>
+    }
+
     let songList
 
     if (this.state.songs.length) {
@@ -164,6 +168,10 @@ export default class SongsPage extends React.Component {
   }
 
   renderRecent() {
+    if (!this.state.songs) {
+      return <div className="page_container">Loading...</div>
+    }
+
     let songList
 
     if (this.state.songs.length) {
@@ -185,22 +193,18 @@ export default class SongsPage extends React.Component {
   }
 
   render() {
-    if (!this.state.songs) {
-      return <div className="page_container">Loading...</div>
-    }
-
-    let inside
-    switch (this.props.filter) {
-      case "played":
-        inside = this.renderRecent()
-        break
-      default:
-        inside = this.renderOverview()
-    }
-
     return <div className="songs_page page_container">
       {this.renderSidebar()}
-      {inside}
+      <Switch>
+        <Route exact path="/play-along" render={() => this.renderOverview()}></Route>
+        <Route exact path="/play-along/recent" render={() => this.renderRecent()}></Route>
+        <Route>
+          <div className="page_container">
+            <h2>Not found</h2>
+            <p>Invalid filter</p>
+          </div>
+        </Route>
+      </Switch>
     </div>
   }
 }

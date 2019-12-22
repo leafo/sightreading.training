@@ -147,6 +147,10 @@ form, .form {
         line-height: 1.5;
     }
 
+    > p:last-child {
+        margin-bottom: 0;
+    }
+
     > ul {
         font-size: 16px;
         line-height: 1.5;

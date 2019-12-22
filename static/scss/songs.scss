@@ -10,6 +10,10 @@ $body_color: #333; // TODO: use common
 
     min-height: calc(100vh - 50px);
 
+    .page_container {
+        align-self: flex-start;
+    }
+
     .sidebar {
         width: 250px;
         box-sizing: border-box;

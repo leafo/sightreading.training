@@ -148,10 +148,7 @@ class Layout extends React.Component {
         exercise: "chord_identification"
       }},
 
-      { path: "/play-along", page: SongsPage,exact: true },
-      { path: "/play-along/recent", page: SongsPage, exact: true, props: {
-        filter: "played"
-      }},
+      { path: "/play-along", page: SongsPage},
       { path: "/stats", page: StatsPage, exact: true },
       { path: "/latency", page: LatencyPage, exact: true },
       { path: "/new-song", page: PlayAlongPage, exact: true, props: {
