@@ -19,7 +19,6 @@ tup.rule({
   "../node_modules/react-dom/umd/react-dom.development.js",
   "../node_modules/prop-types/prop-types.js",
   "../node_modules/react-transition-group/dist/react-transition-group.js",
-  "../node_modules/react-router/umd/react-router.js",
   "../node_modules/react-router-dom/umd/react-router-dom.js",
   "../node_modules/chart.js/dist/Chart.js",
   "../node_modules/react-chartjs-2/dist/react-chartjs-2.js",
