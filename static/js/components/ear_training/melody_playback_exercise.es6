@@ -15,6 +15,8 @@ import {STAVES} from "st/data"
 
 import Keyboard from "st/components/keyboard"
 
+import {setTitle} from "st/globals"
+
 export default class MelodyPlaybackExercise extends React.Component {
   static exerciseName = "Melody Playback"
   static exerciseId = "melody_playback"
@@ -45,6 +47,10 @@ export default class MelodyPlaybackExercise extends React.Component {
 
     this.keyboardPressNote = this.keyboardPressNote.bind(this)
     this.keyboardReleaseNote = this.keyboardReleaseNote.bind(this)
+  }
+
+  componentDidMount() {
+    setTitle("Play Back Melodies Ear Training Exercise")
   }
 
   midiOutputs() {
@@ -305,10 +311,11 @@ export default class MelodyPlaybackExercise extends React.Component {
       </fieldset>
     </div>
 
-    return <div className="melody_playback_exercise keyboard_open">
-      <div className="workspace">
-        {page}
+    return <div className="melody_playback_exercise">
+      <div className="exercise_header">
+        <h1 className="exercise_label">Melody Playback</h1>
       </div>
+      {page}
       {this.renderKeyboard()}
     </div>
   }

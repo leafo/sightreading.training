@@ -1,3 +1,4 @@
+@import "include/common";
 $body_color: #333; // TODO: use common
 
 .songs_page {
@@ -8,7 +9,7 @@ $body_color: #333; // TODO: use common
     max-width: none;
     display: flex;
 
-    min-height: calc(100vh - 50px);
+    min-height: calc(100vh - #{$header_height});
 
     .page_container {
         align-self: flex-start;

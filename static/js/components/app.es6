@@ -132,13 +132,7 @@ class Layout extends React.Component {
       { path: "/login", page: LoginPage, exact: true },
       { path: "/register", page: RegisterPage, exact: true },
 
-      { path: "/ear-training/interval-melodies", page: EarTrainingPage, exact: true, props: {
-        exercise: "melody_recognition"
-      }},
-
-      { path: "/ear-training/melody-playback", page: EarTrainingPage, exact: true, props: {
-        exercise: "melody_playback"
-      }},
+      { path: "/ear-training", page: EarTrainingPage },
 
       { path: "/flash-cards/note-math", page: FlashCardPage, exact: true, props: {
         exercise: "note_math"

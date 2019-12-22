@@ -12,6 +12,8 @@ import {isMobile} from "st/browser"
 
 import {IconShuffle} from "st/components/icons"
 
+import {setTitle} from "st/globals"
+
 export default class MelodyRecognitionExercise extends React.Component {
   static exerciseName = "Interval Melodies"
   static exerciseId = "melody_recognition"
@@ -162,6 +164,8 @@ export default class MelodyRecognitionExercise extends React.Component {
 
   componentDidMount() {
     let loadingCount = 0
+
+    setTitle("Learn Intervals Ear Training Exercise")
 
     this.setState({
       loading: true
@@ -369,6 +373,10 @@ export default class MelodyRecognitionExercise extends React.Component {
 
   render() {
     return <div className="melody_recognition_exercise">
+      <div className="exercise_header">
+        <h1 className="exercise_label">Interval Recognition</h1>
+      </div>
+
       {this.state.loading ?
         <div className="page_container">Loading</div>
       :
