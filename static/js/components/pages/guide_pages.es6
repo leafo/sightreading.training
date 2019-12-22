@@ -64,9 +64,17 @@ class GuideContents extends React.PureComponent {
 
   render() {
     if (this.state.contents) {
-      return <section className="page_container" dangerouslySetInnerHTML={{
-        __html: this.state.contents
-      }} />
+      return <div>
+        <section className="page_container" dangerouslySetInnerHTML={{
+          __html: this.state.contents
+        }} />
+        <section className="page_container">
+          <a target="_blank"
+            href={`https://github.com/leafo/sightreading.training/edit/master/static/guides/${this.props.pageSource}.md`}>
+              Edit this page on GitHub
+          </a>
+        </section>
+      </div>
     } else {
       return <div className="page_container loading_message">Loading...</div>
     }
