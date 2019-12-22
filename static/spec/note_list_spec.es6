@@ -23,6 +23,20 @@ describe("NoteList", function() {
 
       expect(notes2.matchesHead(["D5"])).toBe(true)
       expect(notes2.matchesHead(["C5"])).toBe(false)
+
+      const enharmonic = new NoteList([ "C#4" ])
+      expect(enharmonic.matchesHead(["Db4"])).toBe(true)
+
+      const enharmonic2 = new NoteList([ "Bb4" ])
+      expect(enharmonic2.matchesHead(["A#4"])).toBe(true)
+
+      // wrapped
+      const enharmonic3 = new NoteList([ ["C#4"] ])
+      expect(enharmonic3.matchesHead(["Db4"])).toBe(true)
+
+      const enharmonic4 = new NoteList([ ["Bb4"] ])
+      expect(enharmonic4.matchesHead(["A#4"])).toBe(true)
+
     })
 
     it("matches with multiple notes", function () {

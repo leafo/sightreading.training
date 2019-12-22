@@ -1,5 +1,5 @@
 
-import {notesLessThan, notesSame, MajorScale} from "st/music"
+import {notesLessThan, notesSame, parseNote, MajorScale} from "st/music"
 
 export default class NoteList extends Array {
   constructor(notes, opts={}) {
@@ -67,13 +67,14 @@ export default class NoteList extends Array {
         notes.forEach((n) => noteSet[n.replace(/\d+$/, "")] = true)
         return first.every((n) => noteSet[n.replace(/\d+$/, "")])
       } else {
-        return first.every((n) => notes.indexOf(n) >= 0)
+        const pitches = notes.map(parseNote)
+        return first.map(parseNote).every((n) => pitches.indexOf(n) >= 0)
       }
     } else {
       if (anyOctave) {
         return notes.length == 1 && notesSame(notes[0], first)
       } else {
-        return notes.length == 1 && notes[0] == first
+        return notes.length == 1 && parseNote(notes[0]) == parseNote(first)
       }
 
     }
