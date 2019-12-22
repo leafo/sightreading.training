@@ -10,6 +10,14 @@
         flex-direction: column;
     }
 
+    .keyboard {
+        position: static;
+    }
+
+    .staff_wrapper {
+        margin-bottom: 0;
+    }
+
     .play_along_workspace {
         > h2 {
             font-size: 20px;
