@@ -6,7 +6,7 @@ import {
   MajorScale, MinorScale, HarmonicMinorScale, AscendingMelodicMinorScale, Chord, KeySignature, ChromaticScale
 } from "st/music"
 
-describe("notes", function() {
+describe("music", function() {
   it("less than", function() {
     expect(notesLessThan("C5", "C#5")).toBe(true);
     expect(notesLessThan("B5", "D6")).toBe(true);

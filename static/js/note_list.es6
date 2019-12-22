@@ -54,6 +54,10 @@ export default class NoteList extends Array {
   matchesHead(notes, anyOctave=false) {
     let first = this[0]
 
+    if (!Array.isArray(notes)) {
+      throw new Error("matchesHead: notes should be an array")
+    }
+
     if (Array.isArray(first)) {
       if (first.length != notes.length) {
         return false;
