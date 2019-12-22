@@ -156,31 +156,7 @@ class Layout extends React.Component {
         editorOpen: true,
       }},
       { path: "/song/:song_id/:song_slug", page: PlayAlongPage, exact: true },
-
-      { path: "/about", page: GuidePage, exact: true, props: {
-        title: "About Sight Reading Trainer",
-        pageSource: "about"
-      }},
-
-      { path: "/guide/generators", page: GuidePage, exact: true, props: {
-        title: "Sight Reading Random Notes",
-        pageSource: "generators"
-      }},
-
-      { path: "/guide/chords", page: GuidePage, exact: true, props: {
-        title: "Sight Reading Random Chords",
-        pageSource: "chord_generators"
-      }},
-
-      { path: "/guide/lml", page: GuidePage, exact: true, props: {
-        title: "Programming a song with LML",
-        pageSource: "lml"
-      }},
-
-      { path: "/guide/ear-training", page: GuidePage, exact: true, props: {
-        title: "Ear Training Tools",
-        pageSource: "ear_training"
-      }},
+      { path: ["/about", "/guide"], page: GuidePage }
     ]))
   }
 

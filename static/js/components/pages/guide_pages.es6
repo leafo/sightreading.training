@@ -1,9 +1,9 @@
 import * as React from "react"
-import {Link, NavLink} from "react-router-dom"
+import {NavLink, Switch, Route} from "react-router-dom"
 import {setTitle} from "st/globals"
 import * as types from "prop-types"
 
-export default class GuidePage extends React.Component {
+class GuideContents extends React.PureComponent {
   static propTypes = {
     title: types.string.isRequired,
     pageSource: types.string.isRequired,
@@ -14,21 +14,38 @@ export default class GuidePage extends React.Component {
     this.state = {}
   }
 
-  componentWillUnmount() {
+  componentDidMount() {
+    this.loadPage()
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.pageSource != this.props.pageSource) {
+      this.loadPage()
+    }
+  }
+
+  loadPage() {
     if (this.request) {
       this.request.abort()
       delete this.request
     }
-  }
 
-  componentDidMount() {
     setTitle(this.props.title)
 
-    let request = new XMLHttpRequest()
-    request.open("GET", `/static/guides/${this.props.pageSource}.json`)
+    const request = new XMLHttpRequest()
+    const url = `/static/guides/${this.props.pageSource}.json`
+    request.open("GET", url)
     request.send()
 
     request.onload = (e) => {
+      if (request.status != 200) {
+        console.error("Failed to load guide page", url)
+        this.setState({
+          contents: "Failed to load guide page. Check console."
+        })
+        return
+      }
+
       let res = JSON.parse(request.responseText)
       this.setState({
         contents: res.contents
@@ -38,6 +55,25 @@ export default class GuidePage extends React.Component {
     this.request = request
   }
 
+  componentWillUnmount() {
+    if (this.request) {
+      this.request.abort()
+      delete this.request
+    }
+  }
+
+  render() {
+    if (this.state.contents) {
+      return <section className="page_container" dangerouslySetInnerHTML={{
+        __html: this.state.contents
+      }} />
+    } else {
+      return <div className="page_container loading_message">Loading...</div>
+    }
+  }
+}
+
+export default class GuidePage extends React.PureComponent {
   render() {
     const link = (url, label) =>
       <NavLink activeClassName="active" to={url}>{label}</NavLink>
@@ -60,19 +96,35 @@ export default class GuidePage extends React.Component {
           </ul>
         </section>
       </section>
-      {this.renderContents()}
+      <Switch>
+        <Route exact path="/about">
+          <GuideContents title="About Sight Reading Trainer" pageSource="about" />
+        </Route>
+
+        <Route exact path="/guide/generators">
+          <GuideContents title="Sight Reading Random Notes" pageSource="generators" />
+        </Route>
+
+        <Route exact path="/guide/chords">
+          <GuideContents title="Sight Reading Random Chords" pageSource="chord_generators" />
+        </Route>
+
+        <Route exact path="/guide/ear-training">
+          <GuideContents title="Ear Training Tools" pageSource="ear_training" />
+        </Route>
+
+        <Route exact path="/guide/lml">
+          <GuideContents title="Programming a song with LML" pageSource="lml" />
+        </Route>
+
+        <Route>
+          <div className="page_container">
+            <h2>Not found</h2>
+            <p>Failed to find documentation page</p>
+          </div>
+        </Route>
+      </Switch>
     </main>
-  }
-
-  renderContents() {
-    if (this.state.contents) {
-      return <section className="page_container" dangerouslySetInnerHTML={{
-        __html: this.state.contents
-      }} />
-    } else {
-      return <div className="loading_message">Loading...</div>
-    }
-
   }
 }
 
