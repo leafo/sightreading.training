@@ -3,7 +3,7 @@ import SongParser from "st/song_parser"
 import {trigger} from "st/events"
 
 import {JsonForm, TextInputRow} from "st/components/forms"
-import {withRouter} from "react-router"
+import {withRouter, useHistory} from "react-router-dom"
 
 import Lightbox from "st/components/lightbox"
 import Tabs from "st/components/tabs"
@@ -12,32 +12,25 @@ import Select from "st/components/select"
 import { KeySignature } from "st/music"
 import {readConfig, writeConfig} from "st/config"
 
-class DeleteSongForm extends React.Component {
-  afterSubmit(res) {
-    this.props.lightbox.close()
+const DeleteSongForm = React.memo(function DeleteSongForm(props) {
+  let history = useHistory()
+
+  function afterSubmit(res) {
+    props.lightbox.close()
     if (res.redirect_to) {
-      this.history.push(res.redirect_to)
+      history.push(res.redirect_to)
     }
   }
 
-  render() {
-    // TODO: this is gross
-    let Router = withRouter(({history}) => {
-      this.history = history
-      return null
-    })
-
-    return <JsonForm
-      method="DELETE"
-      action={this.props.action}
-      afterSubmit={this.afterSubmit.bind(this)}
-      className="delete_song_form">
-        <Router/>
-        <p>Are you sure you want to delete this song? You can't un-delete</p>
-        <button>Delete</button>
-    </JsonForm>
-  }
-}
+  return <JsonForm
+    method="DELETE"
+    action={props.action}
+    afterSubmit={afterSubmit}
+    className="delete_song_form">
+      <p>Are you sure you want to delete this song? You can't un-delete</p>
+      <button>Delete</button>
+  </JsonForm>
+})
 
 class SongDetailsLightbox extends Lightbox {
   constructor(opts) {
