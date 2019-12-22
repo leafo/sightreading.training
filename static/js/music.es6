@@ -91,7 +91,14 @@ function parseNoteOffset(note) {
 }
 
 export function parseNote(note) {
-  let [, letter, accidental, octave] = note.match(/^([A-G])(#|b)?(\d+)$/);
+  const parsed = note.match(/^([A-G])(#|b)?(\d+)$/)
+
+  if (!parsed) {
+    throw new Error(`parseNote: invalid note format '${note}'`)
+  }
+
+  let [, letter, accidental, octave] = parsed
+
   if (OFFSETS[letter] == undefined) {
     throw `invalid note letter: ${letter}`
   }
