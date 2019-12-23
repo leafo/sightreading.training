@@ -1,2 +1,2 @@
 include_rules
-: foreach *.es6 |> !babel |> %B.js
+: foreach *.es6 |> !es6 |> %B.js

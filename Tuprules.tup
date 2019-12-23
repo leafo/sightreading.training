@@ -1,7 +1,14 @@
 TOP = $(TUP_CWD)
 
-!babel_amd = |> $(TOP)/node_modules/.bin/babel --plugins @babel/plugin-transform-modules-amd --module-id st/%O -M %f > %o |>
-!babel = |> $(TOP)/node_modules/.bin/babel %f > %o |>
+# compile with babel
+!es6 = |> npx babel %f > %o |>
+!es6_amd = |> npx babel --plugins @babel/plugin-transform-modules-amd --module-id st/%O -M %f > %o |>
+
+# compile with swc
+# !es6 = |> npx swc --config-file $(TOP)/.swcrc -C jsc.parser.syntax=ecmascript %f > %o |>
+# !es6_amd = |> npx swc --config-file $(TOP)/.swcrc -C module.type=amd -C module.moduleId=st/%O %f > %o |>
+
+
 !scss = |> ^ scss %o^ sassc -I scss/ < %f > %o |>
 !join = |> ^ join %o^ cat %f > %o |>
 
