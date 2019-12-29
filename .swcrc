@@ -1,0 +1,10 @@
+{
+  "minify": true,
+  "jsc": {
+    "parser": {
+      "syntax": "ecmascript",
+      "classProperty": true,
+      "jsx": true
+    }
+  }
+}
