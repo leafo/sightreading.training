@@ -203,11 +203,11 @@ export default class MelodyPlaybackExercise extends React.Component {
     let page = <div className="page_container">
       <details className="instructions">
         <summary>How does this work?</summary>
-        <p>Click <em>New melody</em> to generate a random melody, then play it
-          back using the on-screen keyboard or your MIDI input device. You'll be given
-          a new melody after figuring out what you heard. You can trigger current the
-          melody to replay by interacting with any of the sliders or pedals on your
-          MIDI controller.</p>
+        <p>Click <em>New melody</em> to listen to a randomly generated melody.
+          Play it back using the on-screen keyboard or your MIDI input device to
+          complete the exercise. You'll be given a new melody after figuring out what
+          you heard. You can trigger current the melody to replay by interacting with
+          any of the sliders or pedals on your MIDI controller.</p>
       </details>
       <div className="stat_controls">
         {repeatButton}
