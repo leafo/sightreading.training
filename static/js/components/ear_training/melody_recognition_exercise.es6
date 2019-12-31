@@ -603,6 +603,20 @@ export default class MelodyRecognitionExercise extends React.Component {
       return enabled
     }
 
+    let toggleAllButton = null
+    // if it's empty add a toggle all button
+    if (Object.keys(this.state.enabledIntervals || {}).length == 0) {
+      toggleAllButton = <button
+        type="button"
+        onClick={e => this.setState({ enabledIntervals: enabledFiltered(m => true)})}
+        >All on</button>
+    } else {
+      toggleAllButton = <button
+        type="button"
+        onClick={e => this.setState({ enabledIntervals: {} })}
+        >All off</button>
+    }
+
     return <section className="interval_settings">
       <fieldset className="enabled_intervals">
         <legend>Intervals</legend>
@@ -612,10 +626,7 @@ export default class MelodyRecognitionExercise extends React.Component {
         </ul>
 
         <div className="button_toggles">
-          <button
-            type="button"
-            onClick={e => this.setState({ enabledIntervals: {} })}
-            >All off</button>
+          {toggleAllButton}
           {" "}
           <button
             type="button"
