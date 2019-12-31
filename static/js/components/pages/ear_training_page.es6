@@ -16,9 +16,12 @@ import MelodyPlaybackExercise from "st/components/ear_training/melody_playback_e
 
 import {Link, NavLink, Switch, Route, Redirect} from "react-router-dom"
 
+import {IconMenu} from "st/components/icons"
+
 export default class EarTrainingPage extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {}
   }
 
   onMidiMessage(message) {
@@ -35,7 +38,7 @@ export default class EarTrainingPage extends React.Component {
       contents = this.renderIntro()
     }
 
-    return <div className="ear_training_page has_sidebar">
+    return <div className={classNames("ear_training_page has_sidebar", { sidebar_open: this.state.sidebarOpen })}>
       <div className="sidebar">
         <nav>
           <div className="nav_header">Choose Exercise</div>
@@ -52,12 +55,27 @@ export default class EarTrainingPage extends React.Component {
     </div>
   }
 
+  toggleSidebar() {
+    console.log("toggling sidebar")
+    this.setState(s => ({ sidebarOpen: !s.sidebarOpen }))
+  }
+
   renderExercise() {
+    let toggleSidebarButton = <button
+      className="toggle_sidebar_button button outline"
+      onClick={() => this.toggleSidebar()}
+    >
+      <IconMenu width={20} height={20} />
+      Exercises
+    </button>
+
+
     const exerciseProps = {
       ref: (e) => this.currentExercise = e,
       midi: this.props.midi,
       midiOutput: this.props.midiOutput,
-      midiInput: this.props.midiInput
+      midiInput: this.props.midiInput,
+      toggleSidebarButton 
     }
 
     return <Switch>

@@ -3,6 +3,12 @@
 .ear_training_page {
     .exercise_header {
         padding: 20px;
+        display: flex;
+        align-items: center;
+
+        .toggle_sidebar_button {
+            margin-right: 10px;
+        }
 
         @media (max-width: 900px) {
             padding-bottom: 0;

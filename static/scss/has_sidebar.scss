@@ -1,5 +1,15 @@
 @import "include/common";
 
+.toggle_sidebar_button {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+
+    > .svgicon {
+        margin-right: 4px;
+    }
+}
+
 // used on exercise pages, songs page
 .has_sidebar {
     width: auto;

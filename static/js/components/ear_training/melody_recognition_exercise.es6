@@ -374,6 +374,7 @@ export default class MelodyRecognitionExercise extends React.Component {
   render() {
     return <div className="melody_recognition_exercise">
       <div className="exercise_header">
+        {this.props.toggleSidebarButton}
         <h1 className="exercise_label">Interval Recognition</h1>
       </div>
 
