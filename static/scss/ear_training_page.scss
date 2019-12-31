@@ -1,55 +1,21 @@
 @import "include/common";
 
 .ear_training_page {
-    max-width: none;
-    display: flex;
-    min-height: calc(100vh - #{$header_height});
-
-    .content_column {
-        flex: 1;
-    }
-
-    // TODO: this is duplicated from songs.scss
-    .sidebar {
-        width: 250px;
-        box-sizing: border-box;
-        background: #EFEFEF;
-        padding: 20px;
-
-        .nav_header {
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 12px;
-        }
-
-        nav {
-            ul {
-                list-style: none;
-                padding: 0;
-                margin: 20px 0;
-            }
-
-            li {
-                margin-bottom: 8px;
-                &:last-child {
-                    margin-bottom: 0;
-                }
-            }
-
-            a.active {
-                text-decoration: none;
-                font-weight: bold;
-            }
-        }
-    }
-
     .exercise_header {
         padding: 20px;
+
+        @media (max-width: 900px) {
+            padding-bottom: 0;
+        }
 
         > .exercise_label {
             @include single_line;
             font-size: 1.5em;
             margin: 0;
+
+            @media (max-width: 900px) {
+                font-size: 1.2em;
+            }
         }
     }
 

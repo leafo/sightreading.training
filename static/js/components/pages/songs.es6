@@ -193,7 +193,7 @@ export default class SongsPage extends React.Component {
   }
 
   render() {
-    return <div className="songs_page page_container">
+    return <div className="songs_page has_sidebar">
       {this.renderSidebar()}
       <Switch>
         <Route exact path="/play-along" render={() => this.renderOverview()}></Route>

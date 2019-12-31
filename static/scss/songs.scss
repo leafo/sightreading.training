@@ -2,53 +2,19 @@
 $body_color: #333; // TODO: use common
 
 .songs_page {
-    background: transparent;
-    margin: 0;
-    padding: 0;
-    width: auto;
-    max-width: none;
-    display: flex;
-
-    min-height: calc(100vh - #{$header_height});
-
     .page_container {
+        // the loading screen
         align-self: flex-start;
     }
 
     .sidebar {
-        width: 250px;
-        box-sizing: border-box;
-        background: #EFEFEF;
-        padding: 20px;
-
         .new_song_button {
             display: block;
             text-align: center;
         }
-
-        nav {
-            ul {
-                list-style: none;
-                padding: 0;
-                margin: 20px 0;
-            }
-
-            li {
-                margin-bottom: 5px;
-                &:last-child {
-                    margin-bottom: 0;
-                }
-            }
-
-            a.active {
-                text-decoration: none;
-                font-weight: bold;
-            }
-        }
     }
 
     .content_column {
-        flex: 1;
         padding: 20px;
 
         > section {

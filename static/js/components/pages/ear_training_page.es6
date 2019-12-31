@@ -35,7 +35,7 @@ export default class EarTrainingPage extends React.Component {
       contents = this.renderIntro()
     }
 
-    return <div className="ear_training_page">
+    return <div className="ear_training_page has_sidebar">
       <div className="sidebar">
         <nav>
           <div className="nav_header">Choose Exercise</div>
