@@ -31,12 +31,12 @@ export default class MelodyRecognitionExercise extends React.Component {
     }, {
       interval: "M2",
       direction: "asc",
-      song: "M2_asc",
+      song: "mm2_asc",
       title: "Silent Night"
     }, {
       interval: "M2",
       direction: "desc",
-      song: "M2_desc",
+      song: "mm2_desc",
       title: "Mary Had A Little Lamb"
     }, {
       interval: "m3",
@@ -51,37 +51,37 @@ export default class MelodyRecognitionExercise extends React.Component {
     }, {
       interval: "M3",
       direction: "asc",
-      song: "M3_asc",
+      song: "mm3_asc",
       title: "On When The Saints",
     }, {
       interval: "M3",
       direction: "desc",
-      song: "M3_desc",
+      song: "mm3_desc",
       title: "Swing Low Sweet Chariot",
     }, {
       interval: "P4",
       direction: "asc",
-      song: "P4_asc",
+      song: "pp4_asc",
       title: "Here Comes The Bride",
     }, {
       interval: "P4",
       direction: "desc",
-      song: "P4_desc",
+      song: "pp4_desc",
       title: "I've Been Working On The Rail Road",
     }, {
       interval: "T",
       direction: "asc",
-      song: "T_asc",
+      song: "tt_asc",
       title: "The Simpsons",
     }, {
       interval: "P5",
       direction: "asc",
-      song: "P5_asc",
+      song: "pp5_asc",
       title: "Star Wars",
     }, {
       interval: "P5",
       direction: "desc",
-      song: "P5_desc",
+      song: "pp5_desc",
       title: "Flintstones",
     }, {
       interval: "m6",
@@ -91,7 +91,7 @@ export default class MelodyRecognitionExercise extends React.Component {
     }, {
       interval: "M6",
       direction: "asc",
-      song: "M6_asc",
+      song: "mm6_asc",
       title: "NBC",
     }, {
       interval: "m7",
@@ -101,17 +101,17 @@ export default class MelodyRecognitionExercise extends React.Component {
     }, {
       interval: "M7",
       direction: "asc",
-      song: "M7_asc",
+      song: "mm7_asc",
       title: "Take On Me",
     }, {
       interval: "P8",
       direction: "asc",
-      song: "P8_asc",
+      song: "pp8_asc",
       title: "Somewhere Over The Rainbow",
     }, {
       interval: "P8",
       direction: "desc",
-      song: "P8_desc",
+      song: "pp8_desc",
       title: "To Zanarkand",
     }
   ]
