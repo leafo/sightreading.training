@@ -47,6 +47,11 @@ export default class EarTrainingPage extends React.Component {
             <li><NavLink to="/ear-training/melody-playback" activeClassName="active">Play Back Melodies</NavLink></li>
           </ul>
         </nav>
+
+        <button
+          type="button"
+          onClick={()=> this.toggleSidebar()}
+          className="button toggle_sidebar_button">Close</button>
       </div>
 
       <div className="content_column">
@@ -56,12 +61,12 @@ export default class EarTrainingPage extends React.Component {
   }
 
   toggleSidebar() {
-    console.log("toggling sidebar")
     this.setState(s => ({ sidebarOpen: !s.sidebarOpen }))
   }
 
   renderExercise() {
     let toggleSidebarButton = <button
+      type="button"
       className="toggle_sidebar_button button outline"
       onClick={() => this.toggleSidebar()}
     >

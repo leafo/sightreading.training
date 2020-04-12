@@ -1,6 +1,12 @@
 @import "include/common";
 
 .ear_training_page {
+    @media (min-width: 900px) {
+        .toggle_sidebar_button {
+            display: none;
+        }
+    }
+
     .exercise_header {
         padding: 20px;
         display: flex;
@@ -9,6 +15,7 @@
         .toggle_sidebar_button {
             margin-right: 10px;
         }
+
 
         @media (max-width: 900px) {
             padding-bottom: 0;

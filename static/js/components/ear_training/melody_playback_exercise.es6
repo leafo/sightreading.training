@@ -304,6 +304,7 @@ export default class MelodyPlaybackExercise extends React.Component {
 
     return <div className="melody_playback_exercise">
       <div className="exercise_header">
+        {this.props.toggleSidebarButton}
         <h1 className="exercise_label">Melody Playback</h1>
       </div>
       {page}
