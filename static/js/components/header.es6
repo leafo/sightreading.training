@@ -1,5 +1,8 @@
+/*global N*/
 
 import * as React from "react"
+import * as ReactDOM from "react-dom"
+
 import {Link, NavLink} from "react-router-dom"
 import MidiButton from "st/components/midi_button"
 import {trigger} from "st/events"

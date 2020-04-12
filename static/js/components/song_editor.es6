@@ -315,9 +315,11 @@ export default class SongEditor extends React.Component {
       }
       case 1: {
         accidental = "-"
+        break
       }
       case -1: {
         accidental = "+"
+        break
       }
     }
 

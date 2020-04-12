@@ -9,14 +9,18 @@ module.exports = {
     "no-console": "off",
     "no-unused-vars": "off",
     "no-empty": "off",
-
+    "no-constant-condition": [
+      "error",
+      { "checkLoops": false }
+    ],
     "linebreak-style": [
       "error",
       "unix"
     ],
     "quotes": [
       "error",
-      "double"
-    ],
+      "double",
+      { "avoidEscape": true }
+    ]
   }
 };

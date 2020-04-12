@@ -261,7 +261,7 @@ export default class SightReadingPage extends React.Component {
 
   pressNote(note) {
     switch (this.state.currentGenerator.mode) {
-      case "chords":
+      case "chords": {
         let ignoreAbove = this.state.currentGeneratorSettings.ignoreAbove
         if (ignoreAbove != null) {
           console.log(parseNote(note), ignoreAbove, parseNote(note) > ignoreAbove)
@@ -270,6 +270,7 @@ export default class SightReadingPage extends React.Component {
           }
         }
         break
+      }
     }
 
     this.state.heldNotes[note] = true;
