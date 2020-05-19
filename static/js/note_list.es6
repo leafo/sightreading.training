@@ -102,5 +102,10 @@ export default class NoteList extends Array {
   toString() {
     return this.map((n) => n.join(" ")).join(", ")
   }
+
+  // converts it to serialize list of note numbers for quick comparisons
+  toNoteString() {
+    return this.map((n) => n.map(parseNote).join(" ")).join(", ")
+  }
 }
 

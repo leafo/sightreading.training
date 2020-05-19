@@ -100,7 +100,7 @@ export default class MelodyPlaybackExercise extends React.Component {
       this.state.noteHistory.shift()
     }
 
-    if (this.state.noteHistory.toString() == this.state.currentNotes.toString()) {
+    if (this.state.noteHistory.toNoteString() == this.state.currentNotes.toNoteString()) {
       this.setState({
         noteHistory: new NoteList([]),
         locked: true,
