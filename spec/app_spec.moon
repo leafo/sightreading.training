@@ -69,6 +69,7 @@ describe "app", ->
         post: {
           "song[title]": "hello world"
           "song[song]": "g5 g5 g5"
+          "song[publish_status]": "public"
         }
       }
 
@@ -76,8 +77,11 @@ describe "app", ->
 
       s = types.shape {
         success: true
-        song: types.shape {
+        song: types.partial {
           id: types.number
+          title: "hello world"
+          publish_status: "public"
+          user_id: user.id
         }
       }
 
