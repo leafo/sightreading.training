@@ -1,0 +1,17 @@
+name: "test"
+
+on: [push, pull_request]
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: build
+      run: |
+        docker build -t sightreading-test .
+
+    - name: test
+      run: |
+        docker run sightreading-test
