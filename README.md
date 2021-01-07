@@ -2,7 +2,7 @@
 
 ## <https://sightreading.training>
 
-[![Build Status](https://travis-ci.org/leafo/sightreading.training.svg?branch=master)](https://travis-ci.org/leafo/sightreading.training)
+![test](https://github.com/leafo/sightreading.training/workflows/test/badge.svg)
 
 [![Twitch Link](http://leafo.net/dump/twitch-banner.svg)](https://www.twitch.tv/moonscript)
 
