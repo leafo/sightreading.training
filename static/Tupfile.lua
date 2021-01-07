@@ -61,10 +61,10 @@ tup.rule({
   "../node_modules/jasmine-core/lib/jasmine-core/jasmine.css"
 }, join, "spec.css")
 
--- tup.foreach_rule({
---   "lib.js",
---   "main.js",
---   "service_worker.js",
--- }, "../node_modules/.bin/uglifyjs %f > %o", "%B.min.js")
+tup.foreach_rule({
+  "lib.js",
+  "main.js",
+  "service_worker.js",
+}, "../node_modules/.bin/uglifyjs %f > %o", "%B.min.js")
 
 -- vim: set expandtab ts=2 sw=2 ft=lua:

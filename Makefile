@@ -8,7 +8,7 @@ migrate:
 	lapis migrate
 	make schema.sql
 
-schema.sql:
+schema.sql::
 	pg_dump -s -U postgres sightreading > schema.sql
 	pg_dump -a -t lapis_migrations -U postgres sightreading >> schema.sql
 
