@@ -26,7 +26,7 @@ lint:
 	git ls-files | grep '\.moon$$' | grep -v config.moon | xargs -n 100 moonc -l
 
 lint_js:
-	node_modules/.bin/eslint $$(git ls-files | grep \.es6$$ | grep -v spec)
+	npx eslint $$(git ls-files static/js/ | grep '\.js')
 
 checkpoint:
 	mkdir -p dev_backup
