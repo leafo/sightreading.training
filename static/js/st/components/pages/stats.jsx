@@ -1,7 +1,8 @@
 import * as React from "react"
 import {setTitle} from "st/globals"
 
-import moment from "moment"
+import { startOfDay, format as formatDate, addDays, parseISO } from 'date-fns'
+import { zonedTimeToUtc } from "date-fns-tz"
 
 import {Line} from "react-chartjs-2";
 
@@ -63,11 +64,13 @@ export default class StatsPage extends React.Component {
   }
 
   dateStops(days=15) {
-    let d = moment().utc().startOf("day")
+    let d = startOfDay(zonedTimeToUtc(new Date()))
+
     let out = []
+
     for (let i = 0; i < days; i++) {
-      out.push(d.format("YYYY-MM-DD"))
-      d.add(-1, "d")
+      out.push(formatDate(d, "yyyy-MM-dd"))
+      d = addDays(d, -1)
     }
 
     out.reverse()
@@ -76,6 +79,7 @@ export default class StatsPage extends React.Component {
 
   renderStats() {
     let stops = this.dateStops()
+
     let statsByDate = {}
     for (let stat of this.state.stats) {
       statsByDate[stat.date] = stat
@@ -105,7 +109,7 @@ export default class StatsPage extends React.Component {
 
     let data = {
       labels: stops.map((v, i) => {
-        if (i % 2 == 0) { return moment(v).format("MM/DD") } 
+        if (i % 2 == 0) { return formatDate(parseISO(v), "M/dd") }
         return ""
       }),
       datasets: [
