@@ -101,9 +101,9 @@ export default class StatsPage extends React.Component {
 
     let options = {
       scales: {
-        yAxes: [{
+        y: {
           stacked: true
-        }]
+        }
       }
     }
 
