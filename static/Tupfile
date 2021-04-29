@@ -16,7 +16,3 @@ include_rules
 
 : scss/*.css |> cat %f > %o |> style.css
 : style.css |> sassc -t compressed %f > %o |> style.min.css
-
-
-
-

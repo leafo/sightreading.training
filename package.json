@@ -6,7 +6,6 @@
   "dependencies": {
     "@swc/cli": "^0.1.27",
     "@swc/core": "^1.2.43",
-    "chart.js": "^2.9.3",
     "classnames": "^2.2.6",
     "date-fns": "^2.21.1",
     "date-fns-tz": "^1.1.4",
@@ -19,7 +18,7 @@
     "pegjs": "^0.10.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
-    "react-chartjs-2": "^2.9.0",
+    "react-chartjs-2": "^3.0.3",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
     "react-transition-group": "^2.9.0",
