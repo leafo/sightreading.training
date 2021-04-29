@@ -9,8 +9,8 @@ luarocks --lua-version=5.1 install bcrypt
 luarocks --lua-version=5.1 install tableshape
 eval $(luarocks --lua-version=5.1 path)
 
-# js
-npm install
+# # js
+# npm install
 
 echo "config 'test', -> logging false" >> config.moon
 
