@@ -1,0 +1,6 @@
+include_rules
+.gitignore
+
+: foreach *.pegjs |> !pegjs |> %B.js
+
+

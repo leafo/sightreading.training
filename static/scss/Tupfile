@@ -1,1 +1,2 @@
 include_rules
+: foreach *.scss |> !scss |> %B.css

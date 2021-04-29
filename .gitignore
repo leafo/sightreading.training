@@ -2,7 +2,6 @@ node_modules/
 logs/
 .tup
 *.css
-*.js
 *.tar.gz
 *.lua
 nginx.conf.compiled

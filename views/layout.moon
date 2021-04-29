@@ -12,7 +12,11 @@ class Layout extends Widget
       head ->
         meta charset: "UTF-8"
         title "Sight Reading Trainer"
-        link rel: "stylesheet", href: "/static/style.css?#{buster}"
+        if config._name == "production" or @params.prod_assets
+          link rel: "stylesheet", href: "/static/style.min.css?#{buster}"
+        else
+          link rel: "stylesheet", href: "/static/style.css?#{buster}"
+
         link rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Raleway"
         link rel: "icon", sizes: "144x144", href: "/static/img/icon-144.png"
         link rel: "manifest", href: @build_url "/static/manifest.json", scheme: config.default_scheme
@@ -48,15 +52,15 @@ class Layout extends Widget
                     alt: ""
                   }
 
-        @include_js {"lib-dev", "lib.min"}, "main"
-
-        if config.sentry_url
-          script src: "https://cdn.ravenjs.com/3.9.1/raven.min.js"
-          script ->
-            raw "Raven.config(#{to_json config.sentry_url}).install()"
-
         script type: "text/javascript", ->
-          raw "requirejs(['st/main'], function(m) { m.init(#{to_json @initial_state!}) });"
+          raw "window.ST_initial_session = #{to_json @initial_state!}"
+
+        @include_js "main"
+
+        -- if config.sentry_url
+        --   script src: "https://cdn.ravenjs.com/3.9.1/raven.min.js"
+        --   script ->
+        --     raw "Raven.config(#{to_json config.sentry_url}).install()"
 
   initial_state: =>
     out = { }

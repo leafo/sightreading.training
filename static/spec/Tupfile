@@ -1,7 +1,0 @@
-include_rules
-
-!es6 = |> npx babel --plugins @babel/plugin-transform-modules-amd %f > %o |>
-# !es6 = |> npx swc --config-file $(TOP)/.swcrc -C module.type=amd %f > %o |>
-
-: foreach *.es6 |> !es6 |> %B.js
-

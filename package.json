@@ -7,6 +7,7 @@
     "chart.js": "^2.9.3",
     "classnames": "^2.2.6",
     "curl-amd": "^0.8.12",
+    "esbuild": "^0.11.16",
     "mersennetwister": "^0.2.2",
     "moment": "^2.24.0",
     "nosleep.js": "^0.7.0",
@@ -32,7 +33,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.19.0",
-    "jasmine": "^2.99.0",
+    "jasmine": "^3.7.0",
     "pegjs": "^0.10.0",
     "uglify-es": "^3.3.9"
   },
