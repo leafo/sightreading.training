@@ -9,7 +9,7 @@
     "classnames": "^2.2.6",
     "date-fns": "^2.21.1",
     "date-fns-tz": "^1.1.4",
-    "esbuild": "^0.11.16",
+    "esbuild": "^0.13.2",
     "eslint": "^7.25.0",
     "eslint-plugin-react": "^7.23.2",
     "jasmine": "^3.7.0",
