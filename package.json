@@ -4,8 +4,6 @@
   "description": "sight reading trainer",
   "main": "test.js",
   "dependencies": {
-    "@swc/cli": "^0.1.50",
-    "@swc/core": "^1.2.91",
     "chart.js": "^3.5.1",
     "classnames": "^2.3.1",
     "date-fns": "^2.24.0",
