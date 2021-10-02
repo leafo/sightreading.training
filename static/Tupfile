@@ -1,8 +1,8 @@
 .gitignore
 include_rules
 
-: js/st/main.jsx | js/st/song_parser_peg.js |> NODE_PATH=$(TOP)/static/js npx esbuild %f --log-level=warning --bundle > %o |> main.js
-: js/st/main.jsx | js/st/song_parser_peg.js main.js |> NODE_PATH=$(TOP)/static/js npx esbuild %f --log-level=warning --bundle --minify > %o |> main.min.js
+: js/st/main.jsx | js/st/song_parser_peg.js js/st/staff_assets.jsx |> NODE_PATH=$(TOP)/static/js npx esbuild %f --log-level=warning --bundle > %o |> main.js
+: js/st/main.jsx | main.js |> NODE_PATH=$(TOP)/static/js npx esbuild %f --log-level=warning --bundle --minify > %o |> main.min.js
 
 : js/service_worker.js |> NODE_PATH=$(TOP)/static/js npx esbuild %f --log-level=warning --bundle --minify > %o |> service_worker.js
 
@@ -11,7 +11,7 @@ include_rules
 
 : $(TOP)/node_modules/jasmine-core/lib/jasmine-core/jasmine.css |> cp %f %o |> specs.css
 
-: js/specs.js | js/st/song_parser_peg.js |> NODE_PATH=$(TOP)/static/js npx esbuild %f --log-level=warning --bundle > %o |> specs.js
+: js/specs.js | main.js |> NODE_PATH=$(TOP)/static/js npx esbuild %f --log-level=warning --bundle > %o |> specs.js
 
 : scss/*.css |> cat %f > %o |> style.css
 : style.css |> sassc -t compressed %f > %o |> style.min.css

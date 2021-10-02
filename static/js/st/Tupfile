@@ -3,4 +3,5 @@ include_rules
 
 : foreach *.pegjs |> !pegjs |> %B.js
 
+: $(TOP)/static/staff/*.svg |> (echo 'import * as React from "react"'; for file in %f; do echo "export const `basename $file '.svg' | tr [a-z] [A-Z]` = `cat $file`;"; done) > %o |> staff_assets.jsx
 
