@@ -35,6 +35,140 @@ const Sharp = createAsset(SHARP, "Sharp")
 const QuarterNote = createAsset(QUARTER_NOTE, "QuarterNote")
 const WholeNote = createAsset(WHOLE_NOTE, "WholeNote")
 
+// manages a Two.Group for a single staff, clef and including key signature
+// all cordinates are done in "staff local", starting at 0, -STAFF_HEIGHT_OFFSET
+class StaffGroup {
+  constructor(params={}) {
+    this.getAsset = params.getAsset
+    this.clef = params.clef || "g"
+    this.keySignature = params.keySignature || 0
+    this.width = params.width || 1000
+  }
+
+  // resize the staff to a new width
+  updateWidth(width) {
+    this.width = width
+    if (this.lines) {
+      for (let line of this.lines) {
+        line.vertices[1].x = this.width
+        line.vertices[2].x = this.width
+      }
+    }
+  }
+
+  // renders the two group, throwing away existing one if it already exists
+  render() {
+    this.renderGroup = new Two.Group()
+
+    this.marginX = 0
+
+    let bar = this.makeBar(0, 0, BAR_WIDTH, STAFF_INNER_HEIGHT)
+    this.renderGroup.add(bar)
+    this.marginX += BAR_WIDTH
+
+    this.lines ||= []
+    for (let i = 0; i < 5; i++) {
+      let line = this.makeBar(this.marginX, i*LEDGER_DY, this.width, LEDGER_HEIGHT)
+      this.renderGroup.add(line)
+      this.lines.push(line)
+    }
+
+    if (this.clef == "g") {
+      const clef = this.getAsset("gclef")
+      this.renderGroup.add(clef)
+      this.marginX += CLEF_GAP
+      clef.translation.set(this.marginX, STAFF_HEIGHT_OFFSET + 14)
+      this.marginX += clef.getBoundingClientRect().width
+    } else if (this.clef == "f") {
+      const clef = this.getAsset("fclef")
+
+      this.renderGroup.add(clef)
+      this.marginX += CLEF_GAP
+      clef.translation.set(this.marginX, STAFF_HEIGHT_OFFSET + 102)
+      this.marginX += clef.getBoundingClientRect().width
+    }
+
+    let keySignature
+    if (this.keySignature > 0) { // sharp
+      keySignature = this.makeKeySignature("sharp", this.keySignature)
+    } else if (this.keySignature < 0) { // flat
+      keySignature = this.makeKeySignature("flat", -this.keySignature)
+    }
+
+    if (keySignature) {
+      this.marginX += CLEF_GAP
+      keySignature.translation.set(this.marginX, 0)
+      this.renderGroup.add(keySignature)
+      this.marginX += keySignature.getBoundingClientRect().width
+    }
+
+    this.notesGroup = new Two.Group()
+    this.notesGroup.translation.set(this.marginX, 0)
+    this.notesGroup.addTo(this.renderGroup)
+    return this.renderGroup
+  }
+
+  makeKeySignature(type, count) {
+    let offsets, accidentalAsset
+
+    // these offsets apply to G clef with default staff height offset
+    if (type == "flat") {
+      offsets = [133, 42, 158, 67, 191, 100, 216]
+      // asset = this.assets.flat.current
+      accidentalAsset = this.getAsset("flat")
+    } else if (type == "sharp") {
+      offsets = [42, 129, 14, 101, 187, 71, 158]
+      // asset = this.assets.sharp.current
+      accidentalAsset = this.getAsset("sharp")
+    } else {
+      throw new Error("Unknown type for makeKeySignature: " + type)
+    }
+
+    let group = new Two.Group()
+
+    let offsetX = 0
+    const accidentalGap = 4
+    for (var k = 0; k < 7; k++) {
+      let a = accidentalAsset.clone()
+      a.translation.set(offsetX, offsets[k] + STAFF_HEIGHT_OFFSET)
+      offsetX += a.getBoundingClientRect().width + accidentalGap
+      group.add(a)
+    }
+
+    return group
+  }
+
+
+  // makes a rectangle with the origin on the top left
+  makeBar(x,y,w,h) {
+    let bar = new Two.Path([
+      new Two.Anchor(x, y),
+      new Two.Anchor(x + w, y),
+      new Two.Anchor(x + w, y + h),
+      new Two.Anchor(x, y + h)
+    ], true, false)
+
+    bar.fill = "black"
+    bar.noStroke()
+
+    return bar
+  }
+
+  // notes group pre-offset group that will contain all notes & bars on this staff
+  getNotesGroup() {
+    return this.notesGroup
+  }
+
+  getRenderGroup() {
+    return this.renderGroup
+  }
+
+  getMarginX() {
+    return this.marginX
+  }
+}
+
+
 export class NotesStaff extends React.Component {
   constructor(props) {
     super()
