@@ -36,7 +36,7 @@ const QuarterNote = createAsset(QUARTER_NOTE, "QuarterNote")
 const WholeNote = createAsset(WHOLE_NOTE, "WholeNote")
 
 // manages a Two.Group for a single staff, clef and including key signature
-// all cordinates are done in "staff local", starting at 0, -STAFF_HEIGHT_OFFSET
+// all cordinates are done in "staff local" space, STAFF_HEIGHT_OFFSET
 class StaffGroup {
   constructor(params={}) {
     this.getAsset = params.getAsset
@@ -68,7 +68,7 @@ class StaffGroup {
 
     this.lines ||= []
     for (let i = 0; i < 5; i++) {
-      let line = this.makeBar(this.marginX, i*LEDGER_DY, this.width, LEDGER_HEIGHT)
+      let line = this.makeBar(this.marginX, i*LEDGER_DY, this.width - this.marginX, LEDGER_HEIGHT)
       this.renderGroup.add(line)
       this.lines.push(line)
     }
@@ -168,7 +168,6 @@ class StaffGroup {
   }
 }
 
-
 export class NotesStaff extends React.Component {
   constructor(props) {
     super()
@@ -198,25 +197,16 @@ export class NotesStaff extends React.Component {
   }
 
   updateWidth(width) {
-    console.log("updating width to", width, this.two && width != this.two.width)
     if (this.two && width != this.two.width) {
       // setting dimensions is funky: https://github.com/jonobr1/two.js/issues/191
       this.two.width = width
 
-      if (this.lines) {
+      // scale to staff local space
+      let scaledWidth = this.two.width / this.renderGroup.scale
 
-        console.log("unscaled width:", this.two.width / this.renderGroup.scale)
-        let newWidth = (this.two.width / this.renderGroup.scale) / 2 - BAR_WIDTH
-
-        let xx = 0
-        for (let line of this.lines) {
-          console.log("line " + xx++)
-          for (let v of line.vertices) {
-            console.log(v.x, v.y)
-          }
-
-          line.vertices[1].x = newWidth
-          line.vertices[2].x = newWidth
+      if (this.staves) {
+        for (let staff of this.staves) {
+          staff.updateWidth(scaledWidth)
         }
       }
 
@@ -236,114 +226,55 @@ export class NotesStaff extends React.Component {
     }).appendTo(this.containerRef.current)
 
 
-    // render group contains the final transformation
+    // render group contains the final viewport transformation
     this.renderGroup = this.two.makeGroup()
     this.renderGroup.scale = 0.5
 
-    this.makeStaff({clef: "g", width: initialWidth / this.renderGroup.scale}).addTo(this.renderGroup)
+    this.stavesGroup = new Two.Group()
+    this.stavesGroup.translation.set(0, -STAFF_HEIGHT_OFFSET)
+    this.stavesGroup.addTo(this.renderGroup)
+
+    this.addStaff(new StaffGroup({
+      getAsset: this.getAsset.bind(this),
+      clef: "g",
+      keySignature: 4,
+      width: initialWidth / this.renderGroup.scale
+    }))
+
+    this.addStaff(new StaffGroup({
+      getAsset: this.getAsset.bind(this),
+      clef: "f",
+      keySignature: -7,
+      width: initialWidth / this.renderGroup.scale
+    }))
 
     this.two.update()
   }
 
-  makeStaff(params={}) {
-    const group = new Two.Group()
+  // add StaffGroup to list of staves managed by this component
+  addStaff(staffGroup) {
+    const STAFF_ALIGN = 500
 
-    let marginX = 0 // the left coordinate where the next item will be drawn
+    this.staves ||= []
+    this.staves.push(staffGroup)
 
-    let bar = this.makeBar(0, 0, BAR_WIDTH, STAFF_INNER_HEIGHT)
-    group.add(bar)
-    marginX += BAR_WIDTH
+    staffGroup.render()
+      .addTo(this.stavesGroup)
+      .translation.set(0, (this.staves.length - 1) * STAFF_ALIGN)
+  }
 
-    this.lines ||= []
+  getAsset(name) {
+    const domNode = this.assets[name].current
 
-
-    console.log("initial width", params.width)
-    for (let i = 0; i < 5; i++) {
-      let line = this.makeBar(marginX, i*LEDGER_DY, params.width / 2 || 1000, LEDGER_HEIGHT)
-
-      console.log("created line", line.vertices.map(v => [v.x, v.y].join(",") ), "from",
-        marginX, i*LEDGER_DY, params.width / 2 || 1000, LEDGER_HEIGHT
-      )
-
-      // line.corner()
-      group.add(line)
-      this.lines.push(line)
+    if (!domNode) {
+      throw new Error("Failed to find asset by name: " + name)
     }
 
-    let clef = this.two.interpret(this.assets.gclef.current).addTo(group)
-    marginX += CLEF_GAP
-    clef.translation.set(marginX, STAFF_HEIGHT_OFFSET + 14)
-
-    marginX += clef.getBoundingClientRect().width
-
-    // test sharp signature
-    let keySignature = this.makeKeySignature("sharp", 7)
-    marginX += CLEF_GAP
-    keySignature.translation.set(marginX,  0)
-    group.add(keySignature)
-    marginX += keySignature.getBoundingClientRect().width
-
-    // test flat signature
-    let flatSignature = this.makeKeySignature("flat", 7)
-    marginX += CLEF_GAP
-    flatSignature.translation.set(marginX,  0)
-    group.add(flatSignature)
-    marginX += flatSignature.getBoundingClientRect().width
-
-    group.translation.set(0, -STAFF_HEIGHT_OFFSET)
-
-    // TODO: this should also return the offset where notes can start to be placed
-    return group
+    const asset = this.two.interpret(domNode)
+    asset.remove() // remove it from default scene
+    return asset
   }
 
-  makeKeySignature(type, count) {
-    let offsets, asset
-
-    // these offsets apply to G clef with default staff height offset
-    if (type == "flat") {
-      offsets = [133, 42, 158, 67, 191, 100, 216]
-      asset = this.assets.flat.current
-    } else if (type == "sharp") {
-      offsets = [42, 129, 14, 101, 187, 71, 158]
-      asset = this.assets.sharp.current
-    } else {
-      throw new Error("Unknown type for makeKeySignature: " + type)
-    }
-
-    let group = new Two.Group()
-
-    let offsetX = 0
-    const accidentalGap = 4
-    for (var k = 0; k < 7; k++) {
-      let a = this.two.interpret(asset)
-      a.translation.set(offsetX, offsets[k] + STAFF_HEIGHT_OFFSET)
-      offsetX += a.getBoundingClientRect().width + accidentalGap
-      group.add(a)
-    }
-
-    return group
-  }
-
-  // render all the notes as quarter notes
-  makeNotes() {
-    const group = new Two.Group()
-  }
-
-  // this makes a rectangle with the origin on the top left, since the built in
-  // make rectangle function uses the center for some reason
-  makeBar(x,y,w,h) {
-    let bar = this.two.makePath(x, y,
-      x + w, y,
-      x + w, y + h,
-      x, y + h,
-      true
-    )
-
-    bar.fill = "black"
-    bar.noStroke()
-
-    return bar
-  }
 
   render() {
     return <div className="notes_staff" ref={this.containerRef}>
