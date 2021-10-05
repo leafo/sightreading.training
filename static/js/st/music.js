@@ -181,6 +181,10 @@ export class KeySignature {
     this.count = count;
   }
 
+  getCount() {
+    return this.count
+  }
+
   isChromatic() {
     false
   }
