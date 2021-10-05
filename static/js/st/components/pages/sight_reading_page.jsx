@@ -372,8 +372,18 @@ export default class SightReadingPage extends React.Component {
     });
   }
 
+  setKeySignature(k) {
+    this.setState({
+      keySignature: k,
+      notes: null
+    })
+  }
+
   setStaff(staff, callback) {
-    let update = {currentStaff: staff}
+    let update = {
+      currentStaff: staff,
+      notes: null
+    }
 
     // if the current generator is not compatible with new staff change it
     if (!this.state.currentGenerator || (this.state.currentGenerator.mode != staff.mode)) {
@@ -485,8 +495,7 @@ export default class SightReadingPage extends React.Component {
           currentGeneratorSettings: settings,
         })}
 
-        setStaff={this.setStaff.bind(this)}
-        setKeySignature={k => this.setState({keySignature: k})}
+        setStaff={this._setStaff ||= this.setStaff.bind(this)}
       />
     </CSSTransition>
   }
