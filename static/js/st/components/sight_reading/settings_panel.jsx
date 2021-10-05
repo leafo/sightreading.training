@@ -12,7 +12,7 @@ import {ENABLE_PRESETS} from "st/globals"
 
 import {getSession} from "st/app"
 
-export class SettingsPanel extends React.Component {
+export class SettingsPanel extends React.PureComponent {
   static propTypes = {
     close: types.func.isRequired,
     staves: types.array.isRequired,

@@ -480,7 +480,7 @@ export default class SightReadingPage extends React.Component {
 
     return <CSSTransition classNames="slide_right" timeout={{enter: 200, exit: 100}}>
       <SettingsPanel
-        close={this.toggleSettings.bind(this)}
+        close={this._toggleSettings ||= this.toggleSettings.bind(this)}
         staves={STAVES}
         generators={GENERATORS}
         saveGeneratorPreset={this.state.savingPreset}
@@ -490,7 +490,7 @@ export default class SightReadingPage extends React.Component {
         currentStaff={this.state.currentStaff}
         currentKey={this.state.keySignature}
 
-        setGenerator={(g, settings) => this.setState({
+        setGenerator={this._setGenerator ||= (g, settings) => this.setState({
           currentGenerator: g,
           currentGeneratorSettings: settings,
         })}
