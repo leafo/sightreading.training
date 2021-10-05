@@ -25,7 +25,7 @@ export class Staff extends React.Component {
     keySignature: types.object,
 
     // state props
-    notes: types.array.isRequired,
+    notes: types.array,
     heldNotes: types.object.isRequired,
     inGrand: types.bool,
     scale: types.number,
@@ -77,10 +77,6 @@ export class Staff extends React.Component {
 
     if (this.props.notes instanceof SongNoteList) {
       staffNotes = <StaffSongNotes ref="notes" {...this.props}></StaffSongNotes>
-    }
-
-    if (!staffNotes) {
-      return <div data-error="Missing note list" />
     }
 
     let height = DEFAULT_HEIGHT * (this.props.scale || 1)
