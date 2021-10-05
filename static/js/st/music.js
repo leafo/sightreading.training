@@ -802,3 +802,37 @@ export class Chord extends Scale {
 }
 
 
+export class Staff {
+  static forName(name) {
+    if (!this.cache) {
+      this.cache = Object.fromEntries(this.allStaves().map(s => [s.name, s]))
+    }
+
+    return this.cache[name]
+  }
+
+  static allStaves() {
+    return [
+      new Staff("treble", "E5", "F6", "G5"),
+      new Staff("bass", "G3", "A4", "F4")
+      // TODO: alto, middle C center
+    ]
+  }
+
+  // upper and lower note are the notes for the lines on the top and bottom
+  constructor(name, lowerNote, upperNote, clefNote) {
+    this.name = name
+    this.lowerNote = lowerNote
+    this.upperNote = upperNote
+    this.clefNote = clefNote
+  }
+
+  // F, G, etc
+  clefName() {
+    let [, letter] = this.clefNote.match(/^([A-G])/);
+    return letter;
+  }
+}
+
+
+

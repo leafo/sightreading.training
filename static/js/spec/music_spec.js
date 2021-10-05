@@ -1,7 +1,7 @@
 import {
   notesLessThan, notesGreaterThan, compareNotes, noteName, parseNote, notesSame,
   noteStaffOffset,
-  MajorScale, MinorScale, HarmonicMinorScale, AscendingMelodicMinorScale, Chord, KeySignature, ChromaticScale
+  MajorScale, MinorScale, HarmonicMinorScale, AscendingMelodicMinorScale, Chord, KeySignature, ChromaticScale, Staff
 } from "st/music"
 
 describe("music", function() {
@@ -658,6 +658,44 @@ describe("noteStaffOffset", function() {
       26,27,28,
       26,27,28,
     ])
+  })
+})
+
+
+describe("staff", function() {
+  it("gets all staves", function() {
+    const staves = Staff.allStaves()
+
+    expect(staves.map((s) => ({
+      name: s.name,
+      lower: s.lowerNote,
+      upper: s.upperNote,
+      clefNote: s.clefNote,
+      clefName: s.clefName(),
+    }))).toEqual([
+      {
+        name: "treble",
+        lower: "E5",
+        upper: "F6",
+        clefNote: "G5",
+        clefName: "G"
+      },
+      {
+        name: "bass",
+        lower: "G3",
+        upper: "A4",
+        clefNote: "F4",
+        clefName: "F"
+      }
+    ])
+  })
+
+  it ("gets staff by name", function() {
+    for (let name of ["bass", "treble"]) {
+      expect(Staff.forName(name).name).toEqual(name)
+    }
+
+    console.log(Staff.cache)
   })
 })
 
