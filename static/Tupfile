@@ -1,17 +1,18 @@
 .gitignore
 include_rules
 
-: js/st/main.jsx | js/st/song_parser_peg.js js/st/staff_assets.jsx |> NODE_PATH=$(TOP)/static/js npx esbuild %f --log-level=warning --bundle > %o |> main.js
-: js/st/main.jsx | main.js |> NODE_PATH=$(TOP)/static/js npx esbuild %f --log-level=warning --bundle --minify > %o |> main.min.js
+: js/st/main.jsx | js/st/song_parser_peg.js js/st/staff_assets.jsx |> !esbuild_bundle |> main.js | main.js.map
+: js/service_worker.js |> !esbuild_bundle |> service_worker.js | service_worker.js.map
 
-: js/service_worker.js |> NODE_PATH=$(TOP)/static/js npx esbuild %f --log-level=warning --bundle --minify > %o |> service_worker.js
+: main.js |> !minify |> main.min.js
+: service_worker.js |> !minify |> service_worker.min.js
 
 # there is no esm compatible way to import jasmine for specs so we concat all the files
 : $(TOP)/node_modules/jasmine-core/lib/jasmine-core/jasmine.js $(TOP)/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js $(TOP)/node_modules/jasmine-core/lib/jasmine-core/boot.js |> !join_js |> jasmine.js
 
 : $(TOP)/node_modules/jasmine-core/lib/jasmine-core/jasmine.css |> cp %f %o |> specs.css
 
-: js/specs.js | main.js |> NODE_PATH=$(TOP)/static/js npx esbuild %f --log-level=warning --bundle > %o |> specs.js
+: js/specs.js | main.js |> !esbuild_bundle |> specs.js | specs.js.map
 
 : scss/*.css |> cat %f > %o |> style.css
 : style.css |> sassc -t compressed %f > %o |> style.min.css

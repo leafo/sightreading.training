@@ -6,6 +6,9 @@ TOP = $(TUP_CWD)
 # we insert \n; to ensure that two blocks of adjacent minified code do not interfere
 !join_js = |> ^ join js %f > %o^ (for file in %f; do cat "$file"; echo -e "\n;"; done) > %o |>
 
-!pegjs = |> npx pegjs -o %o %f  |>
+!pegjs = |> ^ pegjs %f^ $(TOP)/node_modules/.bin/pegjs -o %o %f  |>
+
+!esbuild_bundle = |> NODE_PATH=$(TOP)/static/js $(TOP)/node_modules/.bin/esbuild %f --log-level=warning --bundle --sourcemap=external --outfile=%o |>
+!minify = |> $(TOP)/node_modules/.bin/esbuild --minify --target=es6 %f --log-level=error --outfile=%o |>
 
 : foreach *.moon |> moonc %f |> %B.lua
