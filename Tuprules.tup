@@ -8,7 +8,7 @@ TOP = $(TUP_CWD)
 
 !pegjs = |> ^ pegjs %f^ $(TOP)/node_modules/.bin/pegjs -o %o %f  |>
 
-!esbuild_bundle = |> NODE_PATH=$(TOP)/static/js $(TOP)/node_modules/.bin/esbuild %f --log-level=warning --bundle --sourcemap=external --outfile=%o |>
-!minify = |> $(TOP)/node_modules/.bin/esbuild --minify --target=es6 %f --log-level=error --outfile=%o |>
+!esbuild_bundle = |> ^ esbuild %f^ NODE_PATH=$(TOP)/static/js $(TOP)/node_modules/.bin/esbuild %f --log-level=warning --bundle --sourcemap --outfile=%o |>
+!minify = |> ^ minify %f > %o^ $(TOP)/node_modules/.bin/esbuild --minify --target=es6 %f --log-level=error --outfile=%o |>
 
 : foreach *.moon |> moonc %f |> %B.lua
