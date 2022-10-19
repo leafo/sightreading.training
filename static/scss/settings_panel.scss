@@ -10,16 +10,12 @@
     position: fixed;
     overflow: auto;
     left: 0;
-    top: 0;
+    top: $header_height;
     bottom: 0;
     background: #D6D6D6;
     width: $settings_panel_width;
     border-right: 2px solid $border_color;
     z-index: 1;
-
-    @media (min-height: 750px) {
-        top: $header_height;
-    }
 
     &.slide_right-enter {
         opacity: 0;
