@@ -57,11 +57,6 @@ class Layout extends Widget
 
         @include_js "main"
 
-        -- if config.sentry_url
-        --   script src: "https://cdn.ravenjs.com/3.9.1/raven.min.js"
-        --   script ->
-        --     raw "Raven.config(#{to_json config.sentry_url}).install()"
-
   initial_state: =>
     out = { }
     if @current_user
