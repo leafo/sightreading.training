@@ -244,11 +244,6 @@ form, .form {
         border-radius: 4px;
         box-shadow: 0 0 20px rgba(black, 0.2);
 
-        &:focus {
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(blue, 0.2), 0 0 20px rgba(black, 0.2);
-        }
-
         .midi_button_wrapper {
             padding: 8px 10px 5px 10px;
             display: flex;

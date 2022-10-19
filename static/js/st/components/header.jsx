@@ -7,6 +7,8 @@ import {trigger} from "st/events"
 import MidiButton from "st/components/midi_button"
 import {IconDownArrow} from "st/components/icons"
 
+import Lightbox from "st/components/lightbox"
+
 import {getSession} from "st/app"
 
 class SizedElement extends React.Component {
@@ -75,42 +77,41 @@ export default class Header extends React.Component {
     let showMidiButton = !this.state.width || this.state.width < 450
 
     if (this.state.menuOpen) {
-      let account_area = null
+      let accountArea = null
       const session = getSession()
 
       if (session.currentUser) {
-        account_area = <div className="account_area logged_in">
+        accountArea = <div className="account_area logged_in">
           <span className="username">
             {session.currentUser.username}
           </span>
           <a href="#" onClick={this.props.doLogout}>Log out</a>
         </div>
       } else {
-        account_area = <div className="account_area logged_out">
+        accountArea = <div className="account_area logged_out">
           <NavLink to="/login" activeClassName="active">Log in</NavLink>
           <NavLink to="/register" activeClassName="active">Register</NavLink>
         </div>
       }
 
-      menu = <div
+      menu = <Lightbox
         key="navigation_menu"
-        ref={el => {
-          if (el) {
-            el.focus()
-          }
-        }}
+        className="navigation_menu"
         onClick={e => {
           if (e.target.matches("a")) {
             this.setState({ menuOpen: false })
           }
         }}
-        className="navigation_menu" tabIndex="-1">
-        {account_area}
+        onClose={(lb) => {
+          this.setState({ menuOpen: false })
+        }}
+      >
+        {accountArea}
         {showMidiButton ? <div className="midi_button_wrapper">{this.renderMidiButton()}</div> : null}
         <ul>
           {userLinks.map((link, i) => <li key={i}>{link}</li>)}
         </ul>
-      </div>
+      </Lightbox>
     }
 
     return <div className="menu_toggle">
