@@ -1,4 +1,5 @@
 @import "include/common";
+@import "../fonts/Raleway/stylesheet";
 
 body {
     color: $body_color;
@@ -177,6 +178,7 @@ form, .form {
     left: 0;
     right: 0;
     z-index: 20;
+    gap: 20px;
 
     width: 100%;
 
@@ -187,19 +189,11 @@ form, .form {
         flex: 1;
         display: flex;
         align-items: center;
-        margin: 0 20px;
+        gap: 20px;
         color: #666;
 
         > a, > .right_section {
             white-space: nowrap;
-        }
-
-        > * {
-            margin-right: 20px;
-
-            &:last-child {
-                margin-right: 0;
-            }
         }
     }
 
@@ -310,7 +304,6 @@ form, .form {
 
     .logo, .logo_small {
         opacity: 0.7;
-        margin-right: 10px;
         display: block;
     }
 

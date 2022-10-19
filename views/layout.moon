@@ -17,7 +17,7 @@ class Layout extends Widget
         else
           link rel: "stylesheet", href: "/static/style.css?#{buster}"
 
-        link rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Raleway"
+        -- link rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Raleway"
         link rel: "icon", sizes: "144x144", href: "/static/img/icon-144.png"
         link rel: "manifest", href: @build_url "/static/manifest.json", scheme: config.default_scheme
 
