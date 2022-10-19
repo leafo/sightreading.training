@@ -39,28 +39,30 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     render() {
       let settings = this.props.currentSettings
 
-      return <div>
+      return <>
         <section className="settings_group">
           <h4>Key signature</h4>
-          {KeySignature.allKeySignatures().map(ks => {
-            let count = "" + ks.count
-            return <label key={ks.name()}>
-              <input
-                checked={settings.keySignatures[count] || false}
-                onChange={e =>
-                  this.props.updateSettings({
-                    ...settings,
-                    keySignatures: {
-                      ...settings.keySignatures,
-                      [count]: !settings.keySignatures[count]
-                    }
-                  })
-                }
-                type="checkbox" />
-              {" "}
-              {ks.name()}
-            </label>
-          })}
+          <div className="button_group">
+            {KeySignature.allKeySignatures().map(ks => {
+              let count = "" + ks.count
+              return <label key={ks.name()}>
+                <input
+                  checked={settings.keySignatures[count] || false}
+                  onChange={e =>
+                    this.props.updateSettings({
+                      ...settings,
+                      keySignatures: {
+                        ...settings.keySignatures,
+                        [count]: !settings.keySignatures[count]
+                      }
+                    })
+                  }
+                  type="checkbox" />
+                {" "}
+                {ks.name()}
+              </label>
+            })}
+          </div>
         </section>
         <section className="settings_group">
           <h4>Inversions</h4>
@@ -78,7 +80,7 @@ export default class ChordIdentificationExercise extends React.PureComponent {
             Enabled
           </label>
         </section>
-      </div>
+      </>
     }
   }
 

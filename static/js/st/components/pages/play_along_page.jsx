@@ -51,8 +51,8 @@ class SettingsPanel extends React.Component {
 
     return <section className="settings_panel">
       <div className="settings_header">
-        <button onClick={this.props.close}>Close</button>
         <h3>Settings</h3>
+        <button onClick={this.props.close}>Close</button>
       </div>
 
       <section className="settings_group">
@@ -87,18 +87,22 @@ class SettingsPanel extends React.Component {
   }
 
   renderAutochords() {
-    return AutoChords.allGenerators.map((type, idx) => {
-      let name = type.displayName
+    return <div className="button_group">
+      {
+        AutoChords.allGenerators.map((type, idx) => {
+          let name = type.displayName
 
-      return <button
-        onClick={(e) => trigger(this, "setAutochords", idx)}
-        className={classNames("toggle_option", {
-          active: idx == this.props.autoChordType
-        })}
-        key={name}>
-          {name}
-        </button>
-    })
+          return <button
+            onClick={(e) => trigger(this, "setAutochords", idx)}
+            className={classNames("toggle_option", {
+              active: idx == this.props.autoChordType
+            })}
+            key={name}>
+              {name}
+            </button>
+        })
+      }
+    </div>
   }
 }
 

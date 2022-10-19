@@ -26,8 +26,8 @@ class SettingsPanel extends React.PureComponent {
   render() {
     return <section className="settings_panel">
       <div className="settings_header">
-        <button onClick={this.props.close}>Close</button>
         <h3>Settings</h3>
+        <button onClick={this.props.close}>Close</button>
       </div>
 
       <section className="settings_group">

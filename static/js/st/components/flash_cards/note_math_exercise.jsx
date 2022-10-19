@@ -33,29 +33,30 @@ export default class NoteMathExercise extends React.PureComponent {
 
       return <section className="settings_group">
         <h4>Root notes</h4>
-        {notes.map((note) =>
-          <label
-            key={note}
-            className={classNames("test_group", {
-              selected: settings.enabledRoots[note]
-            })}>
-            <input
-              type="checkbox"
-              checked={settings.enabledRoots[note] || false}
-              onChange={(e) => {
-                this.props.updateSettings({
-                  ...settings,
-                  enabledRoots: {
-                    ...settings.enabledRoots,
-                    [note]: !settings.enabledRoots[note]
-                  }
-                })
-              }}
-              />
-            {note}
-          </label>
-        )}
-
+        <div className="button_group">
+          {notes.map((note) =>
+            <label
+              key={note}
+              className={classNames("test_group", {
+                selected: settings.enabledRoots[note]
+              })}>
+              <input
+                type="checkbox"
+                checked={settings.enabledRoots[note] || false}
+                onChange={(e) => {
+                  this.props.updateSettings({
+                    ...settings,
+                    enabledRoots: {
+                      ...settings.enabledRoots,
+                      [note]: !settings.enabledRoots[note]
+                    }
+                  })
+                }}
+                />
+              {note}
+            </label>
+          )}
+        </div>
       </section>
     }
   }
