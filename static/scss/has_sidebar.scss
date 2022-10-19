@@ -50,10 +50,12 @@
 
     .content_column {
         flex: 1;
+        min-width: 0;
     }
 
     .sidebar {
         width: 250px;
+        flex: none;
         box-sizing: border-box;
         background: #EFEFEF;
         padding: 20px;

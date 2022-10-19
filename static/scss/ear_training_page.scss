@@ -11,11 +11,7 @@
         padding: 20px;
         display: flex;
         align-items: center;
-
-        .toggle_sidebar_button {
-            margin-right: 10px;
-        }
-
+        gap: 10px;
 
         @media (max-width: 900px) {
             padding-bottom: 0;
@@ -207,11 +203,11 @@
         min-height: 100%;
         display: flex;
         flex-direction: column;
+        gap: 20px;
 
         details.instructions {
             margin-bottom: 10px;
             summary {
-                display: inline;
                 cursor: pointer;
                 font-weight: bold;
             }
@@ -223,9 +219,8 @@
         }
 
         .page_container {
-            margin-top: 20px;
-            margin-bottom: 20px;
-
+            margin-top: 0;
+            margin-bottom: 0;
             > p:first-child {
                 margin-top: 0;
             }
@@ -258,10 +253,6 @@
         .slider_component {
             display: block;
         }
-
-        > :last-child {
-            margin-bottom: 0;
-        }
     }
 
     fieldset {
@@ -275,17 +266,19 @@
     }
 
     .range_picker {
-        button  {
-            margin-right: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
 
+        button  {
             &.active {
                 background-color: lighten($button_color, 10%);
                 box-shadow: 0 0 0 2px darken($border_color, 20%);
             }
+        }
 
-            &:last-child {
-                margin-right: 0;
-            }
+        .current_range {
+            margin-left: auto;
         }
     }
 
