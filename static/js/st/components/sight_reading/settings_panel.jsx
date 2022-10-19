@@ -35,8 +35,8 @@ export class SettingsPanel extends React.PureComponent {
   render() {
     return <section className="settings_panel">
       <div className="settings_header">
-        <button onClick={this.props.close}>Close</button>
         <h3>Settings</h3>
+        <button onClick={this.props.close}>Close</button>
       </div>
 
       {this.renderPresets()}
@@ -125,46 +125,55 @@ export class SettingsPanel extends React.PureComponent {
   }
 
   renderStaves() {
-    return this.props.staves.map((staff, i) => {
-      return <button
-        type="button"
-        key={staff.name}
-        onClick={(e) => {
-          e.preventDefault();
-          this.props.setStaff(staff);
-        }}
-        className={classNames("toggle_option", {
-          active: this.props.currentStaff == staff
-        })}>
-        {staff.name}</button>;
-    })
+    return <div className="button_group">
+      {
+        this.props.staves.map((staff, i) => {
+          return <button
+            type="button"
+            key={staff.name}
+            onClick={(e) => {
+              e.preventDefault();
+              this.props.setStaff(staff);
+            }}
+            className={classNames("toggle_option", {
+              active: this.props.currentStaff == staff
+            })}>
+            {staff.name}</button>;
+        })
+      }
+    </div>
   }
 
   renderGenerators() {
-    return this.props.generators.map((generator, i) => {
-      if (generator.debug) {
-        return
+    return <div className="button_group">
+      {
+        this.props.generators.map((generator, i) => {
+          if (generator.debug) {
+            return
+          }
+
+          if (generator.mode != this.props.currentStaff.mode) {
+            return
+          }
+
+
+          return <button
+            key={generator.name}
+            onClick={(e) => {
+              e.preventDefault();
+              this.props.setGenerator(
+                generator,
+                fixGeneratorSettings(generator, this.props.currentGeneratorSettings)
+              )
+            }}
+
+            className={classNames("toggle_option", {
+              active: this.props.currentGenerator == generator
+            })}>
+            {generator.name}</button>;
+        })
       }
-
-      if (generator.mode != this.props.currentStaff.mode) {
-        return
-      }
-
-      return <button
-        key={generator.name}
-        onClick={(e) => {
-          e.preventDefault();
-          this.props.setGenerator(
-            generator,
-            fixGeneratorSettings(generator, this.props.currentGeneratorSettings)
-          )
-        }}
-
-        className={classNames("toggle_option", {
-          active: this.props.currentGenerator == generator
-        })}>
-        {generator.name}</button>;
-    })
+    </div>
   }
 
   renderGeneratorInputs() {
@@ -194,10 +203,13 @@ export class SettingsPanel extends React.PureComponent {
           {key.name()}
         </button>
 
-
-    return KeySignature.allKeySignatures().concat([
-      new ChromaticKeySignature()
-    ]).map(key => keyButton(key))
+    return <div className="button_group">
+      {
+        KeySignature.allKeySignatures().concat([
+          new ChromaticKeySignature()
+        ]).map(key => keyButton(key))
+      }
+    </div>
   }
 }
 
