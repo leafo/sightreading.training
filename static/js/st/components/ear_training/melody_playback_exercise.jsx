@@ -278,6 +278,9 @@ export default class MelodyPlaybackExercise extends React.Component {
             }}
             key={r.name}>{r.name}</button>
         })}
+        <span className="current_range">
+          {this.state.melodyRange.join(" - ")}
+        </span>
       </fieldset>
 
       <fieldset>
