@@ -40,6 +40,47 @@
         }
     }
 
+    .slider_group {
+        flex: 1;
+        border: 1px solid $border_color;
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        min-height: 26px;
+
+        > span {
+            font-size: 12px;
+            font-weight: bold;
+            &:first-child {
+                padding-left: 5px;
+            }
+        }
+
+        code {
+            min-width: 28px;
+            text-align: center;
+        }
+
+        > .shuffle_button {
+            padding: 2px 8px;
+            border: 0;
+            border-radius: 0;
+            font-size: 12px;
+            align-self: stretch;
+        }
+
+        > .slider_component {
+            flex: 1;
+            min-width: 0;
+
+            .slider_track {
+                flex: 1;
+                min-width: 0;
+            }
+        }
+    }
+
     .melody_recognition_exercise {
         .page_container {
             margin-top: 20px;
@@ -134,42 +175,6 @@
                 }
 
 
-                .slider_group {
-                    flex: 1;
-                    border: 1px solid $border_color;
-                    border-radius: 3px;
-                    display: flex;
-
-                    > * {
-                        padding: 5px 3px;
-                        display: flex;
-                        align-items: center;
-                    }
-
-                    > span {
-                        font-size: 14px;
-                        font-weight: bold;
-                    }
-
-                    code {
-                        min-width: 30px;
-                        text-align: center;
-                    }
-
-                    > .shuffle_button {
-                        padding: 2px 8px;
-                        border: 0;
-                        border-radius: 0;
-                        font-size: 12px;
-                    }
-
-                    > .slider_component {
-                        flex: 1;
-                        .slider_track {
-                            flex: 1;
-                        }
-                    }
-                }
             }
 
             .current_song {
@@ -229,17 +234,10 @@
         .stat_controls {
             display: flex;
             align-items: center;
-            > * {
-                margin-right: 10px;
-
-                &:last-child {
-                    margin-right: 0;
-                }
-            }
+            gap: 10px;
 
             > .stats_row {
-                flex: 1;
-                text-align: right;
+                margin-left: auto;
             }
         }
 
@@ -248,10 +246,6 @@
             > .spacer {
                 flex: 1;
             }
-        }
-
-        .slider_component {
-            display: block;
         }
     }
 

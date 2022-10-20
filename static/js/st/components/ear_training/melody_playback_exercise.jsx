@@ -185,12 +185,17 @@ export default class MelodyPlaybackExercise extends React.Component {
   render() {
     let locked = this.state.playing || this.state.locked || false
 
-    let repeatButton
+    let repeatButton, firstToggle
     if (this.state.currentNotes) {
       repeatButton = <button disabled={locked} onClick={(e) => {
         e.preventDefault()
         this.playMelody()
       }}>Repeat melody</button>
+
+      firstToggle = <details>
+        <summary>First Note</summary>
+        {this.state.currentNotes[0]}
+      </details>
     }
 
     let ranges = [
@@ -217,7 +222,9 @@ export default class MelodyPlaybackExercise extends React.Component {
           e.preventDefault()
           this.pushMelody()
         }}>New melody</button>
-        <span>{this.state.statusMessage}</span>
+        {firstToggle}
+
+        <strong>{this.state.statusMessage}</strong>
 
         <div className="stats_row">
           <div className="stat_container">
@@ -229,12 +236,14 @@ export default class MelodyPlaybackExercise extends React.Component {
 
       <fieldset>
         <legend>Notes per melody</legend>
-        <Slider
-          min={2}
-          max={8}
-          onChange={this.setNotesPerMelody}
-          value={this.state.notesPerMelody} />
-        <span>{this.state.notesPerMelody}</span>
+        <div className="slider_group">
+          <Slider
+            min={2}
+            max={8}
+            onChange={this.setNotesPerMelody}
+            value={this.state.notesPerMelody} />
+          <code>{this.state.notesPerMelody}</code>
+        </div>
 
         <span className="spacer"></span>
 
@@ -248,19 +257,20 @@ export default class MelodyPlaybackExercise extends React.Component {
 
           <span className="label">Continuous melody</span>
         </label>
-
       </fieldset>
 
       <fieldset>
         <legend>Notes per column</legend>
-        <Slider
-          min={1}
-          max={4}
-          onChange={(value) => {
-            this.setState({ notesPerColumn: value })
-          }}
-          value={this.state.notesPerColumn} />
-        <span>{this.state.notesPerColumn}</span>
+        <div className="slider_group">
+          <Slider
+            min={1}
+            max={4}
+            onChange={(value) => {
+              this.setState({ notesPerColumn: value })
+            }}
+            value={this.state.notesPerColumn} />
+          <code>{this.state.notesPerColumn}</code>
+        </div>
       </fieldset>
 
       <fieldset className="range_picker">
