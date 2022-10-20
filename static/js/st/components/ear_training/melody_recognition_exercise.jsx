@@ -493,7 +493,11 @@ export default class MelodyRecognitionExercise extends React.Component {
       }
 
       currentSongTools = <div className="current_song">
-        <div className="song_title">{title}</div>
+        <details>
+          <summary>Show Interval & Title</summary>
+          <div className="song_title">{title}</div>
+        </details>
+
         <div className="song_controls">
           <button
             disabled={disabled}
@@ -521,7 +525,7 @@ export default class MelodyRecognitionExercise extends React.Component {
       </div>
     } else {
       currentSongTools = <div className="current_song">
-        Press <strong>Next melody</strong> to randomly pick a interval to practice
+        <p>Press <strong>Next melody</strong> to randomly pick a interval to practice</p>
       </div>
     }
 

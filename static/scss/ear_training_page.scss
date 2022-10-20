@@ -181,9 +181,15 @@
                 margin-top: 20px;
                 background: mix(white, $body_background, 50%);
                 padding: 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                > p {
+                    margin: 0;
+                }
 
                 .song_title {
-                    margin-bottom: 10px;
                     font-weight: bold;
                     font-size: 18px;
                 }
@@ -191,14 +197,7 @@
                 .song_controls {
                     display: flex;
                     align-items: center;
-
-                    > * {
-                        margin-right: 10px;
-
-                        &:last-child {
-                            margin-right: 0;
-                        }
-                    }
+                    gap: 10px;
                 }
             }
         }
