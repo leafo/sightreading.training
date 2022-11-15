@@ -5,28 +5,27 @@ db = require "lapis.db"
 
 trimmed_text = types.string / trim * types.custom(
   (v) -> v != "", "is empty string"
-  describe: -> "not empty"
-)
+)\describe "text"
 
-empty = types.one_of {
+empty = types.one_of({
   types.nil
   types.pattern("^%s*$") / nil
-}, describe: -> "empty"
+})\describe "empty"
 
 integer = (types.one_of {
   types.number
   types.string / tonumber * types.number
-}, describe: -> "integer") / math.floor
+})\describe("integer") / math.floor
 
-number = (types.one_of {
+number = types.one_of({
   types.number
   types.string / tonumber * types.number
-}, describe: -> "number")
+})\describe "number"
 
 db_id = types.one_of({
   types.number * types.custom (v) -> v == math.floor(v)
   types.string / trim * types.pattern("^%d+$") / tonumber
-}, describe: -> "integer") * types.range(0, 2147483647)
+})\describe("integer") * types.range(0, 2147483647)\describe("database id")
 
 db_nullable = (t) ->
   t + empty / db.NULL
@@ -34,11 +33,10 @@ db_nullable = (t) ->
 db_enum = (e) ->
   names = {unpack e}
 
-  types.one_of {
+  types.one_of({
     types.one_of(names) / e\for_db
     integer / (v) -> e[v] and e\for_db v
-  }, describe: ->
-    "enum(#{table.concat names, ", "})"
+  })\describe "enum(#{table.concat names, ", "})"
 
 truncated_text = (len) ->
   trimmed_text * types.string\length(1,len)\on_repair (s) -> s\sub 1, len
