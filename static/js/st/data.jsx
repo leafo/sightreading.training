@@ -64,7 +64,7 @@ export const STAVES = [
   },
   {
     mode: "notes",
-    name: "electric-bass",
+    name: "upright",
     range: ["C2", "E4"],
     render: function(props=this.state) {
       return <F8Staff
