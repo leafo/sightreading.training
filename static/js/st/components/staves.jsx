@@ -189,6 +189,16 @@ export class FStaff extends Staff {
   }
 }
 
+export class F8Staff extends Staff {
+  static defaultProps = {
+    keySignatureCenter: "F3",
+    upperRow: 26,
+    lowerRow: 18,
+    cleffImage: "/static/svg/clefs.F_change.svg",
+    staffClass: "f8_staff",
+  }
+}
+
 export class GrandStaff extends React.Component {
   constructor(props) {
     super(props)
