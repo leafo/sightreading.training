@@ -95,7 +95,10 @@ class Users extends Model
     super opts
 
   check_password: (pass) =>
-    bcrypt.verify pass, @encrypted_password
+    -- this is to allow the invalid 2y format type to gracfully upgrade, the
+    -- password will be re-hashed on next login
+    hash = @encrypted_password\gsub "^%$2y%$", "$2b$"
+    bcrypt.verify pass, hash
 
   password_is_outdated: =>
     return false unless @encrypted_password
