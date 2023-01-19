@@ -64,6 +64,11 @@ class Users extends Model
     if user and user\check_password password
       if user\is_deleted!
         return nil, "Account no longer exists"
+
+      -- see if password is outdated and rehash it
+      if user\password_is_outdated!
+        user\update_password password
+
       user
     else
       nil, "Incorrect username or password"
