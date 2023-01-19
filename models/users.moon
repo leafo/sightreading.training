@@ -5,6 +5,8 @@ import slugify, from_json from require "lapis.util"
 bcrypt = require "bcrypt"
 date = require "date"
 
+BCRYPT_ROUNDS = 7
+
 unless bcrypt.salt
   bcrypt.salt = (v) -> v
 
@@ -77,7 +79,7 @@ class Users extends Model
     assert opts.password, "missing password"
     assert opts.email, "missing email"
 
-    opts.encrypted_password = bcrypt.digest opts.password, bcrypt.salt 5
+    opts.encrypted_password = bcrypt.digest opts.password, bcrypt.salt BCRYPT_ROUNDS
     opts.password = nil
 
     stripped = strip_non_ascii opts.username
@@ -90,8 +92,22 @@ class Users extends Model
   check_password: (pass) =>
     bcrypt.verify pass, @encrypted_password
 
+  password_is_outdated: =>
+    return false unless @encrypted_password
+
+    -- old format string
+    if @encrypted_password\match "^%$2y%$"
+      return true
+
+    -- rounds mismatch
+    rounds_str = "%02d"\format BCRYPT_ROUNDS
+    unless @encrypted_password\match "^%$..%$#{rounds_str}%$"
+      return true
+
+    false
+
   update_password: (pass, r) =>
-    @update encrypted_password: bcrypt.digest pass, bcrypt.salt 5
+    @update encrypted_password: bcrypt.digest pass, bcrypt.salt BCRYPT_ROUNDS
     @write_session r if r
 
   write_session: (r) =>
