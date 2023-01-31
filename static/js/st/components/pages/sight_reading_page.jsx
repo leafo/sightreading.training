@@ -26,6 +26,8 @@ import {TransitionGroup, CSSTransition} from "react-transition-group"
 
 import {getSession} from "st/app"
 
+import {NotesStaff} from "st/components/staff_two"
+
 const DEFAULT_NOTE_WIDTH = 100
 const DEFAULT_SPEED = 4
 
@@ -594,15 +596,29 @@ export default class SightReadingPage extends React.Component {
     </div>
 
     let staff
-    if (this.state.currentStaff && this.state.notes) {
-      staff = this.state.currentStaff.render.call(this, {
-        heldNotes: this.state.heldNotes,
-        notes: this.state.notes,
-        keySignature: this.state.keySignature,
-        noteWidth: this.state.noteWidth,
-        noteShaking: this.state.noteShaking,
-        scale: this.state.scale,
-      })
+
+    if (this.state.currentStaff) {
+      // new renderer with mode notes only
+      if (this.state.currentStaff.mode == "notes") {
+        staff = <NotesStaff
+           type = {this.state.currentStaff.name}
+           heldNotes = {this.state.heldNotes}
+           notes = {this.state.notes}
+           keySignature = {this.state.keySignature}
+           noteWidth = {this.state.noteWidth}
+           noteShaking = {this.state.noteShaking}
+           scale = {this.state.scale}
+          />
+      } else {
+        staff = this.state.currentStaff.render.call(this, {
+          heldNotes: this.state.heldNotes,
+          notes: this.state.notes,
+          keySignature: this.state.keySignature,
+          noteWidth: this.state.noteWidth,
+          noteShaking: this.state.noteShaking,
+          scale: this.state.scale,
+        })
+      }
     }
 
     return <div ref="workspace" className="workspace">

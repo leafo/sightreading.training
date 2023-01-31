@@ -250,6 +250,8 @@ export class KeySignature {
   }
 
   // key note -> raw note
+  // works with octavless notes as well
+  // notes with accidentals are passed through unchanged
   unconvertNote(note) {
     if (this.count == 0) {
       return note
@@ -260,6 +262,8 @@ export class KeySignature {
     }
 
     let [_, name, octave] = note.match(/^([A-G])(\d+)?/)
+
+    console.log("unconvertNote match:", note, _, name, octave)
 
     if (!name) {
       throw "can't unconvert note with accidental"
@@ -801,7 +805,6 @@ export class Chord extends Scale {
   }
 }
 
-
 export class Staff {
   static forName(name) {
     if (!this.cache) {
@@ -831,6 +834,18 @@ export class Staff {
   clefName() {
     let [, letter] = this.clefNote.match(/^([A-G])/);
     return letter;
+  }
+
+  range() {
+    return [this.lowerNote, this.upperNote]
+  }
+
+  // applies the key signature to the staff lines
+  rangeForKeySignature(keySignature) {
+    return [this.lowerNote, this.upperNote]
+  }
+
+  noteDistance(note, keySignature=null) {
   }
 }
 

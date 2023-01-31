@@ -278,8 +278,12 @@ export class NotesStaff extends React.PureComponent {
     }
   }
 
-  // this will update all the visibile notes
+  // this will update all the visible notes
   refreshNotes() {
+    if (!this.props.notes) {
+      return
+    }
+
     let col = 0
 
     const halfHeight = 29
