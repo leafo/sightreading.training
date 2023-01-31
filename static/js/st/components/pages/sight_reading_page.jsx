@@ -495,6 +495,7 @@ export default class SightReadingPage extends React.Component {
           currentGeneratorSettings: settings,
         })}
 
+        setKeySignature={this._setKeySignature ||= this.setKeySignature.bind(this)}
         setStaff={this._setStaff ||= this.setStaff.bind(this)}
       />
     </CSSTransition>
