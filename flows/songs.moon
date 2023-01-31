@@ -10,6 +10,8 @@ import Songs from require "models"
 import Flow from require "lapis.flow"
 
 import types from require "tableshape"
+
+types = require "lapis.validate.types"
 shapes = require "helpers.shapes"
 
 arrayify = ((types.equivalent({}) / nil) + types.any)\transform
@@ -132,36 +134,31 @@ class SongsFlow extends Flow
     }
 
   validate_song_params: (create=false) =>
-    trim_filter @params
-    assert_valid @params, {
-      {"song", type: "table"}
-    }
+    params = assert_valid @params, types.params_shape {
+      {"song", types.params_shape {
+        {"title",  types.truncated_text(160)}
+        {"song", types.truncated_text(1024*10)}
 
-    params = shapes.assert_params @params, {
-      song: types.shape {
-        title: shapes.truncated_text(160)
-        song: shapes.truncated_text(1024*10)
+        {"source", shapes.db_nullable types.truncated_text(250)}
+        {"album", shapes.db_nullable types.truncated_text(250)}
+        {"artist", shapes.db_nullable types.truncated_text(250)}
 
-        source: shapes.db_nullable shapes.truncated_text(250)
-        album: shapes.db_nullable shapes.truncated_text(250)
-        artist: shapes.db_nullable shapes.truncated_text(250)
-
-        has_autochords: types.one_of {
+        {"has_autochords", types.one_of {
           types.literal("true") / true
           types.any / false
-        }
+        }}
 
-        publish_status: shapes.db_enum(Songs.publish_statuses)
+        {"publish_status", types.db_enum(Songs.publish_statuses)}
 
-        notes_count: shapes.db_nullable shapes.integer
-        beats_duration: shapes.db_nullable shapes.number
+        {"notes_count", shapes.db_nullable shapes.integer}
+        {"beats_duration", shapes.db_nullable shapes.number}
 
-        original_song_id: create and shapes.db_nullable(shapes.db_id) or nil
-
-      }, extra_fields: types.any / nil
+        create and {"original_song_id", shapes.db_nullable(types.db_id)} or nil
+      }}
     }
 
     params.song
+
 
   update_song: =>
     song = @find_song!
