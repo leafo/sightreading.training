@@ -10,15 +10,17 @@ import Two from "two.js"
 const STAFF_HEIGHT_OFFSET = -100
 const STAFF_INNER_HEIGHT = 236
 
+// These dimensions are in "Staff local" coordinates
 const BAR_WIDTH = 12
 const LEDGER_HEIGHT = 4
 const LEDGER_DY = 58
-const CLEF_GAP = 28
-const NOTE_GAP = 22
+const CLEF_GAP = 28 // the X spacing between cleff and first note
+const NOTE_GAP = 22 // the X spacing between notes
+const NOTE_HALF_HEIGHT = 29 // the Y spacing between notes
 
 import {CLEF_G, CLEF_F, FLAT, SHARP, QUARTER_NOTE, WHOLE_NOTE} from "st/staff_assets"
 
-import {parseNote} from "st/music"
+import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
 const createAsset = function(element, name) {
   let out = React.memo(React.forwardRef((_, ref) =>
@@ -42,6 +44,7 @@ const WholeNote = createAsset(WHOLE_NOTE, "WholeNote")
 
 // manages a Two.Group for a single staff, clef and including key signature
 // all cordinates are done in "staff local" space, STAFF_HEIGHT_OFFSET
+// The staff contains a "notes group" which contains all the notes rendered by the staff
 class StaffGroup {
   constructor(params={}) {
     this.getAsset = params.getAsset
@@ -61,10 +64,12 @@ class StaffGroup {
     }
   }
 
-  // renders the two group, throwing away existing one if it already exists
+  // creates a two.group for the staff, but not containing any notes
   render() {
     this.renderGroup = new Two.Group()
 
+    // the X location where the notes can be rendered from. This will be
+    // incremented by initial bar line, key signature, time signature, etc.
     this.marginX = 0
 
     let bar = this.makeBar(0, 0, BAR_WIDTH, STAFF_INNER_HEIGHT)
@@ -107,10 +112,49 @@ class StaffGroup {
       this.marginX += keySignature.getBoundingClientRect().width
     }
 
-    this.notesGroup = new Two.Group()
-    this.notesGroup.translation.set(this.marginX, 0)
-    this.notesGroup.addTo(this.renderGroup)
     return this.renderGroup
+  }
+
+  // convet list of notes into group of positioned note shapes
+  makeNotes(notes) {
+    const notesGroup = new Two.Group()
+    notesGroup.translation.set(this.marginX, 0)
+
+    let nextNoteX = CLEF_GAP // the x position of the next rendred note
+
+    const quarterNote = this.getAsset("quarterNote")
+    const quarterNoteWidth = quarterNote.getBoundingClientRect().width
+
+    // the default Y (0) location is the top-most space within the staff
+
+    // console.log("refresh notes", this.props.notes)
+    for (let noteColumn of notes) {
+      for (let note of noteColumn) {
+        console.log("rendering note", note)
+        let value = parseNote(note)
+        let n = quarterNote.clone()
+
+        n.translation.set(nextNoteX, this.getNoteY(note))
+        notesGroup.add(n)
+
+        nextNoteX += quarterNoteWidth + NOTE_GAP
+      }
+    }
+
+    return notesGroup
+  }
+
+  // renders new set of notes into the primary note group. Note that the staff
+  // must be rendered first to have the render group available
+  renderNotes(notes) {
+    // remove existing notes if they are there
+    if (this.notesGroup) {
+      this.notesGroup.remove()
+      delete this.notesGroup
+    }
+
+    this.notesGroup = this.makeNotes(notes)
+    this.notesGroup.addTo(this.renderGroup)
   }
 
   makeKeySignature(type, count) {
@@ -119,11 +163,9 @@ class StaffGroup {
     // these offsets apply to G clef with default staff height offset
     if (type == "flat") {
       offsets = [133, 42, 158, 67, 191, 100, 216]
-      // asset = this.assets.flat.current
       accidentalAsset = this.getAsset("flat")
     } else if (type == "sharp") {
       offsets = [42, 129, 14, 101, 187, 71, 158]
-      // asset = this.assets.sharp.current
       accidentalAsset = this.getAsset("sharp")
     } else {
       throw new Error("Unknown type for makeKeySignature: " + type)
@@ -171,9 +213,28 @@ class StaffGroup {
   getMarginX() {
     return this.marginX
   }
+
+  // the note Y position offset based on the cleff of the staff
+  getCleffNoteOffset() {
+    if (this.clef == "g") {
+      return 44
+    } else if (this.clef == "f") {
+      return 0
+    }
+
+    throw new Error(`Don't know how to position notes for cleff: ${this.cleff}`)
+  }
+
+  // calculate the note Y offset depending on the note name
+  getNoteY(note) {
+    return (-noteStaffOffset(note) + this.getCleffNoteOffset()) * NOTE_HALF_HEIGHT
+  }
 }
 
-export class NotesStaff extends React.PureComponent {
+export class StaffTwo extends React.PureComponent {
+  // TODO: grand should probably be handled differently -- we want it to be a
+  // controller that renders both and then feeds the correct voices to the
+  // correct staves
   static propTypes = {
     type: types.oneOf(["treble", "bass", "grand"])
   }
@@ -236,7 +297,7 @@ export class NotesStaff extends React.PureComponent {
 
     this.two = new Two({
       width: initialWidth,
-      height: 600,
+      height: 300,
       // type: Two.Types.canvas
     }).appendTo(this.containerRef.current)
 
@@ -286,31 +347,7 @@ export class NotesStaff extends React.PureComponent {
       return
     }
 
-    let col = 0
-
-    const halfHeight = 29
-
-    const notesGroup = this.staves[0].getNotesGroup()
-    const noteMargin = 0
-    let noteOffset = CLEF_GAP
-
-    let noteY = 0
-
-    const quarterNote = this.getAsset("quarterNote")
-    const quarterNoteWidth = quarterNote.getBoundingClientRect().width
-
-    // console.log("refresh notes", this.props.notes)
-    for (let noteColumn of this.props.notes) {
-      for (let note of noteColumn) {
-        let value = parseNote(note)
-        let n = quarterNote.clone()
-        n.translation.set(noteOffset, noteY)
-        notesGroup.add(n)
-
-        noteOffset += quarterNoteWidth + NOTE_GAP
-        noteY += halfHeight
-      }
-    }
+    this.staves[0].renderNotes(this.props.notes)
   }
 
   // add StaffGroup to list of staves managed by this component
