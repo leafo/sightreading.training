@@ -15,6 +15,15 @@ export default class ChordList extends Array {
 
   // TODO: there is some duplication between this and notes list
 
+  clone() {
+    // NOTE: this assumes the array holds immutable objects
+    let list = new ChordList(this, {
+      generator: this.generator
+    })
+    return list
+  }
+
+
   pushRandom() {
     return this.push(this.generator.nextChord());
   }

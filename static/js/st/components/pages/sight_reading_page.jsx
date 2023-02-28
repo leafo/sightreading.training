@@ -42,14 +42,17 @@ export default class SightReadingPage extends React.Component {
     const session = getSession()
 
     this.state = {
-      newRenderer: true,
-
-      midi: null,
+      newRenderer: false,
       noteShaking: false,
       anyOctave: false,
 
+      // the set of notes that are currently held down
       heldNotes: {},
+
+      // the set of notes that have been touched since holding any one note.
+      // Resets to empty when all notes are released
       touchedNotes: {},
+
       scrollSpeed: 100,
 
       noteWidth: DEFAULT_NOTE_WIDTH,
@@ -200,13 +203,15 @@ export default class SightReadingPage extends React.Component {
 
         if (this.state.notes.matchesHead(touched) && touched.length > 2) {
           gaEvent("sight_reading", "chord", "hit");
-          this.state.notes.shift()
-          this.state.notes.pushRandom()
+          let notes = this.state.notes.clone()
+
+          notes.shift()
+          notes.pushRandom()
 
           this.state.stats.hitNotes([])
 
           this.setState({
-            notes: this.state.notes,
+            notes,
             noteShaking: false,
             heldNotes: {},
             touchedNotes: {},
@@ -240,18 +245,19 @@ export default class SightReadingPage extends React.Component {
         if (this.state.notes.matchesHead(touched, this.state.anyOctave)) {
           gaEvent("sight_reading", "note", "hit");
 
-          this.state.notes.shift();
-          this.state.notes.pushRandom();
+          let notes = this.state.notes.clone()
+          notes.shift();
+          notes.pushRandom();
           this.state.stats.hitNotes(touched);
 
           this.setState({
-            notes: this.state.notes,
+            notes,
             noteShaking: false,
             heldNotes: {},
-            touchedNotes: {},
-          });
+            touchedNotes: {}
+          })
 
-          this.state.slider.add(1)
+          this.state.slider.add(1) // TODO: this changes state without update
 
           return true
         } else {
@@ -280,22 +286,23 @@ export default class SightReadingPage extends React.Component {
       }
     }
 
-    this.state.heldNotes[note] = true;
-    this.state.touchedNotes[note] = true;
-
-    if (!this.checkPress()) {
-      this.forceUpdate();
-    }
+    this.setState({
+      heldNotes: {...this.state.heldNotes, [note]: true},
+      touchedNotes: {...this.state.touchedNotes, [note]: true}
+    }, () => this.checkPress())
   }
 
   releaseNote(note) {
     // note might no longer be considered held if we just moved to next note
     if (this.state.heldNotes[note]) {
-      delete this.state.heldNotes[note];
+      const heldNotes = {...this.state.heldNotes}
+      delete heldNotes[note]
 
-      if (Object.keys(this.state.heldNotes).length == 0) {
-        this.checkRelease();
-      }
+      this.setState({ heldNotes }, () => {
+        if (Object.keys(this.state.heldNotes).length == 0) {
+          this.checkRelease()
+        }
+      })
     }
   }
 
@@ -368,9 +375,10 @@ export default class SightReadingPage extends React.Component {
         },
         onLoop: function() {
           this.state.stats.missNotes(this.state.notes.currentColumn());
-          this.state.notes.shift();
-          this.state.notes.pushRandom();
-          this.forceUpdate();
+          let notes = this.state.notes.clone()
+          notes.shift();
+          notes.pushRandom();
+          this.setState({ notes })
         }.bind(this)
       })
     });
@@ -567,7 +575,7 @@ export default class SightReadingPage extends React.Component {
       <pre>
         held: {JSON.stringify(this.state.heldNotes)}
         {" "}
-        pressed: {JSON.stringify(this.state.touchedNotes)}
+        touched: {JSON.stringify(this.state.touchedNotes)}
       </pre>
     </div>
 

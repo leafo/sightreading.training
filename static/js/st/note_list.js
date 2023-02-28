@@ -21,6 +21,15 @@ export default class NoteList extends Array {
     // this.generator = new Double(scale.getRange(3, 10, 2), scale.getRange(5, 12));
   }
 
+  clone() {
+    // this assumes that the individual note/columns are immutable
+    let list = new NoteList(this, {
+      generator: this.generator
+    })
+
+    return list
+  }
+
   getKeyRange() {
     let notes = new MajorScale("C").getRange(3, 24, 2);
     return [notes[0], notes[notes.length - 1]];
@@ -40,6 +49,8 @@ export default class NoteList extends Array {
     }));
   }
 
+  // TODO: there's no point in having this array hold the generator, this
+  // method should just take a generator instance
   pushRandom() {
     return this.push(this.generator.nextNote());
   }
