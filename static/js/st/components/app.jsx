@@ -119,8 +119,9 @@ class Layout extends React.Component {
         </Route>
 
         <Route path="/flash-cards">
-          <Route path="note-math" element={<FlashCardPage exercise="note_math" {...pageProps} />} />
-          <Route path="chord-identification" element={<FlashCardPage exercise="chord_identification" {...pageProps} />} />
+          // The key hack here is to get the page to re-render when selecting a different type due to how settings and loaded and cached
+          <Route path="note-math" element={<FlashCardPage key="note_math" exercise="note_math" {...pageProps} />} />
+          <Route path="chord-identification" element={<FlashCardPage key="chord_identification" exercise="chord_identification" {...pageProps} />} />
           <Route index element={<Navigate replace to="/flash-cards/note-math" />} />
         </Route>
 
