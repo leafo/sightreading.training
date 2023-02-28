@@ -42,10 +42,11 @@ class Layout extends React.Component {
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then(
         midi => {
-          this.setState({midi: midi})
-          this.loadDefaultSettings()
+          this.setState({midi}, () => {
+            this.loadDefaultSettings()
+          })
         },
-        error => console.warn("failed to get MIDI"))
+        error => console.warn("failed to get MIDI")) // TODO: we shoudl show some kind of error lightbox possibly?
     }
   }
 
