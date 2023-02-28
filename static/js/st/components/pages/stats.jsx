@@ -6,6 +6,16 @@ import { zonedTimeToUtc } from "date-fns-tz"
 
 import {Line} from "react-chartjs-2";
 
+import {
+  Chart as ChartJS,
+  LinearScale,
+  CategoryScale,
+  PointElement,
+  LineElement
+} from 'chart.js';
+
+ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement);
+
 import {getSession} from "st/app"
 
 export default class StatsPage extends React.Component {
