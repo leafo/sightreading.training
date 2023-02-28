@@ -1,10 +1,10 @@
 import * as React from "react"
-import {Link, Redirect} from "react-router-dom"
+import {Link, Navigate} from "react-router-dom"
 
 import {setTitle} from "st/globals"
 import {JsonForm, TextInputRow} from "st/components/forms"
 
-import {init as initApp} from "st/app"
+import {init as initApp, getSession} from "st/app"
 
 export default class LoginPage extends React.Component {
   componentDidMount() {
@@ -30,7 +30,11 @@ export default class LoginPage extends React.Component {
 
   render() {
     if (this.state.redirectTo) {
-      return <Redirect to={this.state.redirectTo} />
+      return <Navigate replace to={this.state.redirectTo} />
+    }
+
+    if (getSession().currentUser) {
+      return <Navigate replace to="/" />
     }
 
     return <div className="login_page page_container">

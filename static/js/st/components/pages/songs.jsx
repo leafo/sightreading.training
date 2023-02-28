@@ -1,8 +1,10 @@
 import * as React from "react"
 
-import {Link, NavLink, Route, Switch} from "react-router-dom"
+import {Link, NavLink} from "react-router-dom"
 
 import {getSession} from "st/app"
+
+import {toggleActive} from "st/components/util"
 
 class SongCell extends React.PureComponent {
   render() {
@@ -100,10 +102,10 @@ export default class SongsPage extends React.Component {
       <nav>
         <ul>
           <li>
-            <NavLink exact activeClassName="active" to="/play-along">Overview</NavLink>
+            <NavLink end {...toggleActive} to="/play-along">Overview</NavLink>
           </li>
           <li>
-            <NavLink exact activeClassName="active" to="/play-along/recent">Recently played</NavLink>
+            <NavLink end {...toggleActive} to="/play-along/recent">Recently played</NavLink>
           </li>
         </ul>
       </nav>
@@ -142,7 +144,6 @@ export default class SongsPage extends React.Component {
       {songList}
     </section>
   }
-
 
   renderOverview() {
     if (!this.state.songs) {
@@ -195,19 +196,27 @@ export default class SongsPage extends React.Component {
     </section>
   }
 
+  renderContent() {
+    switch (this.props.filter) {
+      case "recent": {
+        return this.renderRecent()
+      }
+      case "invalid": {
+        return <div className="page_container">
+          <h2>Not found</h2>
+          <p>Invalid filter</p>
+        </div>
+      }
+      default: {
+        return this.renderOverview()
+      }
+    }
+  }
+
   render() {
     return <div className="songs_page has_sidebar">
       {this.renderSidebar()}
-      <Switch>
-        <Route exact path="/play-along" render={() => this.renderOverview()}></Route>
-        <Route exact path="/play-along/recent" render={() => this.renderRecent()}></Route>
-        <Route>
-          <div className="page_container">
-            <h2>Not found</h2>
-            <p>Invalid filter</p>
-          </div>
-        </Route>
-      </Switch>
+      {this.renderContent()}
     </div>
   }
 }

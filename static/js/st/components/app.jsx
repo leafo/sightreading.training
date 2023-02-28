@@ -1,11 +1,11 @@
 import SightReadingPage from "st/components/pages/sight_reading_page"
 import LoginPage from "st/components/pages/login_page"
 import RegisterPage from "st/components/pages/register_page"
-import GuidePage from "st/components/pages/guide_pages"
+import {guideRoutes} from "st/components/pages/guide_pages"
 import StatsPage from "st/components/pages/stats"
 import FlashCardPage from "st/components/pages/flash_card_page"
 import EarTrainingPage from "st/components/pages/ear_training_page"
-import PlayAlongPage from "st/components/pages/play_along_page"
+import {PlayAlongPageWithParams as PlayAlongPage} from "st/components/pages/play_along_page"
 import LatencyPage from "st/components/pages/latency"
 import SongsPage from "st/components/pages/songs"
 import NotFoundPage from "st/components/pages/not_found"
@@ -18,7 +18,7 @@ import {readConfig, writeConfig} from "st/config"
 import {csrfToken} from "st/globals"
 
 import * as React from "react"
-import {BrowserRouter, Route, Switch} from "react-router-dom"
+import {BrowserRouter, Route, Routes, Navigate} from "react-router-dom"
 
 import {TransitionGroup, CSSTransition} from "react-transition-group"
 import {SampleOutput} from "st/sample_output"
@@ -99,62 +99,52 @@ class Layout extends React.Component {
     }
   }
 
-  pageLayout(children) {
+  render() {
+    let pageProps = this.childProps()
+
     return <div className="page_layout">
       <div className="header_spacer">
         {this.renderHeader()}
       </div>
 
-      <Switch>
-        {children}
-        <Route>
-          <NotFoundPage />
+      <Routes>
+        <Route path="/" element={<SightReadingPage {...pageProps} />} />
+        <Route path="/login" element={<LoginPage/>} />
+        <Route path="/register" element={<RegisterPage/>} />
+
+        <Route path="/ear-training">
+          <Route path="interval-melodies" element={<EarTrainingPage exercise="melody_recognition" {...pageProps} />} />
+          <Route path="melody-playback" element={<EarTrainingPage exercise="melody_playback" {...pageProps} />} />
+          <Route index element={<Navigate replace to="/ear-training/interval-melodies" />} />
         </Route>
-      </Switch>
+
+        <Route path="/flash-cards">
+          <Route path="note-math" element={<FlashCardPage exercise="note_math" {...pageProps} />} />
+          <Route path="chord-identification" element={<FlashCardPage exercise="chord_identification" {...pageProps} />} />
+          <Route index element={<Navigate replace to="/flash-cards/note-math" />} />
+        </Route>
+
+        <Route path="/play-along">
+          <Route index element={<SongsPage {...pageProps} />} />
+          <Route path="recent" element={<SongsPage filter="recent" {...pageProps} />} />
+          <Route path="*" element={<SongsPage filter="invalid" {...pageProps} />} />
+        </Route>
+
+        <Route path="/stats" element={<StatsPage {...pageProps} />} />
+        <Route path="/latency" element={<LatencyPage {...pageProps} />} />
+        <Route path="/new-song" element={<PlayAlongPage newSong={true} editorOpen={true} {...pageProps} />} />
+
+        <Route path="/song/:song_id/:song_slug" element={<PlayAlongPage {...pageProps} />} />
+
+        {guideRoutes()}
+
+        <Route path="*" element={<NotFoundPage/>} />
+      </Routes>
 
       <TransitionGroup className="lightboxes">
         {this.renderCurrentLightbox()}
       </TransitionGroup>
     </div>
-  }
-
-  renderRoutes(routes) {
-    let childProps = this.childProps()
-
-    return routes.map(({page: C, props: moreProps, path, exact}, i) =>
-      <Route key={i} exact={exact} path={path} render={
-        props =>
-          <C ref={comp => this.currentPage = comp} {...moreProps} {...childProps} {...props} />
-      } />
-    )
-  }
-
-  render() {
-    return this.pageLayout(this.renderRoutes([
-      { path: "/", page: SightReadingPage, exact: true },
-      { path: "/login", page: LoginPage, exact: true },
-      { path: "/register", page: RegisterPage, exact: true },
-
-      { path: "/ear-training", page: EarTrainingPage },
-
-      { path: "/flash-cards/note-math", page: FlashCardPage, exact: true, props: {
-        exercise: "note_math"
-      }},
-
-      { path: "/flash-cards/chord-identification", page: FlashCardPage, exact: true, props: {
-        exercise: "chord_identification"
-      }},
-
-      { path: "/play-along", page: SongsPage},
-      { path: "/stats", page: StatsPage, exact: true },
-      { path: "/latency", page: LatencyPage, exact: true },
-      { path: "/new-song", page: PlayAlongPage, exact: true, props: {
-        newSong: true,
-        editorOpen: true,
-      }},
-      { path: "/song/:song_id/:song_slug", page: PlayAlongPage, exact: true },
-      { path: ["/about", "/guide"], page: GuidePage }
-    ]))
   }
 
   renderCurrentLightbox() {

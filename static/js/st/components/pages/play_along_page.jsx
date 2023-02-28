@@ -31,6 +31,8 @@ import {TransitionGroup, CSSTransition} from "react-transition-group"
 
 import {getSession} from "st/app"
 
+import {useParams} from "react-router-dom"
+
 const TimeBar = <div className="time_bar"></div>
 const EmptySong = []
 
@@ -106,7 +108,7 @@ class SettingsPanel extends React.Component {
   }
 }
 
-export default class PlayAlongPage extends React.Component {
+export class PlayAlongPage extends React.Component {
   constructor(props) {
     super(props)
 
@@ -229,7 +231,7 @@ export default class PlayAlongPage extends React.Component {
     this.setState({loading: true})
     let request = new XMLHttpRequest()
 
-    let songId = this.props.match.params.song_id
+    let songId = this.props.params.song_id
 
     if (!songId) {
       console.error("no song id to load")
@@ -818,3 +820,10 @@ export default class PlayAlongPage extends React.Component {
     return [...this.props.midi.outputs.values()]
   }
 }
+
+
+export function PlayAlongPageWithParams(props) {
+  const params = useParams()
+  return <PlayAlongPage {...props} params={params} />
+}
+

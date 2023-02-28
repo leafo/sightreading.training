@@ -3,7 +3,7 @@ import SongParser from "st/song_parser"
 import {trigger} from "st/events"
 
 import {JsonForm, TextInputRow} from "st/components/forms"
-import {withRouter, useHistory} from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 
 import Lightbox from "st/components/lightbox"
 import Tabs from "st/components/tabs"
@@ -13,12 +13,12 @@ import { KeySignature } from "st/music"
 import {readConfig, writeConfig} from "st/config"
 
 const DeleteSongForm = React.memo(function DeleteSongForm(props) {
-  let history = useHistory()
+  const navigate = useNavigate()
 
   function afterSubmit(res) {
     props.lightbox.close()
     if (res.redirect_to) {
-      history.push(res.redirect_to)
+      navigate(res.redirect_to)
     }
   }
 

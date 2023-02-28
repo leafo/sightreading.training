@@ -11,6 +11,8 @@ import Lightbox from "st/components/lightbox"
 
 import {getSession} from "st/app"
 
+import {toggleActive} from "st/components/util"
+
 class SizedElement extends React.Component {
   constructor(props) {
     super(props)
@@ -76,6 +78,7 @@ export default class Header extends React.Component {
     let menu = null
     let showMidiButton = !this.state.width || this.state.width < 450
 
+
     if (this.state.menuOpen) {
       let accountArea = null
       const session = getSession()
@@ -89,8 +92,8 @@ export default class Header extends React.Component {
         </div>
       } else {
         accountArea = <div className="account_area logged_out">
-          <NavLink to="/login" activeClassName="active">Log in</NavLink>
-          <NavLink to="/register" activeClassName="active">Register</NavLink>
+          <NavLink to="/login" {...toggleActive}>Log in</NavLink>
+          <NavLink to="/register" {...toggleActive}>Register</NavLink>
         </div>
       }
 
@@ -140,9 +143,9 @@ export default class Header extends React.Component {
 
     } else {
       userPanel = <div className="right_section" key="user_out">
-        <NavLink to="/login" activeClassName="active">Log in</NavLink>
+        <NavLink to="/login" {...toggleActive}>Log in</NavLink>
         {" or "}
-        <NavLink to="/register" activeClassName="active">Register</NavLink>
+        <NavLink to="/register" {...toggleActive}>Register</NavLink>
       </div>
     }
 
@@ -154,21 +157,17 @@ export default class Header extends React.Component {
 
   getPageLinks() {
     let links = [
-      <NavLink exact key="root" to="/" activeClassName="active">Staff</NavLink>,
-      <NavLink exact key="ear-training" to="/ear-training/interval-melodies" activeClassName="active">Ear Training</NavLink>,
-      <NavLink exact key="flash-cards" to="/flash-cards/note-math" activeClassName="active">Flash Cards</NavLink>,
-      <NavLink key="play-along" to="/play-along" activeClassName="active">Play Along</NavLink>,
-      <NavLink exact key="about" to="/about" activeClassName="active">Guide</NavLink>,
+      <NavLink end key="root" to="/" {...toggleActive}>Staff</NavLink>,
+      <NavLink end key="ear-training" to="/ear-training/interval-melodies" {...toggleActive}>Ear Training</NavLink>,
+      <NavLink end key="flash-cards" to="/flash-cards/note-math" {...toggleActive}>Flash Cards</NavLink>,
+      <NavLink key="play-along" to="/play-along" {...toggleActive}>Play Along</NavLink>,
+      <NavLink end key="about" to="/about" {...toggleActive}>Guide</NavLink>,
     ]
 
     const session = getSession()
 
     if (session.currentUser) {
-      links.push(<NavLink
-        exact
-        key="stats"
-        to="/stats"
-        activeClassName="active">Stats</NavLink>)
+      links.push(<NavLink end key="stats" to="/stats" {...toggleActive}>Stats</NavLink>)
     }
 
     return links

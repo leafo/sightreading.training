@@ -1,5 +1,5 @@
 import * as React from "react"
-import {Link, NavLink, Switch, Route, Redirect} from "react-router-dom"
+import {Link, NavLink} from "react-router-dom"
 import classNames from "classnames"
 
 import Select from "st/components/select"
@@ -16,6 +16,8 @@ import MelodyRecognitionExercise from "st/components/ear_training/melody_recogni
 import MelodyPlaybackExercise from "st/components/ear_training/melody_playback_exercise"
 
 import {IconMenu} from "st/components/icons"
+
+import {toggleActive} from "st/components/util"
 
 export default class EarTrainingPage extends React.Component {
   constructor(props) {
@@ -42,8 +44,8 @@ export default class EarTrainingPage extends React.Component {
         <nav>
           <div className="nav_header">Choose Exercise</div>
           <ul>
-            <li><NavLink to="/ear-training/interval-melodies" activeClassName="active">Learn Intervals</NavLink></li>
-            <li><NavLink to="/ear-training/melody-playback" activeClassName="active">Play Back Melodies</NavLink></li>
+            <li><NavLink to="/ear-training/interval-melodies" {...toggleActive}>Learn Intervals</NavLink></li>
+            <li><NavLink to="/ear-training/melody-playback" {...toggleActive}>Play Back Melodies</NavLink></li>
           </ul>
         </nav>
 
@@ -79,20 +81,20 @@ export default class EarTrainingPage extends React.Component {
       midi: this.props.midi,
       midiOutput: this.props.midiOutput,
       midiInput: this.props.midiInput,
-      toggleSidebarButton 
+      toggleSidebarButton
     }
 
-    return <Switch>
-      <Route exact path="/ear-training/interval-melodies">
-        <MelodyRecognitionExercise {...exerciseProps} />
-      </Route>
-      <Route exact path="/ear-training/melody-playback">
-        <MelodyPlaybackExercise {...exerciseProps} />
-      </Route>
-      <Route>
-        <Redirect to="/ear-training/interval-melodies" />
-      </Route>
-    </Switch>
+    switch (this.props.exercise) {
+      case "melody_recognition": {
+        return <MelodyRecognitionExercise {...exerciseProps} />
+      }
+      case "melody_playback": {
+        return <MelodyPlaybackExercise {...exerciseProps} />
+      }
+      default: {
+        throw new Error(`Unknown exercise: ${this.props.exercise}`)
+      }
+    }
   }
 
   renderIntro() {

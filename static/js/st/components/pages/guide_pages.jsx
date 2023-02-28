@@ -1,9 +1,11 @@
 import * as React from "react"
-import {NavLink, Switch, Route} from "react-router-dom"
+import {NavLink, Route, Outlet, Navigate} from "react-router-dom"
 import {setTitle} from "st/globals"
 import * as types from "prop-types"
 
-class GuideContents extends React.PureComponent {
+import {toggleActive} from "st/components/util"
+
+export class GuideContents extends React.PureComponent {
   static propTypes = {
     title: types.string.isRequired,
     pageSource: types.string.isRequired,
@@ -81,10 +83,10 @@ class GuideContents extends React.PureComponent {
   }
 }
 
-export default class GuidePage extends React.PureComponent {
+export class GuidePage extends React.PureComponent {
   render() {
     const link = (url, label) =>
-      <NavLink activeClassName="active" to={url}>{label}</NavLink>
+      <NavLink to={url} {...toggleActive}>{label}</NavLink>
 
     return <main className="guide_page">
       <section className="page_navigation">
@@ -104,35 +106,33 @@ export default class GuidePage extends React.PureComponent {
           </ul>
         </section>
       </section>
-      <Switch>
-        <Route exact path="/about">
-          <GuideContents title="About Sight Reading Trainer" pageSource="about" />
-        </Route>
-
-        <Route exact path="/guide/generators">
-          <GuideContents title="Sight Reading Random Notes" pageSource="generators" />
-        </Route>
-
-        <Route exact path="/guide/chords">
-          <GuideContents title="Sight Reading Random Chords" pageSource="chord_generators" />
-        </Route>
-
-        <Route exact path="/guide/ear-training">
-          <GuideContents title="Ear Training Tools" pageSource="ear_training" />
-        </Route>
-
-        <Route exact path="/guide/lml">
-          <GuideContents title="Programming a song with LML" pageSource="lml" />
-        </Route>
-
-        <Route>
-          <div className="page_container">
-            <h2>Not found</h2>
-            <p>Failed to find documentation page</p>
-          </div>
-        </Route>
-      </Switch>
+      <Outlet />
     </main>
   }
 }
+
+export function guideRoutes() {
+  return <>
+    <Route path="/about" element={<GuidePage />}>
+      <Route index element={<GuideContents title="About Sight Reading Trainer" pageSource="about" />}/>
+    </Route>
+    <Route path="/guide" element={<GuidePage />}>
+      <Route path="generators" element={<GuideContents title="Sight Reading Random Notes" pageSource="generators" />} />
+      <Route path="chords" element={<GuideContents title="Sight Reading Random Chords" pageSource="chord_generators" />} />
+      <Route path="ear-training" element={<GuideContents title="Ear Training Tools" pageSource="ear_training" />} />
+      <Route path="lml" element={<GuideContents title="Programming a song with LML" pageSource="lml" />} />
+
+      <Route index element={<Navigate replace to="/about" />} />
+
+      <Route path="*" element={
+        <div className="page_container">
+          <h2>Not found</h2>
+          <p>Failed to find documentation page</p>
+        </div>
+      }/>
+    </Route>
+  </>
+}
+
+
 
