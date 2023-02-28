@@ -26,7 +26,7 @@ import {TransitionGroup, CSSTransition} from "react-transition-group"
 
 import {getSession} from "st/app"
 
-import {NotesStaff} from "st/components/staff_two"
+import {StaffTwo} from "st/components/staff_two"
 
 const DEFAULT_NOTE_WIDTH = 100
 const DEFAULT_SPEED = 4
@@ -42,6 +42,8 @@ export default class SightReadingPage extends React.Component {
     const session = getSession()
 
     this.state = {
+      newRenderer: true,
+
       midi: null,
       noteShaking: false,
       anyOctave: false,
@@ -569,16 +571,23 @@ export default class SightReadingPage extends React.Component {
       </pre>
     </div>
 
-    let modeToggle = <div className="tool">
-      <span className="label">Mode</span>
-      <div
-        onClick={this.toggleMode.bind(this)}
-        className={classNames("toggle_switch", {
-          first: this.state.mode == "wait",
-          second: this.state.mode == "scroll",
-        })}>
-        <span className="toggle_option">Wait</span>
-        <span className="toggle_option">Scroll</span>
+    let toolbar = <div className="toolbar">
+      <label>
+        <input type="checkbox" checked={this.state.newRenderer || false} onChange={e => this.setState({newRenderer: !this.state.newRenderer})} />
+        New renderer
+      </label>
+
+      <div className="labeled_tool">
+        <span className="label">Mode</span>
+        <div
+          onClick={this.toggleMode.bind(this)}
+          className={classNames("toggle_switch", {
+            first: this.state.mode == "wait",
+            second: this.state.mode == "scroll",
+          })}>
+          <span className="toggle_option">Wait</span>
+          <span className="toggle_option">Scroll</span>
+        </div>
       </div>
 
       <span className="speed_picker slider_input">
@@ -599,8 +608,8 @@ export default class SightReadingPage extends React.Component {
 
     if (this.state.currentStaff) {
       // new renderer with mode notes only
-      if (this.state.currentStaff.mode == "notes") {
-        staff = <NotesStaff
+      if (this.state.newRenderer && this.state.currentStaff.mode == "notes") {
+        staff = <StaffTwo
            type = {this.state.currentStaff.name}
            heldNotes = {this.state.heldNotes}
            notes = {this.state.notes}
@@ -627,9 +636,7 @@ export default class SightReadingPage extends React.Component {
         <div className="staff_wrapper">
           {staff}
         </div>
-        <div className="toolbar">
-          {modeToggle}
-        </div>
+        {toolbar}
       </div>
     </div>;
   }
