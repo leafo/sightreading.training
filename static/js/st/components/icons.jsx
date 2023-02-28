@@ -1,7 +1,7 @@
 import * as React from "react"
 import * as types from "prop-types"
 
-export class IconBase extends React.Component {
+export class IconBase extends React.PureComponent {
   static propTypes = {
     width: types.number,
     height: types.number,
