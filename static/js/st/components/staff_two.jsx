@@ -1,9 +1,11 @@
 
+// Read this for refresher on terminology: https://en.wikipedia.org/wiki/Staff_(music)
+
 import * as React from "react"
 import classNames from "classnames"
 import * as types from "prop-types"
 
-import Two from "two.js";
+import Two from "two.js"
 
 const STAFF_HEIGHT_OFFSET = -100
 const STAFF_INNER_HEIGHT = 236
