@@ -1,7 +1,7 @@
 import * as React from "react"
 import {setTitle} from "st/globals"
 
-import { startOfDay, format as formatDate, addDays, parseISO } from 'date-fns'
+import { startOfDay, format as formatDate, addDays, parseISO } from "date-fns"
 import { zonedTimeToUtc } from "date-fns-tz"
 
 import {Line} from "react-chartjs-2";
@@ -12,7 +12,7 @@ import {
   CategoryScale,
   PointElement,
   LineElement
-} from 'chart.js';
+} from "chart.js"
 
 ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement);
 

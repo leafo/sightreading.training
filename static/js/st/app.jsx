@@ -3,7 +3,7 @@ import {ENABLE_SERVICE_WORKER} from "st/globals"
 
 import * as React from "react"
 
-import { createRoot } from 'react-dom/client';
+import { createRoot } from "react-dom/client";
 
 let currentSession = null;
 
