@@ -2,9 +2,17 @@ import App from "st/components/app"
 import {ENABLE_SERVICE_WORKER} from "st/globals"
 
 import * as React from "react"
-import * as ReactDOM from "react-dom"
+
+import { createRoot } from 'react-dom/client';
 
 let currentSession = null;
+
+let root = null
+
+function getRoot() {
+  root ||= createRoot(document.getElementById("page"));
+  return root;
+}
 
 export function getSession() {
   return currentSession;
@@ -13,13 +21,14 @@ export function getSession() {
 export function init(session) {
   currentSession = session || {}
 
-  ReactDOM.render(<App />, document.getElementById("page"));
+  getRoot().render(<App />)
   installServiceWorker(session.cacheBuster)
 }
 
 export function testPage(session) {
   currentSession = session || {}
-  ReactDOM.render(<App layout={App.BlankLayout} />, document.getElementById("page"));
+
+  getRoot().render(<App layout={App.BlankLayout} />)
 }
 
 export function installServiceWorker(timestamp) {
