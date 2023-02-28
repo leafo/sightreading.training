@@ -71,6 +71,7 @@ how some of the commands work:
 
 * `|` command will move the position back to the start of the block
 * Base duration (adjusted with `dt` and `ht`), will reset to previous value after 
+* Track number reset back to previous value
 
 Example:
 
@@ -164,3 +165,18 @@ The following is a short melody over a G Major and D Minor chord progression.
 
 If a `#` appears, then it and any text following will be ignored. You can use
 this to add notes to anyone reading the code (aka comments).
+
+## Tracks
+
+A single song can be comprised of multiple tracks. Tracks are identified by
+their number, starting from 0. The default track is track 0. The `t` command
+can be used to set what the active track is. All following notes will be
+written into the last set track. Note that changing the track does not change
+the position cursor, so in this example the notes will appear sequentially, not
+at the same time.
+
+    t0 g5
+    t1 a5
+
+A `{}` block will reset the track back to what it was after the closing `}` if
+a track has been set inside of the block.

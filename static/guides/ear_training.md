@@ -4,6 +4,8 @@ This app comes with a few ear training tools:
 
 ## Interval Recognition with Melodies
 
+[Go to Exercise →](/ear-training/interval-melodies)
+
 A common strategy for memorizing intervals is to associate their sound with
 melodies from popular songs that you've recognized. Common melodies are
 included for all 12 intervals both ascending and descending.
@@ -25,6 +27,8 @@ Autoplay mode has a few additional options:
 * **Order** -- You can choose to play the interval melodically or harmonically (both notes at same time). You can also use reverse to play the interval melodically, but in reverse order, or an additional challenge.
 
 ## Melody Playback
+
+[Go to Exercise →](/ear-training/melody-playback)
 
 The computer will generate a short melody. After you hear it, you should play
 it back with either your connected MIDI keyboard or the on-screen keyboard.
