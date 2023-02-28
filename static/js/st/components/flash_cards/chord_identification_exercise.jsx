@@ -91,15 +91,16 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     this.state = {
       cardNumber: 1,
     }
+
   }
 
-  componentWillMount() {
-    this.setupNext()
+  componentDidMount() {
+    this.setState(this.generateNext())
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.settings != this.props.settings) {
-      this.setupNext()
+      this.setState(this.generateNext())
     }
   }
 
@@ -114,7 +115,7 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     </div>
   }
 
-  setupNext() {
+  generateNext() {
     let sigs = KeySignature.allKeySignatures().filter(ks =>
       this.props.settings.keySignatures["" + ks.count]
     )
@@ -123,11 +124,9 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     let keySignature = sigs[this.rand.int() % sigs.length]
 
     if (!keySignature) {
-      this.setState({
+      return {
         currentCard: null
-      })
-
-      return
+      }
     }
 
     if (!this.generators) {
@@ -143,7 +142,7 @@ export default class ChordIdentificationExercise extends React.PureComponent {
 
     let inversion = this.props.settings.inversions ? this.rand.int() % 3 : 0
 
-    this.setState({
+    return {
       cardNumber: this.state.cardNumber + 1,
       cardError: false,
       cardMistakes: null,
@@ -156,7 +155,7 @@ export default class ChordIdentificationExercise extends React.PureComponent {
         chord,
         inversion
       }
-    })
+    }
   }
 
   renderCurrentCard() {
@@ -254,7 +253,7 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     console.log("checking answer", answer, "expected", cardAnswer)
 
     if (cardAnswer == answer) {
-      this.setupNext()
+      this.setState(this.generateNext())
     } else {
       let mistakes = this.state.cardMistakes || {}
       mistakes[answer] = true

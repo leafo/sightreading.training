@@ -69,11 +69,9 @@ export default class NoteMathExercise extends React.PureComponent {
     this.rand = new MersenneTwister()
   }
 
-  componentWillMount() {
-    this.showNext(this.refreshCards())
-  }
-
   componentDidMount() {
+    this.showNext(this.refreshCards())
+
     this.upListener = event => {
       let key = keyCodeToChar(event.keyCode)
       if (key == null) {

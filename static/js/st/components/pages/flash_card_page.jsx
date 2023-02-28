@@ -15,6 +15,8 @@ import ChordIdentificationExercise from "st/components/flash_cards/chord_identif
 
 import {Link, NavLink} from "react-router-dom"
 
+import {toggleActive} from "st/components/util"
+
 class SettingsPanel extends React.PureComponent {
   static propTypes = {
     close: types.func,
@@ -32,8 +34,8 @@ class SettingsPanel extends React.PureComponent {
 
       <section className="settings_group">
         <ul>
-          <li><NavLink to="/flash-cards/chord-identification" activeClassName="active">Chord Identification</NavLink></li>
-          <li><NavLink to="/flash-cards/note-math" activeClassName="active">Note Math</NavLink></li>
+          <li><NavLink to="/flash-cards/chord-identification" {...toggleActive}>Chord Identification</NavLink></li>
+          <li><NavLink to="/flash-cards/note-math" {...toggleActive}>Note Math</NavLink></li>
         </ul>
       </section>
       {this.renderExerciseOptions()}

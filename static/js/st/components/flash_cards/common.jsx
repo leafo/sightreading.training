@@ -4,6 +4,11 @@ import * as React from "react"
 
 export class CardHolder extends React.Component {
   render() {
+    // render nothing if no card is provided
+    if (!this.props.children) {
+      return
+    }
+
     return <div className="card_holder">
       <TransitionGroup component="div" className="transition_group">
         {this.cardAnimation(this.props.children)}
