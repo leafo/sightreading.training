@@ -51,14 +51,17 @@ class Layout extends React.Component {
   }
 
   loadDefaultSettings() {
-    let defaultMidiInput = readConfig("defaults:midiIn")
+    const defaultMidiInput = readConfig("defaults:midiIn")
     if (defaultMidiInput) {
-      let idx = 0
-      for (let input of this.midiInputs()) {
-        if (input.name == defaultMidiInput) {
-          this.setInput(idx)
+      const inputs = this.midiInputs()
+      if (inputs) {
+        let idx = 0
+        for (let input of this.midiInputs()) {
+          if (input.name == defaultMidiInput) {
+            this.setInput(idx)
+          }
+          idx++
         }
-        idx++
       }
     }
   }
