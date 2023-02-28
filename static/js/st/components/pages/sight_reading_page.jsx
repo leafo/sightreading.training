@@ -257,7 +257,7 @@ export default class SightReadingPage extends React.Component {
             touchedNotes: {}
           })
 
-          this.state.slider.add(1) // TODO: this changes state without update
+          this.state.slider.add(1)
 
           return true
         } else {

@@ -15,7 +15,7 @@ import StaffSongNotes from "st/components/staff_song_notes"
 const DEFAULT_HEIGHT = 120
 const DEFAULT_MARGIN = 60
 
-export class Staff extends React.Component {
+export class Staff extends React.PureComponent {
   static propTypes = {
     // rendering props
     upperRow: types.number.isRequired,
@@ -189,7 +189,7 @@ export class FStaff extends Staff {
   }
 }
 
-export class GrandStaff extends React.Component {
+export class GrandStaff extends React.PureComponent {
   constructor(props) {
     super(props)
     this.gstaff = React.createRef()
@@ -241,7 +241,7 @@ export class GrandStaff extends React.Component {
   }
 }
 
-export class ChordStaff extends React.Component {
+export class ChordStaff extends React.PureComponent {
   static propTypes = {
     chords: types.array,
   }
