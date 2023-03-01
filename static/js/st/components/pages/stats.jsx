@@ -11,10 +11,12 @@ import {
   LinearScale,
   CategoryScale,
   PointElement,
-  LineElement
+  LineElement,
+  Tooltip,
+  Legend,
 } from "chart.js"
 
-ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement);
+ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement, Tooltip, Legend)
 
 import {getSession} from "st/app"
 
