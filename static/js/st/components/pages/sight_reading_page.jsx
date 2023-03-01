@@ -141,6 +141,8 @@ export default class SightReadingPage extends React.Component {
     })
   }
 
+  // This generates a new set of notes, appropriate for when the generator or
+  // generator parameters have changed in some say
   refreshNoteList() {
     let generator = this.state.currentGenerator
 
@@ -392,6 +394,10 @@ export default class SightReadingPage extends React.Component {
   }
 
   setStaff(staff, callback) {
+    if (this.state.currentStaff == staff) {
+      return
+    }
+
     let update = {
       currentStaff: staff,
       notes: null
@@ -404,6 +410,8 @@ export default class SightReadingPage extends React.Component {
       update.currentGeneratorSettings = {}
     }
 
+    // The state change will trigger a call to this.refreshNoteList via
+    // componentDidUpdate
     this.setState(update, callback)
     return update
   }
