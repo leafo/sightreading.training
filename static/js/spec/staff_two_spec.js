@@ -33,4 +33,25 @@ describe("staff two", function() {
 
     expect(true).toBe(true)
   })
+
+  it("renders full treble staff", function() {
+    getRoot().render(React.createElement(StaffTwo, {
+      type: "treble",
+      keySignature: new KeySignature(0),
+      notes: new NoteList([
+        ["G5"],
+        ["F6", "E5"], // the extend of the cleff
+        ["G6", "D5"],
+        ["A6", "C5"],
+        ["B6", "B4"],
+        ["C7", "A4"],
+      ]),
+      heldNotes: {
+        "C7": true,
+        "A3": true
+      }
+    }))
+
+    expect(true).toBe(true)
+  })
 })

@@ -14,6 +14,7 @@ const STAFF_INNER_HEIGHT = 236
 const BAR_WIDTH = 12
 const LEDGER_HEIGHT = 4
 const LEDGER_DY = 58 // Y spacing between each ledger line (should be even to allow clean division for note placement)
+const LEDGER_EXTENT = 10 // how much ledger line leads and trails past note
 const CLEF_GAP = 28 // the X spacing between cleff and first note
 const NOTE_GAP = 100 // the X spacing between notes
 const NOTE_HALF_HEIGHT = LEDGER_DY / 2 // the Y spacing between notes
@@ -149,12 +150,50 @@ class StaffGroup {
         noteColumn = [noteColumn]
       }
 
+      // Write the ledger lines for the column
+      const [minRow, maxRow] = this.noteColumnRowRanges(noteColumn)
+      if (minRow && minRow < 0) {
+        let lines = Math.floor(Math.abs(minRow) / 2);
+        console.log(noteColumn, "Above", minRow, "lines:", lines)
+
+        for (let k=1; k <= lines; k++) {
+          let ledgerLine = this.makeBar(
+            nextNoteX - LEDGER_EXTENT, -k*LEDGER_DY,
+            noteAssetWidth + LEDGER_EXTENT * 2, LEDGER_HEIGHT
+          )
+          notesGroup.add(ledgerLine)
+        }
+      }
+
+      if (maxRow && maxRow > 8) {
+        let lines = Math.abs(Math.floor((maxRow - 8) / 2))
+        // console.log(noteColumn, "Below", maxRow, "lines:", lines)
+        const lowerLineY = 4 * LEDGER_DY
+
+        for (let k=1; k <= lines; k++) {
+          let ledgerLine = this.makeBar(
+            nextNoteX - LEDGER_EXTENT, lowerLineY + k*LEDGER_DY,
+            noteAssetWidth + LEDGER_EXTENT * 2, LEDGER_HEIGHT
+          )
+          notesGroup.add(ledgerLine)
+        }
+      }
+
+
+      // Write the notes
       for (let note of noteColumn) {
         let value = parseNote(note)
         let n = noteAsset.clone()
 
-        n.translation.set(nextNoteX, this.getNoteY(note))
+        let noteY = this.getNoteY(note)
+
+        n.translation.set(nextNoteX, noteY)
         notesGroup.add(n)
+
+        // debug indicator
+        // let bar = this.makeBar(nextNoteX, noteY, 10, 10)
+        // bar.fill = "red"
+        // notesGroup.add(bar)
       }
 
       nextNoteX += noteAssetWidth + NOTE_GAP
@@ -274,7 +313,7 @@ class StaffGroup {
     return noteStaffOffset(note)
   }
 
-  // find the min and max "staff local" row numbers for a column of notes.
+  // find the min and max "staff local" row numbers for a column of chromatic notes.
   // Suitable for rendering ledger lines
   noteColumnRowRanges(notes) {
     let minRow, maxRow
