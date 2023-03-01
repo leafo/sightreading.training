@@ -13,10 +13,10 @@ const STAFF_INNER_HEIGHT = 236
 // These dimensions are in "Staff local" coordinates
 const BAR_WIDTH = 12
 const LEDGER_HEIGHT = 4
-const LEDGER_DY = 58
+const LEDGER_DY = 58 // Y spacing between each ledger line (should be even to allow clean division for note placement)
 const CLEF_GAP = 28 // the X spacing between cleff and first note
 const NOTE_GAP = 100 // the X spacing between notes
-const NOTE_HALF_HEIGHT = 29 // the Y spacing between notes
+const NOTE_HALF_HEIGHT = LEDGER_DY / 2 // the Y spacing between notes
 
 import {CLEF_G, CLEF_F, FLAT, SHARP, QUARTER_NOTE, WHOLE_NOTE} from "st/staff_assets"
 
@@ -48,6 +48,20 @@ const WholeNote = createAsset(WHOLE_NOTE, "WholeNote")
 // all cordinates are done in "staff local" space, STAFF_HEIGHT_OFFSET
 // The staff contains a "notes group" which contains all the notes rendered by the staff
 class StaffGroup {
+  static CLEF_SETTINGS = {
+    g: {
+      // where the key signature is centered around
+      keySignatureCenter: "F6",
+      upperLine: "F6", // upper line is where origin (0) is for staff lines
+      lowerLine: "E5",
+    },
+    f: {
+      keySignatureCenter: "F4",
+      upperLine: "A5",
+      lowerLine: "G3",
+    }
+  }
+
   constructor(params={}) {
     this.getAsset = params.getAsset
     this.clef = params.clef || "g"
@@ -176,6 +190,7 @@ class StaffGroup {
     let offsets, accidentalAsset
 
     // these offsets apply to G clef with default staff height offset
+    // TODO: use cleff settings to align correctly
     if (type == "flat") {
       offsets = [133, 42, 158, 67, 191, 100, 216]
       accidentalAsset = this.getAsset("flat")
@@ -190,8 +205,9 @@ class StaffGroup {
 
     let offsetX = 0
     const accidentalGap = 4
-    for (var k = 0; k < count; k++) {
+    for (let k = 0; k < count; k++) {
       let a = accidentalAsset.clone()
+
       a.translation.set(offsetX, offsets[k] + STAFF_HEIGHT_OFFSET)
       offsetX += a.getBoundingClientRect().width + accidentalGap
       group.add(a)
@@ -229,20 +245,22 @@ class StaffGroup {
     return this.marginX
   }
 
-  // the note Y position offset based on the cleff of the staff
-  getCleffNoteOffset() {
-    if (this.clef == "g") {
-      return 44
-    } else if (this.clef == "f") {
-      return 32
+  // the note Y position offset based on the clef of the staff
+  getClefNoteOffset() {
+    const settings = StaffGroup.CLEF_SETTINGS[this.clef]
+    if (!settings) {
+      throw new Error(`Don't have staff settings for clef: ${this.clef}`)
     }
 
-    throw new Error(`Don't know how to position notes for cleff: ${this.cleff}`)
+    return noteStaffOffset(settings.upperLine)
   }
 
-  // calculate the note Y offset depending on the note name
+  // find staff local y coordinate for a note
   getNoteY(note) {
-    return (-noteStaffOffset(note) + this.getCleffNoteOffset()) * NOTE_HALF_HEIGHT
+    // TODO: need to to convert chromatic note to keysignature relative in order to calculate accurate note position
+    // NOTE: noteStaffOffset has y axis flipped (origin on bottom), rendering has origin on top
+    // NOTE we subtract NOTE_HALF_HEIGHT in the end to center the note on the line
+    return (-noteStaffOffset(note) + this.getClefNoteOffset()) * NOTE_HALF_HEIGHT - NOTE_HALF_HEIGHT
   }
 }
 
