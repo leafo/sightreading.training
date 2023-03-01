@@ -1,7 +1,7 @@
 /*global ga*/
 
-export var ENABLE_PRESETS = false
-export var ENABLE_SERVICE_WORKER = false
+export const ENABLE_PRESETS = false
+export const ENABLE_SERVICE_WORKER = false
 
 export function setTitle(title) {
   if (title) {

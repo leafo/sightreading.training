@@ -437,21 +437,23 @@ export class StaffTwo extends React.PureComponent {
   }
 
   render() {
-    this.RefreshNotes ||= React.memo((props) => {
+    this.RefreshNotes ||= Object.assign(React.memo((props) => {
       if (this.renderGroup) {
         this.refreshNotes()
         this.flushChanges = true
       }
       return null
+    }), {
+      displayName: "RefreshNotes"
     })
 
-    this.RefreshStaves ||= React.memo((props) => {
+    this.RefreshStaves ||= Object.assign(React.memo((props) => {
       if (this.renderGroup) {
         this.refreshStaves()
         this.flushChanges = true
       }
       return null
-    })
+    }), { displayName: "RefreshStaves" })
 
     return <div className="notes_staff" ref={this.containerRef}>
       <this.RefreshNotes
