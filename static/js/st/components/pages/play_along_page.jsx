@@ -822,9 +822,8 @@ export class PlayAlongPage extends React.Component {
   }
 }
 
-
-export function PlayAlongPageWithParams(props) {
+export const PlayAlongPageWithParams = React.forwardRef((props, ref) => {
   const params = useParams()
-  return <PlayAlongPage {...props} params={params} />
-}
+  return <PlayAlongPage {...props} params={params} ref={ref} />
+})
 
