@@ -26,10 +26,6 @@ class extends lapis.Application
     if @current_user
       @current_user\update_last_active!
 
-
-  "/test": =>
-    "hello world", layout: "test_layout"
-
   [song: "/song/:song_id/:slug"]: =>
   [play_along: "/play-along"]: =>
 

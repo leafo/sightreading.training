@@ -25,12 +25,6 @@ export function init(session) {
   installServiceWorker(session.cacheBuster)
 }
 
-export function testPage(session) {
-  currentSession = session || {}
-
-  getRoot().render(<App layout={App.BlankLayout} />)
-}
-
 export function installServiceWorker(timestamp) {
   if (!ENABLE_SERVICE_WORKER) {
     console.warn("Service worker not enabled")
