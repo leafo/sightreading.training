@@ -145,6 +145,10 @@ class StaffGroup {
 
     // console.log("refresh notes", this.props.notes)
     for (let noteColumn of notes) {
+      if (typeof noteColumn == "string") {
+        noteColumn = [noteColumn]
+      }
+
       for (let note of noteColumn) {
         let value = parseNote(note)
         let n = noteAsset.clone()
