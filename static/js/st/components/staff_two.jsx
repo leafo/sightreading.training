@@ -424,46 +424,46 @@ export class StaffTwo extends React.PureComponent {
     return asset
   }
 
+  // NOTE: flushChanges is set by the prop watchers in the rendered contents of
+  // this widget. componentDidUpdate is called after all children have
+  // rendered, so we can use it to apply the updates to the scene graph to the
+  // output
   componentDidUpdate(prevProps, prevState) {
-    let updated = false
-
-    let refreshNotes = () => {
-      this.refreshNotes()
-      updated = true
-      refreshNotes = function() {}
-    }
-
-    let refreshStaves = () => {
-      this.refreshStaves()
-      updated = true
-      refreshStaves = function() {}
-    }
-
-    if (prevProps.type != this.props.type) {
-      refreshStaves()
-    }
-
-    if (prevProps.notes != this.props.notes) {
-      refreshNotes()
-    }
-
-    if (prevProps.heldNotes != this.props.heldNotes) {
-      refreshNotes()
-    }
-
-    if (prevProps.keySignature != this.props.keySignature) {
-      refreshStaves()
-      refreshNotes()
-    }
-
-    if (updated) {
+    if (this.flushChanges) {
+      this.flushChanges = false
       this.scaleToFit()
       this.two.update()
     }
   }
 
   render() {
+    this.RefreshNotes ||= React.memo((props) => {
+      if (this.renderGroup) {
+        this.refreshNotes()
+        this.flushChanges = true
+      }
+      return null
+    })
+
+    this.RefreshStaves ||= React.memo((props) => {
+      if (this.renderGroup) {
+        this.refreshStaves()
+        this.flushChanges = true
+      }
+      return null
+    })
+
     return <div className="notes_staff" ref={this.containerRef}>
+      <this.RefreshNotes
+        notes={this.props.notes}
+        heldNotes={this.props.heldNotes}
+      />
+
+      <this.RefreshStaves
+        type={this.props.type}
+        keySignature={this.props.keySignature}
+      />
+
       <div ref={this.assetsRef} className="assets" style={{display: "none"}}>
         <GClef ref={this.assets.gclef ||= React.createRef()} />
         <FClef ref={this.assets.fclef ||= React.createRef()} />
