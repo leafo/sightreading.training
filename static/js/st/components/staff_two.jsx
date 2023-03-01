@@ -15,7 +15,7 @@ const BAR_WIDTH = 12
 const LEDGER_HEIGHT = 4
 const LEDGER_DY = 58
 const CLEF_GAP = 28 // the X spacing between cleff and first note
-const NOTE_GAP = 22 // the X spacing between notes
+const NOTE_GAP = 100 // the X spacing between notes
 const NOTE_HALF_HEIGHT = 29 // the Y spacing between notes
 
 import {CLEF_G, CLEF_F, FLAT, SHARP, QUARTER_NOTE, WHOLE_NOTE} from "st/staff_assets"
@@ -120,25 +120,24 @@ class StaffGroup {
     const notesGroup = new Two.Group()
     notesGroup.translation.set(this.marginX, 0)
 
-    let nextNoteX = CLEF_GAP // the x position of the next rendred note
+    let nextNoteX = CLEF_GAP * 2 // the x position of the next rendred note
 
-    const quarterNote = this.getAsset("quarterNote")
-    const quarterNoteWidth = quarterNote.getBoundingClientRect().width
+    const noteAsset = this.getAsset("wholeNote")
+    const noteAssetWidth = noteAsset.getBoundingClientRect().width
 
     // the default Y (0) location is the top-most space within the staff
 
     // console.log("refresh notes", this.props.notes)
     for (let noteColumn of notes) {
       for (let note of noteColumn) {
-        console.log("rendering note", note)
         let value = parseNote(note)
-        let n = quarterNote.clone()
+        let n = noteAsset.clone()
 
         n.translation.set(nextNoteX, this.getNoteY(note))
         notesGroup.add(n)
-
-        nextNoteX += quarterNoteWidth + NOTE_GAP
       }
+
+      nextNoteX += noteAssetWidth + NOTE_GAP
     }
 
     return notesGroup
@@ -219,7 +218,7 @@ class StaffGroup {
     if (this.clef == "g") {
       return 44
     } else if (this.clef == "f") {
-      return 0
+      return 32
     }
 
     throw new Error(`Don't know how to position notes for cleff: ${this.cleff}`)
@@ -272,8 +271,8 @@ export class StaffTwo extends React.PureComponent {
     delete this.two
   }
 
-  updateWidth(width) {
-    if (this.two && width != this.two.width) {
+  updateWidth(width, force=false) {
+    if (force || (this.two && width != this.two.width)) {
       // setting dimensions is funky: https://github.com/jonobr1/two.js/issues/191
       this.two.width = width
 
@@ -308,17 +307,50 @@ export class StaffTwo extends React.PureComponent {
     this.refreshStaves()
     this.refreshNotes()
 
+    this.scaleToFit()
     this.two.update()
+  }
+
+  // this is a quick hack for development: we should really be using the note
+  // range to control the scale to prevent jumping around in size as new notes
+  // are generated
+  scaleToFit(maxScale=0.5) {
+    const targetHeight = this.two.height
+    const origScale = this.renderGroup.scale
+
+    this.renderGroup.scale = 1
+    this.renderGroup.translation.set(0,0)
+
+    // we want to map these coordinates to the output height
+    let {top, bottom} = this.renderGroup.getBoundingClientRect()
+
+    // add some padding
+    top = Math.min(top, -1)
+    bottom += 10
+
+    const sourceHeight = bottom - top
+    const scale = Math.min(maxScale, targetHeight / sourceHeight)
+
+    this.renderGroup.scale = scale
+    this.renderGroup.translation.set(0, Math.floor(-(top * scale)))
+
+    if (scale != origScale) {
+      // force update call to width since scale has changed
+      this.updateWidth(this.two.width, true)
+      return true
+    }
+
+    return false
   }
 
   refreshStaves() {
     if (this.stavesGroup) {
-      this.stavesGroup.remove(...this.stavesGroup.children)
-    } else {
-      this.stavesGroup = new Two.Group()
-      this.stavesGroup.translation.set(0, -STAFF_HEIGHT_OFFSET)
-      this.stavesGroup.addTo(this.renderGroup)
+      this.stavesGroup.remove()
     }
+
+    this.stavesGroup = new Two.Group()
+    this.stavesGroup.translation.set(0, -STAFF_HEIGHT_OFFSET)
+    this.stavesGroup.addTo(this.renderGroup)
 
     this.staves = []
 
@@ -375,14 +407,35 @@ export class StaffTwo extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.notes != this.props.notes) {
+    let updated = false
+
+    let refreshNotes = () => {
       this.refreshNotes()
-      this.two.update()
+      updated = true
+      refreshNotes = function() {}
+    }
+
+    let refreshStaves = () => {
+      this.refreshStaves()
+      updated = true
+      refreshStaves = function() {}
+    }
+
+    if (prevProps.type != this.props.type) {
+      refreshStaves()
+    }
+
+    if (prevProps.notes != this.props.notes) {
+      refreshNotes()
     }
 
     if (prevProps.keySignature != this.props.keySignature) {
-      this.refreshStaves()
-      this.refreshNotes()
+      refreshStaves()
+      refreshNotes()
+    }
+
+    if (updated) {
+      this.scaleToFit()
       this.two.update()
     }
   }
