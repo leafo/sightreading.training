@@ -301,7 +301,8 @@ export class StaffTwo extends React.PureComponent {
   // controller that renders both and then feeds the correct voices to the
   // correct staves
   static propTypes = {
-    type: types.oneOf(["treble", "bass", "grand"])
+    type: types.oneOf(["treble", "bass", "grand"]).isRequired,
+    keySignature: types.object.isRequired
   }
 
   constructor(props) {
