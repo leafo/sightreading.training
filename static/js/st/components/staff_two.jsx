@@ -261,11 +261,39 @@ class StaffGroup {
 
   // find staff local y coordinate for a note
   getNoteY(note) {
-    // TODO: need to to convert chromatic note to keysignature relative in order to calculate accurate note position
     // NOTE: noteStaffOffset has y axis flipped (origin on bottom), rendering has origin on top
     // NOTE we subtract NOTE_HALF_HEIGHT in the end to center the note on the line
-    return (-noteStaffOffset(note) + this.getClefNoteOffset()) * NOTE_HALF_HEIGHT - NOTE_HALF_HEIGHT
+    return (-this.noteStaffOffset(note) + this.getClefNoteOffset()) * NOTE_HALF_HEIGHT - NOTE_HALF_HEIGHT
   }
+
+  // This is a wrapper around noteStaffOffset to ensure that we have applied
+  // the key signature to the incoming chromatic note
+  noteStaffOffset(note) {
+    // TODO: need to to convert chromatic note to keysignature relative in
+    // order to calculate accurate note position
+    return noteStaffOffset(note)
+  }
+
+  // find the min and max "staff local" row numbers for a column of notes.
+  // Suitable for rendering ledger lines
+  noteColumnRowRanges(notes) {
+    let minRow, maxRow
+
+    for (const note of notes) {
+      let row = -this.noteStaffOffset(note) + this.getClefNoteOffset()
+
+      if (minRow == null || row < minRow) {
+        minRow = row
+      }
+
+      if (maxRow == null || row > maxRow) {
+        maxRow = row
+      }
+    }
+
+    return [minRow, maxRow]
+  }
+
 }
 
 export class StaffTwo extends React.PureComponent {
