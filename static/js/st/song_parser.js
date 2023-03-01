@@ -2,7 +2,7 @@
 import peg from "st/song_parser_peg"
 import {parseNote, noteName, KeySignature} from "st/music"
 
-import {SongNoteList, MultiTrackSong, SongNote} from "st/song_note_list"
+import {MultiTrackSong, SongNote} from "st/song_note_list"
 import {AutoChords} from "st/auto_chords"
 
 // tokens are separated by whitepace

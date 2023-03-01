@@ -24,14 +24,15 @@ class MeasureLines extends React.PureComponent {
     renderLeft: types.number.isRequired,
     renderRight: types.number.isRequired,
     offsetLeft: types.number.isRequired,
+    metadata: types.object
   }
 
   render() {
     const props = this.props
     let beatsPerMeasure = 4
 
-    if (props.notes.metadata) {
-      beatsPerMeasure = props.notes.metadata.beatsPerMeasure || beatsPerMeasure
+    if (props.metadata) {
+      beatsPerMeasure = props.metadata.beatsPerMeasure || beatsPerMeasure
     }
 
     let stop = props.notes.getStopInBeats()
@@ -69,6 +70,7 @@ export default class StaffSongNotes extends React.PureComponent {
     loopRight: types.number,
     pixelsPerBeat: types.number.isRequired,
     heldNotes: types.object.isRequired,
+    metadata: types.object.isRequired, // from song parser
   }
 
   constructor(props) {
@@ -166,6 +168,7 @@ export default class StaffSongNotes extends React.PureComponent {
         renderRight={renderRight}
         pixelsPerBeat={this.props.pixelsPerBeat}
         offsetLeft={offsetLeft}
+        metadata={this.props.metadata}
       />
 
       <LedgerLines key="ledger_lines"

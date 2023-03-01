@@ -471,6 +471,7 @@ export class PlayAlongPage extends React.Component {
       let staffProps = {
         ref: this.getTrackRef(idx),
         key: `track-${idx}`,
+        metadata: this.state.song.metadata,
         notes: track,
         heldNotes: this.state.heldSongNotes,
         keySignature,
