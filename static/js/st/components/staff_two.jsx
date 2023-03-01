@@ -22,6 +22,8 @@ import {CLEF_G, CLEF_F, FLAT, SHARP, QUARTER_NOTE, WHOLE_NOTE} from "st/staff_as
 
 import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
+import NoteList from "st/note_list"
+
 const createAsset = function(element, name) {
   let out = React.memo(React.forwardRef((_, ref) =>
     // NOTE: nulling out viewBox is a hack to deal with this bug: https://github.com/jonobr1/two.js/issues/561
@@ -64,7 +66,7 @@ class StaffGroup {
     }
   }
 
-  // creates a two.group for the staff, but not containing any notes
+  // creates a two.group for the staff, but not containing any notes. Ledger lines are inserted by the notes group
   render() {
     this.renderGroup = new Two.Group()
 
@@ -154,6 +156,20 @@ class StaffGroup {
 
     this.notesGroup = this.makeNotes(notes)
     this.notesGroup.addTo(this.renderGroup)
+  }
+
+  // keep in mind held notes is not array of note names but table
+  renderHeldNotes(heldNotes) {
+    if (this.heldNotesGroup) {
+      this.heldNotesGroup.remove()
+      delete this.heldNotesGroup
+    }
+
+    const notes = new NoteList([Object.keys(heldNotes)])
+
+    this.heldNotesGroup = this.makeNotes(notes)
+    this.heldNotesGroup.opacity = 0.25
+    this.heldNotesGroup.addTo(this.renderGroup)
   }
 
   makeKeySignature(type, count) {
@@ -375,11 +391,13 @@ export class StaffTwo extends React.PureComponent {
 
   // this will update all the visible notes
   refreshNotes() {
-    if (!this.props.notes) {
-      return
+    if (this.props.notes) {
+      this.staves[0].renderNotes(this.props.notes)
     }
 
-    this.staves[0].renderNotes(this.props.notes)
+    if (this.props.heldNotes) {
+      this.staves[0].renderHeldNotes(this.props.heldNotes)
+    }
   }
 
   // add StaffGroup to list of staves managed by this component
@@ -426,6 +444,10 @@ export class StaffTwo extends React.PureComponent {
     }
 
     if (prevProps.notes != this.props.notes) {
+      refreshNotes()
+    }
+
+    if (prevProps.heldNotes != this.props.heldNotes) {
       refreshNotes()
     }
 
