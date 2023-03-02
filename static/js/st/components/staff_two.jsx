@@ -364,7 +364,8 @@ export class StaffTwo extends React.PureComponent {
   }
 
   static defaultProps = {
-    height: 300
+    height: 300, // pixel height of the svg element
+    maxScale: 0.5, // the maximum scale size when scaling contents to fit element
   }
 
   constructor(props) {
@@ -443,7 +444,7 @@ export class StaffTwo extends React.PureComponent {
   // this is a quick hack for development: we should really be using the note
   // range to control the scale to prevent jumping around in size as new notes
   // are generated
-  scaleToFit(maxScale=0.5) {
+  scaleToFit(maxScale=this.props.maxScale) {
     const targetHeight = this.two.height
     const origScale = this.renderGroup.scale
 
