@@ -7,11 +7,11 @@ import * as types from "prop-types"
 
 import Two from "two.js"
 
-const STAFF_HEIGHT_OFFSET = -100 // margin of the entire staff from the top origin of the SVG document
+// hardcoded offset from when offsets were aranged in figma. This should
+// probably be removed and everything should be specified relative to origin
+const STAFF_HEIGHT_OFFSET = -100
 
-
-
-// These dimensions are in "Staff local" coordinates
+// These dimensions are in "staff local" coordinates
 const LINE_DY = 58 // Y spacing between each ledger line, should also be the height of the note
 const LINE_HALF_DY = LINE_DY / 2 // the Y spacing between half steps
 const LINE_HEIGHT = 4
@@ -248,12 +248,15 @@ class StaffGroup {
 
     let group = new Two.Group()
 
+    const clefSettings = this.getClefSettings()
+    const offsetY = (noteStaffOffset(clefSettings.upperLine) - noteStaffOffset(clefSettings.keySignatureCenter)) * LINE_HALF_DY
+
     let offsetX = 0
     const accidentalGap = 4
     for (let k = 0; k < count; k++) {
       let a = accidentalAsset.clone()
 
-      a.translation.set(offsetX, offsets[k] + STAFF_HEIGHT_OFFSET)
+      a.translation.set(offsetX, offsetY + offsets[k] + STAFF_HEIGHT_OFFSET)
       offsetX += a.getBoundingClientRect().width + accidentalGap
       group.add(a)
     }

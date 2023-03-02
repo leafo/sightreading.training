@@ -54,4 +54,52 @@ describe("staff two", function() {
 
     expect(true).toBe(true)
   })
+
+  it("renders key signatures", function() {
+    const notes = new NoteList([
+      ["G5"],
+      ["A5"],
+      ["B5"],
+      ["C6"],
+      ["D6"],
+      ["E6"],
+      ["F6"],
+      ["G6"],
+    ])
+
+
+    getRoot().render(
+      React.createElement("div", {},
+        React.createElement(StaffTwo, {
+          height: 150,
+          type: "treble",
+          keySignature: new KeySignature(7),
+          notes
+        }),
+
+        React.createElement(StaffTwo, {
+          height: 150,
+          type: "treble",
+          keySignature: new KeySignature(-7),
+          notes
+        }),
+
+        React.createElement(StaffTwo, {
+          height: 150,
+          type: "bass",
+          keySignature: new KeySignature(7),
+          notes
+        }),
+
+        React.createElement(StaffTwo, {
+          height: 150,
+          type: "bass",
+          keySignature: new KeySignature(-7),
+          notes
+        }),
+      )
+    )
+
+    expect(true).toBe(true)
+  })
 })
