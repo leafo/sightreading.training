@@ -31,6 +31,8 @@ import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
 import NoteList from "st/note_list"
 
+// this converts static react elements to a memoized component that can take
+// ref
 const createAsset = function(element, name) {
   let out = React.memo(React.forwardRef((_, ref) =>
     // NOTE: nulling out viewBox is a hack to deal with this bug: https://github.com/jonobr1/two.js/issues/561
@@ -43,7 +45,6 @@ const createAsset = function(element, name) {
   return out
 }
 
-// we wrap in components so we can fetch them by reference
 const GClef = createAsset(CLEF_G, "GClef")
 const FClef = createAsset(CLEF_F, "FClef")
 const Flat = createAsset(FLAT, "Flat")
@@ -61,11 +62,17 @@ class StaffGroup {
       keySignatureCenter: "F6",
       upperLine: "F6", // upper line is where origin (0) is for staff lines
       lowerLine: "E5",
+
+      assetName: "gclef",
+      assetOffset: 14,
     },
     f: {
       keySignatureCenter: "F4",
       upperLine: "A4",
       lowerLine: "G3",
+
+      assetName: "fclef",
+      assetOffset: 102,
     }
   }
 
@@ -106,19 +113,15 @@ class StaffGroup {
       this.lines.push(line)
     }
 
-    if (this.clef == "g") {
-      const clef = this.getAsset("gclef")
-      this.renderGroup.add(clef)
-      this.marginX += CLEF_GAP
-      clef.translation.set(this.marginX, STAFF_HEIGHT_OFFSET + 14)
-      this.marginX += clef.getBoundingClientRect().width
-    } else if (this.clef == "f") {
-      const clef = this.getAsset("fclef")
-
-      this.renderGroup.add(clef)
-      this.marginX += CLEF_GAP
-      clef.translation.set(this.marginX, STAFF_HEIGHT_OFFSET + 102)
-      this.marginX += clef.getBoundingClientRect().width
+    if (this.clef) {
+      const clefSettings = this.getClefSettings()
+      const clef =  this.getAsset(clefSettings.assetName)
+      if (clef) {
+        this.marginX += CLEF_GAP
+        clef.translation.set(this.marginX, STAFF_HEIGHT_OFFSET + clefSettings.assetOffset)
+        this.renderGroup.add(clef)
+        this.marginX += clef.getBoundingClientRect().width
+      }
     }
 
     let keySignature
@@ -515,6 +518,7 @@ export class StaffTwo extends React.PureComponent {
       .translation.set(0, (this.staves.length - 1) * STAFF_ALIGN)
   }
 
+  // this will return a fresh copy of the asset that can be mutated
   getAsset(name) {
     const domNode = this.assets[name].current
 
