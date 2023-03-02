@@ -7,17 +7,23 @@ import * as types from "prop-types"
 
 import Two from "two.js"
 
-const STAFF_HEIGHT_OFFSET = -100
-const STAFF_INNER_HEIGHT = 236
+const STAFF_HEIGHT_OFFSET = -100 // margin of the entire staff from the top origin of the SVG document
+
+
 
 // These dimensions are in "Staff local" coordinates
-const BAR_WIDTH = 12
+const LINE_DY = 58 // Y spacing between each ledger line, should also be the height of the note
+const LINE_HALF_DY = LINE_DY / 2 // the Y spacing between half steps
 const LINE_HEIGHT = 4
-const LINE_DY = 58 // Y spacing between each ledger line (should be even to allow clean division for note placement)
-const LEDGER_EXTENT = 10 // how much ledger line leads and trails past note
+
 const CLEF_GAP = 28 // the X spacing between cleff and first note
 const NOTE_GAP = 100 // the X spacing between notes
-const NOTE_HALF_HEIGHT = LINE_DY / 2 // the Y spacing between notes
+
+const LEDGER_EXTENT = 10 // how much ledger line extends before and past the note in x axis
+
+const STAFF_INNER_HEIGHT = LINE_DY*4 + LINE_HEIGHT
+const BAR_WIDTH = 12
+
 
 import {CLEF_G, CLEF_F, FLAT, SHARP, QUARTER_NOTE, WHOLE_NOTE} from "st/staff_assets"
 
@@ -51,14 +57,14 @@ const WholeNote = createAsset(WHOLE_NOTE, "WholeNote")
 class StaffGroup {
   static CLEF_SETTINGS = {
     g: {
-      // where the key signature is centered around
+      // where the F of the key signature is centered around
       keySignatureCenter: "F6",
       upperLine: "F6", // upper line is where origin (0) is for staff lines
       lowerLine: "E5",
     },
     f: {
       keySignatureCenter: "F4",
-      upperLine: "A5",
+      upperLine: "A4",
       lowerLine: "G3",
     }
   }
@@ -229,7 +235,6 @@ class StaffGroup {
     let offsets, accidentalAsset
 
     // these offsets apply to G clef with default staff height offset
-    // TODO: use cleff settings to align correctly
     if (type == "flat") {
       offsets = [133, 42, 158, 67, 191, 100, 216]
       accidentalAsset = this.getAsset("flat")
@@ -285,21 +290,25 @@ class StaffGroup {
     return this.marginX
   }
 
-  // the note Y position offset based on the clef of the staff
-  getClefNoteOffset() {
+  getClefSettings() {
     const settings = StaffGroup.CLEF_SETTINGS[this.clef]
     if (!settings) {
       throw new Error(`Don't have staff settings for clef: ${this.clef}`)
     }
 
-    return noteStaffOffset(settings.upperLine)
+    return settings
   }
 
-  // find staff local y coordinate for a note
+  // the note Y position offset based on the clef of the staff
+  getClefNoteOffset() {
+    return noteStaffOffset(this.getClefSettings().upperLine)
+  }
+
+  // find staff local y coordinate for a note (centered)
   getNoteY(note) {
     // NOTE: noteStaffOffset has y axis flipped (origin on bottom), rendering has origin on top
-    // NOTE we subtract NOTE_HALF_HEIGHT in the end to center the note on the line
-    return (-this.noteStaffOffset(note) + this.getClefNoteOffset()) * NOTE_HALF_HEIGHT - NOTE_HALF_HEIGHT
+    // NOTE we subtract LINE_HALF_DY since we assume the the note_asset.height / 2 == LINE_HALF_DY
+    return (-this.noteStaffOffset(note) + this.getClefNoteOffset()) * LINE_HALF_DY - LINE_HALF_DY
   }
 
   // This is a wrapper around noteStaffOffset to ensure that we have applied
