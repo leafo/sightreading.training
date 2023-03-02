@@ -16,3 +16,10 @@ export const getRoot = () => {
   return root
 }
 
+// the keyCounter ensures that a full re-render happens on every call even if
+// the component is shared
+let keyCounter = 0
+export const render = (...args) => {
+  getRoot().render(React.createElement(React.Fragment, {key: `key-${keyCounter++}`}, ...args))
+}
+

@@ -24,8 +24,7 @@ const LEDGER_EXTENT = 10 // how much ledger line extends before and past the not
 const STAFF_INNER_HEIGHT = LINE_DY*4 + LINE_HEIGHT
 const BAR_WIDTH = 12
 
-
-import {CLEF_G, CLEF_F, FLAT, SHARP, QUARTER_NOTE, WHOLE_NOTE} from "st/staff_assets"
+import {CLEF_G, CLEF_F, CLEF_C, FLAT, SHARP, QUARTER_NOTE, WHOLE_NOTE} from "st/staff_assets"
 
 import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
@@ -47,6 +46,7 @@ const createAsset = function(element, name) {
 
 const GClef = createAsset(CLEF_G, "GClef")
 const FClef = createAsset(CLEF_F, "FClef")
+const CClef = createAsset(CLEF_C, "CClef")
 const Flat = createAsset(FLAT, "Flat")
 const Sharp = createAsset(SHARP, "Sharp")
 const QuarterNote = createAsset(QUARTER_NOTE, "QuarterNote")
@@ -56,12 +56,14 @@ const WholeNote = createAsset(WHOLE_NOTE, "WholeNote")
 // all cordinates are done in "staff local" space, STAFF_HEIGHT_OFFSET
 // The staff contains a "notes group" which contains all the notes rendered by the staff
 class StaffGroup {
+  // TODO: this should be renamed. A clef is just the symbol. The symbol +
+  // location is what is really being specified here (treble, bass, alto,
+  // etc.)
   static CLEF_SETTINGS = {
     g: {
       // where the F of the key signature is centered around
       keySignatureCenter: "F6",
       upperLine: "F6", // upper line is where origin (0) is for staff lines
-      lowerLine: "E5",
 
       assetName: "gclef",
       assetOffset: 14,
@@ -69,10 +71,16 @@ class StaffGroup {
     f: {
       keySignatureCenter: "F4",
       upperLine: "A4",
-      lowerLine: "G3",
 
       assetName: "fclef",
       assetOffset: 102,
+    },
+    c: {
+      keySignatureCenter: "F6",
+      upperLine: "G6",
+
+      assetName: "cclef",
+      assetOffset: 100,
     }
   }
 
@@ -352,7 +360,7 @@ export class StaffTwo extends React.PureComponent {
   // controller that renders both and then feeds the correct voices to the
   // correct staves
   static propTypes = {
-    type: types.oneOf(["treble", "bass", "grand"]).isRequired,
+    type: types.oneOf(["treble", "bass", "alto", "grand"]).isRequired,
     keySignature: types.object.isRequired
   }
 
@@ -485,6 +493,15 @@ export class StaffTwo extends React.PureComponent {
       }))
     }
 
+    if (this.props.type == "alto") {
+      this.addStaff(new StaffGroup({
+        getAsset: this.getAsset.bind(this),
+        clef: "c",
+        keySignature: this.props.keySignature.getCount(),
+        width: this.two.width / this.renderGroup.scale
+      }))
+    }
+
     if (this.props.type == "bass" || this.props.type == "grand") {
       this.addStaff(new StaffGroup({
         getAsset: this.getAsset.bind(this),
@@ -576,6 +593,7 @@ export class StaffTwo extends React.PureComponent {
       <div ref={this.assetsRef} className="assets" style={{display: "none"}}>
         <GClef ref={this.assets.gclef ||= React.createRef()} />
         <FClef ref={this.assets.fclef ||= React.createRef()} />
+        <CClef ref={this.assets.cclef ||= React.createRef()} />
         <Flat ref={this.assets.flat ||= React.createRef()} />
         <Sharp ref={this.assets.sharp ||= React.createRef()} />
         <WholeNote ref={this.assets.wholeNote ||= React.createRef()} />
