@@ -11,7 +11,7 @@ import Two from "two.js"
 // probably be removed and everything should be specified relative to origin
 const STAFF_HEIGHT_OFFSET = -100
 
-// These dimensions are in "staff local" coordinates
+// These dimensions are in "staff-local" coordinates
 const LINE_DY = 58 // Y spacing between each ledger line, should also be the height of the note
 const LINE_HALF_DY = LINE_DY / 2 // the Y spacing between half steps
 const LINE_HEIGHT = 4
@@ -53,40 +53,39 @@ const QuarterNote = createAsset(QUARTER_NOTE, "QuarterNote")
 const WholeNote = createAsset(WHOLE_NOTE, "WholeNote")
 
 // manages a Two.Group for a single staff, clef and including key signature
-// all cordinates are done in "staff local" space, STAFF_HEIGHT_OFFSET
+// all cordinates are done in "staff-local" space, STAFF_HEIGHT_OFFSET
 // The staff contains a "notes group" which contains all the notes rendered by the staff
 class StaffGroup {
-  // TODO: this should be renamed. A clef is just the symbol. The symbol +
-  // location is what is really being specified here (treble, bass, alto,
-  // etc.)
-  static CLEF_SETTINGS = {
-    g: {
+  // Terminology: A "clef" is just the symbol, the staff type (treble, bass,
+  // etc.) is a combination of clef and the range of notes
+  static STAFF_TYPES = {
+    treble: {
       // where the F of the key signature is centered around
       keySignatureCenter: "F6",
       upperLine: "F6", // upper line is where origin (0) is for staff lines
 
-      assetName: "gclef",
+      clefAsset: "gclef",
       assetOffset: 14,
     },
-    f: {
+    bass: {
       keySignatureCenter: "F4",
       upperLine: "A4",
 
-      assetName: "fclef",
+      clefAsset: "fclef",
       assetOffset: 102,
     },
-    c: {
+    alto: {
       keySignatureCenter: "F6",
       upperLine: "G6",
 
-      assetName: "cclef",
+      clefAsset: "cclef",
       assetOffset: 100,
     }
   }
 
   constructor(params={}) {
     this.getAsset = params.getAsset
-    this.clef = params.clef || "g"
+    this.type = params.type || "treble"
     this.keySignature = params.keySignature || 0
     this.width = params.width || 1000
   }
@@ -121,12 +120,12 @@ class StaffGroup {
       this.lines.push(line)
     }
 
-    if (this.clef) {
-      const clefSettings = this.getClefSettings()
-      const clef =  this.getAsset(clefSettings.assetName)
+    if (this.type) {
+      const staffSettings = this.getStaffSettings()
+      const clef =  this.getAsset(staffSettings.clefAsset)
       if (clef) {
         this.marginX += CLEF_GAP
-        clef.translation.set(this.marginX, STAFF_HEIGHT_OFFSET + clefSettings.assetOffset)
+        clef.translation.set(this.marginX, STAFF_HEIGHT_OFFSET + staffSettings.assetOffset)
         this.renderGroup.add(clef)
         this.marginX += clef.getBoundingClientRect().width
       }
@@ -245,12 +244,11 @@ class StaffGroup {
   makeKeySignature(type, count) {
     let offsets, accidentalAsset
 
-    // these offsets apply to G clef with default staff height offset
+    // these offsets are from figma layout, in STAFF_HEIGHT_OFFSET space
     if (type == "flat") {
       offsets = [133, 42, 158, 67, 191, 100, 216]
       accidentalAsset = this.getAsset("flat")
     } else if (type == "sharp") {
-      // offsets aligned to top row
       offsets = [42, 129, 14, 101, 187, 71, 158]
       accidentalAsset = this.getAsset("sharp")
     } else {
@@ -259,8 +257,8 @@ class StaffGroup {
 
     let group = new Two.Group()
 
-    const clefSettings = this.getClefSettings()
-    const offsetY = (noteStaffOffset(clefSettings.upperLine) - noteStaffOffset(clefSettings.keySignatureCenter)) * LINE_HALF_DY
+    const staffSettings = this.getStaffSettings()
+    const offsetY = (noteStaffOffset(staffSettings.upperLine) - noteStaffOffset(staffSettings.keySignatureCenter)) * LINE_HALF_DY
 
     let offsetX = 0
     const accidentalGap = 4
@@ -304,25 +302,26 @@ class StaffGroup {
     return this.marginX
   }
 
-  getClefSettings() {
-    const settings = StaffGroup.CLEF_SETTINGS[this.clef]
+  getStaffSettings() {
+    const settings = StaffGroup.STAFF_TYPES[this.type]
     if (!settings) {
-      throw new Error(`Don't have staff settings for clef: ${this.clef}`)
+      throw new Error(`Don't have staff settings for staff: ${this.type}`)
     }
 
     return settings
   }
 
-  // the note Y position offset based on the clef of the staff
-  getClefNoteOffset() {
-    return noteStaffOffset(this.getClefSettings().upperLine)
+  // the half-step row of the upper line of the staff
+  // subtract from a note's absolute row to get staff-local row
+  getNoteOffset() {
+    return noteStaffOffset(this.getStaffSettings().upperLine)
   }
 
-  // find staff local y coordinate for a note (centered)
+  // find staff-local y coordinate for a note (centered)
   getNoteY(note) {
     // NOTE: noteStaffOffset has y axis flipped (origin on bottom), rendering has origin on top
     // NOTE we subtract LINE_HALF_DY since we assume the the note_asset.height / 2 == LINE_HALF_DY
-    return (-this.noteStaffOffset(note) + this.getClefNoteOffset()) * LINE_HALF_DY - LINE_HALF_DY
+    return (-this.noteStaffOffset(note) + this.getNoteOffset()) * LINE_HALF_DY - LINE_HALF_DY
   }
 
   // This is a wrapper around noteStaffOffset to ensure that we have applied
@@ -333,13 +332,13 @@ class StaffGroup {
     return noteStaffOffset(note)
   }
 
-  // find the min and max "staff local" row numbers for a column of chromatic notes.
+  // find the min and max "staff-local" row numbers for a column of chromatic notes.
   // Suitable for rendering ledger lines
   noteColumnRowRanges(notes) {
     let minRow, maxRow
 
     for (const note of notes) {
-      let row = -this.noteStaffOffset(note) + this.getClefNoteOffset()
+      let row = -this.noteStaffOffset(note) + this.getNoteOffset()
 
       if (minRow == null || row < minRow) {
         minRow = row
@@ -406,7 +405,7 @@ export class StaffTwo extends React.PureComponent {
       // setting dimensions is funky: https://github.com/jonobr1/two.js/issues/191
       this.two.width = width
 
-      // scale to staff local space
+      // scale to staff-local space
       let scaledWidth = this.two.width / this.renderGroup.scale
 
       if (this.staves) {
@@ -487,7 +486,7 @@ export class StaffTwo extends React.PureComponent {
     if (this.props.type == "treble" || this.props.type == "grand") {
       this.addStaff(new StaffGroup({
         getAsset: this.getAsset.bind(this),
-        clef: "g",
+        type: "treble",
         keySignature: this.props.keySignature.getCount(),
         width: this.two.width / this.renderGroup.scale
       }))
@@ -496,7 +495,7 @@ export class StaffTwo extends React.PureComponent {
     if (this.props.type == "alto") {
       this.addStaff(new StaffGroup({
         getAsset: this.getAsset.bind(this),
-        clef: "c",
+        type: "alto",
         keySignature: this.props.keySignature.getCount(),
         width: this.two.width / this.renderGroup.scale
       }))
@@ -505,7 +504,7 @@ export class StaffTwo extends React.PureComponent {
     if (this.props.type == "bass" || this.props.type == "grand") {
       this.addStaff(new StaffGroup({
         getAsset: this.getAsset.bind(this),
-        clef: "f",
+        type: "bass",
         keySignature: this.props.keySignature.getCount(),
         width: this.two.width / this.renderGroup.scale
       }))
