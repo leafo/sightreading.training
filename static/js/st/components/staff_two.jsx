@@ -23,8 +23,9 @@ const LEDGER_EXTENT = 10 // how much ledger line extends before and past the not
 
 const STAFF_INNER_HEIGHT = LINE_DY*4 + LINE_HEIGHT
 const BAR_WIDTH = 12
+const MIN_STAFF_DY = 500
 
-import {CLEF_G, CLEF_F, CLEF_C, FLAT, SHARP, QUARTER_NOTE, WHOLE_NOTE} from "st/staff_assets"
+import {CLEF_G, CLEF_F, CLEF_C, FLAT, SHARP, QUARTER_NOTE, WHOLE_NOTE, BRACE} from "st/staff_assets"
 
 import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
@@ -49,6 +50,7 @@ const FClef = createAsset(CLEF_F, "FClef")
 const CClef = createAsset(CLEF_C, "CClef")
 const Flat = createAsset(FLAT, "Flat")
 const Sharp = createAsset(SHARP, "Sharp")
+const Brace = createAsset(BRACE, "Brace")
 const QuarterNote = createAsset(QUARTER_NOTE, "QuarterNote")
 const WholeNote = createAsset(WHOLE_NOTE, "WholeNote")
 
@@ -479,10 +481,9 @@ export class StaffTwo extends React.PureComponent {
     }
 
     this.stavesGroup = new Two.Group()
-    this.stavesGroup.translation.set(0, -STAFF_HEIGHT_OFFSET)
-    this.stavesGroup.addTo(this.renderGroup)
-
     this.staves = []
+
+    let marginX = 0
 
     if (this.props.type == "treble" || this.props.type == "grand") {
       this.addStaff(new StaffGroup({
@@ -510,6 +511,26 @@ export class StaffTwo extends React.PureComponent {
         width: this.two.width / this.renderGroup.scale
       }))
     }
+
+    // add the brace. Note the bace sits in negative coordinates so we aren't changing origin of staves
+    if (this.props.type == "grand") {
+      const braceMargin = CLEF_GAP / 2
+      const brace = this.getAsset("brace")
+      const {width: braceWidth, height: braceHeight} = brace.getBoundingClientRect()
+
+      const staffHeight = LINE_DY * 4 + LINE_HEIGHT
+
+      let targetHeight = STAFF_INNER_HEIGHT + (this.staves.length - 1)  * MIN_STAFF_DY
+
+      brace.translation.set(-braceWidth - braceMargin, 0)
+      brace.scale = new Two.Vector(1, targetHeight / braceHeight)
+
+      marginX = braceWidth + braceMargin
+      this.stavesGroup.add(brace)
+    }
+
+    this.stavesGroup.translation.set(marginX, -STAFF_HEIGHT_OFFSET)
+    this.stavesGroup.addTo(this.renderGroup)
   }
 
   // this will update all the visible notes
@@ -525,14 +546,15 @@ export class StaffTwo extends React.PureComponent {
 
   // add StaffGroup to list of staves managed by this component
   addStaff(staffGroup) {
-    const STAFF_ALIGN = 500
+    // TODO: the DY of each staff should be dynamically calculated to make
+    // space for ledger lines
 
     this.staves ||= []
     this.staves.push(staffGroup)
 
-    staffGroup.render()
-      .addTo(this.stavesGroup)
-      .translation.set(0, (this.staves.length - 1) * STAFF_ALIGN)
+    const g = staffGroup.render()
+    g.translation.set(0, (this.staves.length - 1) * MIN_STAFF_DY)
+    g.addTo(this.stavesGroup)
   }
 
   // this will return a fresh copy of the asset that can be mutated
@@ -594,6 +616,7 @@ export class StaffTwo extends React.PureComponent {
         <GClef ref={this.assets.gclef ||= React.createRef()} />
         <FClef ref={this.assets.fclef ||= React.createRef()} />
         <CClef ref={this.assets.cclef ||= React.createRef()} />
+        <Brace ref={this.assets.brace ||= React.createRef()} />
         <Flat ref={this.assets.flat ||= React.createRef()} />
         <Sharp ref={this.assets.sharp ||= React.createRef()} />
         <WholeNote ref={this.assets.wholeNote ||= React.createRef()} />
