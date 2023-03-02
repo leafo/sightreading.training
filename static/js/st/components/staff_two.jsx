@@ -12,12 +12,12 @@ const STAFF_INNER_HEIGHT = 236
 
 // These dimensions are in "Staff local" coordinates
 const BAR_WIDTH = 12
-const LEDGER_HEIGHT = 4
-const LEDGER_DY = 58 // Y spacing between each ledger line (should be even to allow clean division for note placement)
+const LINE_HEIGHT = 4
+const LINE_DY = 58 // Y spacing between each ledger line (should be even to allow clean division for note placement)
 const LEDGER_EXTENT = 10 // how much ledger line leads and trails past note
 const CLEF_GAP = 28 // the X spacing between cleff and first note
 const NOTE_GAP = 100 // the X spacing between notes
-const NOTE_HALF_HEIGHT = LEDGER_DY / 2 // the Y spacing between notes
+const NOTE_HALF_HEIGHT = LINE_DY / 2 // the Y spacing between notes
 
 import {CLEF_G, CLEF_F, FLAT, SHARP, QUARTER_NOTE, WHOLE_NOTE} from "st/staff_assets"
 
@@ -95,7 +95,7 @@ class StaffGroup {
 
     this.lines ||= []
     for (let i = 0; i < 5; i++) {
-      let line = this.makeBar(this.marginX, i*LEDGER_DY, this.width - this.marginX, LEDGER_HEIGHT)
+      let line = this.makeBar(this.marginX, i*LINE_DY, this.width - this.marginX, LINE_HEIGHT)
       this.renderGroup.add(line)
       this.lines.push(line)
     }
@@ -144,7 +144,6 @@ class StaffGroup {
 
     // the default Y (0) location is the top-most space within the staff
 
-    // console.log("refresh notes", this.props.notes)
     for (let noteColumn of notes) {
       if (typeof noteColumn == "string") {
         noteColumn = [noteColumn]
@@ -154,12 +153,10 @@ class StaffGroup {
       const [minRow, maxRow] = this.noteColumnRowRanges(noteColumn)
       if (minRow && minRow < 0) {
         let lines = Math.floor(Math.abs(minRow) / 2);
-        console.log(noteColumn, "Above", minRow, "lines:", lines)
-
         for (let k=1; k <= lines; k++) {
           let ledgerLine = this.makeBar(
-            nextNoteX - LEDGER_EXTENT, -k*LEDGER_DY,
-            noteAssetWidth + LEDGER_EXTENT * 2, LEDGER_HEIGHT
+            nextNoteX - LEDGER_EXTENT, -k*LINE_DY,
+            noteAssetWidth + LEDGER_EXTENT * 2, LINE_HEIGHT
           )
           notesGroup.add(ledgerLine)
         }
@@ -167,13 +164,12 @@ class StaffGroup {
 
       if (maxRow && maxRow > 8) {
         let lines = Math.abs(Math.floor((maxRow - 8) / 2))
-        // console.log(noteColumn, "Below", maxRow, "lines:", lines)
-        const lowerLineY = 4 * LEDGER_DY
+        const lowerLineY = 4 * LINE_DY
 
         for (let k=1; k <= lines; k++) {
           let ledgerLine = this.makeBar(
-            nextNoteX - LEDGER_EXTENT, lowerLineY + k*LEDGER_DY,
-            noteAssetWidth + LEDGER_EXTENT * 2, LEDGER_HEIGHT
+            nextNoteX - LEDGER_EXTENT, lowerLineY + k*LINE_DY,
+            noteAssetWidth + LEDGER_EXTENT * 2, LINE_HEIGHT
           )
           notesGroup.add(ledgerLine)
         }
@@ -238,6 +234,7 @@ class StaffGroup {
       offsets = [133, 42, 158, 67, 191, 100, 216]
       accidentalAsset = this.getAsset("flat")
     } else if (type == "sharp") {
+      // offsets aligned to top row
       offsets = [42, 129, 14, 101, 187, 71, 158]
       accidentalAsset = this.getAsset("sharp")
     } else {
@@ -344,6 +341,10 @@ export class StaffTwo extends React.PureComponent {
     keySignature: types.object.isRequired
   }
 
+  static defaultProps = {
+    height: 300
+  }
+
   constructor(props) {
     super()
     this.state = {}
@@ -402,7 +403,7 @@ export class StaffTwo extends React.PureComponent {
 
     this.two = new Two({
       width: initialWidth,
-      height: 300,
+      height: this.props.height,
       // type: Two.Types.canvas
     }).appendTo(this.containerRef.current)
 
