@@ -2,7 +2,18 @@ import NoteList from "st/note_list"
 import {StaffTwo} from "st/components/staff_two"
 import {render} from "spec/helpers"
 
+// Example for rendering with old staff:
+// import {GStaff, FStaff, GrandStaff} from "st/components/staves"
+// React.createElement(GStaff, {
+//   heldNotes: {},
+//   keySignature: new KeySignature(0),
+//   pixelsPerBeat: 100,
+//   noteWidth: 100,
+//   notes
+// })
+
 import {KeySignature} from "st/music"
+
 
 import * as React from "react"
 
@@ -115,37 +126,65 @@ describe("staff two", function() {
     ])
 
     render(
-      React.createElement(React.Fragment, {},
-        React.createElement(StaffTwo, {
-          height: 150,
-          type: "treble",
-          keySignature: new KeySignature(7),
-          notes
-        }),
+      React.createElement(StaffTwo, {
+        height: 150,
+        type: "treble",
+        keySignature: new KeySignature(7),
+        notes
+      }),
 
-        React.createElement(StaffTwo, {
-          height: 150,
-          type: "treble",
-          keySignature: new KeySignature(-7),
-          notes
-        }),
+      React.createElement(StaffTwo, {
+        height: 150,
+        type: "treble",
+        keySignature: new KeySignature(-7),
+        notes
+      }),
 
-        React.createElement(StaffTwo, {
-          height: 150,
-          type: "bass",
-          keySignature: new KeySignature(7),
-          notes
-        }),
+      React.createElement(StaffTwo, {
+        height: 150,
+        type: "bass",
+        keySignature: new KeySignature(7),
+        notes
+      }),
 
-        React.createElement(StaffTwo, {
-          height: 150,
-          type: "bass",
-          keySignature: new KeySignature(-7),
-          notes
-        }),
-      )
+      React.createElement(StaffTwo, {
+        height: 150,
+        type: "bass",
+        keySignature: new KeySignature(-7),
+        notes
+      }),
     )
 
     expect(true).toBe(true)
   })
+
+
+  it("renders stacked notes", function() {
+    const notes = new NoteList([
+      ["C5", "D5", "E5", "F5"],
+      ["G5", "A5", "C6"],
+      ["F5", "A5", "B5"],
+    ])
+
+    render(
+      React.createElement(StaffTwo, {
+        height: 150,
+        type: "treble",
+        keySignature: new KeySignature(0),
+        notes
+      }),
+
+      React.createElement(GStaff, {
+        heldNotes: {},
+        keySignature: new KeySignature(0),
+        pixelsPerBeat: 100,
+        noteWidth: 100,
+        notes
+      })
+    )
+
+    expect(true).toBe(true)
+  })
+
+
 })

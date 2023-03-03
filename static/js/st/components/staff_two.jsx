@@ -17,9 +17,9 @@ const LINE_HALF_DY = LINE_DY / 2 // the Y spacing between half steps
 const LINE_HEIGHT = 4
 
 const CLEF_GAP = 28 // the X spacing between cleff and first note
-const NOTE_GAP = 100 // the X spacing between notes
+const NOTE_COLUMN_DX = 300 // the X spacing between note columns (note this doesn't take into account the width of column) to enssure consistent spacing between column
 
-const LEDGER_EXTENT = 10 // how much ledger line extends before and past the note in x axis
+const LEDGER_EXTENT = 15 // how much ledger line extends before and past the note in x axis
 
 const STAFF_INNER_HEIGHT = LINE_DY*4 + LINE_HEIGHT
 const BAR_WIDTH = 12
@@ -104,7 +104,7 @@ class StaffGroup {
   }
 
   // creates a two.group for the staff, but not containing any notes. Ledger lines are inserted by the notes group
-  render() {
+  renderToGroup() {
     this.renderGroup = new Two.Group()
 
     // the X location where the notes can be rendered from. This will be
@@ -169,6 +169,8 @@ class StaffGroup {
         noteColumn = [noteColumn]
       }
 
+      // TODO: filter the column of notes to not include ones that don't belong on the staff
+
       // Write the ledger lines for the column
       const [minRow, maxRow] = this.noteColumnRowRanges(noteColumn)
       if (minRow && minRow < 0) {
@@ -200,14 +202,30 @@ class StaffGroup {
       let noteColumnGroup = new Two.Group()
       let added = 0
 
-      for (let noteName of noteColumn) {
-        // TODO: filter out notes that don't belong on this staff
+      let sortedColumn = [...noteColumn].sort((a, b) => parseNote(a) - parseNote(b))
+
+      let lastRow = null
+      let lastOffset = false
+      for (let noteName of sortedColumn) {
+        const noteRow = this.noteStaffOffset(noteName)
+
         let note = noteAsset.clone()
         let noteY = this.getNoteY(noteName)
+        let noteX = nextNoteX
 
-        note.translation.set(nextNoteX, noteY)
+        // offset the note
+        if (!lastOffset && lastRow && Math.abs(noteRow - lastRow) == 1) {
+          noteX += Math.floor(note.getBoundingClientRect().width * 0.90)
+          lastOffset = true
+        } else {
+          lastOffset = false
+        }
+
+        note.translation.set(noteX, noteY)
         noteColumnGroup.add(note)
         added += 1
+
+        lastRow = noteRow
 
         // debug indicator
         // let bar = this.makeBar(nextNoteX, noteY, 10, 10)
@@ -222,7 +240,7 @@ class StaffGroup {
         noteColumnGroups.push(null)
       }
 
-      nextNoteX += noteAssetWidth + NOTE_GAP
+      nextNoteX += NOTE_COLUMN_DX
     }
 
     return [notesGroup, noteColumnGroups]
@@ -603,7 +621,7 @@ export class StaffTwo extends React.PureComponent {
     this.staves ||= []
     this.staves.push(staffGroup)
 
-    const g = staffGroup.render()
+    const g = staffGroup.renderToGroup()
     g.translation.set(0, (this.staves.length - 1) * MIN_STAFF_DY)
     g.addTo(this.stavesGroup)
   }
