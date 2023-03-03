@@ -150,8 +150,8 @@ class StaffGroup {
     return this.renderGroup
   }
 
-  // convet list of notes into group of positioned note shapes
-  makeNotes(notes) {
+  // convet a NoteList into group of positioned note shapes
+  makeNotes(noteList) {
     const notesGroup = new Two.Group()
     notesGroup.translation.set(this.marginX, 0)
 
@@ -160,9 +160,11 @@ class StaffGroup {
     const noteAsset = this.getAsset("wholeNote")
     const noteAssetWidth = noteAsset.getBoundingClientRect().width
 
-    // the default Y (0) location is the top-most space within the staff
+    // direct references to the note objects so we can animate them
+    let noteColumnGroups = []
 
-    for (let noteColumn of notes) {
+    // the default Y (0) location is the top-most space within the staff
+    for (let noteColumn of noteList) {
       if (typeof noteColumn == "string") {
         noteColumn = [noteColumn]
       }
@@ -194,26 +196,36 @@ class StaffGroup {
       }
 
 
-      // Write the notes
-      for (let note of noteColumn) {
-        let value = parseNote(note)
-        let n = noteAsset.clone()
+      // Write the column of notes
+      let noteColumnGroup = new Two.Group()
+      let added = 0
 
-        let noteY = this.getNoteY(note)
+      for (let noteName of noteColumn) {
+        // TODO: filter out notes that don't belong on this staff
+        let note = noteAsset.clone()
+        let noteY = this.getNoteY(noteName)
 
-        n.translation.set(nextNoteX, noteY)
-        notesGroup.add(n)
+        note.translation.set(nextNoteX, noteY)
+        noteColumnGroup.add(note)
+        added += 1
 
         // debug indicator
         // let bar = this.makeBar(nextNoteX, noteY, 10, 10)
         // bar.fill = "red"
-        // notesGroup.add(bar)
+        // noteColumnGroup.add(bar)
+      }
+
+      if (added > 0) {
+        noteColumnGroups.push(noteColumnGroup)
+        notesGroup.add(noteColumnGroup)
+      } else {
+        noteColumnGroups.push(null)
       }
 
       nextNoteX += noteAssetWidth + NOTE_GAP
     }
 
-    return notesGroup
+    return [notesGroup, noteColumnGroups]
   }
 
   // renders new set of notes into the primary note group. Note that the staff
@@ -223,10 +235,21 @@ class StaffGroup {
     if (this.notesGroup) {
       this.notesGroup.remove()
       delete this.notesGroup
+      delete this.notesByColumn
     }
 
-    this.notesGroup = this.makeNotes(notes)
-    this.notesGroup.addTo(this.renderGroup)
+    const [group, noteColumnGroups] = this.makeNotes(notes)
+
+    this.notesGroup = group
+    this.noteColumnGroups = noteColumnGroups
+    this.renderGroup.add(group)
+  }
+
+  // these are the notes to be animated when they press the wrong thing
+  getFirstColumnGroup() {
+    if (this.noteColumnGroups) {
+      return this.noteColumnGroups[0]
+    }
   }
 
   // keep in mind held notes is not array of note names but table
@@ -238,9 +261,10 @@ class StaffGroup {
 
     const notes = new NoteList([Object.keys(heldNotes)])
 
-    this.heldNotesGroup = this.makeNotes(notes)
-    this.heldNotesGroup.opacity = 0.25
-    this.heldNotesGroup.addTo(this.renderGroup)
+    const [group, notesByColumn] = this.makeNotes(notes)
+    group.opacity = 0.25
+    this.heldNotesGroup = group
+    this.renderGroup.add(group)
   }
 
   makeKeySignature(type, count) {
@@ -373,6 +397,7 @@ export class StaffTwo extends React.PureComponent {
   constructor(props) {
     super()
     this.state = {}
+    this.updaters = [] // animation functions
 
     this.containerRef = React.createRef()
     this.assetsRef = React.createRef()
@@ -422,6 +447,25 @@ export class StaffTwo extends React.PureComponent {
     }
   }
 
+  addUpdate(fn) {
+    this.updaters = [...this.updaters, fn]
+
+    if (!this.two.playing) {
+      console.log("Starting playing with ", this.updaters.length, "updaters")
+      this.two.play()
+    }
+
+  }
+
+  removeUpdate(fn) {
+    this.updaters = this.updaters.filter(f => f != fn)
+
+    if (this.updaters.length == 0 && this.two.playing) {
+      console.log("Stopping playing")
+      this.two.pause()
+    }
+  }
+
   componentDidMount() {
     this.createResizeObserver()
     let initialWidth = this.containerRef.current.getBoundingClientRect().width
@@ -431,6 +475,13 @@ export class StaffTwo extends React.PureComponent {
       height: this.props.height,
       // type: Two.Types.canvas
     }).appendTo(this.containerRef.current)
+
+    // call updaters when any animations are active
+    this.two.bind("update", (...args) => {
+      for (let updater of this.updaters) {
+        updater(...args)
+      }
+    })
 
     // render group contains the final viewport transformation
     this.renderGroup = this.two.makeGroup()
@@ -578,8 +629,42 @@ export class StaffTwo extends React.PureComponent {
     if (this.flushChanges) {
       this.flushChanges = false
       this.scaleToFit()
-      this.two.update()
+
+      // update not necesary if we are playing an animation, it will happen
+      // next frame
+      if (!this.two.playing) {
+        this.two.update()
+      }
     }
+  }
+
+  // makes a react component for enabling and disabling an animation
+  makeAnimator(displayName, makeFunction) {
+    return Object.assign(React.memo(props => {
+      React.useEffect(() => {
+        const updater = makeFunction()
+        this.addUpdate(updater)
+        return () => {
+          this.removeUpdate(updater)
+          updater(-1, 0) // signal removal of animator
+          this.two.update() // synchronize any changes from removal of update
+        }
+      })
+    }), { displayName })
+  }
+
+  getFirstColumnGroups() {
+    const out = []
+
+    if (this.staves) {
+      for (const staff of this.staves) {
+        const group = staff.getFirstColumnGroup()
+        if (group) {
+          out.push(group)
+        }
+      }
+    }
+    return out
   }
 
   render() {
@@ -601,6 +686,23 @@ export class StaffTwo extends React.PureComponent {
       return null
     }), { displayName: "RefreshStaves" })
 
+
+    this.NoteShaker ||= this.makeAnimator("NoteShaker", () => {
+      let elapsed = 0
+      return (frame, dt) => {
+        const scale = (1 - Math.max(0, elapsed - 250) / 250)
+        for (const group of this.getFirstColumnGroups()) {
+          if (frame > 0) {
+            group.translation.set(Math.sin(elapsed/3)*10*scale, 0)
+          } else {
+            group.translation.set(0,0)
+          }
+        }
+
+        elapsed += dt
+      }
+    })
+
     return <div className="notes_staff" ref={this.containerRef}>
       <this.RefreshNotes
         notes={this.props.notes}
@@ -611,6 +713,8 @@ export class StaffTwo extends React.PureComponent {
         type={this.props.type}
         keySignature={this.props.keySignature}
       />
+
+      {this.props.noteShaking ? <this.NoteShaker /> : null}
 
       <div ref={this.assetsRef} className="assets" style={{display: "none"}}>
         <GClef ref={this.assets.gclef ||= React.createRef()} />
