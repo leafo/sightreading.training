@@ -1,5 +1,5 @@
 
-import {notesLessThan, notesSame, parseNote, MajorScale} from "st/music"
+import {notesLessThan, notesSame, parseNote, noteStaffOffset, MajorScale} from "st/music"
 
 export default class NoteList extends Array {
   constructor(notes, opts={}) {
@@ -43,6 +43,43 @@ export default class NoteList extends Array {
       return true;
     }));
   }
+
+
+  // splits into two note lists suitable for rendering into grand
+  // staff. Attempts to prioritize ledger lines for notes that appear
+  // to be related voices
+  splitForGrandStaff() {
+    const trebleNotes = new NoteList()
+    const bassNotes = new NoteList()
+
+    // the center between the treble and bass cleffs
+    const middleC = noteStaffOffset("C5")
+
+    this.forEach((column, idx) => {
+      if (typeof column == "string") {
+        column = [column]
+      }
+
+      const tCol = []
+      const bCol = []
+
+      for (const note of column) {
+        if (noteStaffOffset(note) >= middleC) {
+          tCol.push(note)
+        } else {
+          bCol.push(note)
+        }
+      }
+
+      trebleNotes.push(tCol)
+      bassNotes.push(bCol)
+    })
+
+
+    return [trebleNotes, bassNotes]
+  }
+
+
 
   // TODO: there's no point in having this array hold the generator, this
   // method should just take a generator instance

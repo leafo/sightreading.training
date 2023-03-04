@@ -316,16 +316,14 @@ class StaffGroup {
     }
   }
 
-  // keep in mind held notes is not array of note names but table
+  // held note should be a NoteList
   renderHeldNotes(heldNotes) {
     if (this.heldNotesGroup) {
       this.heldNotesGroup.remove()
       delete this.heldNotesGroup
     }
 
-    const notes = new NoteList([Object.keys(heldNotes)])
-
-    const [group, notesByColumn] = this.makeNotes(notes)
+    const [group, notesByColumn] = this.makeNotes(heldNotes)
     group.opacity = 0.25
     this.heldNotesGroup = group
     this.renderGroup.add(group)
@@ -660,14 +658,38 @@ export class StaffTwo extends React.PureComponent {
     this.stavesGroup.addTo(this.renderGroup)
   }
 
-  // this will update all the visible notes
+  // update the rendered set of notes from the notes props
   refreshNotes() {
     if (this.props.notes) {
-      this.staves[0].renderNotes(this.props.notes)
+      if (this.props.type == "grand") {
+        // split incoming notes into two NoteLists
+        const [trebleNotes, bassNotes] = this.props.notes.splitForGrandStaff()
+
+        this.staves[0].renderNotes(trebleNotes)
+        if (this.staves[1]) {
+          this.staves[1].renderNotes(bassNotes)
+        }
+      } else {
+        // render everything into the first staff
+        this.staves[0].renderNotes(this.props.notes)
+      }
     }
 
     if (this.props.heldNotes) {
-      this.staves[0].renderHeldNotes(this.props.heldNotes)
+      const heldNotes = new NoteList([Object.keys(this.props.heldNotes)])
+
+      if (this.props.type == "grand") {
+        // TODO: this should inset the first column of notes so that we can
+        // minimize jumps for held notes
+        const [heldTreble, heldBass] = heldNotes.splitForGrandStaff()
+        this.staves[0].renderHeldNotes(heldTreble)
+
+        if (this.staves[1]) {
+          this.staves[1].renderHeldNotes(heldBass)
+        }
+      } else {
+        this.staves[0].renderHeldNotes(heldNotes)
+      }
     }
   }
 
