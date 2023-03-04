@@ -2,6 +2,8 @@ import NoteList from "st/note_list"
 import {StaffTwo} from "st/components/staff_two"
 import {render} from "spec/helpers"
 
+import {GStaff, FStaff, GrandStaff, ChordStaff} from "st/components/staves"
+
 // Example for rendering with old staff:
 // import {GStaff, FStaff, GrandStaff} from "st/components/staves"
 // React.createElement(GStaff, {
@@ -164,6 +166,36 @@ describe("staff two", function() {
       ["C5", "D5", "E5", "F5"],
       ["G5", "A5", "C6"],
       ["F5", "A5", "B5"],
+    ])
+
+    render(
+      React.createElement(StaffTwo, {
+        height: 150,
+        type: "treble",
+        keySignature: new KeySignature(0),
+        notes
+      }),
+
+      // React.createElement(GStaff, {
+      //   heldNotes: {},
+      //   keySignature: new KeySignature(0),
+      //   pixelsPerBeat: 100,
+      //   noteWidth: 100,
+      //   notes
+      // })
+    )
+
+    expect(true).toBe(true)
+  })
+
+  it("renders accidentals", function() {
+    const notes = new NoteList([
+      ["G5", "C5"],
+      ["E#5", "G#5", "B#5"],
+      ["E#5", "F#5", "G#5"],
+
+      ["G#5", "C#5"],
+      ["Gb5", "Cb5"],
     ])
 
     render(

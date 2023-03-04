@@ -27,7 +27,7 @@ const MIN_STAFF_DY = 500
 
 import {CLEF_G, CLEF_F, CLEF_C, FLAT, SHARP, QUARTER_NOTE, WHOLE_NOTE, BRACE} from "st/staff_assets"
 
-import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
+import {parseNote, noteStaffOffset, KeySignature, MIDDLE_C_PITCH} from "st/music"
 
 import NoteList from "st/note_list"
 
@@ -50,6 +50,7 @@ const FClef = createAsset(CLEF_F, "FClef")
 const CClef = createAsset(CLEF_C, "CClef")
 const Flat = createAsset(FLAT, "Flat")
 const Sharp = createAsset(SHARP, "Sharp")
+const Natural = createAsset(SHARP, "Natural")
 const Brace = createAsset(BRACE, "Brace")
 const QuarterNote = createAsset(QUARTER_NOTE, "QuarterNote")
 const WholeNote = createAsset(WHOLE_NOTE, "WholeNote")
@@ -152,6 +153,8 @@ class StaffGroup {
 
   // convet a NoteList into group of positioned note shapes
   makeNotes(noteList) {
+    const key = new KeySignature(this.keySignature)
+
     const notesGroup = new Two.Group()
     notesGroup.translation.set(this.marginX, 0)
 
@@ -210,6 +213,7 @@ class StaffGroup {
         const noteRow = this.noteStaffOffset(noteName)
 
         let note = noteAsset.clone()
+
         let noteY = this.getNoteY(noteName)
         let noteX = nextNoteX
 
@@ -223,8 +227,31 @@ class StaffGroup {
 
         note.translation.set(noteX, noteY)
         noteColumnGroup.add(note)
-        added += 1
 
+
+        const accidentals = key.accidentalsForNote(noteName)
+
+        let accidental = null
+        let accidentalYOffset = 0
+        if (accidentals == 0) {
+          accidental = this.getAsset("natural")
+          accidentalYOffset = 61
+        } else if (accidentals == 1) {
+          accidental = this.getAsset("sharp")
+          accidentalYOffset = 58
+        } else if (accidentals == -1) {
+          accidental = this.getAsset("flat")
+          accidentalYOffset = 85
+        }
+
+        if (accidental) {
+          const accidentalGap = 15
+          const {width: aWidth, height: aHeight} = accidental.getBoundingClientRect()
+          accidental.translation.set(nextNoteX - Math.ceil(aWidth) - accidentalGap, noteY - accidentalYOffset + LINE_HALF_DY)
+          noteColumnGroup.add(accidental)
+        }
+
+        added += 1
         lastRow = noteRow
 
         // debug indicator
@@ -741,6 +768,7 @@ export class StaffTwo extends React.PureComponent {
         <Brace ref={this.assets.brace ||= React.createRef()} />
         <Flat ref={this.assets.flat ||= React.createRef()} />
         <Sharp ref={this.assets.sharp ||= React.createRef()} />
+        <Natural ref={this.assets.natural ||= React.createRef()} />
         <WholeNote ref={this.assets.wholeNote ||= React.createRef()} />
         <QuarterNote ref={this.assets.quarterNote ||= React.createRef()} />
       </div>

@@ -23,6 +23,9 @@ export class Staff extends React.PureComponent {
     cleffImage: types.string.isRequired,
     staffClass: types.string.isRequired,
     keySignature: types.object,
+    pixelsPerBeat: types.number,
+    noteWidth: types.number,
+
 
     // state props
     notes: types.array,
