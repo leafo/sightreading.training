@@ -104,6 +104,12 @@ class StaffGroup {
     }
   }
 
+
+  // offset is real number in number of beats (or columns)
+  updateNotesTranslation(x, y) {
+    this.notesGroup.translation.set(x, y)
+  }
+
   // creates a two.group for the staff, but not containing any notes. Ledger lines are inserted by the notes group
   renderToGroup() {
     this.renderGroup = new Two.Group()
@@ -276,8 +282,11 @@ class StaffGroup {
   // renders new set of notes into the primary note group. Note that the staff
   // must be rendered first to have the render group available
   renderNotes(notes) {
+    let existingPosition
+
     // remove existing notes if they are there
     if (this.notesGroup) {
+      existingPosition = this.notesGroup.translation
       this.notesGroup.remove()
       delete this.notesGroup
       delete this.notesByColumn
@@ -285,10 +294,20 @@ class StaffGroup {
 
     const [group, noteColumnGroups] = this.makeNotes(notes)
 
-    this.notesGroup = group
+    // We wrap the returned notes group in a new group to allow easy
+    // translation on the entire set of notes without affecting whatever
+    // translations was set by makeNotes
+    this.notesGroup = new Two.Group()
+
+    if (existingPosition) {
+      this.notesGroup.translation.set(existingPosition.x, existingPosition.y)
+    }
+
+    this.notesGroup.add(group)
     this.noteColumnGroups = noteColumnGroups
-    this.renderGroup.add(group)
+    this.renderGroup.add(this.notesGroup)
   }
+
 
   // these are the notes to be animated when they press the wrong thing
   getFirstColumnGroup() {
@@ -448,6 +467,18 @@ export class StaffTwo extends React.PureComponent {
     this.assetsRef = React.createRef()
 
     this.assets = { } // this will be populated with asset refs when they are fist instantiated
+  }
+
+  setOffset(offset) {
+    for (const staff of this.staves) {
+      staff.updateNotesTranslation(offset * NOTE_COLUMN_DX, 0)
+    }
+
+    // it's not necessary to trigger update if twojs's own animation loop is
+    // playing
+    if (!this.two.playing) {
+      this.two.update()
+    }
   }
 
   createResizeObserver() {

@@ -626,6 +626,7 @@ export default class SightReadingPage extends React.Component {
       // new renderer with mode notes only
       if (this.state.newRenderer && this.state.currentStaff.mode == "notes") {
         staff = <StaffTwo
+           ref= {staff => this.staff = staff}
            type = {this.state.currentStaff.name}
            heldNotes = {this.state.heldNotes}
            notes = {this.state.notes}
