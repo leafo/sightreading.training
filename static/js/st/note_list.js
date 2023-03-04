@@ -1,6 +1,16 @@
 
 import {notesLessThan, notesSame, parseNote, noteStaffOffset, MajorScale} from "st/music"
 
+const minimumDifference = (note, col) =>
+  col.reduce((k, cNote) => {
+    const diff = Math.abs(noteStaffOffset(cNote) - noteStaffOffset(note))
+    if (k) {
+      return Math.min(k, diff)
+    } else {
+      return diff
+    }
+  }, null)
+
 export default class NoteList extends Array {
   constructor(notes, opts={}) {
     super();
@@ -52,6 +62,9 @@ export default class NoteList extends Array {
     const trebleNotes = new NoteList()
     const bassNotes = new NoteList()
 
+    const maxLedger = 4 // note must be within this many rows of middle C to be eligible for sticking to the same staff
+    const maxJump = 4
+
     // the center between the treble and bass cleffs
     const middleC = noteStaffOffset("C5")
 
@@ -64,7 +77,24 @@ export default class NoteList extends Array {
       const bCol = []
 
       for (const note of column) {
-        if (noteStaffOffset(note) >= middleC) {
+        const noteRow = noteStaffOffset(note)
+
+        if (idx > 0 && Math.abs(middleC - noteRow) <= maxLedger) {
+          // find out how close we are to the previous column's treble and bass
+          // assignments
+          const tDist = minimumDifference(note, trebleNotes[idx - 1])
+          const bDist = minimumDifference(note, bassNotes[idx - 1])
+
+          if (tDist != null && tDist <= maxJump && (bDist == null || tDist < bDist)) {
+            tCol.push(note)
+            continue
+          } else if (bDist != null && bDist <= maxJump && (tDist == null || bDist < tDist)) {
+            bCol.push(note)
+            continue
+          }
+        }
+
+        if (noteRow >= middleC) {
           tCol.push(note)
         } else {
           bCol.push(note)
@@ -75,11 +105,8 @@ export default class NoteList extends Array {
       bassNotes.push(bCol)
     })
 
-
     return [trebleNotes, bassNotes]
   }
-
-
 
   // TODO: there's no point in having this array hold the generator, this
   // method should just take a generator instance

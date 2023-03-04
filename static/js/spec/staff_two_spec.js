@@ -56,6 +56,62 @@ describe("staff two", function() {
     expect(true).toBe(true)
   })
 
+  // this spec is concerned with assigning notes to the correct staff based on
+  // minimizing staff jumps by using ledger lines
+  it("renders full grand staff", function() {
+    render(
+      React.createElement(StaffTwo, {
+        height: 200,
+        type: "grand",
+        keySignature: new KeySignature(0),
+        notes: new NoteList([
+          ["C5"],
+          ["B4"],
+          ["A4"],
+          ["G4"],
+          ["F4"],
+          ["E4"],
+          ["D4"],
+          ["E4"],
+          ["F4"],
+          ["G4"],
+          ["A4"],
+          ["B4"],
+          ["C5"],
+          ["D5"],
+          ["E5"],
+          ["F5"],
+          ["G5"],
+          ["A5"],
+          ["B5"],
+        ])
+      }),
+
+      React.createElement(StaffTwo, {
+        height: 200,
+        type: "grand",
+        keySignature: new KeySignature(0),
+        notes: new NoteList([
+          ["C5"],
+          ["B4"],
+          ["C6"],
+          ["B4"],
+        ])
+      }),
+
+      React.createElement(StaffTwo, {
+        type: "grand",
+        keySignature: new KeySignature(0),
+        notes: new NoteList([
+          ["F4", "A4", "D5"],
+          ["A4", "D5", "F5"]
+        ])
+      })
+    )
+
+    expect(true).toBe(true)
+  })
+
   it("renders full treble staff", function() {
     render(React.createElement(StaffTwo, {
       type: "treble",
