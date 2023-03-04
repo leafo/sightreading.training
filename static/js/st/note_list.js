@@ -30,11 +30,6 @@ export default class NoteList extends Array {
     return list
   }
 
-  getKeyRange() {
-    let notes = new MajorScale("C").getRange(3, 24, 2);
-    return [notes[0], notes[notes.length - 1]];
-  }
-
   filterByRange(min, max) {
     return new NoteList(this.filter(function(n) {
       if (notesLessThan(n, min)) {
