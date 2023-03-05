@@ -678,10 +678,16 @@ export class StaffTwo extends React.PureComponent {
     if (this.props.heldNotes) {
       const heldNotes = new NoteList([Object.keys(this.props.heldNotes)])
 
+
       if (this.props.type == "grand") {
-        // TODO: this should inset the first column of notes so that we can
-        // minimize jumps for held notes
+        if (this.props.notes) {
+          heldNotes.unshift(this.props.notes.currentColumn())
+        }
+
         const [heldTreble, heldBass] = heldNotes.splitForGrandStaff()
+        heldTreble.shift()
+        heldBass.shift()
+
         this.staves[0].renderHeldNotes(heldTreble)
 
         if (this.staves[1]) {

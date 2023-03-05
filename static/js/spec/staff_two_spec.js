@@ -112,6 +112,24 @@ describe("staff two", function() {
     expect(true).toBe(true)
   })
 
+  it("grand staff with held notes", function() {
+    render(
+      React.createElement(StaffTwo, {
+        type: "grand",
+        keySignature: new KeySignature(0),
+        heldNotes: {
+          "C5": true
+        },
+        notes: new NoteList([
+          ["A4", "C5", "F5"],
+          ["C5"]
+        ])
+      })
+    )
+
+    expect(true).toBe(true)
+  })
+
   it("renders full treble staff", function() {
     render(React.createElement(StaffTwo, {
       type: "treble",
