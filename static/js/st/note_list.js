@@ -4,7 +4,7 @@ import {notesLessThan, notesSame, parseNote, noteStaffOffset, MajorScale} from "
 const minimumDifference = (note, col) =>
   col.reduce((k, cNote) => {
     const diff = Math.abs(noteStaffOffset(cNote) - noteStaffOffset(note))
-    if (k) {
+    if (k != null) {
       return Math.min(k, diff)
     } else {
       return diff
