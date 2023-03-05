@@ -130,6 +130,39 @@ describe("staff two", function() {
     expect(true).toBe(true)
   })
 
+  it("renders held notes", function() {
+    const heldNotes = {
+      "F5": true,
+      "A4": true,
+      "F4": true
+    }
+
+    const notes = new NoteList([
+      ["A4","G5"],
+      ["F5"]
+    ])
+
+    render(
+      React.createElement(StaffTwo, {
+        type: "treble",
+        keySignature: new KeySignature(2),
+        heldNotes,
+        notes
+      }),
+
+      // React.createElement(GStaff, {
+      //   keySignature: new KeySignature(2),
+      //   pixelsPerBeat: 100,
+      //   noteWidth: 100,
+      //   heldNotes,
+      //   notes,
+      // })
+    )
+
+    expect(true).toBe(true)
+  })
+
+
   it("renders full treble staff", function() {
     render(React.createElement(StaffTwo, {
       type: "treble",
@@ -280,13 +313,44 @@ describe("staff two", function() {
         notes
       }),
 
-      React.createElement(GStaff, {
-        heldNotes: {},
-        keySignature: new KeySignature(0),
-        pixelsPerBeat: 100,
-        noteWidth: 100,
+      React.createElement(StaffTwo, {
+        height: 150,
+        type: "treble",
+        keySignature: new KeySignature(3),
         notes
-      })
+      }),
+
+      React.createElement(StaffTwo, {
+        height: 150,
+        type: "treble",
+        keySignature: new KeySignature(-3),
+        notes
+      }),
+
+      // React.createElement(GStaff, {
+      //   heldNotes: {},
+      //   keySignature: new KeySignature(0),
+      //   pixelsPerBeat: 100,
+      //   noteWidth: 100,
+      //   notes
+      // }),
+      // React.createElement(GStaff, {
+      //   heldNotes: {},
+      //   keySignature: new KeySignature(3),
+      //   pixelsPerBeat: 100,
+      //   noteWidth: 100,
+      //   notes
+      // }),
+      // // NOTE: there is a discrepancy here, the old staff would transform notes
+      // // in a strange way. With refactoring to how note lists work, we should
+      // // be not be concerned about re-implementing this in the new staff
+      // React.createElement(GStaff, {
+      //   heldNotes: {},
+      //   keySignature: new KeySignature(-3),
+      //   pixelsPerBeat: 100,
+      //   noteWidth: 100,
+      //   notes
+      // }),
     )
 
     expect(true).toBe(true)

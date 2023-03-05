@@ -25,7 +25,7 @@ const STAFF_INNER_HEIGHT = LINE_DY*4 + LINE_HEIGHT
 const BAR_WIDTH = 12
 const MIN_STAFF_DY = 500
 
-import {CLEF_G, CLEF_F, CLEF_C, FLAT, SHARP, QUARTER_NOTE, WHOLE_NOTE, BRACE} from "st/staff_assets"
+import {CLEF_G, CLEF_F, CLEF_C, FLAT, SHARP, NATURAL, QUARTER_NOTE, WHOLE_NOTE, BRACE} from "st/staff_assets"
 
 import {parseNote, noteStaffOffset, KeySignature, MIDDLE_C_PITCH} from "st/music"
 
@@ -50,7 +50,7 @@ const FClef = createAsset(CLEF_F, "FClef")
 const CClef = createAsset(CLEF_C, "CClef")
 const Flat = createAsset(FLAT, "Flat")
 const Sharp = createAsset(SHARP, "Sharp")
-const Natural = createAsset(SHARP, "Natural")
+const Natural = createAsset(NATURAL, "Natural")
 const Brace = createAsset(BRACE, "Brace")
 const QuarterNote = createAsset(QUARTER_NOTE, "QuarterNote")
 const WholeNote = createAsset(WHOLE_NOTE, "WholeNote")
@@ -259,6 +259,7 @@ class StaffGroup {
           const g = new Two.Group()
           g.add(renderedNote)
           g.add(accidental)
+          renderedNote = g
         }
 
         noteColumnGroup.add(renderedNote)
