@@ -158,7 +158,7 @@ class StaffGroup {
   }
 
   // convet a NoteList into group of positioned note shapes
-  makeNotes(noteList) {
+  makeNotes(noteList, callbackFn) {
     const key = new KeySignature(this.keySignature)
 
     const notesGroup = new Two.Group()
@@ -232,8 +232,9 @@ class StaffGroup {
         }
 
         note.translation.set(noteX, noteY)
-        noteColumnGroup.add(note)
 
+        // the rendered note will contain anything else around the note (accidentals, etc.)
+        let renderedNote = note
 
         const accidentals = key.accidentalsForNote(noteName)
 
@@ -254,7 +255,17 @@ class StaffGroup {
           const accidentalGap = 15
           const {width: aWidth, height: aHeight} = accidental.getBoundingClientRect()
           accidental.translation.set(nextNoteX - Math.ceil(aWidth) - accidentalGap, noteY - accidentalYOffset + LINE_HALF_DY)
-          noteColumnGroup.add(accidental)
+
+          const g = new Two.Group()
+          g.add(renderedNote)
+          g.add(accidental)
+        }
+
+        noteColumnGroup.add(renderedNote)
+
+        if (callbackFn) {
+          // last arg is the column idx
+          callbackFn(renderedNote, noteName, noteColumnGroups.length)
         }
 
         added += 1
@@ -281,7 +292,9 @@ class StaffGroup {
 
   // renders new set of notes into the primary note group. Note that the staff
   // must be rendered first to have the render group available
-  renderNotes(notes) {
+  // callback is called for every note asset after it has been added to
+  // thegroup, with positioning information
+  renderNotes(notes, callbackFn) {
     let existingPosition
 
     // remove existing notes if they are there
@@ -292,7 +305,7 @@ class StaffGroup {
       delete this.notesByColumn
     }
 
-    const [group, noteColumnGroups] = this.makeNotes(notes)
+    const [group, noteColumnGroups] = this.makeNotes(notes, callbackFn)
 
     // We wrap the returned notes group in a new group to allow easy
     // translation on the entire set of notes without affecting whatever
@@ -661,23 +674,39 @@ export class StaffTwo extends React.PureComponent {
   // update the rendered set of notes from the notes props
   refreshNotes() {
     if (this.props.notes) {
+      const heldPitches = {}
+
+      if (this.props.heldNotes) {
+        for (const k of Object.keys(this.props.heldNotes)) {
+          heldPitches[parseNote(k)] =  true
+        }
+      }
+
+      // this will make the rendereed notes that match held notes invisible, to
+      // allow the pressed status to be seen
+      const filterHeld = (g, noteName, column) => {
+        if (column == 0 && heldPitches[parseNote(noteName)]) {
+          g.opacity = 0
+        }
+      }
+
       if (this.props.type == "grand") {
         // split incoming notes into two NoteLists
         const [trebleNotes, bassNotes] = this.props.notes.splitForGrandStaff()
 
-        this.staves[0].renderNotes(trebleNotes)
+
+        this.staves[0].renderNotes(trebleNotes, filterHeld)
         if (this.staves[1]) {
-          this.staves[1].renderNotes(bassNotes)
+          this.staves[1].renderNotes(bassNotes, filterHeld)
         }
       } else {
         // render everything into the first staff
-        this.staves[0].renderNotes(this.props.notes)
+        this.staves[0].renderNotes(this.props.notes, filterHeld)
       }
     }
 
     if (this.props.heldNotes) {
       const heldNotes = new NoteList([Object.keys(this.props.heldNotes)])
-
 
       if (this.props.type == "grand") {
         if (this.props.notes) {
