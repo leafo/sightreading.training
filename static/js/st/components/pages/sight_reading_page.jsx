@@ -288,10 +288,10 @@ export default class SightReadingPage extends React.Component {
       }
     }
 
-    this.setState({
-      heldNotes: {...this.state.heldNotes, [note]: true},
-      touchedNotes: {...this.state.touchedNotes, [note]: true}
-    }, () => this.checkPress())
+    this.setState((s) => ({
+      heldNotes: {...s.heldNotes, [note]: true},
+      touchedNotes: {...s.touchedNotes, [note]: true}
+    }), () => this.checkPress())
   }
 
   releaseNote(note) {
@@ -300,7 +300,11 @@ export default class SightReadingPage extends React.Component {
       const heldNotes = {...this.state.heldNotes}
       delete heldNotes[note]
 
-      this.setState({ heldNotes }, () => {
+      this.setState((s) => {
+        const heldNotes = {...s.heldNotes}
+        delete heldNotes[note]
+        return { heldNotes }
+      }, () => {
         if (Object.keys(this.state.heldNotes).length == 0) {
           this.checkRelease()
         }
