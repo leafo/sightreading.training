@@ -479,6 +479,8 @@ export class StaffTwo extends React.PureComponent {
     this.assetsRef = React.createRef()
 
     this.assets = { } // this will be populated with asset refs when they are fist instantiated
+
+    this.assetCache = {} // the parsed two.js objects
   }
 
   setOffset(offset) {
@@ -744,14 +746,25 @@ export class StaffTwo extends React.PureComponent {
 
   // this will return a fresh copy of the asset that can be mutated
   getAsset(name) {
-    const domNode = this.assets[name].current
+    const startTime = performance.now()
 
-    if (!domNode) {
-      throw new Error("Failed to find asset by name: " + name)
+    this.assetCache ||= {}
+
+    if (!this.assetCache[name]) {
+      const domNode = this.assets[name].current
+
+      if (!domNode) {
+        throw new Error("Failed to find asset by name: " + name)
+      }
+
+      const loaded = this.two.interpret(domNode)
+      loaded.remove() // remove it from default scene
+      this.assetCache[name] = loaded
     }
 
-    const asset = this.two.interpret(domNode)
-    asset.remove() // remove it from default scene
+    const asset = this.assetCache[name].clone()
+
+    console.log("Load Asset", name, performance.now() - startTime)
     return asset
   }
 
