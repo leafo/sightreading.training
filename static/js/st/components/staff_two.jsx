@@ -757,8 +757,7 @@ export class StaffTwo extends React.PureComponent {
         throw new Error("Failed to find asset by name: " + name)
       }
 
-      const loaded = this.two.interpret(domNode)
-      loaded.remove() // remove it from default scene
+      const loaded = this.two.interpret(domNode, false, false)
       this.assetCache[name] = loaded
     }
 
