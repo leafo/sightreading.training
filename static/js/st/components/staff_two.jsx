@@ -157,8 +157,9 @@ class StaffGroup {
     return this.renderGroup
   }
 
-  // convet a NoteList into group of positioned note shapes
+  // convert a NoteList into group of positioned note shapes
   makeNotes(noteList, callbackFn) {
+    const startTime = performance.now()
     const key = new KeySignature(this.keySignature)
 
     const notesGroup = new Two.Group()
@@ -167,6 +168,7 @@ class StaffGroup {
     let nextNoteX = CLEF_GAP * 2 // the x position of the next rendred note
 
     const noteAsset = this.getAsset("wholeNote")
+    // TODO: hot path, should be optimized
     const noteAssetWidth = noteAsset.getBoundingClientRect().width
 
     // direct references to the note objects so we can animate them
@@ -219,13 +221,14 @@ class StaffGroup {
         const noteRow = this.noteStaffOffset(noteName)
 
         let note = noteAsset.clone()
+        // let note = this.makeBar(0, 0, 10, 10)
 
         let noteY = this.getNoteY(noteName)
         let noteX = nextNoteX
 
         // offset the note
         if (!lastOffset && lastRow && Math.abs(noteRow - lastRow) == 1) {
-          noteX += Math.floor(note.getBoundingClientRect().width * 0.90)
+          noteX += Math.floor(noteAssetWidth * 0.90)
           lastOffset = true
         } else {
           lastOffset = false
@@ -287,6 +290,8 @@ class StaffGroup {
 
       nextNoteX += NOTE_COLUMN_DX
     }
+
+    console.log("makeNotes", performance.now() - startTime)
 
     return [notesGroup, noteColumnGroups]
   }
@@ -541,7 +546,7 @@ export class StaffTwo extends React.PureComponent {
     this.updaters = [...this.updaters, fn]
 
     if (!this.two.playing) {
-      console.log("Starting playing with ", this.updaters.length, "updaters")
+      // console.log("Starting playing with ", this.updaters.length, "updaters")
       this.two.play()
     }
 
@@ -551,7 +556,7 @@ export class StaffTwo extends React.PureComponent {
     this.updaters = this.updaters.filter(f => f != fn)
 
     if (this.updaters.length == 0 && this.two.playing) {
-      console.log("Stopping playing")
+      // console.log("Stopping playing")
       this.two.pause()
     }
   }
@@ -563,7 +568,7 @@ export class StaffTwo extends React.PureComponent {
     this.two = new Two({
       width: initialWidth,
       height: this.props.height,
-      // type: Two.Types.canvas
+      type: Two.Types.canvas
     }).appendTo(this.containerRef.current)
 
     // call updaters when any animations are active
@@ -617,6 +622,8 @@ export class StaffTwo extends React.PureComponent {
   }
 
   refreshStaves() {
+    const startTime = performance.now()
+
     if (this.stavesGroup) {
       this.stavesGroup.remove()
     }
@@ -672,10 +679,14 @@ export class StaffTwo extends React.PureComponent {
 
     this.stavesGroup.translation.set(marginX, -STAFF_HEIGHT_OFFSET)
     this.stavesGroup.addTo(this.renderGroup)
+
+    console.log("Refresh staves", performance.now() - startTime)
   }
 
   // update the rendered set of notes from the notes props
   refreshNotes() {
+    const startTime = performance.now()
+
     if (this.props.notes) {
       const heldPitches = {}
 
@@ -729,6 +740,8 @@ export class StaffTwo extends React.PureComponent {
         this.staves[0].renderHeldNotes(heldNotes)
       }
     }
+
+    console.log("Refresh notes", performance.now() - startTime)
   }
 
   // add StaffGroup to list of staves managed by this component
@@ -779,7 +792,9 @@ export class StaffTwo extends React.PureComponent {
       // update not necesary if we are playing an animation, it will happen
       // next frame
       if (!this.two.playing) {
+        const startTime = performance.now()
         this.two.update()
+        console.log("Single update", performance.now() - startTime)
       }
     }
   }
