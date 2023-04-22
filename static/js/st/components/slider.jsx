@@ -45,7 +45,8 @@ export default class Slider extends React.PureComponent {
     let startValue = this.currentValue()
 
     let moveListener = (e) => {
-      let x = e.pageX, y = e.pageX
+      let x = e.pageX
+      let y = e.pageY
       let dx = x - startX
 
       let newValue = dx / width * (this.props.max - this.props.min) + startValue
@@ -63,6 +64,36 @@ export default class Slider extends React.PureComponent {
 
     document.body.addEventListener("mousemove", moveListener)
     document.body.addEventListener("mouseup", upListener)
+  }
+
+  startTouchDrag(startX, startY) {
+    if (this.props.disabled) {
+      return true;
+    }
+
+    let width = this.refs.track.clientWidth
+    let startValue = this.currentValue()
+
+    let moveListener = (e) => {
+      let x = e.changedTouches[0].pageX
+      let y = e.changedTouches[0].pageY
+      let dx = x - startX
+
+      let newValue = dx / width * (this.props.max - this.props.min) + startValue
+      newValue = Math.min(this.props.max, Math.max(this.props.min, newValue))
+
+      if (newValue != this.currentValue()) {
+        this.onChange(newValue)
+      }
+    }
+
+    let upListener = (e) => {
+      document.body.removeEventListener("touchmove", moveListener)
+      document.body.removeEventListener("touchend", upListener)
+    }
+
+    document.body.addEventListener("touchmove", moveListener)
+    document.body.addEventListener("touchend", upListener)
   }
 
   currentValue() {
@@ -102,6 +133,7 @@ export default class Slider extends React.PureComponent {
         <button
           ref="sliderNub"
           onMouseDown={(e) => this.startDrag(e.pageX, e.pageY)}
+          onTouchStart={(e) => this.startTouchDrag(e.changedTouches[0].pageX, e.changedTouches[0].pageY)}
           onKeyDown={e => {
             let delta = 0
 
