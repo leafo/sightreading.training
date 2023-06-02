@@ -89,6 +89,7 @@ function parseNoteOffset(note) {
   return (n + 12) % 12; // wrap around for Cb and B#
 }
 
+// converts note name to MIDI pitch integer
 export function parseNote(note) {
   const parsed = note.match(/^([A-G])(#|b)?(\d+)$/)
 

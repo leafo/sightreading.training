@@ -42,7 +42,7 @@ export default class SightReadingPage extends React.Component {
     const session = getSession()
 
     this.state = {
-      newRenderer: false,
+      newRenderer: true,
       noteShaking: false,
       anyOctave: false,
 
@@ -66,6 +66,7 @@ export default class SightReadingPage extends React.Component {
     }
   }
 
+  // TODO trigger this as watching component
   componentDidUpdate(prevProps, prevState) {
     // transitioning to new staff or generator or key signature
     if (prevState.currentStaff != this.state.currentStaff ||
@@ -321,6 +322,8 @@ export default class SightReadingPage extends React.Component {
 
     let n = noteName(pitch)
 
+    // console.debug("midi", pitch, velocity, NOTE_EVENTS[type])
+
     if (NOTE_EVENTS[type] == "noteOn") {
       if (velocity == 0) {
         this.releaseNote(n);
@@ -420,6 +423,7 @@ export default class SightReadingPage extends React.Component {
     return update
   }
 
+  // this is how slider offset is set
   setOffset(value) {
     if (!this.staff) { return; }
     this.staff.setOffset(value);
