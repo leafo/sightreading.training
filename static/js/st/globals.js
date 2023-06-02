@@ -32,7 +32,7 @@ export function gaEvent(category, action, label, value, interactive=true) {
     if (window.ga) {
       ga("send", opts)
     } else {
-      console.debug("event:", opts)
+      // console.log("ga:", opts)
     }
   } catch (e) {}
 }
