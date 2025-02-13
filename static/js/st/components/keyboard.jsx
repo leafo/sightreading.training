@@ -2,8 +2,8 @@
 import * as React from "react"
 import classNames from "classnames"
 
-import { parseNote, noteName, LETTER_OFFSETS } from "st/music"
-import { keyCodeToChar, noteForKey } from "st/keyboard_input"
+import {parseNote, noteName, LETTER_OFFSETS} from "st/music"
+import {keyCodeToChar, noteForKey} from "st/keyboard_input"
 import * as types from "prop-types"
 
 export default class Keyboard extends React.PureComponent {
@@ -24,7 +24,6 @@ export default class Keyboard extends React.PureComponent {
     }
     this.heldKeyboardKeys = {}
     this.activeTouches = {}
-    this.showKeyLabels = true
 
     this.onMouseDown = this.onMouseDown.bind(this)
     this.onTouchStart = this.onTouchStart.bind(this)
