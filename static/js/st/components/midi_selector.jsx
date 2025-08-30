@@ -16,6 +16,52 @@ export default class MidiSelector extends React.PureComponent {
     }
   }
 
+  handleKeyDown = (event, index) => {
+    const { midiOptions } = this.props
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      const nextIndex = (index + 1) % midiOptions.length
+      const nextButton = event.currentTarget.parentElement.children[nextIndex]
+      if (nextButton) {
+        nextButton.focus()
+      }
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault()
+      const prevIndex = (index - 1 + midiOptions.length) % midiOptions.length
+      const prevButton = event.currentTarget.parentElement.children[prevIndex]
+      if (prevButton) {
+        prevButton.focus()
+      }
+    } else if (event.key === 'Home') {
+      event.preventDefault()
+      const firstButton = event.currentTarget.parentElement.children[0]
+      if (firstButton) {
+        firstButton.focus()
+      }
+    } else if (event.key === 'End') {
+      event.preventDefault()
+      const lastButton = event.currentTarget.parentElement.children[midiOptions.length - 1]
+      if (lastButton) {
+        lastButton.focus()
+      }
+    }
+  }
+
+  handleSelect = (index) => {
+    if (this.state.selected == index) {
+      this.setState({selected: null})
+      if (this.props.onChange) {
+        this.props.onChange(null);
+      }
+    } else {
+      this.setState({selected: index})
+      if (this.props.onChange) {
+        this.props.onChange(index);
+      }
+    }
+  }
+
   render() {
     let midiOptions = this.props.midiOptions
 
@@ -26,30 +72,21 @@ export default class MidiSelector extends React.PureComponent {
     return <div className="midi_selector">
       {
         midiOptions.map((option, i) => {
-          return <div
+          return <button
             key={i}
+            type="button"
             className={classNames("midi_input_row", {
               selected: this.state.selected == i
             })}
-            onClick={() => {
-              if (this.state.selected == i) {
-                this.setState({selected: null})
-                if (this.props.onChange) {
-                  this.props.onChange(null);
-                }
-              } else {
-                this.setState({selected: i})
-                if (this.props.onChange) {
-                  this.props.onChange(i);
-                }
-              }
-            }}
+            aria-pressed={this.state.selected == i}
+            onClick={() => this.handleSelect(i)}
+            onKeyDown={(e) => this.handleKeyDown(e, i)}
             >
-            <img className="row_icon" src="/static/img/notes_icon.svg" alt="MIDI Device" />
+            <img className="row_icon" src="/static/img/notes_icon.svg" alt="" />
             <div className="input_name">
               {option.name}
             </div>
-          </div>
+          </button>
         })
       }
     </div>
