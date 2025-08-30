@@ -20,7 +20,6 @@ import {csrfToken} from "st/globals"
 import * as React from "react"
 import {BrowserRouter, Route, Routes, Navigate} from "react-router-dom"
 
-import {TransitionGroup, CSSTransition} from "react-transition-group"
 import {SampleOutput} from "st/sample_output"
 
 import {init as initApp} from "st/app"
@@ -142,9 +141,7 @@ class Layout extends React.Component {
         <Route path="*" element={<NotFoundPage/>} />
       </Routes>
 
-      <TransitionGroup className="lightboxes">
-        {this.renderCurrentLightbox()}
-      </TransitionGroup>
+      {this.renderCurrentLightbox()}
     </div>
   }
 
@@ -156,17 +153,7 @@ class Layout extends React.Component {
       ...this.childProps()
     })
 
-    return <CSSTransition classNames="show_lightbox" timeout={{enter: 200, exit: 100}}>
-      <div
-        className="lightbox_shroud"
-        onClick={(e) => {
-          if (e.target.classList.contains("lightbox_shroud")) {
-            this.refs.currentLightbox.close()
-            e.preventDefault();
-          }
-        }}
-        >{lb}</div>
-    </CSSTransition>
+    return lb
   }
 
   doLogout() {

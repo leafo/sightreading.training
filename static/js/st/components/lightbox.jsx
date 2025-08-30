@@ -4,8 +4,6 @@ import * as types from "prop-types"
 
 import {trigger} from "st/events"
 
-let currentFocusTrap = null
-
 export default class Lightbox extends React.Component {
   static className = null
 
@@ -14,38 +12,37 @@ export default class Lightbox extends React.Component {
   }
 
   componentDidMount() {
-    this.closeListener = e => {
-      if (e.keyCode == 27) {
-        this.close()
-      }
+    // Show the dialog as modal
+    if (this.dialogRef.current) {
+      this.dialogRef.current.showModal()
     }
 
-    document.body.addEventListener("keydown", this.closeListener)
-
-    if (!currentFocusTrap) {
-      // detect if focus has left the lightbox so it can be restored
-      this.detectFocusListener = e => {
-        const container = this.containerRef.current
-        if (e.target != container && !container.contains(e.target)) {
-          container.focus()
-        }
-      }
-
-      document.body.addEventListener("focusin", this.detectFocusListener)
-      currentFocusTrap = this
+    // Handle close events from the dialog
+    this.closeListener = () => {
+      this.close()
     }
 
-    this.containerRef.current.focus()
+    // Handle cancel event (ESC key)
+    this.cancelListener = (e) => {
+      e.preventDefault() // Prevent default close behavior
+      this.close()
+    }
+
+    if (this.dialogRef.current) {
+      this.dialogRef.current.addEventListener("close", this.closeListener)
+      this.dialogRef.current.addEventListener("cancel", this.cancelListener)
+    }
   }
 
   componentWillUnmount() {
-    document.body.removeEventListener("keydown", this.closeListener)
-    if (this.detectFocusListener) {
-      document.body.removeEventListener("focusin", this.detectFocusListener)
-    }
+    if (this.dialogRef.current) {
+      this.dialogRef.current.removeEventListener("close", this.closeListener)
+      this.dialogRef.current.removeEventListener("cancel", this.cancelListener)
 
-    if (currentFocusTrap == this) {
-      currentFocusTrap = null
+      // Close dialog if it's still open
+      if (this.dialogRef.current.open) {
+        this.dialogRef.current.close()
+      }
     }
   }
 
@@ -55,6 +52,11 @@ export default class Lightbox extends React.Component {
 
   close() {
     if (!this.canClose()) { return }
+
+    if (this.dialogRef.current && this.dialogRef.current.open) {
+      this.dialogRef.current.close()
+    }
+
     trigger(this, "lightboxClosed")
     if (this.props.onClose) {
       this.props.onClose(this)
@@ -66,14 +68,21 @@ export default class Lightbox extends React.Component {
   }
 
   render() {
-    return <div
-      tabIndex="-1"
-      role="dialog"
-      aria-modal="true"
-      onClick={this.props.onClick}
-      ref={this.containerRef ||= React.createRef()}
-      className={classNames("lightbox", this.constructor.className, this.props.className)}>
-      {this.renderContent()}
-    </div>
+    return <dialog
+      ref={this.dialogRef ||= React.createRef()}
+      className={classNames("lightbox", this.constructor.className, this.props.className)}
+      onClick={(e) => {
+        // Close when clicking on backdrop (the dialog element itself, not its content)
+        if (e.target === this.dialogRef.current) {
+          this.close()
+        }
+        if (this.props.onClick) {
+          this.props.onClick(e)
+        }
+      }}>
+      <div className="lightbox_content">
+        {this.renderContent()}
+      </div>
+    </dialog>
   }
 }
