@@ -24,10 +24,6 @@ export default class Keyboard extends React.PureComponent {
     }
     this.heldKeyboardKeys = {}
     this.activeTouches = {}
-
-    this.onMouseDown = this.onMouseDown.bind(this)
-    this.onTouchStart = this.onTouchStart.bind(this)
-    this.onTouchEnd = this.onTouchEnd.bind(this)
   }
 
   isBlack(pitch) {
@@ -96,7 +92,7 @@ export default class Keyboard extends React.PureComponent {
     }
   }
 
-  onTouchStart(e) {
+  onTouchStart = (e) => {
     let note = e.target.dataset.note;
 
     this.setState((s) => ({
@@ -111,7 +107,7 @@ export default class Keyboard extends React.PureComponent {
     this.triggerNoteDown(note)
   }
 
-  onTouchEnd(e) {
+  onTouchEnd = (e) => {
     e.preventDefault()
 
     for (let i = 0; i < e.changedTouches.length; i++) {
@@ -132,7 +128,7 @@ export default class Keyboard extends React.PureComponent {
     }
   }
 
-  onMouseDown(e) {
+  onMouseDown = (e) => {
     e.preventDefault();
     let note = e.target.dataset.note;
     this.triggerNoteDown(note)
