@@ -578,6 +578,7 @@ form, .form {
             border-radius: 4px 4px 0 0;
             background: mix(white, $button_color, 90%);
             box-shadow: none;
+            outline: revert;
 
             &.active {
                 box-shadow: 0 1px 0 0 white;
