@@ -110,7 +110,7 @@ export default class Header extends React.Component {
         }}
       >
         {accountArea}
-        {showMidiButton ? <div className="midi_button_wrapper">{this.renderMidiButton()}</div> : null}
+        {showMidiButton ? <div className="midi_button_wrapper">{this.renderMidiButtons()}</div> : null}
         <ul>
           {userLinks.map((link, i) => <li key={i}>{link}</li>)}
         </ul>
@@ -181,6 +181,25 @@ export default class Header extends React.Component {
       }} />
   }
 
+  renderMidiButtons() {
+    const hasMidiInput = !!this.props.midiInput
+
+    return <div className="midi_buttons">
+      {this.renderMidiButton()}
+      {hasMidiInput && (
+        <button
+          className="midi_debug_button"
+          onClick={() => {
+            trigger(this, "showMidiDebug")
+          }}
+          title="Open MIDI Debug Monitor"
+        >
+          Debug
+        </button>
+      )}
+    </div>
+  }
+
   render() {
     let userPanel = null
     let enableDropdown = this.state.width && this.state.width < 700
@@ -198,7 +217,7 @@ export default class Header extends React.Component {
         {enableDropdown ? this.renderNavigationMenu() : this.renderHorizontalNavigation()}
       </SizedElement>
 
-      {hideMidiButton ? null : this.renderMidiButton()}
+      {hideMidiButton ? null : this.renderMidiButtons()}
     </div>
 
   }

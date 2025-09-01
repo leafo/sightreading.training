@@ -203,6 +203,10 @@ export default class MelodyPlaybackExercise extends React.Component {
         name: "singing",
         range: ["C4", "C6"]
       },
+      {
+        name: "whistle",
+        range: ["D6", "D8"]
+      },
       ...STAVES.filter(s => s.mode == "notes")
     ]
 

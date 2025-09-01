@@ -1,0 +1,268 @@
+@import "include/common";
+
+.midi_debug_lightbox {
+    .lightbox_content {
+        width: 900px;
+        max-width: 95vw;
+        max-height: 80vh;
+    }
+
+    .midi_debug_content {
+        h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+    }
+
+    .debug_controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 10px;
+        background: #f8f8f8;
+        border-radius: 4px;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        @media (max-width: 600px) {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+
+    .filter_controls {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+
+        .filter_label {
+            font-weight: bold;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .filter_checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-size: 14px;
+
+            input[type="checkbox"] {
+                margin: 0;
+            }
+
+            .filter_name {
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .control_buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .auto_scroll_checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-size: 14px;
+
+            input[type="checkbox"] {
+                margin: 0;
+            }
+        }
+
+        button {
+            font-size: 12px;
+            padding: 5px 10px;
+        }
+    }
+
+    .events_table_container {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+
+        @media (max-width: 600px) {
+            max-height: 300px;
+        }
+    }
+
+    .events_table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+
+        thead {
+            background: #f5f5f5;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+
+            th {
+                padding: 8px 6px;
+                border-bottom: 2px solid #ddd;
+                text-align: left;
+                font-weight: bold;
+                font-size: 11px;
+                white-space: nowrap;
+            }
+        }
+
+        tbody {
+            tr {
+                &:nth-child(even) {
+                    background: #fafafa;
+                }
+
+                &:hover {
+                    background: #e6f3ff;
+                }
+
+                &.event_noteOn {
+                    border-left: 3px solid #4CAF50;
+                }
+
+                &.event_noteOff {
+                    border-left: 3px solid #f44336;
+                }
+
+                &.event_dataEntry {
+                    border-left: 3px solid #ff9800;
+                }
+            }
+
+            td {
+                padding: 4px 6px;
+                border-bottom: 1px solid #eee;
+                white-space: nowrap;
+                font-size: 11px;
+
+                &.time_delta {
+                    text-align: right;
+                    color: #666;
+                }
+
+                &.source {
+                    max-width: 120px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    color: #333;
+                }
+
+                &.data_hex, &.data_dec {
+                    font-weight: bold;
+                    font-family: 'Courier New', monospace;
+                }
+
+                &.data_hex {
+                    color: #0066cc;
+                }
+
+                &.data_dec {
+                    color: #cc6600;
+                }
+
+                &.channel {
+                    text-align: center;
+                    color: #666;
+                }
+
+                &.message_type {
+                    font-weight: bold;
+                }
+
+                &.note {
+                    font-weight: bold;
+                    color: #333;
+                }
+
+                &.velocity {
+                    text-align: right;
+                    color: #666;
+                }
+            }
+        }
+
+        // Mobile responsive table
+        @media (max-width: 600px) {
+            font-size: 10px;
+
+            th, td {
+                padding: 3px 4px;
+            }
+
+            .source {
+                max-width: 80px;
+            }
+        }
+    }
+
+    .no_events {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+        font-style: italic;
+    }
+}
+
+// Header MIDI buttons styling
+.midi_buttons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    .midi_debug_button {
+        background: transparent;
+        color: #666;
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 3px;
+        border: 1px solid #ddd;
+        cursor: pointer;
+
+        &:hover {
+            background: lighten($body_background, 3%);
+            color: #444;
+        }
+
+        &:active {
+            background: lighten($body_background, 1%);
+        }
+    }
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+        gap: 3px;
+
+        .midi_debug_button {
+            font-size: 11px;
+            padding: 3px 6px;
+        }
+    }
+}
+
+// Update the existing midi_button_wrapper to handle multiple buttons
+.midi_button_wrapper {
+    padding: 8px 10px 5px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .midi_buttons {
+        flex-direction: column;
+        gap: 5px;
+
+        > * {
+            width: 100%;
+            text-align: left;
+        }
+    }
+}

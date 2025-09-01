@@ -12,6 +12,7 @@ import NotFoundPage from "st/components/pages/not_found"
 import Header from "st/components/header"
 
 import DevicePickerLightbox from "st/components/device_picker_lightbox"
+import MidiDebugLightbox from "st/components/midi_debug_lightbox"
 
 import {dispatch, trigger} from "st/events"
 import {readConfig, writeConfig} from "st/config"
@@ -38,6 +39,9 @@ class Layout extends React.Component {
       forwardMidi: readConfig("defaults:forwardMidi") == 1,
       midiOutputChannel
     }
+
+    // MIDI debug callback for the debug dialog
+    this.midiDebugCallback = null
 
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess().then(
@@ -77,6 +81,11 @@ class Layout extends React.Component {
       "pickMidi": (e) => {
         this.setState({
           currentLightbox: this.renderMidiLightbox()
+        })
+      },
+      "showMidiDebug": (e) => {
+        this.setState({
+          currentLightbox: this.renderMidiDebugLightbox()
         })
       }
     })
@@ -218,6 +227,11 @@ class Layout extends React.Component {
       this.state.midiOutputChannel.sendMessage(message.data)
     }
 
+    // forward to debug dialog if active
+    if (this.midiDebugCallback) {
+      this.midiDebugCallback(message)
+    }
+
     // proxy message to the current page
     if (this.currentPage && this.currentPage.onMidiMessage) {
       this.currentPage.onMidiMessage(message)
@@ -252,6 +266,17 @@ class Layout extends React.Component {
         writeConfig("defaults:midiIn", input ? input.name : undefined)
         writeConfig("defaults:forwardMidi", config.forwardMidi ? "1" : undefined)
         writeConfig("defaults:outputDeviceType", config.outputDeviceType || undefined)
+      }} />
+  }
+
+  renderMidiDebugLightbox() {
+    return <MidiDebugLightbox
+      midiInput={this.state.midiInput}
+      onMidiDebugEvent={callback => {
+        this.midiDebugCallback = callback
+      }}
+      onClose={() => {
+        this.midiDebugCallback = null
       }} />
   }
 }

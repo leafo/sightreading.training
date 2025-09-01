@@ -19,11 +19,16 @@ export default class Keyboard extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      isActive: false,
       // used for showing :active effect on keys when using touch device
       activeNotes: {}
     }
     this.heldKeyboardKeys = {}
     this.activeTouches = {}
+
+    this.keyboardRef = React.createRef()
+
+    this.pressCount = 0;
   }
 
   isBlack(pitch) {
@@ -33,6 +38,54 @@ export default class Keyboard extends React.PureComponent {
   isC(pitch) {
     return LETTER_OFFSETS[pitch % 12] === 0;
   }
+
+  incrementPressCount = () => {
+    this.pressCount++;
+    if (this.pressCount == 1) {
+      this.setState({ isActive: true })
+    }
+  }
+
+  decrementPressCount = () => {
+    this.pressCount = Math.max(this.pressCount - 1, 0);
+    if (this.pressCount == 0) {
+      this.setState({ isActive: false })
+    }
+  }
+
+  incrementNote = (noteName) => {
+    this.setState((state) => {
+      const newValue = (state.activeNotes[noteName] || 0) + 1;
+      
+      if (newValue === 1) {
+        this.triggerNoteDown(noteName)
+      }
+
+      return {
+        activeNotes: {
+          ...state.activeNotes,
+          [noteName]: newValue
+        }
+      };
+    });
+  }
+
+  decrementNote = (noteName) => {
+    this.setState((state) => {
+      const currentValue = state.activeNotes[noteName] || 0;
+      const newValue = Math.max(currentValue - 1, 0);
+      const newActiveNotes = { ...state.activeNotes, [noteName]: newValue };
+      
+      if (newValue === 0) {
+        delete newActiveNotes[noteName];
+        this.triggerNoteUp(noteName)
+      }
+      
+      return { activeNotes: newActiveNotes };
+    });
+  }
+
+
 
   componentDidMount() {
     this.downListener = event => {
@@ -128,10 +181,43 @@ export default class Keyboard extends React.PureComponent {
     }
   }
 
+  onKeyboardPointerDown = (e) => {
+    const keyboardEl = this.keyboardRef.current;
+    keyboardEl.setPointerCapture(e.pointerId);
+    this.pressCount++;
+  }
+
+  onKeyboardPointerUp = (e) => {
+    const keyboardEl = this.keyboardRef.current;
+    keyboardEl.releasePointerCapture(e.pointerId);
+    this.pressCount--;
+  }
+
+  // TOOD: do we want this approach?
+  onPointerMove = (e) => {
+    const element = document.elementFromPoint(e.clientX, e.clientY);
+    console.log(element);
+  }
+
+  onPointerEnter = (e) => {
+    const keyEl = e.target
+    const note = keyEl.dataset.note
+    this.incrementNote(note)
+  }
+
+  onPointerLeave = (e) => {
+    const keyEl = e.target
+    const note = keyEl.dataset.note
+    this.decrementNote(note)
+  }
+
   onMouseDown = (e) => {
     e.preventDefault();
     let note = e.target.dataset.note;
     this.triggerNoteDown(note)
+
+    // register mouse move and up listeners
+
 
     if (this.props.onKeyUp) {
       let onUp = e => {
@@ -143,6 +229,11 @@ export default class Keyboard extends React.PureComponent {
 
       document.addEventListener("mouseup", onUp);
     }
+  }
+
+  onMouseMove = (e) => {
+    // find out what element we're over
+    console.log(e)
   }
 
   render() {
@@ -161,31 +252,39 @@ export default class Keyboard extends React.PureComponent {
     if (lower >= upper) {
       throw "lower must be less than upper for keyboard";
     }
+    console.log(this.state.activeNotes)
 
     for (let pitch = lower; pitch <= upper; pitch++) {
       let black = this.isBlack(pitch);
       let name = noteName(pitch);
-
+      
+      const keyIsActive = this.state.activeNotes[name];
 
       let classes = classNames("key", {
         labeled: this.isC(pitch),
         white: !black,
         black: black,
         held: this.props.heldNotes && this.props.heldNotes[name],
-        active: this.state.activeNotes[name]
+        active: keyIsActive
       })
 
       keys.push(<div key={pitch} className="key_wrapper">
         <div
-          onMouseDown={this.onMouseDown}
-          onTouchStart={this.onTouchStart}
-          onTouchEnd={this.onTouchEnd}
+          onPointerLeave={keyIsActive ? this.onPointerLeave : null}
+          onPointerEnter={this.state.isActive ? this.onPointerEnter : null}
+
+          // onMouseDown={this.onMouseDown}
+          // onTouchStart={this.onTouchStart}
+          // onTouchEnd={this.onTouchEnd}
           data-note={name}
           className={classes} />
       </div>)
     }
 
-    return <div className="keyboard">{keys}</div>
+    return <div
+      onPointerDown={this.onKeyboardPointerDown}
+      onPointerUp={this.onKeyboardPointerUp}
+      className="keyboard" ref={this.keyboardRef}>{keys}</div>
   }
 
 }
