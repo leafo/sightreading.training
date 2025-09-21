@@ -13,6 +13,11 @@
         .workspace_header, .keyboard_toggle, .toolbar {
             display: none;
         }
+
+        .workspace_header, .keyboardlabel_toggle, .toolbar {
+            display: none;
+        }
+
     }
 
     .workspace_header{
@@ -151,6 +156,13 @@
         position: absolute;
         z-index: 2;
         bottom: 10px;
+        right: 10px;
+    }
+
+    .keyboardlabel_toggle {
+        position: absolute;
+        z-index: 2;
+        bottom: 40px;
         right: 10px;
     }
 }

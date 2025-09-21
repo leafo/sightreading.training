@@ -52,6 +52,7 @@ export default class SightReadingPage extends React.Component {
 
       bufferSize: 10,
       keyboardOpen: true,
+      showKeyLabels: false,
       settingsOpen: false,
       scale: window.innerWidth < 1000 ? 0.8 : 1,
       stats: new NoteStats(session.currentUser),
@@ -424,7 +425,12 @@ export default class SightReadingPage extends React.Component {
   }
 
   toggleKeyboard() {
-    this.setState({keyboardOpen: !this.state.keyboardOpen});
+    this.setState({ keyboardOpen: !this.state.keyboardOpen });
+    this.recalcFlex();
+  }
+
+  toggleKeyLabels() {
+    this.setState({ showKeyLabels: !this.state.showKeyLabels });
     this.recalcFlex();
   }
 
@@ -458,6 +464,7 @@ export default class SightReadingPage extends React.Component {
         {this.renderSettings()}
       </TransitionGroup>
 
+      {this.state.keyboardOpen && this.renderKeylabelToggle()}
       {this.renderKeyboardToggle()}
     </div>;
   }
@@ -470,6 +477,17 @@ export default class SightReadingPage extends React.Component {
       onClick={this.toggleKeyboard.bind(this)}
       className="keyboard_toggle">
       {this.state.keyboardOpen ? "Hide Keyboard" : "Show Keyboard"}
+    </button>
+  }
+
+  renderKeylabelToggle() {
+    if (!this.state.currentStaff) { return }
+    if (this.state.currentStaff.mode != "notes") { return }
+
+    return <button
+      onClick={this.toggleKeyLabels.bind(this)}
+      className="keyboardlabel_toggle">
+      {this.state.showKeyLabels ? "Hide Key Label" : "Show Key Label"}
     </button>
   }
 
@@ -513,6 +531,7 @@ export default class SightReadingPage extends React.Component {
       upper={upper}
       midiOutput={this.props.midiOutput}
       heldNotes={this.state.heldNotes}
+      showKeyLabels={this.state.showKeyLabels}
       onKeyDown={this.pressNote}
       onKeyUp={this.releaseNote} />;
   }
