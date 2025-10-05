@@ -36,13 +36,13 @@
         left: 50%;
 
         &:focus {
-            box-shadow: 0 0 0 2px mix(white, $blue, 80%);
+            box-shadow: 0 0 0 2px color-mix(in oklab, var(--blue), white 20%);
         }
     }
 }
 
 .slider_input {
-    border: 1px solid $border_color;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     overflow: hidden;
     margin-left: 10px;
@@ -70,7 +70,7 @@
         font-family: monospace;
         display: block;
         height: 100%;
-        background: $border_color;
+        background: var(--border-color);
         color: white;
         min-width: 30px;
         text-align: center;

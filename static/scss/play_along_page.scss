@@ -58,7 +58,7 @@
         input[type=text] {
             margin-left: 10px;
             @include border_box;
-            border: 1px solid lighten($border_color, 10%);
+            border: 1px solid color-mix(in oklab, var(--border-color), white 10%);
             font-family: 'Raleway', sans-serif;
             font-size: 13px;
             padding: 4px 4px;
@@ -155,4 +155,3 @@
         }
     }
 }
-

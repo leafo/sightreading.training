@@ -10,11 +10,11 @@
     position: fixed;
     overflow: auto;
     left: 0;
-    top: $header_height;
+    top: var(--header-height);
     bottom: 0;
     background: #D6D6D6;
-    width: $settings_panel_width;
-    border-right: 2px solid $border_color;
+    width: var(--settings-panel-width);
+    border-right: 2px solid var(--border-color);
     z-index: 1;
 
     &.slide_right-enter {
@@ -39,7 +39,7 @@
 
     .settings_header {
         padding: 15px 20px;
-        background: $border_color;
+        background: var(--border-color);
         color: white;
         display: flex;
         align-items: center;
@@ -62,18 +62,18 @@
 
     .toggle_option {
         background: white;
-        border: 1px solid $border_color;
+        border: 1px solid var(--border-color);
         color: #444;
         &.active {
-            color: darken($button_color, 10%);
-            background: mix(white, $button_color, 80%);
-            border-color: $button_color;
-            box-shadow: 0 0 0 1px $button_color;
+            color: color-mix(in oklab, var(--button-color), black 10%);
+            background: color-mix(in oklab, var(--button-color), white 80%);
+            border-color: var(--button-color);
+            box-shadow: 0 0 0 1px var(--button-color);
         }
     }
 
     .generator_inputs {
-        border: 1px solid $border_color;
+        border: 1px solid var(--border-color);
         padding: 10px;
         background: rgba(white, 0.5);
         display: flex;
@@ -147,5 +147,3 @@
         }
     }
 }
-
-

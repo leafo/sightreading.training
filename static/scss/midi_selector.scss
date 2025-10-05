@@ -2,7 +2,7 @@
 
 .midi_selector {
     background: white;
-    border: 2px solid $light_border_color;
+    border: 2px solid color-mix(in oklab, var(--border-color), white 20%);
     max-height: 200px;
     overflow-y: auto;
 
@@ -35,15 +35,15 @@
         }
 
         &:active {
-            background: darken($button_color_highlight, 5%);
+            background: color-mix(in oklab, var(--button-color-highlight), black 5%);
         }
 
         &.selected {
-            background: $button_color_highlight;
+            background: var(--button-color-highlight);
         }
 
         &.selected:focus {
-            outline: 2px solid darken($button_color_highlight, 20%);
+            outline: 2px solid color-mix(in oklab, var(--button-color-highlight), black 20%);
         }
 
         .row_icon {
@@ -58,4 +58,3 @@
         }
     }
 }
-

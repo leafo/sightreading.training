@@ -15,7 +15,7 @@
     width: auto;
     max-width: none;
     display: flex;
-    min-height: calc(100vh - #{$header_height});
+    min-height: calc(100vh - var(--header-height));
 
     @media (max-width: 900px) {
         .sidebar {
@@ -39,7 +39,7 @@
             .sidebar {
                 position: fixed;
                 display: block;
-                top: $header_height;
+                top: var(--header-height);
                 left: 0;
                 bottom: 0;
                 z-index: 11;

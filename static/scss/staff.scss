@@ -10,9 +10,9 @@
 
 .staff {
     position: relative;
-    height: $line_spacing * 4;
+    height: calc(var(--line-spacing) * 4);
     border-left: 6px solid black;
-    margin: $line_spacing*2 0 $line_spacing*2 0;
+    margin: calc(var(--line-spacing) * 2) 0 calc(var(--line-spacing) * 2) 0;
 
     .cleff {
         z-index: 1;
@@ -167,7 +167,7 @@
             &.held {
                 &:before {
                     background: #94e085;
-                    box-shadow: 0 0 0 2px lighten(#2f3a35, 10%);
+                    box-shadow: 0 0 0 2px color-mix(in oklab, #2f3a35, white 10%);
                 }
             }
 
@@ -280,11 +280,11 @@
         align-items: center;
 
         .right {
-            color: $green;
+            color: var(--green);
         }
 
         .wrong {
-            color: $red;
+            color: var(--red);
         }
 
     }

@@ -29,7 +29,7 @@
     }
 
     .warning {
-        color: $error_color;
+        color: var(--error-color);
         font-weight: bold;
         margin-bottom: 20px;
     }
@@ -42,7 +42,7 @@
 
     .slider_group {
         flex: 1;
-        border: 1px solid $border_color;
+        border: 1px solid var(--border-color);
         border-radius: 3px;
         display: flex;
         align-items: center;
@@ -179,7 +179,7 @@
 
             .current_song {
                 margin-top: 20px;
-                background: mix(white, $body_background, 50%);
+                background: color-mix(in oklab, var(--body-background), white 50%);
                 padding: 10px;
                 display: flex;
                 flex-direction: column;
@@ -265,8 +265,8 @@
 
         button  {
             &.active {
-                background-color: lighten($button_color, 10%);
-                box-shadow: 0 0 0 2px darken($border_color, 20%);
+                background-color: color-mix(in oklab, var(--button-color), white 10%);
+                box-shadow: 0 0 0 2px color-mix(in oklab, var(--border-color), black 20%);
             }
         }
 

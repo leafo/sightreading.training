@@ -23,7 +23,7 @@ dialog.lightbox {
     // Content container
     .lightbox_content {
         background: white;
-        border: 1px solid lighten($border_color, 10%);
+        border: 1px solid color-mix(in oklab, var(--border-color), white 10%);
         border-radius: 6px;
         box-shadow: 0 0 20px rgba(black, 0.2);
         width: 600px;
@@ -90,4 +90,3 @@ dialog.lightbox {
         opacity: 1;
     }
 }
-

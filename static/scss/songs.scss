@@ -1,5 +1,4 @@
 @import "include/common";
-$body_color: #333; // TODO: use common
 
 .songs_page {
     .page_container {
@@ -42,7 +41,7 @@ $body_color: #333; // TODO: use common
             border-radius: 4px;
             padding: 3px 6px;
             margin-left: 5px;
-            color: rgba($body_color, 0.8);
+            color: color-mix(in srgb, var(--body-color), transparent 20%);
         }
 
         .song_title {

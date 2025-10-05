@@ -1,7 +1,7 @@
 @import "include/common";
 
 .sight_reading_page {
-    background: $body_background;
+    background: var(--body-background);
     &.fullscreen {
         width: 100%;
         height: 100%;
@@ -43,7 +43,7 @@
 
     .workspace_wrapper {
         flex: 1;
-        max-width: $default_width;
+        max-width: var(--default-width);
         width: 100%;
 
         @include on_narrow_width {
@@ -107,7 +107,7 @@
             left: 0;
             top: 0;
             bottom: 0;
-            background: $button_color;
+            background: var(--button-color);
             z-index: 1;
             border-radius: 2px;
             transition: 0.1s ease all;

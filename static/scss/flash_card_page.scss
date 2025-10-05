@@ -4,7 +4,7 @@
     .flash_card_header {
         display: flex;
         align-items: center;
-        border-bottom: 1px solid rgba($border_color, 0.5);
+        border-bottom: 1px solid color-mix(in srgb, var(--border-color), transparent 50%);
         padding: 8px 20px;
         background: rgba(white, 0.3);
 
@@ -60,11 +60,11 @@
     }
 
     .card_row {
-        $speed: 0.4s;
+        --card-transition-speed: 0.4s;
         &.show_card-enter {
             .flash_card {
                 opacity: 0.5;
-                transition: opacity $speed ease, transform $speed ease-out;
+                transition: opacity var(--card-transition-speed) ease, transform var(--card-transition-speed) ease-out;
                 transform: scale(0.8, 0.8);
 
                 &:before {
@@ -76,7 +76,7 @@
                     left: 0;
                     background: black;
                     opacity: 0.5;
-                    transition: opacity $speed ease;
+                    transition: opacity var(--card-transition-speed) ease;
                 }
             }
 
@@ -94,7 +94,7 @@
         &.show_card-exit {
             .flash_card {
                 transform: rotate(0);
-                transition: all $speed ease-out;
+                transition: all var(--card-transition-speed) ease-out;
                 opacity: 1;
             }
 
@@ -137,7 +137,7 @@
             right: 0;
             margin: 0;
             padding: 10px;
-            background: rgba($body_background, 0.8);
+            background: color-mix(in srgb, var(--body-background), transparent 20%);
             > button {
                 margin: 5px;
             }
