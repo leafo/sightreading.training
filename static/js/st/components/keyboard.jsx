@@ -172,7 +172,7 @@ export default class Keyboard extends React.PureComponent {
 
 
       let classes = classNames("key", {
-        labeled: this.isC(pitch),
+        labeled: this.isC(pitch) || this.props.showKeyLabels,
         white: !black,
         black: black,
         held: this.props.heldNotes && this.props.heldNotes[name],
