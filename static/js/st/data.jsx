@@ -64,6 +64,17 @@ export const STAVES = [
   },
   {
     mode: "notes",
+    name: "upright",
+    range: ["C2", "E4"],
+    render: function(props=this.state) {
+      return <F8Staff
+        ref={(staff) => this.staff = staff}
+        {...props}
+      />
+    },
+  },
+  {
+    mode: "notes",
     name: "grand",
     range: ["C3", "C7"],
     render: function(props=this.state) {
