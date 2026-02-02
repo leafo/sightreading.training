@@ -2,6 +2,8 @@ import * as React from "react"
 import * as types from "prop-types"
 import classNames from "classnames"
 
+import styles from "./midi_selector.module.css"
+
 export default class MidiSelector extends React.PureComponent {
   static propTypes = {
     midiOptions: types.array.isRequired,
@@ -69,21 +71,21 @@ export default class MidiSelector extends React.PureComponent {
       return <p>No MIDI devices connected</p>
     }
 
-    return <div className="midi_selector">
+    return <div className={styles.midi_selector}>
       {
         midiOptions.map((option, i) => {
           return <button
             key={i}
             type="button"
-            className={classNames("midi_input_row", {
-              selected: this.state.selected == i
+            className={classNames(styles.midi_input_row, {
+              [styles.selected]: this.state.selected == i
             })}
             aria-pressed={this.state.selected == i}
             onClick={() => this.handleSelect(i)}
             onKeyDown={(e) => this.handleKeyDown(e, i)}
             >
-            <img className="row_icon" src="/static/img/notes_icon.svg" alt="" />
-            <div className="input_name">
+            <img className={styles.row_icon} src="/static/img/notes_icon.svg" alt="" />
+            <div className={styles.input_name}>
               {option.name}
             </div>
           </button>
