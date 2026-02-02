@@ -368,7 +368,7 @@ form, .form {
 .workspace {
     display: flex;
 
-    @include on_narrow_height {
+    @include on_narrow_width {
         display: block;
     }
 
@@ -383,11 +383,11 @@ form, .form {
 
     .keyboard_open & {
         bottom: var(--keyboard-height);
-        @include on_narrow_height {
+        @include on_narrow_width {
             bottom: var(--keyboard-height-short);
         }
 
-        @include on_very_narrow_height {
+        @include on_very_narrow_width {
             bottom: var(--keyboard-height-very-short);
         }
     }

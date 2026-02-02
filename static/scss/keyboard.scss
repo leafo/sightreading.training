@@ -85,11 +85,11 @@
         }
     }
 
-    @include on_narrow_height {
+    @include on_narrow_width {
         height: var(--keyboard-height-short);
     }
 
-    @include on_very_narrow_height {
+    @include on_very_narrow_width {
         height: var(--keyboard-height-very-short);
         .key.black {
             bottom: 50%;
