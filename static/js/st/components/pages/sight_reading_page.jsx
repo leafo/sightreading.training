@@ -42,7 +42,7 @@ export default class SightReadingPage extends React.Component {
     const session = getSession()
 
     this.state = {
-      newRenderer: true,
+      newRenderer: props.useStaffTwo || false,
       noteShaking: false,
       anyOctave: false,
 
@@ -596,11 +596,6 @@ export default class SightReadingPage extends React.Component {
     </div>
 
     let toolbar = <div className="toolbar">
-      <label>
-        <input type="checkbox" checked={this.state.newRenderer || false} onChange={e => this.setState({newRenderer: !this.state.newRenderer})} />
-        New renderer
-      </label>
-
       <div className="labeled_tool">
         <span className="label">Mode</span>
         <div

@@ -116,6 +116,7 @@ class Layout extends React.Component {
 
       <Routes>
         <Route path="/" element={<SightReadingPage {...pageProps} />} />
+        <Route path="/staff2" element={<SightReadingPage useStaffTwo={true} {...pageProps} />} />
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/register" element={<RegisterPage/>} />
 
