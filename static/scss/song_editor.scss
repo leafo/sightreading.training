@@ -14,7 +14,7 @@
 
         input[type='text'] {
             width: 100%;
-            @include border_box;
+            box-sizing: border-box;
         }
     }
 

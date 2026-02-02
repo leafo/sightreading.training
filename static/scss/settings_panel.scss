@@ -1,8 +1,8 @@
 @import "include/common";
 
 .settings_panel {
-    @include border_box;
-    @include unselectable;
+    box-sizing: border-box;
+    user-select: none;
     display: flex;
     flex-direction: column;
     gap: 15px;

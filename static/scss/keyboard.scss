@@ -4,8 +4,8 @@
     --white-key-width: 40px;
     --black-key-width: 35px;
 
-    @include border_box;
-    @include unselectable;
+    box-sizing: border-box;
+    user-select: none;
 
     position: absolute;
     bottom: 0;

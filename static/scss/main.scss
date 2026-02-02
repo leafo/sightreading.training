@@ -115,7 +115,7 @@ form, .form {
         }
 
         input[type='text'], input[type='password'], input[type='email'] {
-            @include border_box;
+            box-sizing: border-box;
             border: 1px solid color-mix(in oklab, var(--border-color), white 10%);
             font-family: 'Raleway', sans-serif;
             font-size: 16px;

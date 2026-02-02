@@ -96,7 +96,7 @@
         font-weight: bold;
         font-size: 13px;
         cursor: pointer;
-        @include unselectable;
+        user-select: none;
         overflow: hidden;
 
         &:before {

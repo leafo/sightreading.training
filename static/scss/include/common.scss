@@ -27,17 +27,6 @@
     --header-height: 50px;
 }
 
-@mixin unselectable {
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-@mixin border_box {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-}
-
 @mixin on_narrow_width {
     @media (max-width: 1100px) {
         @content;
