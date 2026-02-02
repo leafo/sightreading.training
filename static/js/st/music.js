@@ -264,8 +264,6 @@ export class KeySignature {
 
     let [_, name, octave] = note.match(/^([A-G])(\d+)?/)
 
-    console.log("unconvertNote match:", note, _, name, octave)
-
     if (!name) {
       throw "can't unconvert note with accidental"
     }
