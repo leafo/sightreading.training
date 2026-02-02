@@ -19,6 +19,8 @@ import Keyboard from "st/components/keyboard"
 
 import {setTitle} from "st/globals"
 
+import pageContainerStyles from "../page_container.module.css"
+
 export default class MelodyPlaybackExercise extends React.Component {
   static exerciseName = "Melody Playback"
   static exerciseId = "melody_playback"
@@ -207,7 +209,7 @@ export default class MelodyPlaybackExercise extends React.Component {
     ]
 
 
-    let page = <div className="page_container">
+    let page = <div className={pageContainerStyles.page_container}>
       <details className="instructions">
         <summary>How does this work?</summary>
         <p>Click <em>New melody</em> to listen to a randomly generated melody.

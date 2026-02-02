@@ -18,6 +18,8 @@ import {IconShuffle} from "st/components/icons"
 
 import {setTitle} from "st/globals"
 
+import pageContainerStyles from "../page_container.module.css"
+
 export default class MelodyRecognitionExercise extends React.Component {
   static exerciseName = "Interval Melodies"
   static exerciseId = "melody_recognition"
@@ -383,9 +385,9 @@ export default class MelodyRecognitionExercise extends React.Component {
       </div>
 
       {this.state.loading ?
-        <div className="page_container">Loading</div>
+        <div className={pageContainerStyles.page_container}>Loading</div>
       :
-        <div className="page_container">
+        <div className={pageContainerStyles.page_container}>
           {this.renderSongPlayer()}
           {this.renderIntervalSettings()}
           {this.renderAutoplayer()}

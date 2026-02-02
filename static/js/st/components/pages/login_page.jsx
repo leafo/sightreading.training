@@ -6,6 +6,8 @@ import {JsonForm, TextInputRow} from "st/components/forms"
 
 import {init as initApp, getSession} from "st/app"
 
+import pageContainerStyles from "../page_container.module.css"
+
 export default class LoginPage extends React.Component {
   componentDidMount() {
     setTitle("Log In")
@@ -37,7 +39,7 @@ export default class LoginPage extends React.Component {
       return <Navigate replace to="/" />
     }
 
-    return <div className="login_page page_container">
+    return <div className={`login_page ${pageContainerStyles.page_container}`}>
       <h2>Log in</h2>
       <JsonForm action="/login.json" afterSubmit={this.afterSubmit.bind(this)}>
         {this.state.errorMessage ? <div className="form_error">{this.state.errorMessage}</div> : null}

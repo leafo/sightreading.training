@@ -1,9 +1,13 @@
 import * as React from "react"
 import {NavLink, Route, Outlet, Navigate} from "react-router-dom"
+import classNames from "classnames"
 import {setTitle} from "st/globals"
 import * as types from "prop-types"
 
 import {toggleActive} from "st/components/util"
+
+import styles from "./guide_pages.module.css"
+import pageContainerStyles from "../page_container.module.css"
 
 export class GuideContents extends React.PureComponent {
   static propTypes = {
@@ -67,10 +71,10 @@ export class GuideContents extends React.PureComponent {
   render() {
     if (this.state.contents) {
       return <div>
-        <section className="page_container" dangerouslySetInnerHTML={{
+        <section className={classNames(pageContainerStyles.page_container, styles.page_container)} dangerouslySetInnerHTML={{
           __html: this.state.contents
         }} />
-        <section className="page_container">
+        <section className={classNames(pageContainerStyles.page_container, styles.page_container)}>
           <a target="_blank"
             href={`https://github.com/leafo/sightreading.training/edit/master/static/guides/${this.props.pageSource}.md`}>
               Edit this page on GitHub
@@ -78,7 +82,7 @@ export class GuideContents extends React.PureComponent {
         </section>
       </div>
     } else {
-      return <div className="page_container loading_message">Loading...</div>
+      return <div className={classNames(pageContainerStyles.page_container, styles.page_container, "loading_message")}>Loading...</div>
     }
   }
 }
@@ -88,10 +92,10 @@ export class GuidePage extends React.PureComponent {
     const link = (url, label) =>
       <NavLink to={url} {...toggleActive}>{label}</NavLink>
 
-    return <main className="guide_page">
-      <section className="page_navigation">
+    return <main className={styles.guide_page}>
+      <section className={styles.page_navigation}>
         <section>
-          <div className="nav_header">Overview</div>
+          <div className={styles.nav_header}>Overview</div>
           <ul>
             <li>{link("/about", "About")}</li>
             <li>{link("/guide/generators", "Generators")}</li>
@@ -100,7 +104,7 @@ export class GuidePage extends React.PureComponent {
           </ul>
         </section>
         <section>
-          <div className="nav_header">Play Along</div>
+          <div className={styles.nav_header}>Play Along</div>
           <ul>
             <li>{link("/guide/lml", "LML")}</li>
           </ul>
@@ -125,7 +129,7 @@ export function guideRoutes() {
       <Route index element={<Navigate replace to="/about" />} />
 
       <Route path="*" element={
-        <div className="page_container">
+        <div className={classNames(pageContainerStyles.page_container, styles.page_container)}>
           <h2>Not found</h2>
           <p>Failed to find documentation page</p>
         </div>

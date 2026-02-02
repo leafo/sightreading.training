@@ -1,4 +1,3 @@
-
 .guide_page {
     display: flex;
     justify-content: center;
@@ -8,32 +7,6 @@
         margin: 0;
         .page_navigation {
             display: none;
-        }
-    }
-
-    .page_container {
-        margin: 0;
-        align-self: flex-start;
-        padding-top: 30px;
-        padding-bottom: 30px;
-
-        > h1, h2, h3, h4 {
-            margin-bottom: 0.5em;
-            margin-top: 1em;
-        }
-
-        > h2 { font-size: 24px; }
-        > h1 {
-            font-size: 30px;
-            font-weight: 900;
-        }
-
-        > :first-child {
-            margin-top: 0;
-        }
-
-        p {
-            margin-top: 0.5em;
         }
     }
 
@@ -77,16 +50,40 @@
 
     p {
         > code {
-            background: rgba(black, 0.05);
+            background: rgba(0, 0, 0, 0.05);
         }
-
     }
-    
+
     pre {
         padding: 10px;
         border-radius: 4px;
-        background: rgba(black, 0.05);
-        box-shadow: 0 0 0 1px inset rgba(black, 0.1);
+        background: rgba(0, 0, 0, 0.05);
+        box-shadow: 0 0 0 1px inset rgba(0, 0, 0, 0.1);
     }
 }
 
+.page_container {
+    margin: 0;
+    align-self: flex-start;
+    padding-top: 30px;
+    padding-bottom: 30px;
+
+    > h1, h2, h3, h4 {
+        margin-bottom: 0.5em;
+        margin-top: 1em;
+    }
+
+    > h2 { font-size: 24px; }
+    > h1 {
+        font-size: 30px;
+        font-weight: 900;
+    }
+
+    > :first-child {
+        margin-top: 0;
+    }
+
+    p {
+        margin-top: 0.5em;
+    }
+}

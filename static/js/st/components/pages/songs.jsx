@@ -6,6 +6,8 @@ import {getSession} from "st/app"
 
 import {toggleActive} from "st/components/util"
 
+import pageContainerStyles from "../page_container.module.css"
+
 class SongCell extends React.PureComponent {
   render() {
     let song = this.props.song
@@ -147,7 +149,7 @@ export default class SongsPage extends React.Component {
 
   renderOverview() {
     if (!this.state.songs) {
-      return <div className="page_container">Loading...</div>
+      return <div className={pageContainerStyles.page_container}>Loading...</div>
     }
 
     let songList
@@ -173,7 +175,7 @@ export default class SongsPage extends React.Component {
 
   renderRecent() {
     if (!this.state.songs) {
-      return <div className="page_container">Loading...</div>
+      return <div className={pageContainerStyles.page_container}>Loading...</div>
     }
 
     let songList
@@ -202,7 +204,7 @@ export default class SongsPage extends React.Component {
         return this.renderRecent()
       }
       case "invalid": {
-        return <div className="page_container">
+        return <div className={pageContainerStyles.page_container}>
           <h2>Not found</h2>
           <p>Invalid filter</p>
         </div>

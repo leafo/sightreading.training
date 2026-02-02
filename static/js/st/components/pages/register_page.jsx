@@ -6,6 +6,8 @@ import {JsonForm, TextInputRow} from "st/components/forms"
 
 import {init as initApp, getSession} from "st/app"
 
+import pageContainerStyles from "../page_container.module.css"
+
 export default class RegisterPage extends React.Component {
   componentDidMount() {
     setTitle("Register Account")
@@ -37,7 +39,7 @@ export default class RegisterPage extends React.Component {
       return <Navigate replace to="/" />
     }
 
-    return <div className="register_page page_container">
+    return <div className={`register_page ${pageContainerStyles.page_container}`}>
       <h2>Register</h2>
       <p>Create an account to keep track of your progress over time.</p>
 

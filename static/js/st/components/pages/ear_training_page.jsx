@@ -19,6 +19,8 @@ import {IconMenu} from "st/components/icons"
 
 import {toggleActive} from "st/components/util"
 
+import pageContainerStyles from "../page_container.module.css"
+
 export default class EarTrainingPage extends React.Component {
   constructor(props) {
     super(props)
@@ -98,7 +100,7 @@ export default class EarTrainingPage extends React.Component {
   }
 
   renderIntro() {
-    return <div className="page_container choose_device">
+    return <div className={`${pageContainerStyles.page_container} choose_device`}>
       <h3>Choose a MIDI output device for ear training</h3>
       <p>The ear training tools require an output device to be configured.</p>
 

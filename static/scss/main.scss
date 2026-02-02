@@ -129,45 +129,6 @@ form, .form {
     }
 }
 
-.page_container {
-    background: white;
-    margin: 60px auto;
-    width: 600px;
-    padding: 40px;
-
-    @media (max-width: 640px) {
-        margin: 0;
-        width: auto;
-        padding: 20px;
-    }
-
-
-    > h2 {
-        margin-top: 0;
-        font-size: 32px;
-    }
-
-    p {
-        font-size: 16px;
-        line-height: 1.5;
-    }
-
-    > p:last-child {
-        margin-bottom: 0;
-    }
-
-    > ul {
-        font-size: 16px;
-        line-height: 1.5;
-        > li {
-            margin-bottom: 8px;
-            &:last-child {
-                margin-bottom: 0;
-            }
-        }
-    }
-}
-
 .header_spacer {
     height: 50px;
 }

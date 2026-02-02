@@ -1,6 +1,8 @@
 import * as React from "react"
 import {setTitle} from "st/globals"
 
+import pageContainerStyles from "../page_container.module.css"
+
 import { startOfDay, format as formatDate, addDays, parseISO } from "date-fns"
 import { zonedTimeToUtc } from "date-fns-tz"
 
@@ -155,6 +157,6 @@ export default class StatsPage extends React.Component {
       inside = "Loading stats"
     }
 
-    return <div className="stats_page page_container">{inside}</div>
+    return <div className={`stats_page ${pageContainerStyles.page_container}`}>{inside}</div>
   }
 }
