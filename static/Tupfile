@@ -1,10 +1,11 @@
 .gitignore
 include_rules
 
-: js/st/main.jsx | js/st/song_parser_peg.js js/st/staff_assets.jsx |> !esbuild_bundle |> main.js | main.js.map
+: js/st/main.jsx | js/st/song_parser_peg.js js/st/staff_assets.jsx |> !esbuild_bundle |> main.js | main.css main.css.map main.js.map
 : js/service_worker.js |> !esbuild_bundle |> service_worker.js | service_worker.js.map
 
 : main.js |> !minify |> main.min.js
+: main.css |> !minify_css |> main.min.css
 : service_worker.js |> !minify |> service_worker.min.js
 
 # there is no esm compatible way to import jasmine for specs so we concat all the files

@@ -1,4 +1,5 @@
 import * as React from "react"
+import styles from "./midi_instrument_picker.module.css"
 
 import MidiSelector from "st/components/midi_selector"
 import Slider from "st/components/slider"
@@ -35,8 +36,8 @@ export default class MidiInstrumentPicker extends React.PureComponent {
   }
 
   render() {
-    return <div className="midi_instrument_picker_component">
-      <div className="midi_options">
+    return <div className={styles.midi_instrument_picker_component}>
+      <div className={styles.midi_options}>
         <label>
           <span>Channel</span>
           <Slider
