@@ -3,6 +3,7 @@ import ChordList from "st/chord_list"
 import NoteStats from "st/note_stats"
 import SlideToZero from "st/slide_to_zero"
 import Slider from "st/components/slider"
+import sliderStyles from "st/components/slider.module.css"
 import Keyboard from "st/components/keyboard"
 import StatsLightbox from "st/components/sight_reading/stats_lightbox"
 
@@ -609,8 +610,8 @@ export default class SightReadingPage extends React.Component {
         </div>
       </div>
 
-      <span className="speed_picker slider_input">
-        <span className="slider_label">Speed</span>
+      <span className={classNames("speed_picker", sliderStyles.slider_input, "slider_input")}>
+        <span className={classNames(sliderStyles.slider_label, "slider_label")}>Speed</span>
         <Slider
           min={50}
           max={300}
@@ -619,7 +620,7 @@ export default class SightReadingPage extends React.Component {
             scrollSpeed: Math.round(value)
           })}
           value={+this.state.scrollSpeed} />
-        <span className="slider_value">{ this.state.scrollSpeed }</span>
+        <span className={classNames(sliderStyles.slider_value, "slider_value")}>{ this.state.scrollSpeed }</span>
       </span>
     </div>
 

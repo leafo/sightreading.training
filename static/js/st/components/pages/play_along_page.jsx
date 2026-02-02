@@ -3,6 +3,7 @@ import * as React from "react"
 import Keyboard from "st/components/keyboard"
 import StaffSongNotes from "st/components/staff_song_notes"
 import Slider from "st/components/slider"
+import sliderStyles from "st/components/slider.module.css"
 import PositionField from "st/components/position_field"
 import Hotkeys from "st/components/hotkeys"
 import Draggable from "st/components/draggable"
@@ -794,24 +795,24 @@ export class PlayAlongPage extends React.Component {
         })
       }>Settings</button>
 
-      <span className="slider_input transport_slider">
-        <span className="slider_label" title="Beats per minute (how fast the songs plays)">BPM</span>
+      <span className={classNames(sliderStyles.slider_input, "slider_input", "transport_slider")}>
+        <span className={classNames(sliderStyles.slider_label, "slider_label")} title="Beats per minute (how fast the songs plays)">BPM</span>
         <Slider
           min={10}
           max={300}
           onChange={this.getSetter("bpm")}
           value={+this.state.bpm} />
-        <span className="slider_value">{ this.state.bpm }</span>
+        <span className={classNames(sliderStyles.slider_value, "slider_value")}>{ this.state.bpm }</span>
       </span>
 
-      <span className="slider_input transport_slider">
-        <span className="slider_label" title="Pixels per beat (how spaced out the notes are)">PPB</span>
+      <span className={classNames(sliderStyles.slider_input, "slider_input", "transport_slider")}>
+        <span className={classNames(sliderStyles.slider_label, "slider_label")} title="Pixels per beat (how spaced out the notes are)">PPB</span>
         <Slider
           min={50}
           max={300}
           onChange={this.getSetter("pixelsPerBeat")}
           value={+this.state.pixelsPerBeat} />
-        <span className="slider_value">{this.state.pixelsPerBeat}</span>
+        <span className={classNames(sliderStyles.slider_value, "slider_value")}>{this.state.pixelsPerBeat}</span>
       </span>
     </div>
   }

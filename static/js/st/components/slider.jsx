@@ -2,6 +2,8 @@ import * as React from "react"
 import classNames from "classnames"
 import * as types from "prop-types"
 
+import styles from "./slider.module.css"
+
 export default class Slider extends React.PureComponent {
   static propTypes = {
     min: types.number,
@@ -94,11 +96,12 @@ export default class Slider extends React.PureComponent {
           this.onChange(newValue)
         }
       }}
-      className={classNames("slider_component", {
+      className={classNames(styles.slider_component, "slider_component", {
+        [styles.disabled]: this.props.disabled,
         disabled: this.props.disabled
       })}
     >
-      <div ref="track" className="slider_track">
+      <div ref="track" className={styles.slider_track}>
         <button
           ref="sliderNub"
           onMouseDown={(e) => this.startDrag(e.pageX, e.pageY)}
@@ -125,7 +128,7 @@ export default class Slider extends React.PureComponent {
           style={{
             left: this.percent() * 100 + "%"
           }}
-          className="slider_nub"></button>
+          className={styles.slider_nub}></button>
       </div>
     </div>
   }
