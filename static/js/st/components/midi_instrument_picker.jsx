@@ -78,7 +78,7 @@ export default class MidiInstrumentPicker extends React.PureComponent {
         onChange={idx => this.setState({ outputIdx: idx })}
         midiOptions={this.midiOutputs()} />
 
-      <div className="midi_instrument_test_buttons">
+      <div className={styles.midi_instrument_test_buttons}>
         <button
           onClick={e => {
             e.preventDefault()

@@ -1,4 +1,16 @@
 .midi_instrument_picker_component {
+  .midi_instrument_test_buttons {
+    margin-top: 20px;
+
+    > button {
+      margin-right: 10px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
   .midi_options {
     margin-bottom: 15px;
     display: flex;

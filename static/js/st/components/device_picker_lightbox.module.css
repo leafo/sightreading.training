@@ -3,18 +3,6 @@
         margin-top: 10px;
     }
 
-    .midi_instrument_test_buttons {
-        margin-top: 20px;
-
-        > button {
-            margin-right: 10px;
-
-            &:last-child {
-                margin-right: 0;
-            }
-        }
-    }
-
     .device_type_picker {
         margin-bottom: 10px;
     }

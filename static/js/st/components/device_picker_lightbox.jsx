@@ -75,7 +75,7 @@ export default class DevicePickerLightbox extends Lightbox {
     return <section>
       <h4>Select Output Device</h4>
       <p>Used for the on-screen keyboard, ear training, and play-along mode.</p>
-      <div className={classNames("input_row", styles.device_type_picker)}>
+      <div className={classNames(styles.input_row, styles.device_type_picker)}>
         <span className={styles.label}>Output type</span>
         {" "}
         <Select
@@ -102,7 +102,7 @@ export default class DevicePickerLightbox extends Lightbox {
           defaultIdx={this.state.selectedInput}
           onChange={idx => this.setState({ selectedInput: idx })}
           midiOptions={this.midiInputs()} />
-        <div className="input_row">
+        <div className={styles.input_row}>
           <label>
             <input
               onChange={e => this.setState({forwardMidi: e.target.checked })}
