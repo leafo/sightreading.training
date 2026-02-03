@@ -1,0 +1,35 @@
+.form_buttons {
+    margin-top: 32px;
+}
+
+.form_error {
+    background: var(--error-color);
+    color: white;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+}
+
+.input_row {
+    margin-bottom: 15px;
+
+    .label {
+        color: #666;
+        font-weight: bold;
+        margin-bottom: 5px;
+        font-size: 14px;
+        text-transform: uppercase;
+    }
+
+    input[type='text'], input[type='password'], input[type='email'] {
+        box-sizing: border-box;
+        border: 1px solid color-mix(in oklab, var(--border-color), white 10%);
+        font-family: 'Raleway', sans-serif;
+        font-size: 16px;
+        padding: 8px 16px;
+        width: 50%;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}

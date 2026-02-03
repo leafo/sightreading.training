@@ -29,6 +29,8 @@ import {CLEF_G, CLEF_F, CLEF_C, FLAT, SHARP, NATURAL, QUARTER_NOTE, WHOLE_NOTE, 
 
 import {parseNote, noteStaffOffset, KeySignature, MIDDLE_C_PITCH} from "st/music"
 
+import styles from "./staff_two.module.css"
+
 import NoteList from "st/note_list"
 
 // this converts static react elements to a memoized component that can take
@@ -1040,7 +1042,7 @@ export class StaffTwo extends React.PureComponent {
       }
     })
 
-    return <div className="notes_staff" ref={this.containerRef}>
+    return <div className={styles.notes_staff} ref={this.containerRef}>
       {this.renderStaves()}
 
       <this.RefreshNotes

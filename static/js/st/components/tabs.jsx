@@ -2,6 +2,8 @@ import * as React from "react"
 import * as types from "prop-types"
 import classNames from "classnames"
 
+import styles from "./tabs.module.css"
+
 export default class Tabs extends React.Component {
   static propTypes = {
     currentTab: types.string,
@@ -20,7 +22,7 @@ export default class Tabs extends React.Component {
 
   render() {
     let currentTab = this.currentTab()
-    return <ul className="tabs_component">
+    return <ul className={styles.tabs_component}>
       {this.props.tabs.map((opt, idx) => {
         return <li key={`tab-${idx}`}>
           <button
@@ -30,8 +32,8 @@ export default class Tabs extends React.Component {
                 this.props.onChangeTab(opt)
               }
             }}
-            className={classNames("tab_button", {
-            active: currentTab == opt
+            className={classNames({
+              [styles.active]: currentTab == opt
             })}>{opt.label || opt.name}</button>
         </li>
       })}

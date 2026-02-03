@@ -22,6 +22,7 @@ import {setTitle} from "st/globals"
 import pageContainerStyles from "../page_container.module.css"
 import parentStyles from "../pages/ear_training_page.module.css"
 import styles from "./melody_playback_exercise.module.css"
+import sharedStyles from "st/components/shared.module.css"
 
 export default class MelodyPlaybackExercise extends React.Component {
   static exerciseName = "Melody Playback"
@@ -231,9 +232,9 @@ export default class MelodyPlaybackExercise extends React.Component {
         <strong>{this.state.statusMessage}</strong>
 
         <div className={styles.stats_row}>
-          <div className="stat_container">
-            <div className="value">{this.state.successes}</div>
-            <div className="label">Melodies</div>
+          <div className={sharedStyles.stat_container}>
+            <div className={sharedStyles.value}>{this.state.successes}</div>
+            <div className={sharedStyles.label}>Melodies</div>
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import {JsonForm, TextInputRow} from "st/components/forms"
 import {init as initApp, getSession} from "st/app"
 
 import pageContainerStyles from "../page_container.module.css"
+import formStyles from "st/components/form.module.css"
 
 export default class LoginPage extends React.Component {
   componentDidMount() {
@@ -42,11 +43,11 @@ export default class LoginPage extends React.Component {
     return <div className={`login_page ${pageContainerStyles.page_container}`}>
       <h2>Log in</h2>
       <JsonForm action="/login.json" afterSubmit={this.afterSubmit.bind(this)}>
-        {this.state.errorMessage ? <div className="form_error">{this.state.errorMessage}</div> : null}
+        {this.state.errorMessage ? <div className={formStyles.form_error}>{this.state.errorMessage}</div> : null}
 
         <TextInputRow name="username" required={true}>Username</TextInputRow>
         <TextInputRow name="password" type="password" required={true}>Password</TextInputRow>
-        <div className="form_buttons">
+        <div className={formStyles.form_buttons}>
           <button className="big_button">Submit</button>
           {" or "}
           <Link to="/register">Register</Link>

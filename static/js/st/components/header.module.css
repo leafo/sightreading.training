@@ -1,0 +1,194 @@
+.header {
+    box-sizing: border-box;
+    padding: 0 20px;
+    height: 50px;
+    background: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: calc(var(--upper-layer-z-index) - 1);
+    gap: 20px;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    .user_links {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        color: #666;
+
+        > a, > .right_section {
+            white-space: nowrap;
+        }
+    }
+
+    .menu_toggle {
+        position: relative;
+        button {
+            background: transparent;
+            padding: 6px 8px;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+
+            > svg {
+                fill: #333;
+                margin-left: 3px;
+                display: inline-block;
+                vertical-align: 1px;
+            }
+        }
+        .menu_shroud {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 1;
+        }
+
+        .navigation_menu {
+            z-index: 2;
+        }
+    }
+
+    .navigation_menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        min-width: 200px;
+        background: white;
+        margin-top: 10px;
+
+        border: 1px solid color-mix(in oklab, var(--border-color), white 10%);
+        border-radius: 4px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+
+        .midi_button_wrapper {
+            padding: 8px 10px 5px 10px;
+            display: flex;
+            > button {
+                flex: 1;
+                text-align: left;
+                display: block;
+            }
+        }
+
+        .account_area {
+            border-bottom: 1px solid color-mix(in oklab, var(--border-color), white 20%);
+            display: flex;
+            padding: 8px 10px;
+            align-items: center;
+
+            &.logged_in {
+                > :first-child {
+                    flex: 1;
+                }
+
+                .username {
+                    min-width: 0;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+
+            &.logged_out {
+                > * {
+                    flex: 1;
+                    &:last-child {
+                        text-align: right;
+                    }
+                }
+            }
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                margin: 8px 10px;
+
+                a {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    .right_section {
+        text-align: right;
+        flex: 1;
+    }
+
+    .logo, .logo_small {
+        opacity: 0.7;
+        display: block;
+    }
+
+    .logo_small {
+        display: none;
+    }
+
+    @media (max-width: 1200px) {
+        .logo {
+            display: none;
+        }
+
+        .logo_small {
+            display: block;
+        }
+    }
+
+
+    :global(.settings_open) & {
+        button {
+            visibility: hidden;
+        }
+    }
+
+    h1 {
+        margin: 0 20px 0 0;
+        line-height: 15px;
+        font-size: 22px;
+        text-transform: uppercase;
+        color: #444;
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+    }
+
+
+    .logo_link {
+        padding: 0;
+    }
+
+    a {
+        padding: 3px 6px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #444;
+
+        &:hover {
+            color: var(--button-color);
+        }
+
+        &:global(.active) {
+            font-weight: bold;
+            text-decoration: none;
+            background: #f6f6f6;
+            color: color-mix(in oklab, var(--button-color), black 8%);
+            border-radius: 2px;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+    }
+}

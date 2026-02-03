@@ -1,0 +1,37 @@
+.midi_button {
+    background: transparent;
+    padding: 6px 8px;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+
+    > div {
+        display: flex;
+        align-items: center;
+    }
+
+    &:hover {
+        opacity: 1.0;
+    }
+
+    img {
+        opacity: 0.6;
+        margin-right: 4px;
+    }
+
+    .current_input_name {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+        min-width: 0;
+        box-sizing: border-box;
+        max-width: 150px;
+        color: #444;
+        font-weight: bold;
+    }
+
+    &:hover {
+        background: color-mix(in oklab, var(--body-background), white 5%);
+    }
+}

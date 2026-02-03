@@ -1,0 +1,114 @@
+@import "../../fonts/Raleway/stylesheet.css";
+
+:root {
+    --border-color: #a2a2a2;
+
+    --upper-layer-z-index: 10;
+
+    --keyboard-height: 180px;
+    --keyboard-height-short: 120px;
+    --keyboard-height-very-short: 90px;
+
+    --button-color: #727290;
+    --button-color-highlight: #e0e0e7;
+
+    --default-width: 900px;
+    --line-spacing: 30px;
+
+    --body-background: #e7e7e7;
+    --body-color: #333333;
+
+    --settings-panel-width: 270px;
+
+    --red: #fe4e50;
+    --green: #aada80;
+    --blue: #34a0f2;
+
+    --error-color: #d14343;
+
+    --header-height: 50px;
+}
+
+body {
+    color: var(--body-color);
+    background: var(--body-background);
+    font-family: 'Raleway', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+:focus {
+    outline-color: rgba(0, 0, 255, 0.2);
+}
+
+button, .button {
+    color: white;
+    font-weight: bold;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    border: 0;
+    background: var(--button-color);
+    padding: 5px 10px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
+    border: 1px solid var(--button-color);
+    cursor: pointer;
+    text-decoration: none;
+
+    &:focus {
+        outline: none;
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2), 0 0 0 2px rgba(0, 0, 255, 0.2);
+    }
+
+    &:hover {
+        background: color-mix(in oklab, var(--button-color), white 2%);
+        color: white;
+    }
+
+    &:disabled {
+        background: color-mix(in oklab, var(--button-color), white 55%);
+        opacity: 0.8;
+        cursor: default;
+    }
+
+    &.outline {
+        background: white;
+        color: color-mix(in oklab, var(--button-color), black 10%);
+    }
+
+    &.big_button {
+        font-size: 18px;
+        padding: 10px 18px;
+    }
+}
+
+blockquote {
+    background: #f7f7f7;
+    padding: 1em;
+    margin: 1em 0;
+
+    > p {
+        margin: 0;
+        margin-bottom: 1em;
+        color: #666;
+
+        &:first-child {
+            margin-top: 0;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+a {
+    color: var(--button-color);
+    &:hover {
+        color: color-mix(in oklab, var(--button-color), black 10%);
+    }
+}
+
+.header_spacer {
+    height: 50px;
+}

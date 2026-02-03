@@ -13,6 +13,8 @@ import {getSession} from "st/app"
 
 import {toggleActive} from "st/components/util"
 
+import styles from "./header.module.css"
+
 class SizedElement extends React.Component {
   constructor(props) {
     super(props)
@@ -58,7 +60,7 @@ class SizedElement extends React.Component {
   }
 
   render() {
-    return <div className={classNames("sized_element", this.props.className)}>
+    return <div className={this.props.className}>
       {this.state.width ? this.props.children : null}
     </div>
   }
@@ -84,14 +86,14 @@ export default class Header extends React.Component {
       const session = getSession()
 
       if (session.currentUser) {
-        accountArea = <div className="account_area logged_in">
-          <span className="username">
+        accountArea = <div className={classNames(styles.account_area, styles.logged_in)}>
+          <span className={styles.username}>
             {session.currentUser.username}
           </span>
           <a href="#" onClick={this.props.doLogout}>Log out</a>
         </div>
       } else {
-        accountArea = <div className="account_area logged_out">
+        accountArea = <div className={classNames(styles.account_area, styles.logged_out)}>
           <NavLink to="/login" {...toggleActive}>Log in</NavLink>
           <NavLink to="/register" {...toggleActive}>Register</NavLink>
         </div>
@@ -99,7 +101,7 @@ export default class Header extends React.Component {
 
       menu = <Lightbox
         key="navigation_menu"
-        className="navigation_menu"
+        className={styles.navigation_menu}
         onClick={e => {
           if (e.target.matches("a")) {
             this.setState({ menuOpen: false })
@@ -110,20 +112,20 @@ export default class Header extends React.Component {
         }}
       >
         {accountArea}
-        {showMidiButton ? <div className="midi_button_wrapper">{this.renderMidiButton()}</div> : null}
+        {showMidiButton ? <div className={styles.midi_button_wrapper}>{this.renderMidiButton()}</div> : null}
         <ul>
           {userLinks.map((link, i) => <li key={i}>{link}</li>)}
         </ul>
       </Lightbox>
     }
 
-    return <div className="menu_toggle">
+    return <div className={styles.menu_toggle}>
       <button type="button" onClick={e => {
         this.setState({ menuOpen: !this.state.menuOpen })
       }}>Menu {<IconDownArrow width={12}/>}</button>
       {menu ? <div
         onClick={e => this.setState({ menuOpen: false })}
-        className="menu_shroud"></div> : null}
+        className={styles.menu_shroud}></div> : null}
       {menu}
     </div>
   }
@@ -135,14 +137,14 @@ export default class Header extends React.Component {
     const session = getSession()
 
     if (session.currentUser) {
-      userPanel = <div className="right_section" key="user_in">
+      userPanel = <div className={styles.right_section} key="user_in">
         {session.currentUser.username}
         {" " }
         <a href="#" onClick={this.props.doLogout}>Log out</a>
       </div>
 
     } else {
-      userPanel = <div className="right_section" key="user_out">
+      userPanel = <div className={styles.right_section} key="user_out">
         <NavLink to="/login" {...toggleActive}>Log in</NavLink>
         {" or "}
         <NavLink to="/register" {...toggleActive}>Register</NavLink>
@@ -186,13 +188,13 @@ export default class Header extends React.Component {
     let enableDropdown = this.state.width && this.state.width < 700
     let hideMidiButton = !this.state.width || this.state.width < 450
 
-    return <div className="header">
-      <Link to="/" className="logo_link">
-        <img className="logo" src="/static/img/logo.svg" height="35" alt="" />
-        <img className="logo_small" src="/static/img/logo-small.svg" height="35" alt="" />
+    return <div className={styles.header}>
+      <Link to="/" className={styles.logo_link}>
+        <img className={styles.logo} src="/static/img/logo.svg" height="35" alt="" />
+        <img className={styles.logo_small} src="/static/img/logo-small.svg" height="35" alt="" />
       </Link>
 
-      <SizedElement className="user_links" onWidth={(w) => {
+      <SizedElement className={styles.user_links} onWidth={(w) => {
         this.setState({ width: w })
       }}>
         {enableDropdown ? this.renderNavigationMenu() : this.renderHorizontalNavigation()}

@@ -5,6 +5,8 @@ import * as types from "prop-types"
 
 import classNames from "classnames"
 
+import formStyles from "st/components/form.module.css"
+
 const {FormData, XMLHttpRequest} = window
 
 export class TextInputRow extends React.Component {
@@ -24,9 +26,9 @@ export class TextInputRow extends React.Component {
       }
     })
 
-    return <div className={classNames("input_row", this.props.className)}>
+    return <div className={classNames(formStyles.input_row, this.props.className)}>
       <label>
-        <div className="label">{this.props.children}</div>
+        <div className={formStyles.label}>{this.props.children}</div>
         <input {...inputProps} />
       </label>
     </div>

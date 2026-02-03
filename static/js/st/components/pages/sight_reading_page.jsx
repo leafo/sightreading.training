@@ -10,6 +10,7 @@ import Hotkeys from "st/components/hotkeys"
 
 import styles from "./sight_reading_page.module.css"
 import staffStyles from "st/components/staff.module.css"
+import sharedStyles from "st/components/shared.module.css"
 
 import {KeySignature, noteName, parseNote} from "st/music"
 import {STAVES, GENERATORS} from "st/data"
@@ -599,9 +600,9 @@ export default class SightReadingPage extends React.Component {
 
   renderWorkspace() {
     if (this.state.stats.streak) {
-      var streak = <div className="stat_container">
-        <div className="value">{this.state.stats.streak}</div>
-        <div className="label">streak</div>
+      var streak = <div className={sharedStyles.stat_container}>
+        <div className={sharedStyles.value}>{this.state.stats.streak}</div>
+        <div className={sharedStyles.label}>streak</div>
       </div>
     }
 
@@ -627,14 +628,14 @@ export default class SightReadingPage extends React.Component {
       <div className={styles.stats}>
         {streak}
 
-        <div className="stat_container" onClick={this.openStatsLightbox.bind(this)}>
-          <div className="value">{this.state.stats.hits}</div>
-          <div className="label">hits</div>
+        <div className={sharedStyles.stat_container} onClick={this.openStatsLightbox.bind(this)}>
+          <div className={sharedStyles.value}>{this.state.stats.hits}</div>
+          <div className={sharedStyles.label}>hits</div>
         </div>
 
-        <div className="stat_container" onClick={this.openStatsLightbox.bind(this)}>
-          <div className="value">{this.state.stats.misses}</div>
-          <div className="label">misses</div>
+        <div className={sharedStyles.stat_container} onClick={this.openStatsLightbox.bind(this)}>
+          <div className={sharedStyles.value}>{this.state.stats.misses}</div>
+          <div className={sharedStyles.label}>misses</div>
         </div>
       </div>
     </div>

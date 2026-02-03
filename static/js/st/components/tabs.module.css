@@ -1,0 +1,32 @@
+.tabs_component {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--button-color), transparent 20%);
+    z-index: 0;
+
+    > li {
+        padding: 0;
+        margin: 0 5px 0 0;
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        > button {
+            color: color-mix(in oklab, var(--button-color), black 10%);
+            border-color: color-mix(in srgb, var(--button-color), transparent 20%);
+            border-bottom: 0;
+            border-radius: 4px 4px 0 0;
+            background: color-mix(in oklab, var(--button-color), white 90%);
+            box-shadow: none;
+
+            &.active {
+                box-shadow: 0 1px 0 0 white;
+                z-index: 1;
+                background: white;
+            }
+        }
+    }
+}
