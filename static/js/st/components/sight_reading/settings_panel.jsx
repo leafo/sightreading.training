@@ -34,7 +34,7 @@ export class SettingsPanel extends React.PureComponent {
   }
 
   render() {
-    return <section className={classNames(styles.settings_panel, "settings_panel")}>
+    return <section className={styles.settings_panel}>
       <div className={styles.settings_header}>
         <h3>Settings</h3>
         <button onClick={this.props.close}>Close</button>

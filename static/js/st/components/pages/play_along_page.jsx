@@ -7,6 +7,7 @@ import sliderStyles from "st/components/slider.module.css"
 import PositionField from "st/components/position_field"
 import Hotkeys from "st/components/hotkeys"
 import Draggable from "st/components/draggable"
+import styles from "./play_along_page.module.css"
 
 import Lightbox from "st/components/lightbox"
 import SongEditor from "st/components/song_editor"
@@ -53,7 +54,7 @@ class SettingsPanel extends React.Component {
     let chordMinSpacing = this.props.chordMinSpacing || 0
     let autochordsRate = this.props.autochordsRate || 1
 
-    return <section className={classNames(settingsPanelStyles.settings_panel, "settings_panel")}>
+    return <section className={settingsPanelStyles.settings_panel}>
       <div className={settingsPanelStyles.settings_header}>
         <h3>Settings</h3>
         <button onClick={this.props.close}>Close</button>
@@ -61,27 +62,27 @@ class SettingsPanel extends React.Component {
 
       <section className={settingsPanelStyles.settings_group}>
         <h4>Autochords</h4>
-        <label>
-          <div className={classNames(settingsPanelStyles.input_label, "input_label")}>Note spacing</div>
-          <div className={classNames(settingsPanelStyles.slider_row, "slider_row")}>
+        <label className={styles.settings_label}>
+          <div className={styles.input_label}>Note spacing</div>
+          <div className={styles.slider_row}>
             <Slider
               min={-5}
               max={10}
               onChange={this.setMinChordSpacing}
               value={chordMinSpacing} />
-            <span className={settingsPanelStyles.current_value}>{chordMinSpacing}</span>
+            <span className={styles.current_value}>{chordMinSpacing}</span>
           </div>
         </label>
 
-        <label>
-          <div className={classNames(settingsPanelStyles.input_label, "input_label")}>Multiplier</div>
-          <div className={classNames(settingsPanelStyles.slider_row, "slider_row")}>
+        <label className={styles.settings_label}>
+          <div className={styles.input_label}>Multiplier</div>
+          <div className={styles.slider_row}>
             <Slider
               min={1}
               max={4}
               onChange={this.setAutochordsRate}
               value={autochordsRate} />
-            <span className={settingsPanelStyles.current_value}>{autochordsRate}</span>
+            <span className={styles.current_value}>{autochordsRate}</span>
           </div>
         </label>
 
@@ -487,10 +488,11 @@ export class PlayAlongPage extends React.Component {
     })
 
     if (!renderedTracks.find(t => !!t)) {
-      return <div className="empty_tracks">No tracks to display</div>
+      return <div className={styles.empty_tracks}>No tracks to display</div>
     }
 
     return <Draggable
+      className={styles.draggable}
       onDrag={(dx, dy) => {
         this.state.songTimer.scrub(-dx / this.state.pixelsPerBeat)
       }}
@@ -509,7 +511,7 @@ export class PlayAlongPage extends React.Component {
     let songError = null
 
     if (this.state.songError) {
-      songError = <div className="song_error">
+      songError = <div className={styles.song_error}>
         <div>
           <strong>There was an error loading the song: </strong>
           {this.state.songError}
@@ -519,15 +521,15 @@ export class PlayAlongPage extends React.Component {
 
     let renderedTracks = this.renderTracks()
 
-    return <div className={classNames("play_along_page", { has_song: !!renderedTracks })}>
+    return <div className={classNames(styles.play_along_page, { [styles.has_song]: !!renderedTracks })}>
       <TransitionGroup>
         {this.renderSettings()}
       </TransitionGroup>
 
-      <div className={classNames("play_along_workspace", {settings_open: this.state.settingsPanelOpen})}>
+      <div className={classNames(styles.play_along_workspace, { [styles.settings_open]: this.state.settingsPanelOpen })}>
         {this.state.songModel ? <h2>{this.state.songModel.title}</h2> : null}
         {this.renderSongTrackTools()}
-        <div className="staff_wrapper">
+        <div className={classNames("staff_wrapper", styles.staff_wrapper)}>
           {songError}
           {renderedTracks}
           {this.renderTransportControls()}
@@ -549,7 +551,7 @@ export class PlayAlongPage extends React.Component {
       return
     }
 
-    return <ul className="song_tracks">
+    return <ul className={styles.song_tracks}>
       {tracks.map((t, idx) => {
         let title = `Track ${idx + 1}`
         if (t.trackName) {
@@ -677,6 +679,7 @@ export class PlayAlongPage extends React.Component {
     return <Keyboard
       lower={"C4"}
       upper={"C7"}
+      className={styles.keyboard}
       midiOutput={this.props.midiOutput}
       heldNotes={this.state.heldNotes}
       onKeyDown={this.pressNote}
@@ -702,7 +705,7 @@ export class PlayAlongPage extends React.Component {
       stop = this.state.song.getStopInBeats()
     }
 
-    return <div className="transport_controls">
+    return <div className={styles.transport_controls}>
       {
         this.state.songTimer ?
         <button
@@ -721,7 +724,7 @@ export class PlayAlongPage extends React.Component {
 
       {
         this.state.songTimer
-        ? <button className="play_pause"type="button" onClick={e => this.togglePlay()}>
+        ? <button className={styles.play_pause} type="button" onClick={e => this.togglePlay()}>
             {this.state.songTimer.running ? "Pause" : "Play"}
           </button>
         : null
@@ -741,8 +744,8 @@ export class PlayAlongPage extends React.Component {
         title="Automatically pause on miss"
         type="checkbox" />
 
-      <span className="loop_controls">
-        <span className="label_text">
+      <span className={styles.loop_controls}>
+        <span className={styles.label_text}>
           Loop
         </span>
 
@@ -765,7 +768,7 @@ export class PlayAlongPage extends React.Component {
         />
       </span>
 
-      <div className="spacer"></div>
+      <div className={styles.spacer}></div>
 
       <PositionField
         min={1}
@@ -796,24 +799,24 @@ export class PlayAlongPage extends React.Component {
         })
       }>Settings</button>
 
-      <span className={classNames(sliderStyles.slider_input, "slider_input", "transport_slider")}>
-        <span className={classNames(sliderStyles.slider_label, "slider_label")} title="Beats per minute (how fast the songs plays)">BPM</span>
+      <span className={classNames(sliderStyles.slider_input, styles.transport_slider)}>
+        <span className={sliderStyles.slider_label} title="Beats per minute (how fast the songs plays)">BPM</span>
         <Slider
           min={10}
           max={300}
           onChange={this.getSetter("bpm")}
           value={+this.state.bpm} />
-        <span className={classNames(sliderStyles.slider_value, "slider_value")}>{ this.state.bpm }</span>
+        <span className={sliderStyles.slider_value}>{ this.state.bpm }</span>
       </span>
 
-      <span className={classNames(sliderStyles.slider_input, "slider_input", "transport_slider")}>
-        <span className={classNames(sliderStyles.slider_label, "slider_label")} title="Pixels per beat (how spaced out the notes are)">PPB</span>
+      <span className={classNames(sliderStyles.slider_input, styles.transport_slider)}>
+        <span className={sliderStyles.slider_label} title="Pixels per beat (how spaced out the notes are)">PPB</span>
         <Slider
           min={50}
           max={300}
           onChange={this.getSetter("pixelsPerBeat")}
           value={+this.state.pixelsPerBeat} />
-        <span className={classNames(sliderStyles.slider_value, "slider_value")}>{this.state.pixelsPerBeat}</span>
+        <span className={sliderStyles.slider_value}>{this.state.pixelsPerBeat}</span>
       </span>
     </div>
   }

@@ -1,6 +1,7 @@
 import {TransitionGroup, CSSTransition} from "react-transition-group"
 
 import * as React from "react"
+import styles from "./flash_cards.module.css"
 
 export class CardHolder extends React.Component {
   render() {
@@ -9,8 +10,8 @@ export class CardHolder extends React.Component {
       return
     }
 
-    return <div className="card_holder">
-      <TransitionGroup component="div" className="transition_group">
+    return <div className={styles.card_holder}>
+      <TransitionGroup component="div" className={styles.transition_group}>
         {this.cardAnimation(this.props.children)}
       </TransitionGroup>
     </div>
@@ -26,4 +27,3 @@ export class CardHolder extends React.Component {
     </CSSTransition>
   }
 }
-

@@ -7,6 +7,7 @@ import classNames from "classnames"
 import MersenneTwister from "mersennetwister"
 import {shuffled} from "st/util"
 import settingsPanelStyles from "st/components/settings_panel.module.css"
+import flashCardStyles from "st/components/flash_cards/flash_cards.module.css"
 
 import * as types from "prop-types"
 
@@ -38,8 +39,8 @@ export default class NoteMathExercise extends React.PureComponent {
           {notes.map((note) =>
             <label
               key={note}
-              className={classNames("test_group", {
-                selected: settings.enabledRoots[note]
+              className={classNames(flashCardStyles.test_group, {
+                [flashCardStyles.selected]: settings.enabledRoots[note]
               })}>
               <input
                 type="checkbox"
@@ -117,7 +118,7 @@ export default class NoteMathExercise extends React.PureComponent {
 
   render() {
     let card = this.state.currentCard
-    let errorMessage = card ? null : <strong className="no_cards_error">Please enable some cards from settings</strong>
+    let errorMessage = card ? null : <strong className={flashCardStyles.no_cards_error}>Please enable some cards from settings</strong>
 
     return <div className="note_math_exercise flash_card_exercise">
       {errorMessage}
@@ -133,8 +134,8 @@ export default class NoteMathExercise extends React.PureComponent {
       return
     }
 
-    return <div key={this.state.cardNumber} className="card_row">
-      <div className={classNames("flash_card", {errorshake: this.state.cardError})}>
+    return <div key={this.state.cardNumber} className={flashCardStyles.card_row}>
+      <div className={classNames(flashCardStyles.flash_card, {errorshake: this.state.cardError})}>
         {card.label}
       </div>
     </div>
@@ -158,7 +159,7 @@ export default class NoteMathExercise extends React.PureComponent {
       >{a}</button>
     )
 
-    return <div className="card_options" ref="cardOptions">
+    return <div className={flashCardStyles.card_options} ref="cardOptions">
       {options}
     </div>
   }

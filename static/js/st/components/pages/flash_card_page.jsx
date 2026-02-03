@@ -1,20 +1,17 @@
 
 import * as React from "react"
 import * as types from "prop-types"
-import classNames from "classnames"
-import MersenneTwister from "mersennetwister"
 
 import {TransitionGroup, CSSTransition} from "react-transition-group"
 
 import {setTitle} from "st/globals"
 import settingsPanelStyles from "st/components/settings_panel.module.css"
-
-import Select from "st/components/select"
+import flashCardStyles from "st/components/flash_cards/flash_cards.module.css"
 
 import NoteMathExercise from "st/components/flash_cards/note_math_exercise"
 import ChordIdentificationExercise from "st/components/flash_cards/chord_identification_exercise"
 
-import {Link, NavLink} from "react-router-dom"
+import {NavLink} from "react-router-dom"
 
 import {toggleActive} from "st/components/util"
 
@@ -27,7 +24,7 @@ class SettingsPanel extends React.PureComponent {
   }
 
   render() {
-    return <section className={classNames(settingsPanelStyles.settings_panel, "settings_panel")}>
+    return <section className={settingsPanelStyles.settings_panel}>
       <div className={settingsPanelStyles.settings_header}>
         <h3>Settings</h3>
         <button onClick={this.props.close}>Close</button>
@@ -101,9 +98,9 @@ export default class FlashCardPage extends React.PureComponent {
   render() {
     let Exercise = this.getExercise()
 
-    return <div className="flash_card_page">
-      <div className="flash_card_header">
-        <div className="exercise_label">{Exercise ? Exercise.exerciseName : ""}</div>
+    return <div className={flashCardStyles.flash_card_page}>
+      <div className={flashCardStyles.flash_card_header}>
+        <div className={flashCardStyles.exercise_label}>{Exercise ? Exercise.exerciseName : ""}</div>
         <button onClick={e => this.setState({
           settingsPanelOpen: !this.state.settingsPanelOpen
         })} type="button">Settings</button>

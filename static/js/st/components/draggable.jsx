@@ -5,6 +5,14 @@ import classNames from "classnames"
 import * as types from "prop-types"
 
 export default class Draggable extends React.Component {
+  static propTypes = {
+    className: types.string,
+    disabled: types.bool,
+    onDrag: types.func,
+    startDrag: types.func,
+    stopDrag: types.func,
+  }
+
   constructor(props) {
     super(props)
   }
@@ -107,7 +115,7 @@ export default class Draggable extends React.Component {
 
 
   render() {
-    return <div className="draggable">
+    return <div className={classNames("draggable", this.props.className)}>
       {this.props.children}
     </div>
   }
