@@ -1,4 +1,5 @@
 import * as React from "react"
+import classNames from "classnames"
 import * as types from "prop-types"
 
 import Lightbox from "st/components/lightbox"
@@ -6,9 +7,10 @@ import MidiSelector from "st/components/midi_selector"
 import MidiInstrumentPicker from "st/components/midi_instrument_picker"
 import Select from "st/components/select"
 import {MidiChannel} from "st/midi"
+import styles from "./device_picker_lightbox.module.css"
 
 export default class DevicePickerLightbox extends Lightbox {
-  static className = "device_picker_lightbox"
+  static className = styles.device_picker_lightbox
 
   static propTypes = {
     midi: types.object,
@@ -73,8 +75,8 @@ export default class DevicePickerLightbox extends Lightbox {
     return <section>
       <h4>Select Output Device</h4>
       <p>Used for the on-screen keyboard, ear training, and play-along mode.</p>
-      <div className="input_row device_type_picker">
-        <span className="label">Output type</span>
+      <div className={classNames("input_row", styles.device_type_picker)}>
+        <span className={styles.label}>Output type</span>
         {" "}
         <Select
           value={this.state.outputDeviceType}
@@ -107,7 +109,7 @@ export default class DevicePickerLightbox extends Lightbox {
               type="checkbox" checked={this.state.forwardMidi}
             />
             {" "}
-            <span className="label">Forward MIDI input to output</span>
+            <span className={styles.label}>Forward MIDI input to output</span>
           </label>
         </div>
       </div>
@@ -132,4 +134,3 @@ export default class DevicePickerLightbox extends Lightbox {
   }
 
 }
-
