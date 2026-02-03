@@ -8,6 +8,7 @@ import {useNavigate} from "react-router-dom"
 import Lightbox from "st/components/lightbox"
 import Tabs from "st/components/tabs"
 import Select from "st/components/select"
+import styles from "st/components/song_editor.module.css"
 
 import { KeySignature } from "st/music"
 import {readConfig, writeConfig} from "st/config"
@@ -231,7 +232,11 @@ export default class SongEditor extends React.Component {
       hasAutochords = true
     }
 
-    return <JsonForm action={action} beforeSubmit={this.beforeSubmit.bind(this)} afterSubmit={this.afterSubmit.bind(this)} className="song_editor">
+    return <JsonForm
+      action={action}
+      beforeSubmit={this.beforeSubmit.bind(this)}
+      afterSubmit={this.afterSubmit.bind(this)}
+      className={styles.song_editor}>
       <input type="hidden" ref={this.notesCountInputRef} name="song[notes_count]" />
       <input type="hidden" ref={this.beatsLengthInputRef} name="song[beats_duration]" />
       <input type="hidden" value={hasAutochords ? "true" : ""} name="song[has_autochords]" />
@@ -245,7 +250,7 @@ export default class SongEditor extends React.Component {
         value={this.state.code}
         onChange={this.fieldUpdaters.code}></textarea>
 
-      <div className="song_editor_tools">
+      <div className={styles.song_editor_tools}>
         {errors}
         {this.textInput("Title", "title", {
           required: true
@@ -254,7 +259,7 @@ export default class SongEditor extends React.Component {
         {this.textInput("Artist", "artist")}
         {this.textInput("Album", "album")}
 
-        <div className="form_tools">
+        <div className={styles.form_tools}>
           {saveButton}
           {" "}
           {songVisibility}

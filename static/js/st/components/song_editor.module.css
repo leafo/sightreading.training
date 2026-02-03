@@ -1,5 +1,3 @@
-@import "include/common";
-
 .song_editor {
     min-height: 200px;
     padding: 20px;
@@ -27,7 +25,7 @@
         display: flex;
         align-items:  center;
 
-        .select_component {
+        :global(.select_component) {
             height: 28px;
             padding: 0 10px;
             display: flex;
@@ -44,5 +42,4 @@
         }
     }
 }
-
 
