@@ -8,6 +8,7 @@ import {getSession} from "st/app"
 import {toggleActive} from "st/components/util"
 
 import pageContainerStyles from "../page_container.module.css"
+import commonStyles from "st/components/common.module.css"
 import styles from "./songs.module.css"
 
 class SongCell extends React.PureComponent {
@@ -131,7 +132,7 @@ export default class SongsPage extends React.Component {
         </li>
       )}</ul>
     } else {
-      songList = <p className="empty_message">No results</p>
+      songList = <p className={commonStyles.empty_message}>No results</p>
     }
 
     if (!songList) {
@@ -163,7 +164,7 @@ export default class SongsPage extends React.Component {
         </li>
       )}</ul>
     } else {
-      songList = <p className="empty_message">No results</p>
+      songList = <p className={commonStyles.empty_message}>No results</p>
     }
 
     return <section className={classNames("content_column", styles.content_column)}>
@@ -189,7 +190,7 @@ export default class SongsPage extends React.Component {
         </li>
       )}</ul>
     } else {
-      songList = <p className="empty_message">No results</p>
+      songList = <p className={commonStyles.empty_message}>No results</p>
     }
 
     return <section className={classNames("content_column", styles.content_column)}>

@@ -2,12 +2,13 @@
 import * as React from "react"
 import Lightbox from "st/components/lightbox"
 import Tabs from "st/components/tabs"
+import commonStyles from "st/components/common.module.css"
 import styles from "./stats_lightbox.module.css"
 
 import * as types from "prop-types"
 
 export default class StatsLightbox extends Lightbox {
-  static className = "stats_lightbox"
+  static className = styles.stats_lightbox
   static propTypes = {
     stats: types.object.isRequired,
   }
@@ -32,13 +33,13 @@ export default class StatsLightbox extends Lightbox {
         statsContent = this.renderNoteTimings(availableNotes);
       }
     } else {
-      statsContent = <p className="empty_message">
+      statsContent = <p className={commonStyles.empty_message}>
         You don't have any stats yet. Try playing some notes first.
       </p>
     }
 
     if (this.props.stats.averageHitTime) {
-      var hitTime = <div className="hit_time">
+      var hitTime = <div className={styles.hit_time}>
         Average hit time
         <strong> {Math.round(this.props.stats.averageHitTime)}ms</strong>
       </div>
@@ -88,27 +89,27 @@ export default class StatsLightbox extends Lightbox {
       let miss_rate = misses / (hits + misses) * 100;
 
       if (hit_rate > 0) {
-        var hit_bar = <div className="hit_bar" style={{ width: `${hit_rate}%`}}>
+        var hit_bar = <div className={styles.hit_bar} style={{ width: `${hit_rate}%`}}>
           {hits}
         </div>;
       }
 
       if (miss_rate > 0) {
-        var miss_bar = <div className="miss_bar" style={{ width: `${miss_rate}%`}}>
+        var miss_bar = <div className={styles.miss_bar} style={{ width: `${miss_rate}%`}}>
           {misses}
         </div>;
       }
 
-      return <div key={note} className="note_stat_row">
-        <div className="note_name">{note}</div>
-        <div className="note_rates">
+      return <div key={note} className={styles.note_stat_row}>
+        <div className={styles.note_name}>{note}</div>
+        <div className={styles.note_rates}>
           {hit_bar}
           {miss_bar}
         </div>
       </div>
     }.bind(this));
 
-    statsContent = <div className="note_bars_container">{statsContent}</div>;
+    statsContent = <div className={styles.note_bars_container}>{statsContent}</div>;
     return statsContent;
   }
 
@@ -135,23 +136,23 @@ export default class StatsLightbox extends Lightbox {
 
       let widthPercent = 0.5 + (stats.averageHitTime - globalAverage) / (graphRange * 2)
 
-      return <div key={note} className="note_timing_row">
-        <div className="note_name">{note}</div>
-        <div className="note_timing">
-        <div className="timing_progress" style={{
+      return <div key={note} className={styles.note_timing_row}>
+        <div className={styles.note_name}>{note}</div>
+        <div className={styles.note_timing}>
+        <div className={styles.timing_progress} style={{
           width: widthPercent * 100 + "%"
         }}></div>
-          <div className="timing_label">
+          <div className={styles.timing_label}>
             {Math.round(stats.averageHitTime)}ms
           </div>
         </div>
       </div>;
     });
 
-    return <div className="note_timings_container">
-      <div className="timing_legend">Average</div>
-      <div className="line_container">
-        <div className="average_line"></div>
+    return <div className={styles.note_timings_container}>
+      <div className={styles.timing_legend}>Average</div>
+      <div className={styles.line_container}>
+        <div className={styles.average_line}></div>
       </div>
       {statsContent}
     </div>
