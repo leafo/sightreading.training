@@ -6,11 +6,14 @@ import {parseNote, noteName, LETTER_OFFSETS} from "st/music"
 import {keyCodeToChar, noteForKey} from "st/keyboard_input"
 import * as types from "prop-types"
 
+import styles from "./keyboard.module.css"
+
 export default class Keyboard extends React.PureComponent {
   static propTypes = {
     lower: types.oneOfType([types.string, types.number]),
     upper: types.oneOfType([types.string, types.number]),
     heldNotes: types.object,
+    className: types.string,
   }
 
   defaultLower = "C5"
@@ -171,15 +174,15 @@ export default class Keyboard extends React.PureComponent {
       let name = noteName(pitch);
 
 
-      let classes = classNames("key", {
-        labeled: this.isC(pitch),
-        white: !black,
-        black: black,
-        held: this.props.heldNotes && this.props.heldNotes[name],
-        active: this.state.activeNotes[name]
+      let classes = classNames(styles.key, {
+        [styles.labeled]: this.isC(pitch),
+        [styles.white]: !black,
+        [styles.black]: black,
+        [styles.held]: this.props.heldNotes && this.props.heldNotes[name],
+        [styles.active]: this.state.activeNotes[name]
       })
 
-      keys.push(<div key={pitch} className="key_wrapper">
+      keys.push(<div key={pitch} className={styles.key_wrapper}>
         <div
           onMouseDown={this.onMouseDown}
           onTouchStart={this.onTouchStart}
@@ -189,7 +192,7 @@ export default class Keyboard extends React.PureComponent {
       </div>)
     }
 
-    return <div className={classNames("keyboard", this.props.className)}>{keys}</div>
+    return <div className={classNames(styles.keyboard, "keyboard", this.props.className)}>{keys}</div>
   }
 
 }

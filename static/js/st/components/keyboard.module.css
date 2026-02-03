@@ -1,0 +1,101 @@
+.keyboard {
+    --white-key-width: 40px;
+    --black-key-width: 35px;
+
+    box-sizing: border-box;
+    user-select: none;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--keyboard-height);
+    z-index: 1;
+
+    :global(.settings_open) & {
+        left: var(--settings-panel-width);
+    }
+
+    background: #D6D6D6;
+    overflow: auto;
+    border-top: 1px solid #D6D6D6;
+    white-space: nowrap;
+    text-align: center;
+
+    .key_wrapper {
+        position: relative;
+        height: 100%;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .key {
+        &.labeled::before {
+            content: attr(data-note);
+            position: absolute;
+            bottom: 20%;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+        }
+
+        &.black {
+            position: absolute;
+            width: var(--black-key-width);
+            left: 0;
+            top: 0;
+            margin-left: calc(var(--black-key-width) / -2);
+            border-radius: 0 0 8px 8px;
+            bottom: 40%;
+            background: #333;
+            z-index: 3;
+            box-shadow: inset 0 -15px 0 rgba(0,0,0, 0.3), inset 0 -17px 0 rgba(255,255,255,0.07);
+
+            &:hover {
+                background: color-mix(in oklab, #333, white 5%);
+            }
+
+            &:active,
+            &.active,
+            &.held {
+                background: color-mix(in oklab, #333, black 3%);
+                box-shadow: inset 0 -10px 0 rgba(0,0,0, 0.3), inset 0 -12px 0 rgba(255,255,255,0.07);
+            }
+        }
+
+        &.white {
+            background: white;
+            width: var(--white-key-width);
+            height: calc(100% - 10px);
+            margin: 0 1px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 0 0 2px #999, inset 0 -15px 0 rgba(0,0,0, 0.1), inset 0 5px 10px -5px rgba(0,0,0,0.2);
+            z-index: 1;
+
+            &:hover {
+                background: #f3f3f3;
+            }
+
+            &:active,
+            &.active,
+            &.held {
+                background: color-mix(in oklab, #f3f3f3, black 5%);
+                box-shadow: 0 0 0 2px #999, inset 0 -10px 0 rgba(0,0,0, 0.1), inset 0 5px 10px -5px rgba(0,0,0,0.2);
+            }
+        }
+    }
+
+    @media (max-width: 1100px) {
+        height: var(--keyboard-height-short);
+    }
+
+    @media (max-width: 800px) {
+        height: var(--keyboard-height-very-short);
+
+        .key.black {
+            bottom: 50%;
+        }
+    }
+}
