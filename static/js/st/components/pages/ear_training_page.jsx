@@ -20,6 +20,7 @@ import {IconMenu} from "st/components/icons"
 import {toggleActive} from "st/components/util"
 
 import pageContainerStyles from "../page_container.module.css"
+import sidebarStyles from "st/components/sidebar.module.css"
 import styles from "./ear_training_page.module.css"
 
 export default class EarTrainingPage extends React.Component {
@@ -42,10 +43,12 @@ export default class EarTrainingPage extends React.Component {
       contents = this.renderIntro()
     }
 
-    return <div className={classNames(styles.ear_training_page, "has_sidebar", { sidebar_open: this.state.sidebarOpen })}>
-      <div className="sidebar">
+    return <div className={classNames(styles.ear_training_page, sidebarStyles.has_sidebar, {
+      [sidebarStyles.sidebar_open]: this.state.sidebarOpen
+    })}>
+      <div className={sidebarStyles.sidebar}>
         <nav>
-          <div className="nav_header">Choose Exercise</div>
+          <div className={sidebarStyles.nav_header}>Choose Exercise</div>
           <ul>
             <li><NavLink to="/ear-training/interval-melodies" {...toggleActive}>Learn Intervals</NavLink></li>
             <li><NavLink to="/ear-training/melody-playback" {...toggleActive}>Play Back Melodies</NavLink></li>
@@ -55,10 +58,12 @@ export default class EarTrainingPage extends React.Component {
         <button
           type="button"
           onClick={()=> this.toggleSidebar()}
-          className={classNames("button", styles.toggle_sidebar_button)}>Close</button>
+          className={classNames("button", sidebarStyles.toggle_sidebar_button, styles.toggle_sidebar_button)}>
+          Close
+        </button>
       </div>
 
-      <div className="content_column">
+      <div className={sidebarStyles.content_column}>
         {contents}
       </div>
     </div>
@@ -71,7 +76,7 @@ export default class EarTrainingPage extends React.Component {
   renderExercise() {
     let toggleSidebarButton = <button
       type="button"
-      className={classNames(styles.toggle_sidebar_button, "button outline")}
+      className={classNames("button outline", sidebarStyles.toggle_sidebar_button, styles.toggle_sidebar_button)}
       onClick={() => this.toggleSidebar()}
     >
       <IconMenu width={20} height={20} />

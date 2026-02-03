@@ -9,6 +9,7 @@ import {toggleActive} from "st/components/util"
 
 import pageContainerStyles from "../page_container.module.css"
 import commonStyles from "st/components/common.module.css"
+import sidebarStyles from "st/components/sidebar.module.css"
 import styles from "./songs.module.css"
 
 class SongCell extends React.PureComponent {
@@ -101,7 +102,7 @@ export default class SongsPage extends React.Component {
   }
 
   renderSidebar() {
-    return <section className={classNames("sidebar", styles.sidebar)}>
+    return <section className={classNames(sidebarStyles.sidebar, styles.sidebar)}>
       <Link to="/new-song" className={classNames("button", styles.new_song_button)}>Create a new song</Link>
 
       <nav>
@@ -167,7 +168,7 @@ export default class SongsPage extends React.Component {
       songList = <p className={commonStyles.empty_message}>No results</p>
     }
 
-    return <section className={classNames("content_column", styles.content_column)}>
+    return <section className={classNames(sidebarStyles.content_column, styles.content_column)}>
       <section>
         <h2>Songs</h2>
       {songList}
@@ -193,7 +194,7 @@ export default class SongsPage extends React.Component {
       songList = <p className={commonStyles.empty_message}>No results</p>
     }
 
-    return <section className={classNames("content_column", styles.content_column)}>
+    return <section className={classNames(sidebarStyles.content_column, styles.content_column)}>
       <section>
         <h2>Recently played</h2>
         {songList}
@@ -219,7 +220,7 @@ export default class SongsPage extends React.Component {
   }
 
   render() {
-    return <div className={classNames(styles.songs_page, "has_sidebar")}>
+    return <div className={classNames(styles.songs_page, sidebarStyles.has_sidebar)}>
       {this.renderSidebar()}
       {this.renderContent()}
     </div>
