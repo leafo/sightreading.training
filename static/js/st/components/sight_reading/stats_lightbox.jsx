@@ -2,6 +2,7 @@
 import * as React from "react"
 import Lightbox from "st/components/lightbox"
 import Tabs from "st/components/tabs"
+import styles from "./stats_lightbox.module.css"
 
 import * as types from "prop-types"
 
@@ -67,9 +68,9 @@ export default class StatsLightbox extends Lightbox {
       {statTabs}
       {statsContent}
       {hitTime}
-      <div className="footer_buttons">
+      <div className={styles.footer_buttons}>
         <button onClick={this.close.bind(this)}>Close</button>
-        <div className="spacer"></div>
+        <div className={styles.spacer}></div>
         {clearButton}
       </div>
     </div>

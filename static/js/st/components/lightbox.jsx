@@ -3,6 +3,7 @@ import classNames from "classnames"
 import * as types from "prop-types"
 
 import {trigger} from "st/events"
+import styles from "./lightbox.module.css"
 
 export default class Lightbox extends React.Component {
   static className = null
@@ -70,7 +71,7 @@ export default class Lightbox extends React.Component {
   render() {
     return <dialog
       ref={this.dialogRef ||= React.createRef()}
-      className={classNames("lightbox", this.constructor.className, this.props.className)}
+      className={classNames(styles.lightbox, this.constructor.className, this.props.className)}
       onClick={(e) => {
         // Close when clicking on backdrop (the dialog element itself, not its content)
         if (e.target === this.dialogRef.current) {
@@ -80,7 +81,7 @@ export default class Lightbox extends React.Component {
           this.props.onClick(e)
         }
       }}>
-      <div className="lightbox_content">
+      <div className={styles.lightbox_content}>
         {this.renderContent()}
       </div>
     </dialog>
