@@ -1,5 +1,3 @@
-@import "include/common";
-
 .select_component {
     display: inline-block;
     box-sizing: border-box;
@@ -18,14 +16,14 @@
 
     &.focused {
         border-color: color-mix(in oklab, var(--border-color), black 20%);
-        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2), 0 0 0 2px rgba(blue, 0.2);
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(0, 0, 255, 0.2);
 
         .select_component {
             color: #444;
         }
     }
 
-    .svgicon {
+    :global(.svgicon) {
         margin-left: 10px;
         fill: color-mix(in srgb, var(--border-color), transparent 20%);
     }
@@ -37,7 +35,7 @@
         align-items: center;
 
         .selected_option_name {
-            flex: 1
+            flex: 1;
         }
 
         svg {
@@ -59,5 +57,4 @@
             cursor: pointer;
         }
     }
-
 }

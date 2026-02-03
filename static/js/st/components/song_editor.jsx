@@ -211,6 +211,7 @@ export default class SongEditor extends React.Component {
 
     if (!this.state.song || this.state.song.allowed_to_edit) {
       songVisibility = <Select
+        className={styles.select_component}
         name="song[publish_status]"
         value={this.state.publishStatus}
         onChange={value => {

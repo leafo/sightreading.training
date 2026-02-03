@@ -8,7 +8,7 @@
       width: 200px;
     }
 
-    :global(.select_component) {
+    .select_component {
       margin-left: 10px;
     }
 

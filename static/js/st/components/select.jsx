@@ -2,6 +2,7 @@ import * as React from "react"
 import * as types from "prop-types"
 import classNames from "classnames"
 import {IconDownArrow} from "st/components/icons"
+import styles from "./select.module.css"
 
 export default class Select extends React.Component {
   static propTypes = {
@@ -34,11 +35,11 @@ export default class Select extends React.Component {
   render() {
     let current = this.currentOption()
 
-    return <div className={classNames("select_component", this.props.className, {
-      focused: this.state.focused
+    return <div className={classNames(styles.select_component, this.props.className, {
+      [styles.focused]: this.state.focused
     })}>
-      <div className="selected_option">
-        <span className="selected_option_name">{current.name}</span>
+      <div className={styles.selected_option}>
+        <span className={styles.selected_option_name}>{current.name}</span>
         <IconDownArrow width={12} />
       </div>
       <select

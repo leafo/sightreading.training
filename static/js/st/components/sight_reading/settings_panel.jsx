@@ -103,6 +103,7 @@ export class SettingsPanel extends React.PureComponent {
     if (this.state.presets && this.state.presets.length) {
       presetsPicker = <div className="presetsPicker">
         <Select
+          className={styles.select_component}
           name="preset"
           options={this.state.presets.map(p => ({
               name: p.name,
@@ -293,6 +294,7 @@ export class GeneratorSettings extends React.PureComponent {
     })
 
     return <Select
+      className={styles.select_component}
       onChange={ value => this.updateInputValue(input, value) }
       value={currentValue}
       options={options} />
@@ -311,6 +313,7 @@ export class GeneratorSettings extends React.PureComponent {
       <label>
         Note
         <Select
+          className={styles.select_component}
           onChange={value => {
             this.updateInputValue(input, parseNote(value))
           }}
@@ -356,6 +359,7 @@ export class GeneratorSettings extends React.PureComponent {
       <label>
         Min
         <Select
+          className={styles.select_component}
           onChange={value => {
             this.updateInputValue(input, [
               parseNote(value),
@@ -370,6 +374,7 @@ export class GeneratorSettings extends React.PureComponent {
       <label>
         Max
         <Select
+          className={styles.select_component}
           onChange={value => {
             this.updateInputValue(input, [
               currentValue[0],

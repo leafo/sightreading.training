@@ -25,7 +25,7 @@
         display: flex;
         align-items:  center;
 
-        :global(.select_component) {
+        .select_component {
             height: 28px;
             padding: 0 10px;
             display: flex;

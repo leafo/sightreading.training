@@ -86,7 +86,7 @@
             font-weight: bold;
         }
 
-        :global(.select_component) {
+        .select_component {
             display: block;
         }
 

@@ -52,6 +52,7 @@ export default class MidiInstrumentPicker extends React.PureComponent {
         <label>
           <span>Instrument</span>
           <Select
+            className={styles.select_component}
             value={this.state.outInstrument}
             onChange={v => this.setState({ outInstrument: v})}
             options={[
