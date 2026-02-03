@@ -1,7 +1,49 @@
-@import "include/common";
-
 .sight_reading_page {
     background: var(--body-background);
+
+    /* Empty rules to export class names that are only styled in nested/compound contexts */
+    .fullscreen {}
+    .stats {}
+    .second {}
+
+    /* Workspace styles (migrated from main.scss since only used by this page) */
+    .workspace {
+        display: flex;
+
+        @media (max-width: 1100px) {
+            display: block;
+        }
+
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 50px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: auto;
+    }
+
+    /*
+     * keyboard_open, settings_open stay as global classes because:
+     * - settings_open affects .header styles in main.scss
+     * - Using :global() allows these modifiers to work with both global header
+     *   styles and our scoped workspace styles
+     */
+    &:global(.keyboard_open) .workspace {
+        bottom: var(--keyboard-height);
+        @media (max-width: 1100px) {
+            bottom: var(--keyboard-height-short);
+        }
+        @media (max-width: 800px) {
+            bottom: var(--keyboard-height-very-short);
+        }
+    }
+
+    &:global(.settings_open) .workspace {
+        left: var(--settings-panel-width);
+    }
+
     &.fullscreen {
         width: 100%;
         height: 100%;
@@ -15,7 +57,7 @@
         }
     }
 
-    .workspace_header{
+    .workspace_header {
         margin-bottom: 20px;
         display: flex;
         align-items: center;
@@ -26,10 +68,10 @@
 
         .stats {
             text-align: right;
-            flex: 1
+            flex: 1;
         }
 
-        @include on_narrow_width {
+        @media (max-width: 1100px) {
             margin-top: 20px;
             padding-left: 20px;
             padding-right: 20px;
@@ -38,7 +80,6 @@
         .stats {
             white-space: nowrap;
         }
-
     }
 
     .workspace_wrapper {
@@ -46,11 +87,10 @@
         max-width: var(--default-width);
         width: 100%;
 
-        @include on_narrow_width {
+        @media (max-width: 1100px) {
             max-width: none;
         }
     }
-
 
     .toolbar {
         margin: 20px 0;
@@ -59,7 +99,7 @@
         justify-content: end;
         gap: 10px;
 
-        @include on_narrow_width {
+        @media (max-width: 1100px) {
             padding: 0 20px;
             margin-bottom: 40px;
         }
@@ -68,7 +108,6 @@
             flex-direction: column;
             align-items: flex-end;
         }
-
 
         > .labeled_tool {
             display: flex;
@@ -79,10 +118,9 @@
                 font-size: 14px;
                 opacity: 0.8;
             }
-
         }
 
-        > .slider_input {
+        > :global(.slider_input) {
             margin: 0;
         }
     }
@@ -99,7 +137,7 @@
         user-select: none;
         overflow: hidden;
 
-        &:before {
+        &::before {
             position: absolute;
             content: "";
             width: 50%;
@@ -110,11 +148,11 @@
             z-index: 1;
             border-radius: 2px;
             transition: 0.1s ease all;
-            box-shadow: inset 0 0 0 1px rgba(white, 0.2);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
         }
 
         &.second {
-            &:before {
+            &::before {
                 left: 50%;
                 right: 2px;
             }
@@ -127,7 +165,6 @@
                 &:nth-child(2) {
                     opacity: 1;
                 }
-
             }
         }
 
@@ -152,4 +189,23 @@
         bottom: 10px;
         right: 10px;
     }
+
+    &.scroll_mode {
+        .staff_wrapper {
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: calc(50% - 60px);
+                right: 0;
+                width: 120px;
+                background: #9fffb8;
+            }
+        }
+    }
+
+    &.wait_mode {}
+
+    .staff_wrapper {}
 }

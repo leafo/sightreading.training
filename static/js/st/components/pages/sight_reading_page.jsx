@@ -8,6 +8,9 @@ import Keyboard from "st/components/keyboard"
 import StatsLightbox from "st/components/sight_reading/stats_lightbox"
 import Hotkeys from "st/components/hotkeys"
 
+import styles from "./sight_reading_page.module.css"
+import staffStyles from "st/components/staff.module.css"
+
 import {KeySignature, noteName, parseNote} from "st/music"
 import {STAVES, GENERATORS} from "st/data"
 import {GeneratorSettings, SettingsPanel} from "st/components/sight_reading/settings_panel"
@@ -520,12 +523,12 @@ export default class SightReadingPage extends React.Component {
   render() {
     return <div
       ref="page_container"
-      className={classNames("sight_reading_page", {
-        fullscreen: this.state.fullscreen,
+      className={classNames(styles.sight_reading_page, {
+        [styles.fullscreen]: this.state.fullscreen,
         keyboard_open: this.state.keyboardOpen,
         settings_open: this.state.settingsOpen,
-        scroll_mode: this.state.mode == "scroll",
-        wait_mode: this.state.mode == "wait",
+        [styles.scroll_mode]: this.state.mode == "scroll",
+        [styles.wait_mode]: this.state.mode == "wait",
     })}>
       {this.renderWorkspace()}
       {this.renderKeyboard()}
@@ -545,7 +548,7 @@ export default class SightReadingPage extends React.Component {
 
     return <button
       onClick={this.toggleKeyboard.bind(this)}
-      className="keyboard_toggle">
+      className={styles.keyboard_toggle}>
       {this.state.keyboardOpen ? "Hide Keyboard" : "Show Keyboard"}
     </button>
   }
@@ -610,7 +613,7 @@ export default class SightReadingPage extends React.Component {
       >Fullscreen</button>
     }
 
-    let header = <div className="workspace_header">
+    let header = <div className={styles.workspace_header}>
       <div className="header_buttons">
         <button
           onClick={this.toggleSettings.bind(this)}
@@ -621,7 +624,7 @@ export default class SightReadingPage extends React.Component {
         {fullscreenButton}
       </div>
 
-      <div className="stats">
+      <div className={styles.stats}>
         {streak}
 
         <div className="stat_container" onClick={this.openStatsLightbox.bind(this)}>
@@ -644,17 +647,17 @@ export default class SightReadingPage extends React.Component {
       </pre>
     </div>
 
-    let toolbar = <div className="toolbar">
-      <div className="labeled_tool">
-        <span className="label">Mode</span>
+    let toolbar = <div className={styles.toolbar}>
+      <div className={styles.labeled_tool}>
+        <span className={styles.label}>Mode</span>
         <div
           onClick={this.toggleMode.bind(this)}
-          className={classNames("toggle_switch", {
+          className={classNames(styles.toggle_switch, {
             first: this.state.mode == "wait",
-            second: this.state.mode == "scroll",
+            [styles.second]: this.state.mode == "scroll",
           })}>
-          <span className="toggle_option">Wait</span>
-          <span className="toggle_option">Scroll</span>
+          <span className={styles.toggle_option}>Wait</span>
+          <span className={styles.toggle_option}>Scroll</span>
         </div>
       </div>
 
@@ -699,10 +702,10 @@ export default class SightReadingPage extends React.Component {
       }
     }
 
-    return <div ref="workspace" className="workspace">
-      <div className="workspace_wrapper">
+    return <div ref="workspace" className={styles.workspace}>
+      <div className={styles.workspace_wrapper}>
         {header}
-        <div className="staff_wrapper">
+        <div className={classNames(staffStyles.staff_wrapper, styles.staff_wrapper)}>
           {staff}
         </div>
         {toolbar}

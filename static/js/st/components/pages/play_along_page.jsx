@@ -530,7 +530,7 @@ export class PlayAlongPage extends React.Component {
       <div className={classNames(styles.play_along_workspace, { [styles.settings_open]: this.state.settingsPanelOpen })}>
         {this.state.songModel ? <h2>{this.state.songModel.title}</h2> : null}
         {this.renderSongTrackTools()}
-        <div className={classNames("staff_wrapper", styles.staff_wrapper)}>
+        <div className={classNames(staffStyles.staff_wrapper, styles.staff_wrapper)}>
           {songError}
           {renderedTracks}
           {this.renderTransportControls()}
