@@ -1,6 +1,5 @@
 TOP = $(TUP_CWD)
 
-!scss = |> ^ scss %o^ sassc -I scss/ < %f > %o |>
 !join = |> ^ join %o^ cat %f > %o |>
 
 # we insert \n; to ensure that two blocks of adjacent minified code do not interfere

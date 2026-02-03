@@ -1,0 +1,6 @@
+/* these styles are only used for the jasmine test runner page */
+body.test_runner {
+    #react_root {
+        margin: 20px;
+    }
+}

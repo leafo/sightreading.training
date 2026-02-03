@@ -13,10 +13,8 @@ class Layout extends Widget
         meta charset: "UTF-8"
         title "Sight Reading Trainer"
         if config._name == "production" or @params.prod_assets
-          link rel: "stylesheet", href: "/static/style.min.css?#{buster}"
           link rel: "stylesheet", href: "/static/main.min.css?#{buster}"
         else
-          link rel: "stylesheet", href: "/static/style.css?#{buster}"
           link rel: "stylesheet", href: "/static/main.css?#{buster}"
 
         -- link rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Raleway"

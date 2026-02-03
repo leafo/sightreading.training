@@ -1,3 +1,4 @@
+import "./specs.css"
 import "spec/generators_spec"
 import "spec/music_spec"
 import "spec/note_list_spec"
