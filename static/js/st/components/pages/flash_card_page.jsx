@@ -7,6 +7,7 @@ import MersenneTwister from "mersennetwister"
 import {TransitionGroup, CSSTransition} from "react-transition-group"
 
 import {setTitle} from "st/globals"
+import settingsPanelStyles from "st/components/settings_panel.module.css"
 
 import Select from "st/components/select"
 
@@ -26,13 +27,13 @@ class SettingsPanel extends React.PureComponent {
   }
 
   render() {
-    return <section className="settings_panel">
-      <div className="settings_header">
+    return <section className={classNames(settingsPanelStyles.settings_panel, "settings_panel")}>
+      <div className={settingsPanelStyles.settings_header}>
         <h3>Settings</h3>
         <button onClick={this.props.close}>Close</button>
       </div>
 
-      <section className="settings_group">
+      <section className={settingsPanelStyles.settings_group}>
         <ul>
           <li><NavLink to="/flash-cards/chord-identification" {...toggleActive}>Chord Identification</NavLink></li>
           <li><NavLink to="/flash-cards/note-math" {...toggleActive}>Note Math</NavLink></li>

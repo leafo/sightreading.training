@@ -6,6 +6,7 @@ import * as React from "react"
 import classNames from "classnames"
 import MersenneTwister from "mersennetwister"
 import {shuffled} from "st/util"
+import settingsPanelStyles from "st/components/settings_panel.module.css"
 
 import * as types from "prop-types"
 
@@ -31,9 +32,9 @@ export default class NoteMathExercise extends React.PureComponent {
       let notes = NoteMathExercise.notes
       let settings = this.props.currentSettings
 
-      return <section className="settings_group">
+      return <section className={settingsPanelStyles.settings_group}>
         <h4>Root notes</h4>
-        <div className="button_group">
+        <div className={settingsPanelStyles.button_group}>
           {notes.map((note) =>
             <label
               key={note}

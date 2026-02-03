@@ -4,6 +4,7 @@ import Slider from "st/components/slider"
 import Select from "st/components/select"
 import {trigger} from "st/events"
 import {generatorDefaultSettings, fixGeneratorSettings} from "st/generators"
+import styles from "st/components/settings_panel.module.css"
 
 import {KeySignature, ChromaticKeySignature, noteName, parseNote} from "st/music"
 import * as types from "prop-types"
@@ -33,27 +34,27 @@ export class SettingsPanel extends React.PureComponent {
   }
 
   render() {
-    return <section className="settings_panel">
-      <div className="settings_header">
+    return <section className={classNames(styles.settings_panel, "settings_panel")}>
+      <div className={styles.settings_header}>
         <h3>Settings</h3>
         <button onClick={this.props.close}>Close</button>
       </div>
 
       {this.renderPresets()}
 
-      <section className="settings_group">
+      <section className={styles.settings_group}>
         <h4>Staff</h4>
         {this.renderStaves()}
       </section>
 
-      <section className="settings_group">
+      <section className={styles.settings_group}>
         <h4>Generator</h4>
         {this.renderGenerators()}
       </section>
 
       {this.renderGeneratorInputs()}
 
-      <section className="settings_group">
+      <section className={styles.settings_group}>
         <h4>Key</h4>
         {this.renderKeys()}
       </section>
@@ -112,7 +113,7 @@ export class SettingsPanel extends React.PureComponent {
       </div>
     }
 
-    return <div className="settings_group">
+    return <div className={styles.settings_group}>
       {presetsPicker}
       <form onSubmit={this.savePreset.bind(this)} ref="presetForm">
         <label>
@@ -125,7 +126,7 @@ export class SettingsPanel extends React.PureComponent {
   }
 
   renderStaves() {
-    return <div className="button_group">
+    return <div className={styles.button_group}>
       {
         this.props.staves.map((staff, i) => {
           return <button
@@ -135,8 +136,8 @@ export class SettingsPanel extends React.PureComponent {
               e.preventDefault();
               this.props.setStaff(staff);
             }}
-            className={classNames("toggle_option", {
-              active: this.props.currentStaff == staff
+            className={classNames(styles.toggle_option, {
+              [styles.active]: this.props.currentStaff == staff
             })}>
             {staff.name}</button>;
         })
@@ -145,7 +146,7 @@ export class SettingsPanel extends React.PureComponent {
   }
 
   renderGenerators() {
-    return <div className="button_group">
+    return <div className={styles.button_group}>
       {
         this.props.generators.map((generator, i) => {
           if (generator.debug) {
@@ -167,8 +168,8 @@ export class SettingsPanel extends React.PureComponent {
               )
             }}
 
-            className={classNames("toggle_option", {
-              active: this.props.currentGenerator == generator
+            className={classNames(styles.toggle_option, {
+              [styles.active]: this.props.currentGenerator == generator
             })}>
             {generator.name}</button>;
         })
@@ -179,7 +180,7 @@ export class SettingsPanel extends React.PureComponent {
   renderGeneratorInputs() {
     let g = this.props.currentGenerator
     if (!g.inputs || !g.inputs.length) return
-    return <div className="settings_group">
+    return <div className={styles.settings_group}>
       <GeneratorSettings
         key={`${g.name}-${g.mode}`}
         generator={g}
@@ -196,14 +197,14 @@ export class SettingsPanel extends React.PureComponent {
         onClick={(e) => {
           this.props.setKeySignature(key)
         }}
-        className={classNames("toggle_option", {
-          active: this.props.currentKey.name() == key.name()
+        className={classNames(styles.toggle_option, {
+          [styles.active]: this.props.currentKey.name() == key.name()
         })}
         key={key.name()}>
           {key.name()}
         </button>
 
-    return <div className="button_group">
+    return <div className={styles.button_group}>
       {
         KeySignature.allKeySignatures().concat([
           new ChromaticKeySignature()
@@ -234,7 +235,7 @@ export class GeneratorSettings extends React.PureComponent {
 
     let inputs = this.props.generator.inputs
 
-    return <div className="generator_inputs">{
+    return <div className={styles.generator_inputs}>{
       inputs.map((input, idx) => {
         let fn
         switch (input.type) {
@@ -264,11 +265,11 @@ export class GeneratorSettings extends React.PureComponent {
         let el = input.type == "toggles" ? "div" : "label"
 
         let inside = React.createElement(el, null, ...[
-          <div className="input_label">{input.label || input.name}</div>,
+          <div className={styles.input_label}>{input.label || input.name}</div>,
           fn.call(this, input, idx)
         ])
 
-        return <div key={input.name} className="generator_input">
+        return <div key={input.name} className={styles.generator_input}>
           {inside}
         </div>
       })
@@ -306,7 +307,7 @@ export class GeneratorSettings extends React.PureComponent {
       options.push(noteName(i))
     }
 
-    return <div className="note_range_row">
+    return <div className={styles.note_range_row}>
       <label>
         Note
         <Select
@@ -351,7 +352,7 @@ export class GeneratorSettings extends React.PureComponent {
       }
     }
 
-    return <div className="note_range_row">
+    return <div className={styles.note_range_row}>
       <label>
         Min
         <Select
@@ -385,13 +386,13 @@ export class GeneratorSettings extends React.PureComponent {
   renderRange(input, idx) {
     let currentValue = this.cachedSettings[input.name]
 
-    return <div className="slider_row">
+    return <div className={styles.slider_row}>
       <Slider
         min={input.min}
         max={input.max}
         onChange={(value) => this.updateInputValue(input, value)}
         value={currentValue} />
-      <span className="current_value">{currentValue}</span>
+      <span className={styles.current_value}>{currentValue}</span>
     </div>
   }
 
@@ -426,5 +427,3 @@ export class GeneratorSettings extends React.PureComponent {
     </div>
   }
 }
-
-

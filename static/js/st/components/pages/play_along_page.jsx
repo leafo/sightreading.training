@@ -22,6 +22,7 @@ import NoteStats from "st/note_stats"
 
 import {setTitle} from "st/globals"
 import classNames from "classnames"
+import settingsPanelStyles from "st/components/settings_panel.module.css"
 
 import {IconRewind} from "st/components/icons"
 
@@ -52,35 +53,35 @@ class SettingsPanel extends React.Component {
     let chordMinSpacing = this.props.chordMinSpacing || 0
     let autochordsRate = this.props.autochordsRate || 1
 
-    return <section className="settings_panel">
-      <div className="settings_header">
+    return <section className={classNames(settingsPanelStyles.settings_panel, "settings_panel")}>
+      <div className={settingsPanelStyles.settings_header}>
         <h3>Settings</h3>
         <button onClick={this.props.close}>Close</button>
       </div>
 
-      <section className="settings_group">
+      <section className={settingsPanelStyles.settings_group}>
         <h4>Autochords</h4>
         <label>
-          <div className="input_label">Note spacing</div>
-          <div className="slider_row">
+          <div className={classNames(settingsPanelStyles.input_label, "input_label")}>Note spacing</div>
+          <div className={classNames(settingsPanelStyles.slider_row, "slider_row")}>
             <Slider
               min={-5}
               max={10}
               onChange={this.setMinChordSpacing}
               value={chordMinSpacing} />
-            <span className="current_value">{chordMinSpacing}</span>
+            <span className={settingsPanelStyles.current_value}>{chordMinSpacing}</span>
           </div>
         </label>
 
         <label>
-          <div className="input_label">Multiplier</div>
-          <div className="slider_row">
+          <div className={classNames(settingsPanelStyles.input_label, "input_label")}>Multiplier</div>
+          <div className={classNames(settingsPanelStyles.slider_row, "slider_row")}>
             <Slider
               min={1}
               max={4}
               onChange={this.setAutochordsRate}
               value={autochordsRate} />
-            <span className="current_value">{autochordsRate}</span>
+            <span className={settingsPanelStyles.current_value}>{autochordsRate}</span>
           </div>
         </label>
 
@@ -90,15 +91,15 @@ class SettingsPanel extends React.Component {
   }
 
   renderAutochords() {
-    return <div className="button_group">
+    return <div className={settingsPanelStyles.button_group}>
       {
         AutoChords.allGenerators.map((type, idx) => {
           let name = type.displayName
 
           return <button
             onClick={(e) => trigger(this, "setAutochords", idx)}
-            className={classNames("toggle_option", {
-              active: idx == this.props.autoChordType
+            className={classNames(settingsPanelStyles.toggle_option, {
+              [settingsPanelStyles.active]: idx == this.props.autoChordType
             })}
             key={name}>
               {name}
@@ -827,4 +828,3 @@ export const PlayAlongPageWithParams = React.forwardRef((props, ref) => {
   const params = useParams()
   return <PlayAlongPage {...props} params={params} ref={ref} />
 })
-

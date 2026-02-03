@@ -1,5 +1,3 @@
-@import "include/common";
-
 .settings_panel {
     box-sizing: border-box;
     user-select: none;
@@ -17,22 +15,22 @@
     border-right: 2px solid var(--border-color);
     z-index: 1;
 
-    &.slide_right-enter {
+    &:global(.slide_right-enter) {
         opacity: 0;
         transform: translate(-20%, 0);
         transition: opacity 0.2s ease, transform 0.2s ease;
 
-        &.slide_right-enter-active {
+        &:global(.slide_right-enter-active) {
             transform: translate(0, 0);
             opacity: 1;
         }
     }
 
-    &.slide_right-exit {
+    &:global(.slide_right-exit) {
         opacity: 1;
         transition: opacity 0.1s ease;
 
-        &.slide_right-exit-active {
+        &:global(.slide_right-exit-active) {
             opacity: 0;
         }
     }
@@ -47,7 +45,6 @@
         h3 {
             margin: 0;
         }
-
 
         button {
             margin-left: auto;
@@ -64,6 +61,7 @@
         background: white;
         border: 1px solid var(--border-color);
         color: #444;
+
         &.active {
             color: color-mix(in oklab, var(--button-color), black 10%);
             background: color-mix(in oklab, var(--button-color), white 80%);
@@ -75,7 +73,7 @@
     .generator_inputs {
         border: 1px solid var(--border-color);
         padding: 10px;
-        background: rgba(white, 0.5);
+        background: rgba(255, 255, 255, 0.5);
         display: flex;
         flex-direction: column;
         gap: 5px;
@@ -88,7 +86,7 @@
             font-weight: bold;
         }
 
-        .select_component {
+        :global(.select_component) {
             display: block;
         }
 
@@ -97,7 +95,7 @@
             display: flex;
             align-items: center;
 
-            .slider_component {
+            :global(.slider_component) {
                 width: auto;
                 flex: 1;
             }
@@ -117,6 +115,7 @@
                 font-weight: bold;
                 color: #666;
                 display: flex;
+
                 > *  {
                     margin-left: 5px;
                 }

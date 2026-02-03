@@ -7,6 +7,8 @@ import MersenneTwister from "mersennetwister"
 
 import * as types from "prop-types"
 
+import settingsPanelStyles from "st/components/settings_panel.module.css"
+
 import NoteList from "st/note_list"
 
 import {KeySignature} from "st/music"
@@ -40,9 +42,9 @@ export default class ChordIdentificationExercise extends React.PureComponent {
       let settings = this.props.currentSettings
 
       return <>
-        <section className="settings_group">
+        <section className={settingsPanelStyles.settings_group}>
           <h4>Key signature</h4>
-          <div className="button_group">
+          <div className={settingsPanelStyles.button_group}>
             {KeySignature.allKeySignatures().map(ks => {
               let count = "" + ks.count
               return <label key={ks.name()}>
@@ -64,7 +66,7 @@ export default class ChordIdentificationExercise extends React.PureComponent {
             })}
           </div>
         </section>
-        <section className="settings_group">
+        <section className={settingsPanelStyles.settings_group}>
           <h4>Inversions</h4>
           <label>
             <input
