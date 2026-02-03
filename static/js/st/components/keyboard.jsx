@@ -189,7 +189,7 @@ export default class Keyboard extends React.PureComponent {
       </div>)
     }
 
-    return <div className="keyboard">{keys}</div>
+    return <div className={classNames("keyboard", this.props.className)}>{keys}</div>
   }
 
 }

@@ -20,6 +20,8 @@ import Keyboard from "st/components/keyboard"
 import {setTitle} from "st/globals"
 
 import pageContainerStyles from "../page_container.module.css"
+import parentStyles from "../pages/ear_training_page.module.css"
+import styles from "./melody_playback_exercise.module.css"
 
 export default class MelodyPlaybackExercise extends React.Component {
   static exerciseName = "Melody Playback"
@@ -209,8 +211,8 @@ export default class MelodyPlaybackExercise extends React.Component {
     ]
 
 
-    let page = <div className={pageContainerStyles.page_container}>
-      <details className="instructions">
+    let page = <div className={classNames(pageContainerStyles.page_container, styles.page_container)}>
+      <details className={styles.instructions}>
         <summary>How does this work?</summary>
         <p>Click <em>New melody</em> to listen to a randomly generated melody.
           Play it back using the on-screen keyboard or your MIDI input device to
@@ -218,7 +220,7 @@ export default class MelodyPlaybackExercise extends React.Component {
           you heard. You can trigger current the melody to replay by interacting with
           any of the sliders or pedals on your MIDI controller.</p>
       </details>
-      <div className="stat_controls">
+      <div className={styles.stat_controls}>
         {repeatButton}
         <button disabled={locked} onClick={(e) => {
           e.preventDefault()
@@ -228,7 +230,7 @@ export default class MelodyPlaybackExercise extends React.Component {
 
         <strong>{this.state.statusMessage}</strong>
 
-        <div className="stats_row">
+        <div className={styles.stats_row}>
           <div className="stat_container">
             <div className="value">{this.state.successes}</div>
             <div className="label">Melodies</div>
@@ -238,7 +240,7 @@ export default class MelodyPlaybackExercise extends React.Component {
 
       <fieldset>
         <legend>Notes per melody</legend>
-        <div className="slider_group">
+        <div className={parentStyles.slider_group}>
           <Slider
             min={2}
             max={8}
@@ -247,7 +249,7 @@ export default class MelodyPlaybackExercise extends React.Component {
           <code>{this.state.notesPerMelody}</code>
         </div>
 
-        <span className="spacer"></span>
+        <span className={styles.spacer}></span>
 
         <label>
           <input
@@ -263,7 +265,7 @@ export default class MelodyPlaybackExercise extends React.Component {
 
       <fieldset>
         <legend>Notes per column</legend>
-        <div className="slider_group">
+        <div className={parentStyles.slider_group}>
           <Slider
             min={1}
             max={4}
@@ -275,12 +277,12 @@ export default class MelodyPlaybackExercise extends React.Component {
         </div>
       </fieldset>
 
-      <fieldset className="range_picker">
+      <fieldset className={parentStyles.range_picker}>
         <legend>Range</legend>
         {ranges.map(r => {
           return <button
             className={classNames({
-              active: r.range.join(",") == this.state.melodyRange.join(",")
+              [parentStyles.active]: r.range.join(",") == this.state.melodyRange.join(",")
             })}
             onClick={e => {
               e.preventDefault();
@@ -290,7 +292,7 @@ export default class MelodyPlaybackExercise extends React.Component {
             }}
             key={r.name}>{r.name}</button>
         })}
-        <span className="current_range">
+        <span className={parentStyles.current_range}>
           {this.state.melodyRange.join(" - ")}
         </span>
       </fieldset>
@@ -319,10 +321,10 @@ export default class MelodyPlaybackExercise extends React.Component {
       </fieldset>
     </div>
 
-    return <div className="melody_playback_exercise">
-      <div className="exercise_header">
+    return <div className={styles.melody_playback_exercise}>
+      <div className={parentStyles.exercise_header}>
         {this.props.toggleSidebarButton}
-        <h1 className="exercise_label">Melody Playback</h1>
+        <h1 className={parentStyles.exercise_label}>Melody Playback</h1>
       </div>
       {page}
       {this.renderKeyboard()}
@@ -410,6 +412,7 @@ export default class MelodyPlaybackExercise extends React.Component {
       upper={this.state.melodyRange[1]}
       heldNotes={this.state.keyboardHeldNotes}
       midiOutput={this.props.midiOutput}
+      className={styles.keyboard}
       onKeyDown={this.keyboardPressNote}
       onKeyUp={this.keyboardReleaseNote} />
   }

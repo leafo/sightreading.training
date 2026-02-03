@@ -1,4 +1,5 @@
 import * as React from "react"
+import classNames from "classnames"
 
 import {Link, NavLink} from "react-router-dom"
 
@@ -7,6 +8,7 @@ import {getSession} from "st/app"
 import {toggleActive} from "st/components/util"
 
 import pageContainerStyles from "../page_container.module.css"
+import styles from "./songs.module.css"
 
 class SongCell extends React.PureComponent {
   render() {
@@ -15,28 +17,28 @@ class SongCell extends React.PureComponent {
     let timePlayed
 
     if (song.publish_status == "draft") {
-      publishStatus = <div className="publish_status">Draft</div>
+      publishStatus = <div className={styles.publish_status}>Draft</div>
     }
 
     if (song.current_user_time) {
       let minutes = song.current_user_time.time_spent / 60
 
-      timePlayed = <div className="time_played">
+      timePlayed = <div className={styles.time_played}>
         Played for {minutes.toFixed(2).replace(/0+$/, "").replace(/\.$/, "")} {minutes == 1 ? "minute" : "minutes"}
       </div>
     }
 
-    return <div className="song_cell">
+    return <div className={styles.song_cell}>
       {publishStatus}
 
-      <div className="song_title">
+      <div className={styles.song_title}>
         <Link to={song.url}>{song.title}</Link>
       </div>
-      <div className="song_creator">
+      <div className={styles.song_creator}>
         {song.user.name}
       </div>
       {timePlayed}
-      <div className="song_stats">
+      <div className={styles.song_stats}>
         <span>Notes: {song.notes_count}</span>
         <span>Duration: {song.beats_duration}</span>
       </div>
@@ -98,8 +100,8 @@ export default class SongsPage extends React.Component {
   }
 
   renderSidebar() {
-    return <section className="sidebar">
-      <Link to="/new-song" className="button new_song_button">Create a new song</Link>
+    return <section className={classNames("sidebar", styles.sidebar)}>
+      <Link to="/new-song" className={classNames("button", styles.new_song_button)}>Create a new song</Link>
 
       <nav>
         <ul>
@@ -123,7 +125,7 @@ export default class SongsPage extends React.Component {
 
     let songList
     if (this.state.mySongs && this.state.mySongs.length) {
-      songList = <ul className="song_cell_list">{this.state.mySongs.map(song =>
+      songList = <ul className={styles.song_cell_list}>{this.state.mySongs.map(song =>
         <li key={song.id}>
           <SongCell song={song} key={song.id}/>
         </li>
@@ -136,7 +138,7 @@ export default class SongsPage extends React.Component {
       songList = <React.Fragment>
         <p>Any songs you create or edit will show up here.</p>
         <p>
-          <Link to="/new-song" className="button new_song_button">Create a new song</Link>
+          <Link to="/new-song" className={classNames("button", styles.new_song_button)}>Create a new song</Link>
         </p>
       </React.Fragment>
     }
@@ -149,13 +151,13 @@ export default class SongsPage extends React.Component {
 
   renderOverview() {
     if (!this.state.songs) {
-      return <div className={pageContainerStyles.page_container}>Loading...</div>
+      return <div className={classNames(pageContainerStyles.page_container, styles.page_container)}>Loading...</div>
     }
 
     let songList
 
     if (this.state.songs.length) {
-      songList = <ul className="song_cell_list">{this.state.songs.map(song =>
+      songList = <ul className={styles.song_cell_list}>{this.state.songs.map(song =>
         <li key={song.id}>
           <SongCell song={song} key={song.id}/>
         </li>
@@ -164,7 +166,7 @@ export default class SongsPage extends React.Component {
       songList = <p className="empty_message">No results</p>
     }
 
-    return <section className="content_column">
+    return <section className={classNames("content_column", styles.content_column)}>
       <section>
         <h2>Songs</h2>
       {songList}
@@ -175,13 +177,13 @@ export default class SongsPage extends React.Component {
 
   renderRecent() {
     if (!this.state.songs) {
-      return <div className={pageContainerStyles.page_container}>Loading...</div>
+      return <div className={classNames(pageContainerStyles.page_container, styles.page_container)}>Loading...</div>
     }
 
     let songList
 
     if (this.state.songs.length) {
-      songList = <ul className="song_cell_list">{this.state.songs.map(song =>
+      songList = <ul className={styles.song_cell_list}>{this.state.songs.map(song =>
         <li key={song.id}>
           <SongCell song={song} key={song.id}/>
         </li>
@@ -190,7 +192,7 @@ export default class SongsPage extends React.Component {
       songList = <p className="empty_message">No results</p>
     }
 
-    return <section className="content_column">
+    return <section className={classNames("content_column", styles.content_column)}>
       <section>
         <h2>Recently played</h2>
         {songList}
@@ -204,7 +206,7 @@ export default class SongsPage extends React.Component {
         return this.renderRecent()
       }
       case "invalid": {
-        return <div className={pageContainerStyles.page_container}>
+        return <div className={classNames(pageContainerStyles.page_container, styles.page_container)}>
           <h2>Not found</h2>
           <p>Invalid filter</p>
         </div>
@@ -216,7 +218,7 @@ export default class SongsPage extends React.Component {
   }
 
   render() {
-    return <div className="songs_page has_sidebar">
+    return <div className={classNames(styles.songs_page, "has_sidebar")}>
       {this.renderSidebar()}
       {this.renderContent()}
     </div>

@@ -1,0 +1,44 @@
+.melody_playback_exercise {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    details.instructions {
+        margin-bottom: 10px;
+        summary {
+            cursor: pointer;
+            font-weight: bold;
+        }
+    }
+
+    .keyboard {
+        margin-top: auto;
+        position: static;
+    }
+
+    .stat_controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        > .stats_row {
+            margin-left: auto;
+        }
+    }
+
+    fieldset {
+        margin-top: 20px;
+        > .spacer {
+            flex: 1;
+        }
+    }
+}
+
+.page_container {
+    margin-top: 0;
+    margin-bottom: 0;
+    > p:first-child {
+        margin-top: 0;
+    }
+}

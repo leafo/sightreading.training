@@ -19,6 +19,8 @@ import {IconShuffle} from "st/components/icons"
 import {setTitle} from "st/globals"
 
 import pageContainerStyles from "../page_container.module.css"
+import parentStyles from "../pages/ear_training_page.module.css"
+import styles from "./melody_recognition_exercise.module.css"
 
 export default class MelodyRecognitionExercise extends React.Component {
   static exerciseName = "Interval Melodies"
@@ -378,16 +380,16 @@ export default class MelodyRecognitionExercise extends React.Component {
   }
 
   render() {
-    return <div className="melody_recognition_exercise">
-      <div className="exercise_header">
+    return <div className={styles.melody_recognition_exercise}>
+      <div className={parentStyles.exercise_header}>
         {this.props.toggleSidebarButton}
-        <h1 className="exercise_label">Interval Recognition</h1>
+        <h1 className={parentStyles.exercise_label}>Interval Recognition</h1>
       </div>
 
       {this.state.loading ?
-        <div className={pageContainerStyles.page_container}>Loading</div>
+        <div className={classNames(pageContainerStyles.page_container, styles.page_container)}>Loading</div>
       :
-        <div className={pageContainerStyles.page_container}>
+        <div className={classNames(pageContainerStyles.page_container, styles.page_container)}>
           {this.renderSongPlayer()}
           {this.renderIntervalSettings()}
           {this.renderAutoplayer()}
@@ -407,11 +409,11 @@ export default class MelodyRecognitionExercise extends React.Component {
     }
 
 
-    return <section className="auto_player">
+    return <section className={styles.auto_player}>
       <h3>Autoplay Mode</h3>
       <p>Repeatedly plays a random interval, a pause, then the associated melody. No input required, listen along and try to identify the intervals.</p>
 
-      <fieldset className="autoplay_options">
+      <fieldset className={styles.autoplay_options}>
         <legend>Autoplay options</legend>
         <ul >
           <li>
@@ -494,13 +496,13 @@ export default class MelodyRecognitionExercise extends React.Component {
         title = "Listen to interval..."
       }
 
-      currentSongTools = <div className="current_song">
+      currentSongTools = <div className={styles.current_song}>
         <details>
           <summary>Show Interval & Title</summary>
-          <div className="song_title">{title}</div>
+          <div className={styles.song_title}>{title}</div>
         </details>
 
-        <div className="song_controls">
+        <div className={styles.song_controls}>
           <button
             disabled={disabled}
             type="button"
@@ -526,20 +528,20 @@ export default class MelodyRecognitionExercise extends React.Component {
         </div>
       </div>
     } else {
-      currentSongTools = <div className="current_song">
+      currentSongTools = <div className={styles.current_song}>
         <p>Press <strong>Next melody</strong> to randomly pick a interval to practice</p>
       </div>
     }
 
     let disabled = !!(this.state.playing || this.state.autoplayTimer)
 
-    return <div className="song_selector">
-      <div className="global_controls">
+    return <div className={styles.song_selector}>
+      <div className={styles.global_controls}>
         <button
           disabled={disabled}
           onClick={(e) => { this.nextMelody() }}>Next melody</button>
 
-        <label className="slider_group">
+        <label className={parentStyles.slider_group}>
           <span>BPM</span>
           <Slider
             min={40}
@@ -551,7 +553,7 @@ export default class MelodyRecognitionExercise extends React.Component {
           <code>{this.state.playbackBpm}</code>
         </label>
 
-        <label className="slider_group">
+        <label className={parentStyles.slider_group}>
           <span>Transpose</span>
           <Slider
             min={-24}
@@ -569,7 +571,7 @@ export default class MelodyRecognitionExercise extends React.Component {
                 playbackTranspose: (this.state.rand.int() % 36) - 18
               })
             }
-            className="shuffle_button">
+            className={parentStyles.shuffle_button}>
               <IconShuffle width={16} height={16} />
             </button>
         </label>
@@ -628,8 +630,8 @@ export default class MelodyRecognitionExercise extends React.Component {
         >All off</button>
     }
 
-    return <section className="interval_settings">
-      <fieldset className="enabled_intervals">
+    return <section className={styles.interval_settings}>
+      <fieldset className={styles.enabled_intervals}>
         <legend>Intervals</legend>
 
         <ul>

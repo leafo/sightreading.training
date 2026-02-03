@@ -101,7 +101,7 @@ export default class Slider extends React.PureComponent {
         disabled: this.props.disabled
       })}
     >
-      <div ref="track" className={styles.slider_track}>
+      <div ref="track" className={classNames(styles.slider_track, "slider_track")}>
         <button
           ref="sliderNub"
           onMouseDown={(e) => this.startDrag(e.pageX, e.pageY)}

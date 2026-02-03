@@ -1,11 +1,4 @@
-@import "include/common";
-
 .songs_page {
-    .page_container {
-        // the loading screen
-        align-self: flex-start;
-    }
-
     .sidebar {
         .new_song_button {
             display: block;
@@ -47,7 +40,6 @@
         .song_title {
             font-size: 20px;
             a {
-                // alternate dark link color
                 color: #55556b;
                 text-decoration: none;
             }
@@ -82,4 +74,8 @@
         grid-gap: 15px;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
+}
+
+.page_container {
+    align-self: flex-start;
 }

@@ -20,6 +20,7 @@ import {IconMenu} from "st/components/icons"
 import {toggleActive} from "st/components/util"
 
 import pageContainerStyles from "../page_container.module.css"
+import styles from "./ear_training_page.module.css"
 
 export default class EarTrainingPage extends React.Component {
   constructor(props) {
@@ -41,7 +42,7 @@ export default class EarTrainingPage extends React.Component {
       contents = this.renderIntro()
     }
 
-    return <div className={classNames("ear_training_page has_sidebar", { sidebar_open: this.state.sidebarOpen })}>
+    return <div className={classNames(styles.ear_training_page, "has_sidebar", { sidebar_open: this.state.sidebarOpen })}>
       <div className="sidebar">
         <nav>
           <div className="nav_header">Choose Exercise</div>
@@ -54,7 +55,7 @@ export default class EarTrainingPage extends React.Component {
         <button
           type="button"
           onClick={()=> this.toggleSidebar()}
-          className="button toggle_sidebar_button">Close</button>
+          className={classNames("button", styles.toggle_sidebar_button)}>Close</button>
       </div>
 
       <div className="content_column">
@@ -70,7 +71,7 @@ export default class EarTrainingPage extends React.Component {
   renderExercise() {
     let toggleSidebarButton = <button
       type="button"
-      className="toggle_sidebar_button button outline"
+      className={classNames(styles.toggle_sidebar_button, "button outline")}
       onClick={() => this.toggleSidebar()}
     >
       <IconMenu width={20} height={20} />
@@ -100,7 +101,7 @@ export default class EarTrainingPage extends React.Component {
   }
 
   renderIntro() {
-    return <div className={`${pageContainerStyles.page_container} choose_device`}>
+    return <div className={classNames(pageContainerStyles.page_container, styles.page_container, styles.choose_device)}>
       <h3>Choose a MIDI output device for ear training</h3>
       <p>The ear training tools require an output device to be configured.</p>
 

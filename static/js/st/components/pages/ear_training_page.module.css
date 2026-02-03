@@ -1,0 +1,123 @@
+.ear_training_page {
+    @media (min-width: 900px) {
+        .toggle_sidebar_button {
+            display: none;
+        }
+    }
+
+    .exercise_header {
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        @media (max-width: 900px) {
+            padding-bottom: 0;
+        }
+
+        > .exercise_label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 1.5em;
+            margin: 0;
+
+            @media (max-width: 900px) {
+                font-size: 1.2em;
+            }
+        }
+    }
+
+    .warning {
+        color: var(--error-color);
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .choose_device {
+        h3 {
+            margin-top: 0;
+        }
+    }
+
+    .slider_group {
+        flex: 1;
+        border: 1px solid var(--border-color);
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        min-height: 26px;
+
+        > span {
+            font-size: 12px;
+            font-weight: bold;
+            &:first-child {
+                padding-left: 5px;
+            }
+        }
+
+        code {
+            min-width: 28px;
+            text-align: center;
+        }
+
+        > .shuffle_button {
+            padding: 2px 8px;
+            border: 0;
+            border-radius: 0;
+            font-size: 12px;
+            align-self: stretch;
+        }
+
+        > :global(.slider_component) {
+            flex: 1;
+            min-width: 0;
+
+            :global(.slider_track) {
+                flex: 1;
+                min-width: 0;
+            }
+        }
+    }
+
+    fieldset {
+        border: 1px solid #ddd;
+        legend {
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #666;
+        }
+    }
+
+    .range_picker {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        button  {
+            &.active {
+                background-color: color-mix(in oklab, var(--button-color), white 10%);
+                box-shadow: 0 0 0 2px color-mix(in oklab, var(--border-color), black 20%);
+            }
+        }
+
+        .current_range {
+            margin-left: auto;
+        }
+    }
+
+    .confirm_buttons {
+        display: flex;
+        margin-top: 20px;
+
+        .spacer {
+            flex: 1;
+        }
+    }
+}
+
+.page_container {
+    /* placeholder for choose_device combined class */
+}
