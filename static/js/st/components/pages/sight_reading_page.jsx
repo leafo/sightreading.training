@@ -6,6 +6,7 @@ import Slider from "st/components/slider"
 import sliderStyles from "st/components/slider.module.css"
 import Keyboard from "st/components/keyboard"
 import StatsLightbox from "st/components/sight_reading/stats_lightbox"
+import Hotkeys from "st/components/hotkeys"
 
 import {KeySignature, noteName, parseNote} from "st/music"
 import {STAVES, GENERATORS} from "st/data"
@@ -39,6 +40,10 @@ export default class SightReadingPage extends React.Component {
     this.pressNote = this.pressNote.bind(this)
     this.releaseNote = this.releaseNote.bind(this)
     this.onFullscreenChange = this.onFullscreenChange.bind(this)
+
+    this.keyMap = {
+      " ": e => this.skipCurrentNote(),
+    }
 
     const session = getSession()
 
@@ -276,6 +281,48 @@ export default class SightReadingPage extends React.Component {
     }
   }
 
+  skipCurrentNote() {
+    // Only support notes mode (not chords)
+    if (this.state.currentGenerator?.mode !== "notes") {
+      return
+    }
+
+    if (!this.state.notes || this.state.notes.length === 0) {
+      return
+    }
+
+    const currentNotes = this.state.notes.currentColumn()
+
+    // Play notes via MIDI output if available
+    if (this.props.midiOutput && currentNotes.length > 0) {
+      for (const note of currentNotes) {
+        const pitch = parseNote(note)
+        this.props.midiOutput.noteOn(pitch, 100)
+      }
+
+      setTimeout(() => {
+        for (const note of currentNotes) {
+          const pitch = parseNote(note)
+          this.props.midiOutput.noteOff(pitch)
+        }
+      }, 300)
+    }
+
+    // Advance to next note
+    let notes = this.state.notes.clone()
+    notes.shift()
+    notes.pushRandom()
+
+    this.setState({
+      notes,
+      noteShaking: false,
+      heldNotes: {},
+      touchedNotes: {}
+    })
+
+    this.state.slider.add(1)
+  }
+
   pressNote(note) {
     switch (this.state.currentGenerator.mode) {
       case "chords": {
@@ -488,6 +535,7 @@ export default class SightReadingPage extends React.Component {
       </TransitionGroup>
 
       {this.renderKeyboardToggle()}
+      <Hotkeys keyMap={this.keyMap} />
     </div>;
   }
 
