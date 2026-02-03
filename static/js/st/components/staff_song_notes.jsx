@@ -10,6 +10,7 @@ import * as types from "prop-types"
 import LedgerLines from "st/components/staff/ledger_lines"
 import BarNotes from "st/components/staff/bar_notes"
 import {SongNoteList} from "st/song_note_list"
+import styles from "st/components/staff.module.css"
 
 class MeasureLines extends React.PureComponent {
   static bucketSize = 4 // how many beats each chunk of rendering is
@@ -53,7 +54,7 @@ class MeasureLines extends React.PureComponent {
         style={{ left: `${offsetLeft + fromLeft - 2}px`}}
         data-label={m + 1}
         key={`measure-${m}`}
-        className="measure_line"></div>)
+        className={styles.measure_line}></div>)
     }
 
     return lines
@@ -80,7 +81,7 @@ export default class StaffSongNotes extends React.PureComponent {
   }
 
   classNames()  {
-    return "staff_notes staff_song_notes"
+    return classNames(styles.staff_notes, styles.staff_song_notes)
   }
 
   static filterNotes(notes, filter) {

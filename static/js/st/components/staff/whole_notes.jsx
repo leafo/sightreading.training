@@ -3,6 +3,7 @@ import classNames from "classnames"
 import {parseNote, noteStaffOffset} from "st/music"
 
 import * as types from "prop-types"
+import styles from "st/components/staff.module.css"
 
 export default class WholeNotes extends React.PureComponent {
   static propTypes = {
@@ -71,27 +72,27 @@ export default class WholeNotes extends React.PureComponent {
       noteClasses = props.noteClasses[note.id]
     }
 
-    let classes = classNames("whole_note", "note", {
-      is_flat: accidentals == -1,
-      is_sharp: accidentals == 1,
-      is_natural: accidentals == 0,
-      outside: outside,
+    let classes = classNames(styles.note, styles.whole_note, {
+      [styles.is_flat]: accidentals == -1,
+      [styles.is_sharp]: accidentals == 1,
+      [styles.is_natural]: accidentals == 0,
+      [styles.outside]: outside,
     }, noteClasses, props.staticNoteClasses)
 
     let parts = [
-      <img key="head" className="primary" src="/static/svg/noteheads.s0.svg" />
+      <img key="head" className={styles.primary} src="/static/svg/noteheads.s0.svg" />
     ]
 
     if (accidentals == 0) {
-      parts.push(<img key="natural" className="accidental natural" src="/static/svg/natural.svg" />)
+      parts.push(<img key="natural" className={classNames(styles.accidental, styles.natural)} src="/static/svg/natural.svg" />)
     }
 
     if (accidentals == -1) {
-      parts.push(<img key="flat" className="accidental flat" src="/static/svg/flat.svg" />)
+      parts.push(<img key="flat" className={classNames(styles.accidental, styles.flat)} src="/static/svg/flat.svg" />)
     }
 
     if (accidentals == 1) {
-      parts.push(<img key="sharp" className="accidental sharp" src="/static/svg/sharp.svg" />)
+      parts.push(<img key="sharp" className={classNames(styles.accidental, styles.sharp)} src="/static/svg/sharp.svg" />)
     }
 
     return <div

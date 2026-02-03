@@ -4,6 +4,7 @@ import classNames from "classnames"
 import {parseNote, noteStaffOffset} from "st/music"
 
 import * as types from "prop-types"
+import styles from "st/components/staff.module.css"
 
 export default class BarNotes extends React.PureComponent {
   static defaultProps = {
@@ -56,12 +57,12 @@ export default class BarNotes extends React.PureComponent {
     let held = this.props.heldNotes[note.id]
 
     return <div
-      className={classNames("note_bar", {
-        is_flat: accidentals == -1,
-        is_sharp: accidentals == 1,
-        is_natural: accidentals == 0,
-        held,
-        outside_loop: outsideLoop,
+      className={classNames(styles.note_bar, {
+        [styles.is_flat]: accidentals == -1,
+        [styles.is_sharp]: accidentals == 1,
+        [styles.is_natural]: accidentals == 0,
+        [styles.held]: held,
+        [styles.outside_loop]: outsideLoop,
       })}
       title={noteName}
       style={style}

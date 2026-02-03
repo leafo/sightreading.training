@@ -12,9 +12,9 @@ include_rules
 : $(TOP)/node_modules/jasmine-core/lib/jasmine-core/jasmine.js $(TOP)/node_modules/jasmine-core/lib/jasmine-core/jasmine-html.js $(TOP)/node_modules/jasmine-core/lib/jasmine-core/boot.js |> !join_js |> jasmine.js
 
 
-: js/specs.js | main.js |> !esbuild_bundle |> specs.js | specs.js.map
+: js/specs.js | main.js |> !esbuild_bundle |> specs.js | specs.js.map specs.css specs.css.map
 
 : scss/*.css |> cat %f > %o |> style.css
 : style.css |> sassc -t compressed %f > %o |> style.min.css
 
-: $(TOP)/node_modules/jasmine-core/lib/jasmine-core/jasmine.css style.css |> cat %f > %o |> specs.css
+: $(TOP)/node_modules/jasmine-core/lib/jasmine-core/jasmine.css style.css specs.css |> cat %f > %o |> specs.bundle.css

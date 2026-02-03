@@ -11,6 +11,7 @@ import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 
 import StaffNotes from "st/components/staff_notes"
 import StaffSongNotes from "st/components/staff_song_notes"
+import styles from "st/components/staff.module.css"
 
 const DEFAULT_HEIGHT = 120
 const DEFAULT_MARGIN = 60
@@ -112,16 +113,16 @@ export class Staff extends React.PureComponent {
         marginTop: marginTop ? `${marginTop}px` : null,
         marginBottom: marginBottom ? `${marginBottom}px` : null,
       }}
-      className={classNames("staff", this.props.staffClass)}
+      className={classNames(styles.staff, this.props.staffClass)}
     >
-      <img className="cleff" src={this.props.cleffImage} />
+      <img className={styles.cleff} src={this.props.cleffImage} />
 
-      <div className="lines">
-        <div className="line1 line"></div>
-        <div className="line2 line"></div>
-        <div className="line3 line"></div>
-        <div className="line4 line"></div>
-        <div className="line5 line"></div>
+      <div className={styles.lines}>
+        <div className={classNames(styles.line1, styles.line)}></div>
+        <div className={classNames(styles.line2, styles.line)}></div>
+        <div className={classNames(styles.line3, styles.line)}></div>
+        <div className={classNames(styles.line4, styles.line)}></div>
+        <div className={classNames(styles.line5, styles.line)}></div>
       </div>
 
       {this.renderKeySignature()}
@@ -148,11 +149,11 @@ export class Staff extends React.PureComponent {
 
     let topOffset = this.props.upperRow
 
-    let sigClass = keySignature.isFlat() ? "flat" : "sharp";
+    let sigClass = keySignature.isFlat() ? styles.flat : styles.sharp;
 
     let src = keySignature.isFlat() ? "/static/svg/flat.svg" : "/static/svg/sharp.svg";
 
-    return <div className="key_signature">
+    return <div className={styles.key_signature}>
       {sigNotes.map((n, i) => {
         let fromTop = topOffset - noteStaffOffset(n);
         let style = {
@@ -164,7 +165,7 @@ export class Staff extends React.PureComponent {
           key={`sig-${n}`}
           data-note={n}
           style={style}
-          className={classNames("accidental", sigClass)}
+          className={classNames(styles.accidental, sigClass)}
           src={src} />;
       })}
     </div>;
@@ -178,7 +179,7 @@ export class GStaff extends Staff {
     upperRow: 45,
     lowerRow: 37,
     cleffImage: "/static/svg/clefs.G.svg",
-    staffClass: "g_staff",
+    staffClass: styles.g_staff,
   }
 }
 
@@ -188,7 +189,7 @@ export class FStaff extends Staff {
     upperRow: 33,
     lowerRow: 25,
     cleffImage: "/static/svg/clefs.F_change.svg",
-    staffClass: "f_staff",
+    staffClass: styles.f_staff,
   }
 }
 
@@ -230,7 +231,7 @@ export class GrandStaff extends React.PureComponent {
   }
 
   render() {
-    return <div className="grand_staff">
+    return <div className={styles.grand_staff}>
       <GStaff
         ref={this.gstaff}
         filterPitch={this.filterGStaff}
@@ -260,25 +261,25 @@ export class ChordStaff extends React.PureComponent {
 
     let touchedNotes = Object.keys(this.props.touchedNotes)
 
-    return <div className="chord_staff">
-      <div className="chord_scrolling" ref="chordScrolling">
+    return <div className={styles.chord_staff}>
+      <div className={styles.chord_scrolling} ref="chordScrolling">
         {this.props.chords.map((c, i) => {
           let pressedIndicator
 
           if (i == 0 && touchedNotes.length) {
-            pressedIndicator = <span className="touched">
+            pressedIndicator = <span className={styles.touched}>
               {touchedNotes.map(n => {
                 if (c.containsNote(n)) {
-                  return <span key={`right-${n}`} className="right">•</span>
+                  return <span key={`right-${n}`} className={styles.right}>•</span>
                 } else {
-                  return <span key={`wrong-${n}`} className="wrong">×</span>
+                  return <span key={`wrong-${n}`} className={styles.wrong}>×</span>
                 }
               })}
             </span>
           }
 
-          return <div key={`${c}-${i}`} className={classNames("chord", {
-            errorshake: this.props.noteShaking && i == 0,
+          return <div key={`${c}-${i}`} className={classNames(styles.chord, {
+            [styles.errorshake]: this.props.noteShaking && i == 0,
           })}>
             {c.toString()}
             {pressedIndicator}
@@ -288,4 +289,3 @@ export class ChordStaff extends React.PureComponent {
     </div>
   }
 }
-

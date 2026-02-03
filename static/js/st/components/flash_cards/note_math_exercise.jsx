@@ -8,6 +8,7 @@ import MersenneTwister from "mersennetwister"
 import {shuffled} from "st/util"
 import settingsPanelStyles from "st/components/settings_panel.module.css"
 import flashCardStyles from "st/components/flash_cards/flash_cards.module.css"
+import staffStyles from "st/components/staff.module.css"
 
 import * as types from "prop-types"
 
@@ -135,7 +136,9 @@ export default class NoteMathExercise extends React.PureComponent {
     }
 
     return <div key={this.state.cardNumber} className={flashCardStyles.card_row}>
-      <div className={classNames(flashCardStyles.flash_card, {errorshake: this.state.cardError})}>
+      <div className={classNames(flashCardStyles.flash_card, {
+        [staffStyles.errorshake]: this.state.cardError,
+      })}>
         {card.label}
       </div>
     </div>

@@ -8,6 +8,7 @@ import MersenneTwister from "mersennetwister"
 import * as types from "prop-types"
 
 import flashCardStyles from "st/components/flash_cards/flash_cards.module.css"
+import staffStyles from "st/components/staff.module.css"
 import settingsPanelStyles from "st/components/settings_panel.module.css"
 
 import NoteList from "st/note_list"
@@ -171,7 +172,9 @@ export default class ChordIdentificationExercise extends React.PureComponent {
     let notes = card.chord.getRange(card.octave, card.notes, card.inversion)
 
     return <div key={this.state.cardNumber} className={flashCardStyles.card_row}>
-      <div className={classNames(flashCardStyles.flash_card, {errorshake: this.state.cardError})}>
+      <div className={classNames(flashCardStyles.flash_card, {
+        [staffStyles.errorshake]: this.state.cardError,
+      })}>
         <GStaff
           heldNotes={{}}
           notes={new NoteList([notes])}

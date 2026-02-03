@@ -1,5 +1,3 @@
-@import "include/common";
-
 .grand_staff {
     .staff {
         &:first-child {
@@ -27,10 +25,6 @@
             height: 165%;
             top: -28%;
         }
-
-        // .note {
-        //     -webkit-filter: #{"invert()"} sepia() saturate(8000%) hue-rotate(20deg);
-        // }
     }
 
     &.f_staff {
@@ -39,16 +33,18 @@
             left: 8px;
             height: 82%;
         }
-
-        // .note {
-        //     -webkit-filter: #{"invert()"} sepia() saturate(8000%) hue-rotate(80deg);
-        // }
     }
 
     .ledger_line {
         position: absolute;
         height: 2px;
         background: #666;
+
+        &.above {
+        }
+
+        &.below {
+        }
     }
 
     .lines {
@@ -61,16 +57,19 @@
             background: #666;
         }
 
+        .line1 {
+        }
+
         .line2 {
-            top: percentage(1.0/4.0);
+            top: 25%;
         }
 
         .line3 {
-            top: percentage(2.0/4.0);
+            top: 50%;
         }
 
         .line4 {
-            top: percentage(3.0/4.0);
+            top: 75%;
         }
 
         .line5 {
@@ -109,7 +108,7 @@
             top: 0;
             bottom: 0;
             &[data-label] {
-                &:before {
+                &::before {
                     position: absolute;
                     content: attr(data-label);
                     font-size: 12px;
@@ -129,7 +128,7 @@
             height: 20%;
             transform: translate(0, -47%);
 
-            &:before {
+            &::before {
                 content: "";
                 position: absolute;
                 top: 4px;
@@ -144,35 +143,35 @@
             }
 
             &.is_sharp {
-                &:before {
+                &::before {
                     background: #a25d5d;
                     border-radius: 12px 12px 0 0;
                 }
             }
 
             &.is_flat {
-                &:before {
+                &::before {
                     background: #5d92a2;
                     border-radius: 0 0 12px 12px;
                 }
             }
 
             &.is_natural {
-                &:before {
+                &::before {
                     background: #915da2;
                     border-radius: 0;
                 }
             }
 
             &.held {
-                &:before {
+                &::before {
                     background: #94e085;
                     box-shadow: 0 0 0 2px color-mix(in oklab, #2f3a35, white 10%);
                 }
             }
 
             &.outside_loop {
-                &:before {
+                &::before {
                     background: #bbb;
                     box-shadow: none;
                 }
@@ -197,7 +196,7 @@
             font-size: 12px;
             font-weight: bold;
             opacity: 0.5;
-            text-shadow: 0 1px 2px rgba(black, 0.5);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .accidental {
@@ -230,6 +229,9 @@
             transform: translate(0, -47%);
             transition: 0.1s ease transform;
 
+            &.whole_note {
+            }
+
             .primary {
                 height: 100%;
             }
@@ -242,6 +244,9 @@
                 opacity: 0.2;
                 transform: scale3d(1.1, 1.1, 1) translate(0, -47%);
             }
+
+            &.outside {
+            }
         }
     }
 
@@ -251,7 +256,7 @@
         bottom: 0;
         width: 2px;
         background: red;
-        left: 120 + 100px;
+        left: 220px;
     }
 
 }
@@ -288,4 +293,42 @@
         }
 
     }
+}
+
+@keyframes noteshake {
+    from, 100% {
+        transform: translate(0, -47%);
+    }
+
+    10%, 30%, 50%, 70%, 90% {
+        transform: translate(-7%, -47%);
+    }
+
+    20%, 40%, 60%, 80% {
+        transform: translate(7%, -47%);
+    }
+}
+
+.noteshake {
+    animation-name: noteshake;
+    animation-duration: 0.5s;
+}
+
+@keyframes errorshake {
+    from, 100% {
+        transform: translate(0, 0);
+    }
+
+    10%, 30%, 50%, 70%, 90% {
+        transform: translate(-5%, 0);
+    }
+
+    20%, 40%, 60%, 80% {
+        transform: translate(5%, 0);
+    }
+}
+
+.errorshake {
+    animation-name: errorshake;
+    animation-duration: 0.5s;
 }

@@ -3,6 +3,7 @@ import classNames from "classnames"
 import {noteStaffOffset} from "st/music"
 
 import * as types from "prop-types"
+import styles from "st/components/staff.module.css"
 
 export default class LedgerLines extends React.PureComponent {
   static propTypes = {
@@ -78,9 +79,9 @@ export default class LedgerLines extends React.PureComponent {
 
       lines.push(<div
         key={`leger-${idx}-${i}`}
-        className={classNames("ledger_line", {
-          above: !below,
-          below: below
+        className={classNames(styles.ledger_line, {
+          [styles.above]: !below,
+          [styles.below]: below
         })}
         style={style} />);
     }
@@ -88,4 +89,3 @@ export default class LedgerLines extends React.PureComponent {
     return lines;
   }
 }
-

@@ -441,44 +441,6 @@ form, .form {
 }
 
 
-@keyframes noteshake {
-    from, 100% {
-        transform: translate(0, -47%);
-    }
-
-    10%, 30%, 50%, 70%, 90% {
-        transform: translate(-7%, -47%);
-    }
-
-    20%, 40%, 60%, 80% {
-        transform: translate(7%, -47%);
-    }
-}
-
-.noteshake {
-    animation-name: noteshake;
-    animation-duration: 0.5s;
-}
-
-@keyframes errorshake {
-    from, 100% {
-        transform: translate(0, 0);
-    }
-
-    10%, 30%, 50%, 70%, 90% {
-        transform: translate(-5%, 0);
-    }
-
-    20%, 40%, 60%, 80% {
-        transform: translate(5%, 0);
-    }
-}
-
-.errorshake {
-    animation-name: errorshake;
-    animation-duration: 0.5s;
-}
-
 .midi_button {
     background: transparent;
     padding: 6px 8px;

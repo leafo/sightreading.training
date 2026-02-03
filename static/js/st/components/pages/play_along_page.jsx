@@ -2,6 +2,7 @@ import * as React from "react"
 
 import Keyboard from "st/components/keyboard"
 import StaffSongNotes from "st/components/staff_song_notes"
+import staffStyles from "st/components/staff.module.css"
 import Slider from "st/components/slider"
 import sliderStyles from "st/components/slider.module.css"
 import PositionField from "st/components/position_field"
@@ -36,7 +37,7 @@ import {getSession} from "st/app"
 
 import {useParams} from "react-router-dom"
 
-const TimeBar = <div className="time_bar"></div>
+const TimeBar = <div className={staffStyles.time_bar}></div>
 const EmptySong = []
 
 class SettingsPanel extends React.Component {

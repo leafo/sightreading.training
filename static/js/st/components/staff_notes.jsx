@@ -1,5 +1,4 @@
 import * as React from "react"
-import classNames from "classnames"
 
 import * as types from "prop-types"
 import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
@@ -7,6 +6,7 @@ import {parseNote, noteStaffOffset, MIDDLE_C_PITCH} from "st/music"
 import {SongNoteList, SongNote} from "st/song_note_list"
 import LedgerLines from "st/components/staff/ledger_lines"
 import WholeNotes from "st/components/staff/whole_notes"
+import styles from "st/components/staff.module.css"
 
 export default class StaffNotes extends React.Component {
   static propTypes = {
@@ -52,7 +52,7 @@ export default class StaffNotes extends React.Component {
         upperRow={this.props.upperRow}
         lowerRow={this.props.lowerRow}
         notes={heldSongNotes}
-        staticNoteClasses="held"
+        staticNoteClasses={styles.held}
         pixelsPerBeat={this.props.noteWidth}
       />
 
@@ -110,10 +110,11 @@ export default class StaffNotes extends React.Component {
       noteStaffOffset(this.props.keySignature.enharmonic(n))
 
     let appendClass = (note, cls) => {
+      let mappedClass = styles[cls] || cls
       if (noteClasses[note.id]) {
-        noteClasses[note.id].push(cls)
+        noteClasses[note.id].push(mappedClass)
       } else {
-        noteClasses[note.id] = [cls]
+        noteClasses[note.id] = [mappedClass]
       }
     }
 
@@ -171,7 +172,7 @@ export default class StaffNotes extends React.Component {
   }
 
   classNames()  {
-    return "staff_notes"
+    return styles.staff_notes
   }
 
   setOffset(amount) {
@@ -192,7 +193,7 @@ export default class StaffNotes extends React.Component {
         }
         out.push(<div
           style={style}
-          className="annotation"
+          className={styles.annotation}
           key={`annotation-${idx}`}>
           {column.annotation}
         </div>)
