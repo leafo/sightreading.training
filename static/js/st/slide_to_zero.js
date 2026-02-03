@@ -31,21 +31,29 @@ export default class SlideToZero {
       return
     }
 
-    let lastFrame = performance.now();
+    let lastFrame = null;
     this.animating = true
     this.canceled = false
     this.onStart();
+    this.onUpdate(this.value);
 
     let frameUpdate = time => {
-      let dt = (time - lastFrame) / 1000;
-      lastFrame = time;
-
       if (this.canceled) {
         this.animating = false;
         return;
       }
 
+      if (lastFrame === null) {
+        lastFrame = time;
+        window.requestAnimationFrame(frameUpdate);
+        return;
+      }
+
+      let dt = (time - lastFrame) / 1000;
+      lastFrame = time;
+
       if (dt == 0) {
+        window.requestAnimationFrame(frameUpdate);
         return;
       }
 
