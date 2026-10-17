@@ -91,3 +91,7 @@ memory. Reading ahead gives you time to figure out how to move your hands as
 you're playing.
 
 
+
+## Icon credits
+
+<a href="https://www.flaticon.com/free-icons/reset" title="reset icons">Reset icons created by Rahul Kaklotar - Flaticon</a>

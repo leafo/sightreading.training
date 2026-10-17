@@ -1,5 +1,14 @@
 .sight_reading_page {
     background: var(--body-background);
+    --trainer-keyboard-height: var(--keyboard-height);
+
+    @media (max-width: 1100px) {
+        --trainer-keyboard-height: var(--keyboard-height-short);
+    }
+
+    @media (max-width: 800px) {
+        --trainer-keyboard-height: var(--keyboard-height-very-short);
+    }
 
     /* Empty rules to export class names that are only styled in nested/compound contexts */
     .fullscreen {}
@@ -31,13 +40,7 @@
      *   styles and our scoped workspace styles
      */
     &:global(.keyboard_open) .workspace {
-        bottom: var(--keyboard-height);
-        @media (max-width: 1100px) {
-            bottom: var(--keyboard-height-short);
-        }
-        @media (max-width: 800px) {
-            bottom: var(--keyboard-height-very-short);
-        }
+        bottom: var(--trainer-keyboard-height);
     }
 
     &:global(.settings_open) .workspace {
@@ -190,6 +193,17 @@
         right: 10px;
     }
 
+    &:global(.keyboard_open) .keyboard_toggle {
+        bottom: calc(var(--trainer-keyboard-height) + 10px);
+    }
+
+    .reset_stats {
+        margin-left: 1em;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     &.scroll_mode {
         .staff_wrapper {
             &::before {
@@ -208,4 +222,16 @@
     &.wait_mode {}
 
     .staff_wrapper {}
+}
+
+.last_streak {
+    display: block;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+.preference_status {
+    display: block;
+    max-width: 20rem;
+    margin-top: 0.5rem;
 }

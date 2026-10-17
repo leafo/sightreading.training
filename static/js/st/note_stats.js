@@ -7,6 +7,7 @@ export default class NoteStats {
   constructor(currentUser, opts={}) {
     this.currentUser = currentUser
     this.noteHitStats = {}
+    this.lastStreak = 0
     this.streak = 0
     this.hits = 0
     this.misses = 0
@@ -15,6 +16,17 @@ export default class NoteStats {
     this.averageHitTime = 0
 
     this.resetBuffer()
+  }
+
+  // Reset session displays without dropping pending account-history updates.
+  reset() {
+    this.hits = 0
+    this.misses = 0
+    this.streak = 0
+    this.lastStreak = 0
+    this.noteHitStats = {}
+    this.lastHitTime = undefined
+    this.averageHitTime = 0
   }
 
   resetBuffer() {
@@ -93,6 +105,9 @@ export default class NoteStats {
 
     this.startTimer()
 
+    if (this.streak > 0) {
+      this.lastStreak = this.streak
+    }
     this.streak = 0;
     this.misses += 1;
     this.buffer.misses += 1;

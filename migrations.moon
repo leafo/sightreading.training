@@ -109,3 +109,6 @@ package.loaded.migrations =
       "PRIMARY KEY (user_id, song_id)"
     }
 
+
+  [1792195200]: =>
+    add_column "users", "trainer_preferences", "jsonb not null default '{}'::jsonb"
