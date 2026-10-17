@@ -134,3 +134,75 @@ describe "app", ->
         }
       }, res
 
+
+  describe "all-time hit statistics", ->
+    it "aggregates full history by local active day and isolates users", ->
+      db = require "lapis.db"
+      user = factory.Users!
+      other = factory.Users!
+      for row in *{
+        {user.id, "2000-01-01 23:00:00", "hit", 10}
+        {user.id, "2000-01-02 01:00:00", "hit", 20}
+        {user.id, "2000-01-03 12:00:00", "miss", 5}
+        {other.id, "2000-01-01 23:00:00", "hit", 999}
+      }
+        db.insert "hourly_hits", {
+          user_id: row[1], hour: row[2], type: HourlyHits.types\for_db(row[3]), count: row[4]
+        }
+      status, res = request_as user, "/stats.json?offset=120", expect: "json"
+      assert.same 200, status
+      assert.same 30, tonumber res.summary.best_daily_hits
+      assert.same 15, tonumber res.summary.average_daily_hits
+
+    it "returns zero summaries for accounts without activity", ->
+      user = factory.Users!
+      status, res = request_as user, "/stats.json", expect: "json"
+      assert.same 200, status
+      assert.same 0, tonumber res.summary.best_daily_hits
+      assert.same 0, tonumber res.summary.average_daily_hits
+
+  describe "trainer preferences", ->
+    it "requires an account", ->
+      status, res = request "/trainer-preferences.json", {
+        expect: "json", post: { preferences: "{}" }
+      }
+      assert.same 200, status
+      assert.truthy res.errors
+
+    it "saves preferences only for the authenticated account", ->
+      import to_json from require "lapis.util"
+      user = factory.Users!
+      other = factory.Users!
+      preferences = {
+        version: 1, staff: "bass", generator: "random", key: "Gb"
+        generatorSettings: { hands: 1 }
+        mode: "scroll", speed: 175, keyboardOpen: false, settingsOpen: true
+      }
+      status, res = request_as user, "/trainer-preferences.json", {
+        expect: "json", post: { preferences: to_json preferences, user_id: other.id }
+      }
+      assert.same 200, status
+      assert.true res.success
+      user\refresh!
+      other\refresh!
+      assert.same preferences, user.trainer_preferences
+      assert.same {}, other.trainer_preferences
+
+    it "rejects invalid preference documents", ->
+      user = factory.Users!
+      for payload in *{"bad json", "null", "{}", string.rep("x", 16385)}
+        status, res = request_as user, "/trainer-preferences.json", {
+          expect: "json", post: { preferences: payload }
+        }
+        assert.same 200, status
+        assert.truthy res.errors
+
+    it "rejects preference writes with invalid CSRF tokens", ->
+      user = factory.Users!
+      status, res = request_as user, "/trainer-preferences.json", {
+        expect: "json", post: { preferences: "{}", csrf_token: "invalid" }
+      }
+      assert.same 200, status
+      assert.same {"invalid csrf"}, res.errors
+      user\refresh!
+      assert.same {}, user.trainer_preferences

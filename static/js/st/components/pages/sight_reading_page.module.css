@@ -209,3 +209,15 @@
 
     .staff_wrapper {}
 }
+
+.last_streak {
+    display: block;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+.preference_status {
+    display: block;
+    max-width: 20rem;
+    margin-top: 0.5rem;
+}

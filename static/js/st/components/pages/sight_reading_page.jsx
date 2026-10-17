@@ -1,3 +1,4 @@
+import TrainerPreferenceStore from "st/trainer_preference_store"
 import NoteList from "st/note_list"
 import ChordList from "st/chord_list"
 import NoteStats from "st/note_stats"
@@ -50,6 +51,9 @@ export default class SightReadingPage extends React.Component {
     }
 
     const session = getSession()
+    this.preferenceStore = new TrainerPreferenceStore(session.currentUser, status => {
+      if (this.mounted) this.setState({preferenceStatus: status})
+    })
 
     this.state = {
       newRenderer: props.useStaffTwo || false,
@@ -73,11 +77,13 @@ export default class SightReadingPage extends React.Component {
       scale: window.innerWidth < 1000 ? 0.8 : 1,
       stats: new NoteStats(session.currentUser),
       keySignature: new KeySignature(0),
+      ...this.preferenceStore.load(),
     }
   }
 
   // TODO trigger this as watching component
   componentDidUpdate(prevProps, prevState) {
+    this.preferenceStore.save(this.state)
     // transitioning to new staff or generator or key signature
     if (prevState.currentStaff != this.state.currentStaff ||
         prevState.currentGenerator != this.state.currentGenerator ||
@@ -90,9 +96,15 @@ export default class SightReadingPage extends React.Component {
 
   componentDidMount() {
     setTitle()
+    this.mounted = true
+    this.preferenceStore.start()
 
-    this.setStaff(STAVES[0], () => {
-      this.enterWaitMode()
+    this.refreshNoteList(() => {
+      if (this.state.mode === "scroll") {
+        this.enterScrollMode()
+      } else {
+        this.enterWaitMode()
+      }
     })
 
     dispatch(this, {
@@ -127,6 +139,9 @@ export default class SightReadingPage extends React.Component {
   }
 
   componentWillUnmount() {
+    this.mounted = false
+    this.preferenceStore.stop()
+    this.state.slider?.cancel()
     document.removeEventListener("webkitfullscreenchange", this.onFullscreenChange)
 
     if (this.nosleep && this.state.fullscreen) {
@@ -154,7 +169,7 @@ export default class SightReadingPage extends React.Component {
 
   // This generates a new set of notes, appropriate for when the generator or
   // generator parameters have changed in some say
-  refreshNoteList() {
+  refreshNoteList(callback) {
     let generator = this.state.currentGenerator
 
     let generatorSettings = {
@@ -188,7 +203,7 @@ export default class SightReadingPage extends React.Component {
     }
 
     notes.fillBuffer(this.state.bufferSize)
-    return this.setState({ notes: notes })
+    return this.setState({ notes: notes }, callback)
   }
 
   // called when held notes reaches 0
@@ -514,10 +529,15 @@ export default class SightReadingPage extends React.Component {
     this.refs.workspace.style.height = "auto";
   }
 
+  resetStats() {
+    this.state.stats.reset()
+    this.forceUpdate()
+  }
+
   openStatsLightbox() {
     trigger(this, "showLightbox",
       <StatsLightbox
-        resetStats={() => this.setState({stats: new NoteStats()})}
+        resetStats={() => this.resetStats()}
         stats={this.state.stats} />)
   }
 
@@ -599,12 +619,11 @@ export default class SightReadingPage extends React.Component {
   }
 
   renderWorkspace() {
-    if (this.state.stats.streak) {
-      var streak = <div className={sharedStyles.stat_container}>
-        <div className={sharedStyles.value}>{this.state.stats.streak}</div>
-        <div className={sharedStyles.label}>streak</div>
-      </div>
-    }
+    const streak = <div className={sharedStyles.stat_container}>
+      <div className={sharedStyles.value}>{this.state.stats.streak}</div>
+      <div className={sharedStyles.label}>streak</div>
+      <small className={styles.last_streak}>Last streak: {this.state.stats.lastStreak}</small>
+    </div>
 
     let fullscreenButton
     if (document.body.webkitRequestFullscreen && !this.state.fullscreen) {
@@ -623,6 +642,7 @@ export default class SightReadingPage extends React.Component {
         </button>
         {" "}
         {fullscreenButton}
+        {this.state.preferenceStatus && <small role="status" className={styles.preference_status}>{this.state.preferenceStatus}</small>}
       </div>
 
       <div className={styles.stats}>
@@ -637,6 +657,7 @@ export default class SightReadingPage extends React.Component {
           <div className={sharedStyles.value}>{this.state.stats.misses}</div>
           <div className={sharedStyles.label}>misses</div>
         </div>
+        <button type="button" onClick={() => this.resetStats()}>Reset</button>
       </div>
     </div>
 
