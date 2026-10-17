@@ -12,6 +12,7 @@ class FormatterFlow extends Flow
     {
       id: user.id
       username: user.username
+      trainerPreferences: user.trainer_preferences
     }
 
 

@@ -1,0 +1,15 @@
+{
+  "name": "Sight Reading Trainer",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22-bookworm",
+  "forwardPorts": [
+    3000
+  ],
+  "portsAttributes": {
+    "3000": {
+      "label": "Sight Reading Trainer",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "npm ci",
+  "postStartCommand": "bash dev/start_preview.sh"
+}

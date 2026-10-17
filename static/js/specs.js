@@ -5,3 +5,6 @@ import "spec/note_list_spec"
 import "spec/song_spec"
 import "spec/parser_spec"
 import "spec/staff_two_spec"
+import "spec/note_math_spec"
+
+import "spec/trainer_preferences_spec"

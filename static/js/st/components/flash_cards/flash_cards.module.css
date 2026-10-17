@@ -164,6 +164,11 @@
             border: 1px solid rgba(0, 0, 0, 0.2);
         }
 
+        &.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
         &:last-child {
             margin-bottom: 0;
         }
@@ -171,6 +176,24 @@
         input {
             margin-right: 8px;
         }
+    }
+
+    .option_list {
+        display: grid;
+        gap: 5px;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .with_keyboard {
+        padding-bottom: var(--keyboard-height);
+    }
+
+    .note_math_keyboard {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
     }
 }
 

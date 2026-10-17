@@ -52,3 +52,22 @@ class HitsFlow extends Flow
       ", offset, HourlyHits.types.hit, HourlyHits.types.miss
     }
 
+
+  -- Full-history daily totals in the same local timezone as the chart.
+  get_summary: (opts={}) =>
+    assert_error @current_user
+    assert_valid opts, {
+      {"offset", is_integer: true, optional: true}
+    }
+    offset = "#{opts.offset or "0"} minutes"
+    rows = db.query "
+      select coalesce(max(hits), 0) as best_daily_hits,
+        coalesce(avg(hits), 0) as average_daily_hits
+      from (
+        select coalesce(sum(count) filter (where type = ?), 0) as hits
+        from hourly_hits
+        where user_id = ?
+        group by (hour - ?::interval)::date
+      ) daily
+    ", HourlyHits.types.hit, @current_user.id, offset
+    rows[1]

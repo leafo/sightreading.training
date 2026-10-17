@@ -63,7 +63,7 @@ export default class StatsPage extends React.Component {
       delete this.request
       try {
         let res = JSON.parse(request.responseText)
-        this.setState({loading: false, stats: res.stats || []})
+        this.setState({loading: false, stats: res.stats || [], summary: res.summary})
       } catch (e) {
         this.setState({loading: false, error_message: "Failed to fetch stats"})
       }
@@ -144,6 +144,12 @@ export default class StatsPage extends React.Component {
     }
 
     return <div>
+      {this.state.summary && <section className={styles.summary} aria-label="All-time hit statistics">
+        <h2>All-time hits</h2>
+        <p>Best daily hits: <strong>{Number(this.state.summary.best_daily_hits).toLocaleString()}</strong></p>
+        <p>Average hits per active day: <strong>{Number(this.state.summary.average_daily_hits).toLocaleString(undefined, {maximumFractionDigits: 1})}</strong></p>
+        <p>Includes all recorded practice days, including days with only misses.</p>
+      </section>}
       <h2>Daily stats</h2>
       <Line data={data} options={options} width={600} height={300} />
     </div>

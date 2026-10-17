@@ -113,6 +113,22 @@ describe("scales", function() {
     ]);
   });
 
+  it("preserves scale letters for enharmonic naturals in sharp keys", function() {
+    expect(new MajorScale("F#").getRange(5)).toEqual([
+      "F#5", "G#5", "A#5", "B5", "C#6", "D#6", "E#6", "F#6"
+    ])
+    expect(new MajorScale("C#").getRange(5)).toEqual([
+      "C#5", "D#5", "E#5", "F#5", "G#5", "A#5", "B#5", "C#6"
+    ])
+  })
+
+  it("preserves flat scale spelling across offsets and octaves", function() {
+    const scale = new MajorScale("Gb")
+    expect(scale.getRange(5, 3, 3)).toEqual(["Cb6", "Db6", "Eb6"])
+    expect(scale.getRange(5, 3, -4)).toEqual(["Cb5", "Db5", "Eb5"])
+    expect(scale.getRange(5, 16)[10]).toBe("Cb7")
+  })
+
   it("gets notes in loose range for scale", function() {
     let scale = new MajorScale("G");
     let range = scale.getLooseRange("C5", "C6")

@@ -47,6 +47,10 @@ class extends lapis.Application
     @flow("hits")\register_hits!
     json: { success: true }
 
+  "/trainer-preferences.json": post =>
+    @flow("trainer_preferences")\save!
+    json: { success: true }
+
   "/stats.json": get =>
     assert_error @current_user, "must be logged in"
     stats = @flow("hits")\get_stats {
@@ -55,7 +59,8 @@ class extends lapis.Application
 
     stats = nil unless next stats
 
-    json: { success: true, :stats }
+    summary = @flow("hits")\get_summary { offset: @params.offset }
+    json: { success: true, :stats, :summary }
 
   "/presets.json": get =>
     assert_error @current_user, "must be logged in"
