@@ -8,6 +8,7 @@ import sliderStyles from "st/components/slider.module.css"
 import Keyboard from "st/components/keyboard"
 import StatsLightbox from "st/components/sight_reading/stats_lightbox"
 import Hotkeys from "st/components/hotkeys"
+import IconReset from "st/components/reset_icon"
 
 import styles from "./sight_reading_page.module.css"
 import staffStyles from "st/components/staff.module.css"
@@ -657,7 +658,14 @@ export default class SightReadingPage extends React.Component {
           <div className={sharedStyles.value}>{this.state.stats.misses}</div>
           <div className={sharedStyles.label}>misses</div>
         </div>
-        <button type="button" onClick={() => this.resetStats()}>Reset</button>
+        <button
+          type="button"
+          className={styles.reset_stats}
+          aria-label="Reset session stats"
+          title="Reset session stats"
+          onClick={() => this.resetStats()}>
+          <IconReset width={20} />
+        </button>
       </div>
     </div>
 
