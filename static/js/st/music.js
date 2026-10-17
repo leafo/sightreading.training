@@ -411,6 +411,9 @@ export class Scale {
     let current = parseNote(`${this.root}${octave}`)
     let isFlat = this.isFlat()
     let range = new NoteList
+    let degree = Math.min(offset, 0)
+    const rootLetter = NOTE_NAME_OFFSETS[this.root[0]]
+    const letters = "CDEFGAB"
 
     let k = 0;
 
@@ -426,10 +429,24 @@ export class Scale {
 
     for (let i = 0; i < count + offset; i++) {
       if (i >= offset) {
-        range.push(noteName(current, this.chromatic || !isFlat))
+        let name = noteName(current, this.chromatic || !isFlat)
+        // Seven-note scales advance one staff letter per degree, including
+        // enharmonic naturals such as Cb and E#. Keep canonical names for
+        // scales that would require unsupported double accidentals.
+        if (this.steps.length === 7 && !this.chromatic) {
+          const staffPosition = octave * 7 + rootLetter + degree
+          const letter = letters[((staffPosition % 7) + 7) % 7]
+          const noteOctave = Math.floor(staffPosition / 7)
+          const accidental = current - (noteOctave * OCTAVE_SIZE + OFFSETS[letter])
+          if (Math.abs(accidental) <= 1) {
+            name = `${letter}${accidental === -1 ? "b" : accidental === 1 ? "#" : ""}${noteOctave}`
+          }
+        }
+        range.push(name)
       }
 
       current += this.steps[k++ % this.steps.length]
+      degree++
     }
 
     return range;
