@@ -5,6 +5,13 @@ import from_json, to_json from require "lapis.util"
 class TrainerPreferencesFlow extends Flow
   save: =>
     assert_error @current_user, "must be logged in"
+    if @params.diagram_zoom
+      zoom = tonumber @params.diagram_zoom
+      assert_error zoom and zoom == math.floor(zoom) and zoom >= 0 and zoom <= 100, "invalid diagram size"
+      existing = @current_user.trainer_preferences or {}
+      existing.diagramZoom = zoom
+      @current_user\update trainer_preferences: to_json existing
+      return
     payload = @params.preferences
     assert_error type(payload) == "string" and #payload <= 16384, "invalid preferences"
     ok, preferences = pcall from_json, payload
@@ -28,4 +35,5 @@ class TrainerPreferencesFlow extends Flow
       assert_error type(preferences[field]) == "boolean", "invalid #{field}"
       out[field] = preferences[field]
 
+    out.diagramZoom = (@current_user.trainer_preferences or {}).diagramZoom
     @current_user\update trainer_preferences: to_json out

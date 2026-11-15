@@ -1,4 +1,5 @@
 import * as React from "react"
+import {FRET_MARKERS} from "st/chord_diagram_data"
 import {chordNote} from "st/chord_lab"
 import {OPEN_PITCHES, STRING_NAMES} from "st/guitar_chords"
 import styles from "./guitar_visuals.module.css"
@@ -8,12 +9,11 @@ export default function GuitarFretboard({frets = Array(6).fill(null), onChange, 
   const Cell = onChange ? "button" : "div"
   return <section aria-label="Guitar fretboard" className={styles.instrument}>
     <div className={styles.toolbar}>
-      {!quiet && <span>Standard tuning · E A D G B E</span>}
+      {!quiet && <span className={styles.fretboard_hint}>Standard tuning · E A D G B E · {onChange ? "Tap a fret to place a note; tap it again to mute the string. ○ open · × muted." : "Highlighted notes belong to the scale; an outlined dot marks the root."}</span>}
       {onReset && <button type="button" className={styles.reset} aria-label="Reset fretboard" title="Reset fretboard" onClick={onReset}>
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M4 10a8 8 0 1 1 0 5M4 4v6h6" /></svg>
       </button>}
     </div>
-    {!quiet && <p>{onChange ? "Tap a fret to place a note; tap it again to mute the string. ○ open · × muted." : "Highlighted notes belong to the scale; an outlined dot marks the root. Fret 0 is the open string."}</p>}
     <div className={styles.scroll} tabIndex="0" role="group" aria-label="Scrollable fretboard, frets 0 to 12">
       <div className={styles.fretboard}>
         {[5, 4, 3, 2, 1, 0].map(string => <div className={styles.string} key={string}>
@@ -34,7 +34,7 @@ export default function GuitarFretboard({frets = Array(6).fill(null), onChange, 
           })}
         </div>)}
         <div className={styles.fret_numbers}>{Array.from({length: 13}, (_, fret) => <span key={fret}>
-          {fret}{[3, 5, 7, 9, 12].includes(fret) && <small>{fret === 12 ? "••" : "•"}</small>}
+          {FRET_MARKERS.includes(fret) ? fret : ""}{FRET_MARKERS.includes(fret) && <small>{fret === 12 ? "••" : "•"}</small>}
         </span>)}</div>
       </div>
     </div>

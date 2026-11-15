@@ -59,7 +59,7 @@ describe("Guitar chord diagrams and voicings", () => {
     expect(markup).toContain("finger 1")
     expect(markup).toContain('stroke-linecap="round"')
     const high = renderToStaticMarkup(<ChordDiagram frets={[null, 10, 12, 12, 12, 10]} name="G" />)
-    expect(high).toContain("10fr")
+    expect(high).toContain(">12</text>")
     expect(high).toContain("Low E muted")
     const open = renderToStaticMarkup(<ChordDiagram frets={[null, 3, 2, 0, 1, 0]} name="C" />)
     expect(open).toContain("High E open")

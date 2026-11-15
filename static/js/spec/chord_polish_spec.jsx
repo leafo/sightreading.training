@@ -10,6 +10,8 @@ import ChordVoicings from "st/components/chord_voicings"
 import Scales from "st/components/pages/guitar_scales_page"
 import Lab from "st/components/pages/chord_lab_page"
 import Reference from "st/components/pages/chord_reference_page"
+import {normalizeDiagramSize, diagramWidth, readDiagramSize, setDiagramSize} from "st/diagram_size"
+import GuitarFretboard from "st/components/guitar_fretboard"
 import ToolOptions from "st/components/tool_options"
 
 function elements(node) {
@@ -63,13 +65,14 @@ describe("Shared chord diagram presentation and export", () => {
     expect(chordDiagramAscii(frets, "C", "line")).toBe("C = x-3-2-0-1-0")
     expect(chordDiagramAscii(frets, "D♭7", "line")).toBe("Db7 = x-3-2-0-1-0")
     const block = chordDiagramAscii(frets, "C", "block")
-    expect(block).toContain("Frets 1-5")
-    expect(block.split("\n").filter(line => /^\s*\d+\s/.test(line)).length).toBe(5)
+    expect(block).not.toContain("Frets")
+    expect(block).not.toContain("C =")
+    expect(block.split("\n").filter(line => /^\s*\d+\s/.test(line)).length).toBe(2)
     expect(block).toContain("x           o       o")
-    expect(chordDiagramAscii([null, 10, 12, 12, 12, 10], "G", "block")).toContain("Frets 10-14")
+    expect(chordDiagramAscii([null, 10, 12, 12, 12, 10], "G", "block")).toContain("12  |")
     const wide = chordDiagramAscii([0, 1, 3, 7, 9, 12], "Wide", "block")
-    expect(wide.split("\n").filter(line => /^\s*\d+\s/.test(line)).length).toBe(15)
-    expect(wide).toContain("Frets 11-15")
+    expect(wide.split("\n").filter(line => /^\s*\d+\s/.test(line)).length).toBe(5)
+    expect(wide).toContain("12  |")
   })
   it("copies the selected format and reports clipboard rejection for retry", async () => {
     let copied
@@ -77,7 +80,7 @@ describe("Shared chord diagram presentation and export", () => {
     expect(copied).toBe("C = x-3-2-0-1-0")
     await expectAsync(copyChordDiagram(frets, "C", "block", {writeText: async () => {throw new Error("denied")}})).toBeRejected()
     await copyChordDiagram(frets, "C", "block", {writeText: async text => {copied = text}})
-    expect(copied).toContain("Frets 1-5")
+    expect(copied).toBe(chordDiagramAscii(frets, "C", "block"))
   })
   it("shows all returned voicings without details foldouts or indexed captions", () => {
     const text = html(<ChordVoicings notes={searchChords("C7")[0].notes} name="C7" />)
@@ -120,5 +123,33 @@ describe("Trimmed tool UI", () => {
     const ref = new Reference({})
     expect(html(ref.render())).not.toContain("without account sync")
     expect(html(<ToolOptions />)).not.toContain("saved on this browser")
+  })
+})
+
+
+describe("Diagram size and fretboard polish", () => {
+  it("defaults to the current diagram width at twenty percent and validates limits", () => {
+    expect(normalizeDiagramSize(undefined)).toBe(20)
+    expect(normalizeDiagramSize(101)).toBe(20)
+    expect(normalizeDiagramSize(-1)).toBe(20)
+    expect(diagramWidth(20)).toBe(140)
+    expect(diagramWidth(100)).toBe(280)
+    setDiagramSize(60)
+    expect(readDiagramSize()).toBe(60)
+    setDiagramSize(20)
+  })
+  it("exports the requested C7 block without headings or extra fret numbers", () => {
+    const block = chordDiagramAscii([null, 3, 2, 3, 1, null], "C7", "block")
+    expect(block.split("\n")[0]).toBe("    E   A   D   G   B   e")
+    expect(block.split("\n").filter(line => /^\s*\d/.test(line)).map(line => line.trim().split(" ")[0])).toEqual(["3", "5"])
+    expect(block).not.toContain("C7")
+    expect(block).not.toContain("Frets")
+  })
+  it("only numbers marker frets and keeps the tuning and instructions together", () => {
+    const text = html(<GuitarFretboard onChange={() => {}} />)
+    expect(text).toContain("E A D G B E · Tap a fret")
+    expect(text).not.toContain(">1<")
+    expect(text).not.toContain(">2<")
+    expect(text).toContain(">12<")
   })
 })

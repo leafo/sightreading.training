@@ -7,6 +7,7 @@ import {assignFingers} from "st/guitar_chords"
 import ToolOptions from "st/components/tool_options"
 import PianoVisual from "st/components/piano_visual"
 import ChordVoicings from "st/components/chord_voicings"
+import DiagramSize from "st/components/diagram_size"
 import Toast from "st/components/toast"
 import {chordTones} from "st/chord_display"
 import {labState, readToolState, persistToolPage} from "st/tool_preferences"
@@ -121,6 +122,7 @@ export default class ChordLabPage extends React.Component {
           <button type="button" onClick={() => this.setState({pianoNotes: []})}>Clear piano notes</button>
         </>}
       {labels !== "notes" && <p>Degrees relative to {selected ? `${selected.split("/")[0]} root` : `the current bass (${notes[0] || "select a note"})`}.</p>}
+      {instrument === "guitar" && <DiagramSize />}
       <div className={styles.analysis}>
         {instrument === "guitar" && <ChordDiagram frets={frets} fingers={assignFingers(frets)} name={selected || "Your voicing"} labels={this.state.diagramLabels} />}
         <section aria-live="polite"><h2>Chord matches</h2>

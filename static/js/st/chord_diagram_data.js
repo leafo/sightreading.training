@@ -20,11 +20,11 @@ export function chordDiagramAscii(frets, name = "Chord", format = "line") {
   const {start, rows} = diagramRange(frets)
   const blocks = []
   for (let first = start; first < start + rows; first += 5) {
-    const lines = [line, `Frets ${first}-${first + 4}`, "    E   A   D   G   B   e",
+    const lines = ["    E   A   D   G   B   e",
       "    " + frets.map(fret => fret === null ? "x" : fret === 0 ? "o" : " ").join("   "),
       "    +---+---+---+---+---+"]
     for (let fret = first; fret < first + 5; fret++) {
-      lines.push(`${String(fret).padStart(2)}  ` + frets.map(value => value === fret ? "o" : "|").join("---"))
+      lines.push(`${([3, 5, 7, 9, 12].includes(fret) ? String(fret) : "").padStart(2)}  ` + frets.map(value => value === fret ? "o" : "|").join("---"))
       lines.push("    +---+---+---+---+---+")
     }
     blocks.push(lines.join("\n"))
@@ -38,3 +38,5 @@ export async function copyChordDiagram(frets, name, format, clipboard = globalTh
 export function diagramTones(name, frets) {
   return chordTones(name, frets.flatMap((fret, index) => fret === null ? [] : [OPEN_PITCHES[index] + fret]))
 }
+
+export const FRET_MARKERS = [3, 5, 7, 9, 12, 15, 17, 19, 22, 24]

@@ -3,13 +3,13 @@
     width: 170px;
     max-width: 100%;
     color: var(--body-color);
-    svg { display: block; width: 100%; max-height: 360px; }
+    svg { display: block; width: 100%;  }
     figcaption { text-align: center; font-size: 14px; font-weight: 700; margin: 4px 0 12px; }
 }
 .finger { fill: var(--surface); }
 .instrument { min-width: 0; }
 .toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-.scroll { overflow-x: auto; padding: 12px 0; border-radius: 8px; }
+.scroll { overflow-x: auto; padding: 4px 0; border-radius: 8px; }
 .fretboard { min-width: 780px; }
 .string, .fret_numbers { display: grid; grid-template-columns: 48px repeat(12, minmax(52px, 1fr)); }
 .string {
@@ -41,9 +41,13 @@
 
 .root_note { outline: 2px solid var(--body-color); outline-offset: 2px; }
 .reset { display: grid; place-items: center; width: 44px; height: 44px; padding: 8px; border-radius: 8px; cursor: pointer; }
-.diagram { position: relative; width: 140px; padding-top: 18px; }
+.diagram { position: relative; width: 140px; padding-top: 32px; padding-right: 28px; box-sizing: content-box; }
 .copy_menu { position: absolute; right: 0; top: 0; z-index: 2; font-size: 12px; text-align: left;
     > summary { display: grid; place-items: center; width: 28px; height: 28px; cursor: pointer; list-style: none; border-radius: 6px; color: var(--text-muted); &:hover { background: var(--surface-muted); } &::-webkit-details-marker { display:none; } }
     > div { position: absolute; top: 28px; right: 0; width: 100px; padding: 8px; background: var(--surface); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 4px 16px #0002; display: grid; gap: 4px; }
     button { min-height: 32px; text-align: left; cursor: pointer; }
 }
+
+.size_control { display: flex; justify-content: flex-end; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; font-size: 14px; }
+
+.fretboard_hint { font-size: 14px; }

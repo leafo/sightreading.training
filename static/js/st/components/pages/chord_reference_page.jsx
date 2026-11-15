@@ -1,6 +1,7 @@
 import * as React from "react"
 import {Link} from "react-router-dom"
 import ChordVoicings from "st/components/chord_voicings"
+import DiagramSize from "st/components/diagram_size"
 import Toast from "st/components/toast"
 import {referenceState, readToolState, persistToolPage, CHORD_FAMILIES} from "st/tool_preferences"
 import {CHORD_ROOTS} from "st/chord_lab"
@@ -55,6 +56,7 @@ export default class ChordReferencePage extends React.Component {
       <p>Mood and style are starting points for exploration: voicing and musical context change how a chord feels.</p>
       </section>
       <section className={styles.chord_panel} aria-label="Chord diagrams and details">
+      <DiagramSize />
       <p role="status">{query.trim()
         ? results.length ? `${results.length} ${results.length === 1 ? "match" : "matches"}` : "No chords matched. Try a chord symbol or a word such as dreamy, dark, blues, or open."
         : "Enter a chord symbol or a quality such as suspended."}</p>
