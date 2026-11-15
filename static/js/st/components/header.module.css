@@ -38,11 +38,13 @@
     inset: 50px auto 0 0;
     width: 260px;
     max-width: calc(100vw - 56px);
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     overscroll-behavior: contain;
     background: var(--surface);
     border-right: 1px solid var(--border-color);
-    padding: 20px 12px;
+    padding: 8px 12px;
     color: var(--body-color);
     a {
         display: flex;
@@ -58,9 +60,9 @@
     }
     h3 { margin: 24px 12px 8px; color: var(--text-muted); font-size: 12px; letter-spacing: .04em; }
     ul { list-style: none; margin: 0; padding: 0; }
-    .account_area { display: flex; flex-wrap: wrap; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); }
-    .midi_button_wrapper { margin: 16px 12px; }
-    .theme_section { border-top: 1px solid var(--border-color); margin-top: 24px; }
+    .account_area { display: flex; flex-wrap: wrap; flex-shrink: 0; padding-bottom: 4px; border-bottom: 1px solid var(--border-color); }
+    .midi_button_wrapper { margin: 8px 12px; }
+    .theme_section { border-top: 1px solid var(--border-color); margin-top: 8px; flex-shrink: 0; }
 }
 .header :is(a, button):focus-visible { outline: 2px solid var(--button-color); outline-offset: 2px; }
 .backdrop { display: none; }
@@ -83,3 +85,6 @@
     .header { display: none; }
     :global(.page_layout):has(.sidebar) { padding-left: 0; }
 }
+
+.tool_groups { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.footer_controls { display: flex; align-items: center; justify-content: space-between; }

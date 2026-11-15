@@ -1,6 +1,17 @@
 import {CHORD_ROOTS, CHORD_SHAPES} from "st/chord_lab"
 
 const QUALITIES = {
+  "7b5": ["Dominant seventh flat fifth", "7b5", "1 3 b5 b7", "7(b5)"],
+  "7#5": ["Dominant seventh sharp fifth", "7#5", "1 3 #5 b7", "7(#5) aug7 +7"],
+  "7b9": ["Dominant seventh flat ninth", "7b9", "1 3 5 b7 b9", "7(b9)"],
+  "7#9": ["Dominant seventh sharp ninth", "7#9", "1 3 5 b7 #9", "7(#9)"],
+  "11": ["Dominant eleventh", "11", "1 3 5 b7 9 11", "dom11"],
+  "m11": ["Minor eleventh", "m11", "1 b3 5 b7 9 11", "min11"],
+  "M11": ["Major eleventh", "maj11", "1 3 5 7 9 11", "M11 Δ11"],
+  "13": ["Dominant thirteenth", "13", "1 3 5 b7 9 11 13", "dom13"],
+  "m13": ["Minor thirteenth", "m13", "1 b3 5 b7 9 11 13", "min13"],
+  "M13": ["Major thirteenth", "maj13", "1 3 5 7 9 11 13", "M13 Δ13"],
+
   M: ["Major", "", "1 3 5", "maj M"],
   m: ["Minor", "m", "1 b3 5", "min -"],
   dim: ["Diminished", "dim", "1 b3 b5", "o °"],
@@ -59,7 +70,7 @@ export const CHORD_SEARCH_EXAMPLES = ["dreamy", "C jazzy", "A dark", "blues", "o
 const LETTERS = "CDEFGAB"
 const NATURAL_PITCHES = [0, 2, 4, 5, 7, 9, 11]
 const ROOTS = [...CHORD_ROOTS, "Cb", "C#", "D#", "E#", "Fb", "Gb", "G#", "A#", "B#"]
-const ORDINALS = {second: "2", fourth: "4", sixth: "6", seventh: "7", ninth: "9"}
+const ORDINALS = {second: "2", fourth: "4", sixth: "6", seventh: "7", ninth: "9", eleventh: "11", thirteenth: "13"}
 
 function display(value) {
   return value.replaceAll("#", "♯").replaceAll("b", "♭")

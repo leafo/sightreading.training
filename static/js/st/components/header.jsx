@@ -49,20 +49,25 @@ export default class Header extends React.Component {
           if (event.target.closest("a") && window.matchMedia("(max-width: 760px)").matches) this.closeMenu()
         }}>
         {accountArea}
-        <div className={styles.midi_button_wrapper}>{this.renderMidiButton()}</div>
         <nav aria-label="Music tools" className={styles.tool_groups}>
           {[
-            ["Train your ear & reading", ["root", "ear-training", "flash-cards"]],
-            ["Play & create", ["play-along", "drum-machine", "guitar-scales", "chord-lab", "chord-sheet"]],
-            ["Reference & progress", ["chord-reference", "about", "stats"]]
+            ["Training", ["root", "ear-training", "flash-cards"]],
+            ["Practice", ["play-along", "drum-machine", "chord-sheet"]],
+            ["Reference", ["guitar-scales", "chord-lab", "chord-reference"]]
           ].map(([title, keys]) => <section key={title}>
             <h3>{title}</h3>
-            <ul>{userLinks.filter(link => keys.includes(link.key)).map(link => <li key={link.key}>{link}</li>)}</ul>
+            <ul>{keys.map(key => userLinks.find(link => link.key === key)).filter(Boolean).map(link => <li key={link.key}>{link}</li>)}</ul>
           </section>)}
         </nav>
         <section className={styles.theme_section}>
-          <h3>Appearance</h3>
-          <ThemePicker inline />
+          <div className={styles.midi_button_wrapper}>{this.renderMidiButton()}</div>
+          <div className={styles.footer_controls}>
+            <NavLink to="/about" aria-label="Guide" title="Guide">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5M12 17v1" /></svg>
+            </NavLink>
+            {userLinks.filter(link => link.key === "stats")}
+            <ThemePicker />
+          </div>
         </section>
       </aside>
     }
@@ -89,7 +94,7 @@ export default class Header extends React.Component {
   getPageLinks() {
     let links = [
       <NavLink end key="root" to="/" {...toggleActive}>Staff</NavLink>,
-      <NavLink end key="ear-training" to="/ear-training/interval-melodies" {...toggleActive}>Ear Training</NavLink>,
+      <NavLink end key="ear-training" to="/ear-training/interval-melodies" {...toggleActive}>Ear</NavLink>,
       <NavLink end key="flash-cards" to="/flash-cards/note-math" {...toggleActive}>Flash Cards</NavLink>,
       <NavLink key="play-along" to="/play-along" {...toggleActive}>Play Along</NavLink>,
       <NavLink key="drum-machine" to="/drum-machine" {...toggleActive}>Drum Machine</NavLink>,
@@ -122,7 +127,7 @@ export default class Header extends React.Component {
       if (!this.state.menuOpen) return
       if (event.key === "Escape") { this.closeMenu(); return }
       if (event.key === "Tab" && window.matchMedia("(max-width: 760px)").matches) {
-        const controls = [...event.currentTarget.querySelectorAll('a, button:not([tabindex="-1"])')]
+        const controls = [...event.currentTarget.querySelectorAll('a, summary, button:not([tabindex="-1"])')]
         const target = event.shiftKey ? controls.at(-1) : controls[0]
         if (event.target === (event.shiftKey ? controls[0] : controls.at(-1))) {
           event.preventDefault()

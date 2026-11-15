@@ -48,6 +48,10 @@
     button { min-height: 32px; text-align: left; cursor: pointer; }
 }
 
-.size_control { display: flex; justify-content: flex-end; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; font-size: 14px; }
+.size_control { display: flex; flex-direction: column; width: 129px; max-width: 100%; flex: 0 0 129px; margin: 0 0 12px auto; gap: 4px; font-size: 14px; box-sizing: border-box;
+    > span { display: flex; justify-content: space-between; width: 100%; }
+    input { width: 100%; min-width: 0; margin: 0; box-sizing: border-box; }
+}
+
 
 .fretboard_hint { font-size: 14px; }

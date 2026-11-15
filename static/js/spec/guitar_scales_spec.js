@@ -40,3 +40,18 @@ describe("Guitar scales", () => {
     }
   })
 })
+
+describe("Expanded scale catalog", () => {
+  it("uses ascending melodic minor and correctly labels altered mode degrees", () => {
+    expect(guitarScale("C", "Melodic minor", 0).notes.map(n => n.pitchClass)).toEqual([0, 2, 3, 5, 7, 9, 11])
+    expect(guitarScale("C", "Lydian dominant", 0).notes.map(n => n.interval)).toEqual(["1", "2", "3", "♯4", "5", "6", "♭7"])
+    expect(guitarScale("C", "Lydian augmented", 0).notes.map(n => n.interval)).toContain("♯5")
+  })
+  it("closes every scale at exactly one octave", () => {
+    for (const Type of Object.values(SCALE_TYPES)) {
+      expect(new Type("C").steps.reduce((sum, step) => sum + step, 0)).toBe(12)
+    }
+    expect(guitarScale("C", "Chromatic", 0).notes.length).toBe(12)
+    expect(guitarScale("C", "Diminished (half-whole)", 0).notes.length).toBe(8)
+  })
+})
