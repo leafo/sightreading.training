@@ -65,7 +65,7 @@ const MOVEABLE = [
 const cache = new Map()
 export function guitarChordVoicings(notes, limit = 4, bassNote = notes[0]) {
   const classes = [...new Set(notes.map(noteClass))]
-  if (classes.includes(null) || classes.length < 3 || classes.length > 6) return []
+  if (classes.includes(null) || classes.length < 3 || classes.length > 7) return []
   const bassClass = noteClass(bassNote)
   const key = `${classes.join(",")}:${bassClass}`
   if (cache.has(key)) return cache.get(key).slice(0, limit)
@@ -94,7 +94,7 @@ export function guitarChordVoicings(notes, limit = 4, bassNote = notes[0]) {
   const curated = candidates.length
   // Four-fret windows with at most four fingers, including explicit barres.
   // Only an explicitly optional natural fifth may be omitted; no extra tones.
-  for (let start = 1; start <= 9; start++) {
+  for (let start = 1; start <= 12; start++) {
     const choices = OPEN_PITCHES.map(open => [null, ...[0, start, start + 1, start + 2, start + 3]
       .filter(fret => classes.includes((open + fret) % 12))])
     const visit = (frets, stopped) => {

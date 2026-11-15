@@ -37,7 +37,7 @@ export function guitarVoicing(frets) {
 
 export function chordNote(pitch) {
   return noteName(pitch, CHORD_ROOTS[pitchClass(pitch)].includes("#"))
-    .replace(/\d+$/, "").replace("#", "♯").replaceAll("b", "♭")
+    .replace(/\d+$/, "").replaceAll("#", "♯").replaceAll("b", "♭")
 }
 
 export function identifyChordMatches(pitches) {
@@ -48,7 +48,7 @@ export function identifyChordMatches(pitches) {
     return match ? [{...chord, ...match}] : []
   }).sort((a, b) => Number(a.omittedFifth) - Number(b.omittedFifth) || Number(b.rootPitch === bass) - Number(a.rootPitch === bass))
     .map(({name, rootPitch, omittedFifth}) => {
-      const symbol = name.replace("#", "♯").replaceAll("b", "♭")
+      const symbol = name.replaceAll("#", "♯").replaceAll("b", "♭")
       return {name: rootPitch === bass ? symbol : `${symbol}/${chordNote(bass)}`, omittedFifth}
     })
 }
@@ -67,6 +67,6 @@ export function suggestChords(pitches, limit = 5) {
       overlap: chord.classes.length - missing.length}
   }).filter(chord => chord.distance > 0 && chord.distance <= 2 && chord.overlap >= 2)
     .sort((a, b) => a.distance - b.distance || b.overlap - a.overlap || Number(b.rootPitch === bass) - Number(a.rootPitch === bass))
-    .slice(0, limit).map(chord => ({name: chord.name.replace("#", "♯").replaceAll("b", "♭"),
+    .slice(0, limit).map(chord => ({name: chord.name.replaceAll("#", "♯").replaceAll("b", "♭"),
       missing: chord.missing.map(chordNote), extra: chord.extra.map(chordNote)}))
 }

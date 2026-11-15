@@ -16,7 +16,7 @@ export function labState(value = {}) {
     selectedSuggestion: typeof value.selectedSuggestion === "string" ? value.selectedSuggestion.slice(0, 40) : "",
     showAllNotes: value.showAllNotes === true, labels: choose(value.labels, labels, "notes")}
 }
-export const CHORD_FAMILIES = ["major", "minor", "dominant seventh", "major seventh", "minor seventh", "suspended second", "suspended fourth", "diminished", "augmented"]
+export const CHORD_FAMILIES = ["major", "minor", "dominant seventh", "major seventh", "minor seventh", "suspended second", "suspended fourth", "diminished", "diminished seventh", "half diminished seventh", "augmented", "dominant seventh flat fifth", "dominant seventh sharp fifth", "dominant seventh flat ninth", "dominant seventh sharp ninth", "dominant ninth", "minor ninth", "major ninth", "dominant eleventh", "minor eleventh", "major eleventh", "dominant thirteenth", "minor thirteenth", "major thirteenth"]
 export function referenceState(value = {}) {
   return {diagramLabels: choose(value.diagramLabels, diagramLabels, "fingers"), query: typeof value.query === "string" ? value.query.slice(0, 80) : "C major",
     root: choose(value.root, ROOTS, "C"), family: choose(value.family, CHORD_FAMILIES, "major"),

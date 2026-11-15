@@ -2,7 +2,7 @@ import * as React from "react"
 import {renderToStaticMarkup} from "react-dom/server"
 import {MemoryRouter} from "react-router-dom"
 import {identifyChordMatches, identifyChords, guitarVoicing, chordNote} from "st/chord_lab"
-import {guitarChordVoicings, OPEN_PITCHES} from "st/guitar_chords"
+import {guitarChordVoicings, OPEN_PITCHES, noteClass} from "st/guitar_chords"
 import {searchChords} from "st/chord_reference"
 import {chordDiagramAscii, copyChordDiagram} from "st/chord_diagram_data"
 import ChordDiagram from "st/components/chord_diagram"
@@ -153,3 +153,26 @@ describe("Diagram size and fretboard polish", () => {
     expect(text).toContain(">12<")
   })
 })
+
+describe("Extended chord database", () => {
+  it("searches, spells and identifies altered and extended chords in every root", () => {
+    for (const root of ["C", "Db", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]) {
+      for (const suffix of ["dim7", "m7b5", "7b5", "7#5", "7b9", "7#9", "11", "m11", "maj11", "13", "m13", "maj13"]) {
+        const chord = searchChords(root + suffix)[0]
+        expect(chord).toBeDefined()
+        const tones = chordTonesForTest(chord)
+        expect(identifyChords(tones)).toContain(chord.symbol.replace("maj", "M"))
+      }
+    }
+  })
+  it("offers valid guitar diagrams for diminished, half diminished and altered fifth chords", () => {
+    for (const symbol of ["Cdim7", "Cm7b5", "C7b5", "C7#5", "C11", "C13"]) {
+      const chord = searchChords(symbol)[0]
+      expect(guitarChordVoicings(chord.notes).length).toBeGreaterThan(0)
+    }
+  })
+})
+function chordTonesForTest(chord) {
+  const root = noteClass(chord.notes[0])
+  return chord.notes.map(note => 48 + root + (noteClass(note) - root + 12) % 12)
+}

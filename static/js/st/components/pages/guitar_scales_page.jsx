@@ -26,7 +26,7 @@ export default class GuitarScalesPage extends React.Component {
           {ROOTS.map(note => <option key={note} value={note}>{displayNote(note)}</option>)}
         </select></label>
         <label>Scale<select value={type} onChange={event => this.setState({type: event.target.value})}>
-          {Object.keys(SCALE_TYPES).map(name => <option key={name}>{name}</option>)}
+          {Object.keys(SCALE_TYPES).map(name => <option key={name} value={name}>{name === "Melodic minor" ? "Melodic minor (ascending / jazz)" : name}</option>)}
         </select></label>
         <label>Labels<select value={labels} onChange={event => this.setState({labels: event.target.value})}>
           <option value="notes">Notes</option><option value="degrees">Intervals</option><option value="both">Notes and intervals</option>
