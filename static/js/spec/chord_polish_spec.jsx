@@ -176,3 +176,25 @@ function chordTonesForTest(chord) {
   const root = noteClass(chord.notes[0])
   return chord.notes.map(note => 48 + root + (noteClass(note) - root + 12) % 12)
 }
+
+
+describe("Dominant seventh root spelling", () => {
+  it("keeps D natural with a flat seventh and flat ninth", () => {
+    // D F# A C Eb: the C is b7, not an alteration of the root.
+    const matches = identifyChords([50, 54, 57, 60, 63])
+    expect(matches).toContain("D7♭9")
+    expect(matches.some(name => name.startsWith("D♭7"))).toBeFalse()
+    expect(searchChords("D7b9")[0].notes).toEqual(["D", "F♯", "A", "C", "E♭"])
+    // A genuinely flat root must retain its accidental.
+    expect(identifyChords([49, 53, 56, 59, 62])).toContain("D♭7♭9")
+  })
+  it("shows status only for unsuccessful nonempty reference searches", () => {
+    const page = new Reference({})
+    for (const query of ["Cmaj7", "C dreamy", ""]) {
+      page.state = {...page.state, query}
+      expect(elements(page.render()).some(node => node.type === "p" && node.props.role === "status")).toBeFalse()
+    }
+    page.state = {...page.state, query: "not-a-chord"}
+    expect(html(page.render())).toContain("No chords matched.")
+  })
+})

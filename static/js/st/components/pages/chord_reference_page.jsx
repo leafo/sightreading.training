@@ -30,8 +30,9 @@ export default class ChordReferencePage extends React.Component {
     const results = query.trim() ? searchChords(query) : []
     return <main className={styles.page}>
       <h1>Chord Reference</h1>
-      <p>Find a chord by symbol, name, mood, or style to see its notes and interval formula.</p>
+      <p className={styles.intro}>Find a chord by symbol, name, mood, or style to see its notes and interval formula.</p>
       <div className={styles.workspace}>
+      <div className={styles.diagram_toolbar}><DiagramSize /></div>
       <section className={styles.search_panel} aria-label="Find a chord">
       <div className={styles.root_picker} role="group" aria-label="Chord root">
         {CHORD_ROOTS.map(root => <button type="button" key={root} aria-pressed={query === `${root} ${this.state.family}`}
@@ -56,10 +57,7 @@ export default class ChordReferencePage extends React.Component {
       <p>Mood and style are starting points for exploration: voicing and musical context change how a chord feels.</p>
       </section>
       <section className={styles.chord_panel} aria-label="Chord diagrams and details">
-      <DiagramSize />
-      <p role="status">{query.trim()
-        ? results.length ? `${results.length} ${results.length === 1 ? "match" : "matches"}` : "No chords matched. Try a chord symbol or a word such as dreamy, dark, blues, or open."
-        : "Enter a chord symbol or a quality such as suspended."}</p>
+      {query.trim() && results.length === 0 && <p role="status">No chords matched. Try a chord symbol or a word such as dreamy, dark, blues, or open.</p>}
       {results.length > 0 && <ul className={styles.results} aria-label="Matching chords">
         {results.slice(0, this.state.visible).map(({symbol, quality, formula, notes, descriptors}) => {
           return <li key={symbol}>
