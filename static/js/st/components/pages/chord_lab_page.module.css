@@ -44,3 +44,5 @@
 .page_heading p { margin: 4px 0; }
 
 .degree_context { margin-top: 0; margin-bottom: 0; }
+
+.reset { display: grid; place-items: center; width: 44px; height: 44px; padding: 8px; border-radius: 8px; cursor: pointer; flex: none; }

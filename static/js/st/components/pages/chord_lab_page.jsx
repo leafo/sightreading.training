@@ -92,8 +92,12 @@ export default class ChordLabPage extends React.Component {
     const activeSuggestion = suggestions.find(item => item.name === this.state.selectedSuggestion) || suggestions[0]
     const chooseVoicing = frets => this.setState({frets: [...frets], instrument: "guitar"})
     return <main className={styles.page}>
-      <div className={styles.page_heading}><div><h1>Chord Lab</h1><p>Build a voicing. Discover the chord.</p></div>
+      <div className={styles.page_heading}><h1>Chord Lab</h1>
         <div className={styles.heading_actions}><Link to="/chord-reference">Search chords →</Link>
+        {instrument === "guitar" && <button type="button" className={styles.reset} aria-label="Reset fretboard" title="Reset fretboard"
+          onClick={() => this.setState({frets: Array(6).fill(null), selectedMatch: ""})}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M4 10a8 8 0 1 1 0 5M4 4v6h6" /></svg>
+        </button>}
         <ToolOptions>
           <label>Instrument<select value={instrument} onChange={event => { this.resetMidi(); this.setState({instrument: event.target.value}) }}>
             <option value="guitar">Guitar</option><option value="piano">Piano</option><option value="midi">MIDI keyboard</option>
@@ -108,7 +112,7 @@ export default class ChordLabPage extends React.Component {
         </ToolOptions></div>
       </div>
       {instrument === "guitar" ? <GuitarFretboard frets={frets} tones={tones} labels={labels} showAllNotes={showAllNotes}
-        onChange={frets => this.setState({frets})} onReset={() => this.setState({frets: Array(6).fill(null), selectedMatch: ""})} />
+        onChange={frets => this.setState({frets})} />
         : instrument === "midi" ? <>
           <p>Play and hold a chord on your MIDI keyboard. Sustain pedal notes count until you release the pedal.</p>
           <p role="status">{this.props.midiInput && this.props.midiInput.state !== "disconnected"
