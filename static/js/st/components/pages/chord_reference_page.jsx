@@ -29,10 +29,13 @@ export default class ChordReferencePage extends React.Component {
     const {query} = this.state
     const results = query.trim() ? searchChords(query) : []
     return <main className={styles.page}>
-      <h1>Chord Reference</h1>
-      <p className={styles.intro}>Find a chord by symbol, name, mood, or style to see its notes and interval formula.</p>
+      <div className={styles.page_heading}>
+        <div><h1>Chord Reference</h1>
+          <p className={styles.intro}>Find a chord by symbol, name, mood, or style to see its notes and interval formula.</p>
+        </div>
+        <div className={styles.diagram_toolbar}><DiagramSize /></div>
+      </div>
       <div className={styles.workspace}>
-      <div className={styles.diagram_toolbar}><DiagramSize /></div>
       <section className={styles.search_panel} aria-label="Find a chord">
       <div className={styles.root_picker} role="group" aria-label="Chord root">
         {CHORD_ROOTS.map(root => <button type="button" key={root} aria-pressed={query === `${root} ${this.state.family}`}

@@ -93,16 +93,15 @@
 }
 @media (max-width: 500px) { .root_picker { grid-template-columns: repeat(6, 1fr); } }
 
-.page h1 { margin-bottom: 4px; }
-.intro { margin: 0 0 12px; font-size: 14px; font-style: italic; }
-.workspace { row-gap: 4px; }
-.diagram_toolbar { grid-column: 2; grid-row: 1; }
+.page_heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.page_heading > div:first-child { min-width: 0; }
+.page_heading h1 { margin: 0 0 4px; }
+.intro { margin: 0; font-size: 14px; font-style: italic; }
+.diagram_toolbar { flex: 0 0 129px; }
 .diagram_toolbar > label { margin-bottom: 0; }
-.search_panel { grid-column: 1; grid-row: 2; }
-.chord_panel { grid-column: 2; grid-row: 2; }
+.diagram_toolbar input[type="range"] { min-height: 0; height: 16px; padding: 0; }
 .results { margin-top: 0; }
-@media (max-width: 1050px) {
-  .search_panel { grid-column: 1; grid-row: 1; }
-  .diagram_toolbar { grid-column: 1; grid-row: 2; margin-top: 8px; }
-  .chord_panel { grid-column: 1; grid-row: 3; }
+@media (max-width: 600px) {
+  .page_heading { flex-wrap: wrap; }
+  .diagram_toolbar { margin-left: auto; }
 }
