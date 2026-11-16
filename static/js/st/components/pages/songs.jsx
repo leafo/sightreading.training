@@ -1,4 +1,5 @@
 import * as React from "react"
+import {BEGINNER_SONGS} from "st/beginner_songs"
 import classNames from "classnames"
 
 import {Link, NavLink} from "react-router-dom"
@@ -70,7 +71,7 @@ export default class SongsPage extends React.Component {
   refreshSongs() {
     if (FRONTEND_ONLY) {
       this.setState({
-        error_message: "The song library requires the backend server, which is not available in frontend-only development mode."
+        songs: [], mySongs: []
       })
       return
     }
@@ -159,15 +160,30 @@ export default class SongsPage extends React.Component {
     </section>
   }
 
+  renderBeginnerSongs() {
+    return <section>
+      <h2>Beginner songs</h2>
+      <p>Melody and simple block chords. Start slowly, then adjust the BPM as you learn.</p>
+      <ul className={styles.song_cell_list}>{BEGINNER_SONGS.map(song =>
+        <li className={styles.song_cell} key={song.id}>
+          <div className={styles.song_title}><Link to={song.url}>{song.title}</Link></div>
+          <p>{song.description}</p>
+          <div>{song.key} major · {song.bpm} BPM · Melody + chords</div>
+        </li>
+      )}</ul>
+    </section>
+  }
+
   renderOverview() {
     if (this.state.error_message) {
       return <div className={classNames(pageContainerStyles.page_container, styles.page_container)}>
+        {this.renderBeginnerSongs()}
         <p className={commonStyles.empty_message}>{this.state.error_message}</p>
       </div>
     }
 
     if (!this.state.songs) {
-      return <div className={classNames(pageContainerStyles.page_container, styles.page_container)}>Loading...</div>
+      return <div className={classNames(pageContainerStyles.page_container, styles.page_container)}>{this.renderBeginnerSongs()}<p>Loading...</p></div>
     }
 
     let songList
@@ -183,8 +199,9 @@ export default class SongsPage extends React.Component {
     }
 
     return <section className={classNames(sidebarStyles.content_column, styles.content_column)}>
+      {this.renderBeginnerSongs()}
       <section>
-        <h2>Songs</h2>
+        <h2>Community songs</h2>
       {songList}
       </section>
       {this.renderMySongs()}

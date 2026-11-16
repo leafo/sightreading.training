@@ -147,6 +147,7 @@ class Layout extends React.Component {
 
         <Route path="/play-along">
           <Route index element={<SongsPage {...pageProps} />} />
+          <Route path="beginner/:preset_id" element={<PlayAlongPage {...pageProps} />} />
           <Route path="recent" element={<SongsPage filter="recent" {...pageProps} />} />
           <Route path="*" element={<SongsPage filter="invalid" {...pageProps} />} />
         </Route>
