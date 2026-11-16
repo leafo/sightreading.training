@@ -1,6 +1,10 @@
 import * as React from "react"
 
 import {setTitle} from "st/globals"
+import {STARTER_SHEETS} from "st/starter_sheets"
+import ChordDiagram from "st/components/chord_diagram"
+import {sheetChordDiagrams} from "st/sheet_chord_diagrams"
+import {chordDiagramAscii} from "st/chord_diagram_data"
 import Toast from "st/components/toast"
 import {
   exportChordSheet, importChordSheet, exportSongbook, importSongbook, SONGBOOK_BACKUP_SIZE_LIMIT,
@@ -11,7 +15,7 @@ import styles from "./chord_sheet_page.module.css"
 const EMPTY_SHEET = {title: "", source: "", shift: 0, flats: false}
 
 export default class ChordSheetPage extends React.Component {
-  state = {...EMPTY_SHEET, sheets: [], songbookQuery: "", songbookSort: "saved", activeId: "", notice: "", noticeId: 0, practicing: false, scrolling: false, scrollSpeed: 30}
+  state = {...EMPTY_SHEET, sheets: [], songbookQuery: "", songbookSort: "saved", activeId: "", notice: "", noticeId: 0, practicing: false, scrolling: false, scrollSpeed: 30, diagramMode: "block"}
 
   componentDidMount() {
     setTitle("Chord Sheet Maker")
@@ -32,11 +36,17 @@ export default class ChordSheetPage extends React.Component {
     } catch {
       notice = notice || "Could not recover the last editor draft. Saved sheets are still available if they loaded successfully."
     }
+    const starter = STARTER_SHEETS.find(sheet => sheet.id === new URLSearchParams(globalThis.location?.search || "").get("starter"))
+    if (starter) draft = {...starter, shift: 0, flats: false, activeId: ""}
+    try {
+      const mode = localStorage.getItem("chord-sheet-diagrams:v1")
+      if (["block", "line", "hidden"].includes(mode)) this.setState({diagramMode: mode})
+    } catch { /* Use block diagrams when storage is unavailable. */ }
     const first = sheets[0]
     this.setState({sheets, ...(draft || first || EMPTY_SHEET),
       activeId: draft ? draft.activeId : first?.id || ""}, () => {
       this.editorLoaded = true
-      if (notice) this.notify(notice)
+      if (notice && !starter) this.notify(notice)
     })
   }
 
@@ -239,6 +249,7 @@ export default class ChordSheetPage extends React.Component {
   render() {
     const {title, source, notice, noticeId, shift, flats, sheets, activeId} = this.state
 
+    const diagrams = this.state.diagramMode === "hidden" ? [] : sheetChordDiagrams(source, shift, flats)
     const visibleSheets = searchSongbook(sheets, this.state.songbookQuery, this.state.songbookSort)
     const hiddenActive = sheets.find(sheet => sheet.id === activeId && !visibleSheets.includes(sheet))
 
@@ -294,6 +305,17 @@ export default class ChordSheetPage extends React.Component {
         <p>Open UTF-8 text or ChordPro with bracketed chords. ChordPro titles, artists, comments, sections, and capo notes are imported; other directives stay visible. Capo notes do not transpose chords. The filename supplies a missing title.
           Imported text starts in its written key as a new, unsaved sheet.</p>
         {this.state.textImportError && <p role="alert">{this.state.textImportError}</p>}
+        <label>Starter songs
+          <select value="" onChange={event => {
+            const starter = STARTER_SHEETS.find(sheet => sheet.id === event.target.value)
+            if (!starter) return
+            if ((title || source) && !window.confirm("Open a starter song and replace the current editor? Saved sheets are kept.")) return
+            this.setState({title: starter.title, source: starter.source, shift: 0, flats: false, activeId: ""})
+          }}>
+            <option value="">Choose a beginner song…</option>
+            {STARTER_SHEETS.map(sheet => <option key={sheet.id} value={sheet.id}>{sheet.title} ({sheet.chords})</option>)}
+          </select>
+        </label>
         <label>Song title
           <input value={title} maxLength={SHEET_TITLE_LIMIT}
             onChange={event => this.setState({title: event.target.value})} />
@@ -329,6 +351,17 @@ export default class ChordSheetPage extends React.Component {
       </div>
 
       <div className={styles.practiceControls}>
+        <label>Chord diagrams
+          <select value={this.state.diagramMode} onChange={event => {
+            const diagramMode = event.target.value
+            this.setState({diagramMode})
+            try { localStorage.setItem("chord-sheet-diagrams:v1", diagramMode) } catch { /* Keep the session choice. */ }
+          }}>
+            <option value="block">Block diagrams</option>
+            <option value="line">Line diagrams</option>
+            <option value="hidden">Hidden</option>
+          </select>
+        </label>
         <button type="button" disabled={!source.trim()} aria-pressed={this.state.practicing} onClick={this.togglePractice}>
           {this.state.practicing ? "Exit practice view" : "Practice this sheet"}
         </button>
@@ -352,6 +385,13 @@ export default class ChordSheetPage extends React.Component {
           if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(event.key)) this.pauseScroll()
         }}>
         <h2>{title.trim() || "Untitled song"}</h2>
+        {diagrams.length > 0 && <div className={styles.diagrams} aria-label="Chords used in this sheet">
+          {diagrams.map(({name, voicing}) => <div key={name}>
+            {!voicing ? <p>{name}: diagram unavailable</p> : this.state.diagramMode === "block"
+              ? <ChordDiagram {...voicing} name={name} caption />
+              : <code>{chordDiagramAscii(voicing.frets, name, "line")}</code>}
+          </div>)}
+        </div>}
         {source.trim() ? parseChordSheet(source, shift, flats).map((line, lineIndex) =>
           <div className={styles.line} key={lineIndex}>
             {line.map(({chord, lyric}, segmentIndex) => <span className={styles.segment} key={segmentIndex}>

@@ -1,5 +1,6 @@
 import * as React from "react"
 import {BEGINNER_SONGS} from "st/beginner_songs"
+import {STARTER_SHEETS} from "st/starter_sheets"
 import classNames from "classnames"
 
 import {Link, NavLink} from "react-router-dom"
@@ -253,7 +254,16 @@ export default class SongsPage extends React.Component {
   render() {
     return <div className={classNames(styles.songs_page, sidebarStyles.has_sidebar)}>
       {this.renderSidebar()}
+      <div className={sidebarStyles.content_column}>
+      {!this.props.filter && <section className={styles.content_column}>
+        <h2>Beginner chord songs</h2>
+        <p>Ready to play: open a chord sheet, choose diagrams, and use practice view. Save a copy to customize it.</p>
+        <ul>{STARTER_SHEETS.map(sheet => <li key={sheet.id}>
+          <Link to={`/chord-sheet?starter=${sheet.id}`}>{sheet.title}</Link> — {sheet.chords}
+        </li>)}</ul>
+      </section>}
       {this.renderContent()}
+      </div>
     </div>
   }
 }

@@ -1,3 +1,5 @@
+import {STARTER_SHEETS} from "st/starter_sheets"
+import {sheetChordDiagrams} from "st/sheet_chord_diagrams"
 import ChordSheetPage from "st/components/pages/chord_sheet_page"
 
 describe("Chord sheet practice scrolling", () => {
@@ -68,5 +70,24 @@ describe("Chord sheet practice scrolling", () => {
     page.state.source = " "
     page.startScroll()
     expect(page.state.scrolling).toBe(false)
+  })
+})
+
+
+describe("Starter chord songs and diagrams", () => {
+  it("includes Whiskey and a three-chord beginner song", () => {
+    expect(STARTER_SHEETS.map(sheet => sheet.title)).toContain("Whiskey in the Jar")
+    const grace = STARTER_SHEETS.find(sheet => sheet.id === "amazing-grace")
+    expect(sheetChordDiagrams(grace.source).map(chord => chord.name).sort()).toEqual(["C", "D", "G"])
+    STARTER_SHEETS.forEach(sheet => {
+      expect(sheetChordDiagrams(sheet.source).every(chord => chord.voicing?.frets.length === 6)).toBe(true)
+    })
+  })
+  it("deduplicates chords in playing order and follows transposition", () => {
+    expect(sheetChordDiagrams("[G]one [C]two [G]three", 2).map(chord => chord.name)).toEqual(["A", "D"])
+    expect(sheetChordDiagrams("[G]one", 1, true)[0].name).toBe("Ab")
+    expect(sheetChordDiagrams("[G]one", 1, true)[0].voicing).toBeDefined()
+    expect(sheetChordDiagrams("[Unknown]word")[0].voicing).toBeUndefined()
+    expect(sheetChordDiagrams("plain lyrics")).toEqual([])
   })
 })

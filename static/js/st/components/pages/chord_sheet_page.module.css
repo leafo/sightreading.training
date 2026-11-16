@@ -137,3 +137,9 @@
   .editor :is(input, select, textarea) { max-width: 100%; box-sizing: border-box; }
   .preview h2 { margin-top: 0; }
 }
+
+.diagrams { display: flex; flex-wrap: wrap; align-items: start; gap: 16px; margin-bottom: 24px; }
+.diagrams > div { break-inside: avoid; }
+.diagrams figure { margin: 0; }
+.diagrams code { display: block; white-space: pre-wrap; }
+@media print { .diagrams details { display: none; } }
