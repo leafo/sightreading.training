@@ -121,7 +121,7 @@ export default class ChordLabPage extends React.Component {
             ? pianoNotes.filter(note => note !== pitch) : [...pianoNotes, pitch]}))} />
           <button type="button" onClick={() => this.setState({pianoNotes: []})}>Clear piano notes</button>
         </>}
-      {labels !== "notes" && <p>Degrees relative to {selected ? `${selected.split("/")[0]} root` : `the current bass (${notes[0] || "select a note"})`}.</p>}
+      {labels !== "notes" && <p className={styles.degree_context}>Degrees relative to {selected ? `${selected.split("/")[0]} root` : `the current bass (${notes[0] || "select a note"})`}.</p>}
       {instrument === "guitar" && <DiagramSize />}
       <div className={styles.analysis}>
         {instrument === "guitar" && <ChordDiagram frets={frets} fingers={assignFingers(frets)} name={selected || "Your voicing"} labels={this.state.diagramLabels} />}

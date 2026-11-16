@@ -92,3 +92,17 @@
   .root_picker { grid-template-columns: repeat(12, minmax(0, 1fr)); }
 }
 @media (max-width: 500px) { .root_picker { grid-template-columns: repeat(6, 1fr); } }
+
+.page h1 { margin-bottom: 4px; }
+.intro { margin: 0 0 12px; font-size: 14px; font-style: italic; }
+.workspace { row-gap: 4px; }
+.diagram_toolbar { grid-column: 2; grid-row: 1; }
+.diagram_toolbar > label { margin-bottom: 0; }
+.search_panel { grid-column: 1; grid-row: 2; }
+.chord_panel { grid-column: 2; grid-row: 2; }
+.results { margin-top: 0; }
+@media (max-width: 1050px) {
+  .search_panel { grid-column: 1; grid-row: 1; }
+  .diagram_toolbar { grid-column: 1; grid-row: 2; margin-top: 8px; }
+  .chord_panel { grid-column: 1; grid-row: 3; }
+}
