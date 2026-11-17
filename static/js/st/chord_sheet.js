@@ -1,11 +1,12 @@
 import {noteName, parseNote} from "st/music"
+import {chordToken, readDefinitions, shiftedFrets, fretText} from "st/voicing_markup"
 
 function transposeNote(note, shift, flats) {
   const ascii = note.replace("♯", "#").replace("♭", "b")
   return noteName(parseNote(ascii + "4") + shift, !flats).replace(/\d+$/, "")
 }
 
-function transposeChord(symbol, shift, flats) {
+export function transposeChord(symbol, shift, flats) {
   const chord = symbol.match(/^([A-G][#b♯♭]?)([\w+°øΔ#♯♭(),-]*(?:\/\d+)?)(?:\/([A-G][#b♯♭]?))?$/)
   if (!chord || shift === 0) return symbol
 
@@ -88,26 +89,54 @@ export function importSongbook(value, existing, createId) {
 }
 
 export function parseChordSheet(source, shift = 0, flats = false) {
-  return source.split(/\r\n?|\n/).map(line => {
+  const {definitions} = readDefinitions(source)
+  const definitionLines = new Set(definitions.map(d => d.lineIndex))
+  return source.split(/\r\n?|\n/).flatMap((line, lineIndex) => {
+    if (definitionLines.has(lineIndex)) return []
     const segments = []
-    let chord = ""
-    let end = 0
-    for (const match of line.matchAll(/\[([^[\]\s]{1,24})\]/g)) {
+    let chord = "", voicing, end = 0
+    const segment = lyric => ({chord, lyric, ...(voicing ? {voicing} : {})})
+    for (const match of line.matchAll(/\[([^[\]\s]{1,160})\]/g)) {
       const lyric = line.slice(end, match.index)
-      if (lyric || chord) segments.push({chord, lyric})
-      chord = transposeChord(match[1], shift, flats)
+      if (lyric || chord) segments.push(segment(lyric))
+      const token = chordToken(match[1])
+      chord = transposeChord(token?.name || match[1], shift, flats)
+      voicing = undefined
+      if (token?.shape || token?.alias) {
+        const definition = definitions.find(d => d.name === token.name && d.alias === token.alias)
+        const original = token.frets || definition?.frets
+        const frets = original && shiftedFrets(original, shift)
+        voicing = {...token, frets, error: token.error || (!original ? `Undefined voicing ${token.alias}.` : !frets ? "This shape cannot transpose within frets 0–24. Choose another shape." : undefined)}
+      }
       end = match.index + match[0].length
     }
-    segments.push({chord, lyric: line.slice(end)})
-    return segments
+    segments.push(segment(line.slice(end)))
+    return [segments]
   })
 }
 
-// Use the same parsed chords as the preview, keeping lyrics and section spacing.
+// Keep portable voicing definitions and references when exporting transposed text.
 export function exportChordSheet(source, shift = 0, flats = false) {
-  return parseChordSheet(source, shift, flats).map(line =>
-    line.map(({chord, lyric}) => (chord ? `[${chord}]` : "") + lyric).join("")
-  ).join("\n")
+  const {definitions} = readDefinitions(source)
+  return source.split(/\r\n?|\n/).map((line, lineIndex) => {
+    const definition = definitions.find(d => d.lineIndex === lineIndex)
+    if (definition) {
+      const frets = shiftedFrets(definition.frets, shift)
+      if (!frets) throw new Error("A voicing cannot be transposed. Choose another shape before exporting.")
+      return `{voicing: ${transposeChord(definition.name, shift, flats)}:${definition.alias} = ${fretText(frets)}}`
+    }
+    return line.replace(/\[([^[\]\s]{1,160})\]/g, (raw, text) => {
+      const token = chordToken(text)
+      if (!token) return `[${transposeChord(text, shift, flats)}]`
+      let suffix = token.alias ? `:${token.alias}` : ""
+      if (token.shape) {
+        const frets = token.frets && shiftedFrets(token.frets, shift)
+        if (!frets) throw new Error("Fix the voicing before exporting.")
+        suffix = `@${fretText(frets)}`
+      }
+      return `[${transposeChord(token.name, shift, flats)}${suffix}]`
+    })
+  }).join("\n")
 }
 
 // Import bracketed text and common ChordPro metadata/section directives.

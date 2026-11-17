@@ -1,6 +1,9 @@
 import * as React from "react"
 
 import {Link} from "react-router-dom"
+import VoicingTransfer from "st/components/voicing_transfer"
+import {readLabHandoff} from "st/voicing_handoff"
+import {voicingToken, validFrets} from "st/voicing_markup"
 import GuitarFretboard from "st/components/guitar_fretboard"
 import ChordDiagram from "st/components/chord_diagram"
 import {assignFingers} from "st/guitar_chords"
@@ -54,9 +57,19 @@ export default class ChordLabPage extends React.Component {
   componentDidMount() {
     this.props.midiInput?.addEventListener("statechange", this.handleInputState)
     setTitle("Chord Lab")
-    const incoming = new URLSearchParams(window.location.search).get("frets")
-    if (incoming && /^(x|[0-9]|1[0-2])(,(x|[0-9]|1[0-2])){5}$/.test(incoming)) {
-      this.setState({instrument: "guitar", frets: incoming.split(",").map(fret => fret === "x" ? null : Number(fret))})
+    const params = new URLSearchParams(window.location.search)
+    const ticket = params.get("sheetReturn")
+    const context = readLabHandoff(ticket)
+    if (context) this.setState({sheetReturn: ticket, sheetContext: context})
+    const incoming = params.get("frets")
+    if (incoming && /^(x|[0-9]|1[0-9]|2[0-4])(,(x|[0-9]|1[0-9]|2[0-4])){5}$/.test(incoming)) {
+      this.setState({selectedMatch: params.get("chord") || "", instrument: "guitar", frets: incoming.split(",").map(fret => fret === "x" ? null : Number(fret))})
+    }
+    // Consume the initial shape, so refresh recovers subsequent experimentation.
+    if (params.has("frets")) {
+      const url = new URL(window.location.href)
+      url.searchParams.delete("frets"); url.searchParams.delete("chord")
+      window.history?.replaceState(null, "", url.pathname + url.search + url.hash)
     }
   }
 
@@ -133,6 +146,15 @@ export default class ChordLabPage extends React.Component {
           {matches.length ? this.renderChordTabs(matchDetails, selected, "selectedMatch", pitches) : <p>{notes.length < 3 ? "Select at least three different notes to identify a chord." : "No direct match."}</p>}
         </section>
       </div>
+      {instrument === "guitar" && selected && validFrets(frets) && <section className={styles.actions} aria-label="Use voicing in Chord Sheet">
+        <VoicingTransfer name={selected} frets={frets} />
+        {this.state.sheetReturn && <>
+          <p>Return to {this.state.sheetContext.title || "Untitled song"} with this exact shape.</p>
+          <Link reloadDocument to={`/chord-sheet?sheetReturn=${this.state.sheetReturn}&action=add&voicing=${encodeURIComponent(voicingToken(selected, frets))}`}>Add variation and return</Link>
+          {this.state.sheetContext.alias && <Link reloadDocument to={`/chord-sheet?sheetReturn=${this.state.sheetReturn}&action=replace&voicing=${encodeURIComponent(voicingToken(selected, frets))}`}>Replace this voicing and return</Link>}
+        </>}
+      </section>}
+      {this.state.sheetReturn && <p><Link reloadDocument to="/chord-sheet">Return to sheet without changes</Link></p>}
       {instrument === "guitar" && selected && <section className={styles.variants} id="match-voicings" role="tabpanel" aria-label={`${selected} voicings`}>
         <ChordVoicings notes={tones.map(tone => tone.name)} bassNote={selected.split("/")[1]} name={selected} labels={this.state.diagramLabels} onChoose={chooseVoicing} />
       </section>}

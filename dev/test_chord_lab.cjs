@@ -11,7 +11,7 @@ try {
   writeFileSync(join(outdir, 'test-session.mjs'), 'export function getSession() { return {} }')
   esbuild.buildSync({
     absWorkingDir: root,
-    entryPoints: ['static/js/spec/chord_polish_spec.jsx', 'static/js/spec/tool_usability_spec.jsx', 'static/js/spec/guitar_scales_spec.js', 'static/js/spec/guitar_chords_spec.jsx', 'static/js/spec/chord_sheet_practice_spec.js', 'static/js/spec/chord_sheet_spec.js', 'static/js/spec/chord_lab_spec.js', 'static/js/spec/chord_midi_spec.js', 'static/js/spec/chord_reference_spec.js'],
+    entryPoints: ['static/js/spec/voicing_markup_spec.jsx', 'static/js/spec/chord_polish_spec.jsx', 'static/js/spec/tool_usability_spec.jsx', 'static/js/spec/guitar_scales_spec.js', 'static/js/spec/guitar_chords_spec.jsx', 'static/js/spec/chord_sheet_practice_spec.js', 'static/js/spec/chord_sheet_spec.js', 'static/js/spec/chord_lab_spec.js', 'static/js/spec/chord_midi_spec.js', 'static/js/spec/chord_reference_spec.js'],
     bundle: true, outdir, platform: 'node', format: 'cjs',
     nodePaths: [join(root, 'static/js')], loader: {'.css': 'empty'},
     alias: {'st/app': join(outdir, 'test-session.mjs')},
@@ -29,6 +29,7 @@ try {
       process.exitCode = result.overallStatus === 'passed' ? 0 : 1
     },
   })
+  require(join(outdir, 'voicing_markup_spec.js'))
   require(join(outdir, 'chord_sheet_practice_spec.js'))
   require(join(outdir, 'chord_sheet_spec.js'))
   require(join(outdir, 'chord_lab_spec.js'))
