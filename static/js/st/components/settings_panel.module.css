@@ -7,7 +7,7 @@
 
     position: fixed;
     overflow: auto;
-    left: 0;
+    left: var(--navigation-offset, 0px);
     top: var(--header-height);
     bottom: 0;
     background: var(--surface-muted);

@@ -1,4 +1,7 @@
 import * as React from "react"
+import PracticeTimer from "st/components/practice_timer"
+import SightReadingPage from "st/components/pages/sight_reading_page"
+import {IconTimer, IconEye} from "st/components/control_icons"
 import {renderToStaticMarkup} from "react-dom/server"
 import ScalesPage from "st/components/pages/guitar_scales_page"
 import ChordLabPage from "st/components/pages/chord_lab_page"
@@ -155,5 +158,30 @@ describe("Chord exploration", () => {
     const inversion = guitarChordVoicings(["C", "E", "G"], 18, "E")
     expect(inversion.length).toBeGreaterThan(0)
     expect(inversion[0].frets.some(fret => fret !== null)).toBeTrue()
+  })
+})
+
+
+describe("Icon-only practice controls", () => {
+  it("keeps timer text and countdown in accessible labels rather than button content", () => {
+    const timer = new PracticeTimer({})
+    let button = elements(timer.render()).find(node => node.type === "button")
+    expect(button.props["aria-label"]).toBe("Practice timer")
+    expect(button.props.children.type).toBe(IconTimer)
+    timer.state = {...timer.state, now: 0, run: {remaining: 1, deadline: 60000}}
+    button = elements(timer.render()).find(node => node.type === "button")
+    expect(button.props["aria-label"]).toContain("1:00")
+    expect(button.props.children.type).toBe(IconTimer)
+  })
+  it("switches the keyboard eye icon and screen-reader action without visible text", () => {
+    const page = {state: {currentStaff: {mode: "notes"}, keyboardOpen: true}, toggleKeyboard() {}}
+    let button = SightReadingPage.prototype.renderKeyboardToggle.call(page)
+    expect(button.props["aria-label"]).toBe("Hide keyboard")
+    expect(button.props.children.type).toBe(IconEye)
+    expect(button.props.children.props.hidden).toBe(true)
+    page.state.keyboardOpen = false
+    button = SightReadingPage.prototype.renderKeyboardToggle.call(page)
+    expect(button.props["aria-label"]).toBe("Show keyboard")
+    expect(button.props.children.props.hidden).toBe(false)
   })
 })

@@ -8,6 +8,7 @@ import sliderStyles from "st/components/slider.module.css"
 import Keyboard from "st/components/keyboard"
 import StatsLightbox from "st/components/sight_reading/stats_lightbox"
 import Hotkeys from "st/components/hotkeys"
+import {IconEye} from "st/components/control_icons"
 import IconReset from "st/components/reset_icon"
 import Toast from "st/components/toast"
 import BuildInfo from "st/components/build_info"
@@ -586,10 +587,13 @@ export default class SightReadingPage extends React.Component {
     if (!this.state.currentStaff) { return }
     if (this.state.currentStaff.mode != "notes") { return }
 
-    return <button
+    return <button type="button"
+      title={this.state.keyboardOpen ? "Hide keyboard" : "Show keyboard"}
+      aria-label={this.state.keyboardOpen ? "Hide keyboard" : "Show keyboard"}
+      aria-pressed={this.state.keyboardOpen}
       onClick={this.toggleKeyboard.bind(this)}
       className={styles.keyboard_toggle}>
-      {this.state.keyboardOpen ? "Hide Keyboard" : "Show Keyboard"}
+      <IconEye hidden={this.state.keyboardOpen} />
     </button>
   }
 

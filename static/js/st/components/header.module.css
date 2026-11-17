@@ -1,3 +1,5 @@
+/* Shared by document-flow pages and the positioned Staff trainer. */
+:global(.page_layout) { --navigation-width: 12rem; --navigation-offset: 0px; }
 .header {
     box-sizing: border-box;
     position: fixed;
@@ -36,7 +38,7 @@
     position: fixed;
     box-sizing: border-box;
     inset: 50px auto 0 0;
-    width: 260px;
+    width: var(--navigation-width);
     max-width: calc(100vw - 56px);
     display: flex;
     flex-direction: column;
@@ -67,7 +69,7 @@
 .header :is(a, button):focus-visible { outline: 2px solid var(--button-color); outline-offset: 2px; }
 .backdrop { display: none; }
 @media (min-width: 761px) {
-    :global(.page_layout):has(.sidebar) { padding-left: 260px; }
+    :global(.page_layout):has(.sidebar) { --navigation-offset: var(--navigation-width); padding-left: var(--navigation-offset); }
 }
 @media (max-width: 760px) {
     .backdrop {
@@ -88,3 +90,7 @@
 
 .tool_groups { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
 .footer_controls { display: flex; align-items: center; justify-content: space-between; }
+
+.tool_groups a { white-space: nowrap; }
+.sidebar .midi_button_wrapper { margin-inline: 0; min-width: 0; overflow: hidden; }
+@media print { :global(.page_layout) { --navigation-offset: 0px !important; } }

@@ -12,10 +12,15 @@ import {
 } from "st/chord_sheet"
 import styles from "./chord_sheet_page.module.css"
 
+const UI_STORAGE_KEY = "chord-sheet-ui:v1"
+const STARTERS = STARTER_SHEETS.map(sheet => ({...sheet, id: `starter:${sheet.id}`, shift: 0, flats: false}))
+const SaveIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M5 3h12l4 4v14H3V3h2Z"/><path d="M7 3v6h9V3M7 21v-8h10v8"/></svg>
+const DeleteIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>
+
 const EMPTY_SHEET = {title: "", source: "", shift: 0, flats: false}
 
 export default class ChordSheetPage extends React.Component {
-  state = {...EMPTY_SHEET, sheets: [], songbookQuery: "", songbookSort: "saved", activeId: "", notice: "", noticeId: 0, practicing: false, scrolling: false, scrollSpeed: 30, diagramMode: "block"}
+  state = {...EMPTY_SHEET, sheets: [], songbookQuery: "", songbookSort: "saved", activeId: "", notice: "", noticeId: 0, practicing: false, scrolling: false, scrollSpeed: 30, diagramMode: "block", tab: "create", scrollTop: 0, importMode: "songbook", importFile: null, importOpen: false}
 
   componentDidMount() {
     setTitle("Chord Sheet Maker")
@@ -31,42 +36,76 @@ export default class ChordSheetPage extends React.Component {
     }
     let draft
     try {
-      draft = readEditorDraft(localStorage, sheets)
+      draft = readEditorDraft(localStorage, [...sheets, ...STARTERS])
       if (draft) notice = notice || "Restored your last editor draft."
     } catch {
       notice = notice || "Could not recover the last editor draft. Saved sheets are still available if they loaded successfully."
     }
     const starter = STARTER_SHEETS.find(sheet => sheet.id === new URLSearchParams(globalThis.location?.search || "").get("starter"))
-    if (starter) draft = {...starter, shift: 0, flats: false, activeId: ""}
+    if (starter) {
+      draft = {...starter, shift: 0, flats: false, activeId: `starter:${starter.id}`}
+      // Consume explicit starter links so refreshing preserves subsequent edits.
+      const url = new URL(globalThis.location.href)
+      url.searchParams.delete("starter")
+      globalThis.history?.replaceState(null, "", url.pathname + url.search + url.hash)
+    }
     try {
       const mode = localStorage.getItem("chord-sheet-diagrams:v1")
       if (["block", "line", "hidden"].includes(mode)) this.setState({diagramMode: mode})
     } catch { /* Use block diagrams when storage is unavailable. */ }
-    const first = sheets[0]
-    this.setState({sheets, ...(draft || first || EMPTY_SHEET),
-      activeId: draft ? draft.activeId : first?.id || ""}, () => {
+    let ui = {}
+    try {
+      const stored = JSON.parse(localStorage.getItem(UI_STORAGE_KEY))
+      if (stored?.version === 1) {
+        if (["create", "practice", "info"].includes(stored.tab)) ui.tab = stored.tab
+        if (["saved", "title"].includes(stored.songbookSort)) ui.songbookSort = stored.songbookSort
+        if (typeof stored.songbookQuery === "string") ui.songbookQuery = stored.songbookQuery.slice(0, 1000)
+        if (["block", "line", "hidden"].includes(stored.diagramMode)) ui.diagramMode = stored.diagramMode
+        if (Number.isFinite(stored.scrollSpeed)) ui.scrollSpeed = Math.min(100, Math.max(5, stored.scrollSpeed))
+        if (Number.isFinite(stored.scrollTop)) ui.scrollTop = Math.max(0, stored.scrollTop)
+      }
+    } catch { /* Recover the song even if UI preferences are corrupt. */ }
+    const first = sheets[0] || STARTERS[0]
+    this.restoring = true
+    this.setState({sheets, ...ui, ...(draft || first),
+      practicing: ui.tab === "practice", activeId: draft ? draft.activeId : first.id}, () => {
+      this.restoring = false
       this.editorLoaded = true
-      if (notice && !starter) this.notify(notice)
+      // Persist the initial starter and explicit starter links as well as later edits.
+      this.persistEditor()
+      if (notice) this.notify(notice)
     })
+  }
+
+  persistEditor() {
+    try {
+      writeEditorDraft(localStorage, this.state)
+      const {tab, songbookQuery, songbookSort, scrollSpeed, scrollTop, diagramMode} = this.state
+      localStorage.setItem(UI_STORAGE_KEY, JSON.stringify({version: 1, tab, songbookQuery, songbookSort, scrollSpeed, scrollTop, diagramMode}))
+      this.draftWriteFailed = false
+    } catch {
+      if (!this.draftWriteFailed) {
+        this.draftWriteFailed = true
+        this.notify("Could not back up your changes. Save or download your work before leaving.")
+      }
+    }
   }
 
   preview = React.createRef()
 
   componentDidUpdate(previousProps, previousState) {
-    if (this.editorLoaded && ["title", "source", "shift", "flats", "activeId"].some(key => previousState[key] !== this.state[key])) {
-      try {
-        writeEditorDraft(localStorage, this.state)
-        this.draftWriteFailed = false
-      } catch {
-        if (!this.draftWriteFailed) {
-          this.draftWriteFailed = true
-          this.notify("Could not back up your editor draft. Save or download your work before leaving.")
-        }
-      }
+    if (this.restoring) {
+      this.restoring = false
+      if (this.preview.current) this.preview.current.scrollTop = this.state.scrollTop
+      return
+    }
+    if (this.editorLoaded && ["title", "source", "shift", "flats", "activeId", "tab", "songbookQuery", "songbookSort", "scrollSpeed", "scrollTop", "diagramMode"].some(key => previousState[key] !== this.state[key])) {
+      this.persistEditor()
     }
     if (previousState.source !== this.state.source || previousState.activeId !== this.state.activeId) {
       this.pauseScroll()
       if (this.preview.current) this.preview.current.scrollTop = 0
+      if (this.state.scrollTop) this.setState({scrollTop: 0})
     }
   }
 
@@ -109,7 +148,37 @@ export default class ChordSheetPage extends React.Component {
 
   togglePractice = () => {
     this.pauseScroll()
-    this.setState(({practicing}) => ({practicing: !practicing}), () => this.preview.current?.focus())
+    this.selectTab(this.state.practicing ? "create" : "practice")
+  }
+
+  selectTab(tab) {
+    this.pauseScroll()
+    this.setState({tab, practicing: tab === "practice"}, () => {
+      if (tab === "practice" && this.preview.current) {
+        this.preview.current.scrollTop = this.state.scrollTop
+      }
+    })
+  }
+
+  importDialog = React.createRef()
+  importButton = React.createRef()
+
+  openImport = () => {
+    this.pauseScroll()
+    this.setState({importOpen: true, importFile: null, importError: "", textImportError: ""}, () => this.importDialog.current?.showModal())
+  }
+
+  closeImport = () => {
+    if (this.state.importing || this.state.importingText) return
+    this.importDialog.current?.close()
+    this.setState({importOpen: false}, () => this.importButton.current?.focus())
+  }
+
+  submitImport = async () => {
+    if (!this.state.importFile || this.state.importing || this.state.importingText) return
+    const event = {currentTarget: {files: [this.state.importFile], value: ""}}
+    if (this.state.importMode === "songbook") await this.restoreBackup(event)
+    else await this.importText(event)
   }
 
   notify(notice) {
@@ -118,19 +187,19 @@ export default class ChordSheetPage extends React.Component {
 
   open(id) {
     const {sheets, activeId, title, source, shift, flats} = this.state
-    if (id === activeId) return
-    const saved = sheets.find(sheet => sheet.id === activeId) || EMPTY_SHEET
+    if (id && id === activeId) return
+    const saved = [...sheets, ...STARTERS].find(sheet => sheet.id === activeId) || EMPTY_SHEET
     const dirty = title !== saved.title || source !== saved.source ||
       shift !== saved.shift || flats !== saved.flats
     if (dirty && !window.confirm("Discard unsaved changes to this sheet?")) return
-    this.setState({...(sheets.find(sheet => sheet.id === id) || EMPTY_SHEET), activeId: id})
+    this.setState({...([...sheets, ...STARTERS].find(sheet => sheet.id === id) || EMPTY_SHEET), activeId: id, scrollTop: 0})
   }
 
   save() {
     const {activeId, title, source, shift, flats} = this.state
     try {
       const sheets = readSongbook(localStorage)
-      const id = activeId || crypto.randomUUID()
+      const id = sheets.some(sheet => sheet.id === activeId) ? activeId : crypto.randomUUID()
       const sheet = {id, title, source, shift, flats}
       const updated = sheets.some(saved => saved.id === id)
         ? sheets.map(saved => saved.id === id ? sheet : saved)
@@ -145,6 +214,7 @@ export default class ChordSheetPage extends React.Component {
 
   remove() {
     const {activeId} = this.state
+    if (!this.state.sheets.some(sheet => sheet.id === activeId)) return
     if (!window.confirm("Delete this saved sheet and discard any unsaved changes?")) return
     try {
       const sheets = readSongbook(localStorage).filter(sheet => sheet.id !== activeId)
@@ -205,7 +275,7 @@ export default class ChordSheetPage extends React.Component {
       const sheet = importChordSheet(await file.text(), file.name)
       if ((this.state.title || this.state.source) &&
           !window.confirm("Replace the current editor with this text sheet? Saved sheets will be kept.")) return
-      this.setState({...sheet, activeId: ""})
+      this.setState({...sheet, activeId: "", importOpen: false}, () => this.importButton.current?.focus())
       this.notify("Text sheet opened. Save it to keep it in this browser.")
     } catch {
       this.setState({textImportError: "Choose a nonempty text sheet with no more than 16,000 characters and no null characters."})
@@ -237,7 +307,7 @@ export default class ChordSheetPage extends React.Component {
       }
       const added = sheets.length - existing.length
       if (added) localStorage.setItem(SONGBOOK_STORAGE_KEY, JSON.stringify(sheets))
-      this.setState({sheets})
+      this.setState({sheets, importOpen: false}, () => this.importButton.current?.focus())
       this.notify(added ? `Imported ${added} ${added === 1 ? "sheet" : "sheets"}.` : "No new sheets to import.")
     } catch {
       this.setState({importError: "Could not read the backup or save the imported sheets in this browser."})
@@ -246,163 +316,142 @@ export default class ChordSheetPage extends React.Component {
     }
   }
 
+  renderPreview() {
+    const {title, source, shift, flats, diagramMode} = this.state
+    const diagrams = diagramMode === "hidden" ? [] : sheetChordDiagrams(source, shift, flats)
+    return <section ref={this.preview} className={styles.preview} aria-label="Chord sheet preview" tabIndex={0}
+      onScroll={event => { if (this.state.tab === "practice") this.setState({scrollTop: event.currentTarget.scrollTop}) }}
+      onWheel={this.pauseScroll} onTouchStart={this.pauseScroll} onPointerDown={this.pauseScroll}
+      onKeyDown={event => {
+        if (event.key === "Escape") this.selectTab("create")
+        if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(event.key)) this.pauseScroll()
+      }}>
+      <h2>{title.trim() || "Untitled song"}</h2>
+      {diagrams.length > 0 && <div className={styles.diagrams} aria-label="Chords used in this sheet">
+        {diagrams.map(({name, voicing}) => <div key={name}>
+          {!voicing ? <p>{name}: diagram unavailable</p> : diagramMode === "block"
+            ? <ChordDiagram {...voicing} name={name} caption />
+            : <code>{chordDiagramAscii(voicing.frets, name, "line")}</code>}
+        </div>)}
+      </div>}
+      {source.trim() ? parseChordSheet(source, shift, flats).map((line, lineIndex) =>
+        <div className={styles.line} key={lineIndex}>
+          {line.map(({chord, lyric}, segmentIndex) => <span className={styles.segment} key={segmentIndex}>
+            {chord && <strong>{chord}</strong>}<span>{lyric}</span>
+          </span>)}
+        </div>
+      ) : <p>No sheet content.</p>}
+    </section>
+  }
+
   render() {
-    const {title, source, notice, noticeId, shift, flats, sheets, activeId} = this.state
-
-    const diagrams = this.state.diagramMode === "hidden" ? [] : sheetChordDiagrams(source, shift, flats)
-    const visibleSheets = searchSongbook(sheets, this.state.songbookQuery, this.state.songbookSort)
-    const hiddenActive = sheets.find(sheet => sheet.id === activeId && !visibleSheets.includes(sheet))
-
-    return <main className={`${styles.page} ${this.state.practicing ? styles.practicing : ""}`}>
-      <div className={styles.editor}>
-        <h1>Chord Sheet Maker</h1>
-        <p>Put chords in brackets just before the words they go with, like <code>[Am]Here comes [F]the chorus</code>.
-          Use blank lines between sections. For an instrumental line, enter just the chords.</p>
-
-        <div className={styles.actions}>
-          <label>Search saved sheets
-            <input type="search" value={this.state.songbookQuery} placeholder="Title or lyrics"
-              onChange={event => this.setState({songbookQuery: event.target.value})} />
-          </label>
-          <label>Sort saved sheets
-            <select value={this.state.songbookSort} onChange={event => this.setState({songbookSort: event.target.value})}>
-              <option value="saved">Saved order</option>
-              <option value="title">Title (A–Z)</option>
-            </select>
-          </label>
-          {this.state.songbookQuery && <button type="button" onClick={() => this.setState({songbookQuery: ""})}>Clear search</button>}
+    const {title, source, notice, noticeId, shift, flats, sheets, activeId, tab} = this.state
+    const allSheets = [...STARTERS, ...sheets]
+    const visibleSheets = searchSongbook(allSheets, this.state.songbookQuery, this.state.songbookSort)
+    const selected = allSheets.find(sheet => sheet.id === activeId)
+    return <main className={styles.page} onPointerDown={event => {
+      event.currentTarget.querySelectorAll("details[data-sheet-popover][open]").forEach(details => {
+        if (!details.contains(event.target)) details.open = false
+      })
+    }}>
+      <h1>Chord Sheet Maker</h1>
+      <div className={styles.workspace}>
+        <div className={styles.tabs} role="tablist" aria-label="Chord Sheet Maker">
+          {["create", "practice", "info"].map((name, index, tabs) => <button key={name} type="button"
+            id={`sheet-tab-${name}`} role="tab" aria-selected={tab === name} aria-controls={`sheet-panel-${name}`}
+            tabIndex={tab === name ? 0 : -1}
+            onClick={() => this.selectTab(name)} onKeyDown={event => {
+              let next
+              if (event.key === "ArrowRight") next = tabs[(index + 1) % tabs.length]
+              if (event.key === "ArrowLeft") next = tabs[(index + tabs.length - 1) % tabs.length]
+              if (event.key === "Home") next = tabs[0]
+              if (event.key === "End") next = tabs[tabs.length - 1]
+              if (next) { event.preventDefault(); this.selectTab(next); document.getElementById(`sheet-tab-${next}`)?.focus() }
+            }}>{name[0].toUpperCase() + name.slice(1)}</button>)}
         </div>
-        <p role="status">{visibleSheets.length} of {sheets.length} saved sheets{this.state.songbookQuery.trim() && !visibleSheets.length ? " — no matches. Try another title or lyric." : "."}</p>
-        <div className={styles.actions}>
-          <label>Saved sheets
-            <select value={activeId} onChange={event => this.open(event.target.value)}>
-              <option value="">New sheet</option>
-              {hiddenActive && <option value={hiddenActive.id}>{hiddenActive.title.trim() || "Untitled song"} (current; outside search)</option>}
-              {visibleSheets.map((sheet, index) => <option key={sheet.id} value={sheet.id}>
-                {index + 1}. {sheet.title.trim() || "Untitled song"}
-              </option>)}
-            </select>
-          </label>
-          <button type="button" disabled={!activeId} onClick={() => this.remove()}>
-            Delete saved sheet
-          </button>
-        </div>
-        <div className={styles.actions}>
-          <button type="button" disabled={!sheets.length} onClick={() => this.downloadBackup()}>
-            Download saved sheets
-          </button>
-          <label>Import songbook backup
-            <input type="file" accept=".json,application/json" disabled={this.state.importing}
-              onChange={event => this.restoreBackup(event)} />
-          </label>
-        </div>
-        <p>Backups include saved sheets only. Import keeps existing sheets and skips unchanged copies of previously imported sheets.</p>
-        {this.state.importError && <p role="alert">{this.state.importError}</p>}
-        <label>Open text / ChordPro sheet
-          <input type="file" accept=".txt,.cho,.crd,.chordpro,.pro,text/plain" disabled={this.state.importingText}
-            onChange={event => this.importText(event)} />
-        </label>
-        <p>Open UTF-8 text or ChordPro with bracketed chords. ChordPro titles, artists, comments, sections, and capo notes are imported; other directives stay visible. Capo notes do not transpose chords. The filename supplies a missing title.
-          Imported text starts in its written key as a new, unsaved sheet.</p>
-        {this.state.textImportError && <p role="alert">{this.state.textImportError}</p>}
-        <label>Starter songs
-          <select value="" onChange={event => {
-            const starter = STARTER_SHEETS.find(sheet => sheet.id === event.target.value)
-            if (!starter) return
-            if ((title || source) && !window.confirm("Open a starter song and replace the current editor? Saved sheets are kept.")) return
-            this.setState({title: starter.title, source: starter.source, shift: 0, flats: false, activeId: ""})
-          }}>
-            <option value="">Choose a beginner song…</option>
-            {STARTER_SHEETS.map(sheet => <option key={sheet.id} value={sheet.id}>{sheet.title} ({sheet.chords})</option>)}
-          </select>
-        </label>
-        <label>Song title
-          <input value={title} maxLength={SHEET_TITLE_LIMIT}
-            onChange={event => this.setState({title: event.target.value})} />
-        </label>
-        <label>Chords and lyrics
-          <textarea value={source} maxLength={SHEET_SOURCE_LIMIT} rows={12}
-            onChange={event => this.setState({source: event.target.value})} />
-        </label>
-        <p>Your current editor draft is recovered automatically in this browser. Use Save sheet to update your songbook; drafts are not included in songbook backups. Saving an open sheet updates that sheet.</p>
-        <div className={styles.actions}>
-          <label>Transpose
-            <select value={shift} onChange={event => this.setState({shift: Number(event.target.value)})}>
-              {Array.from({length: 25}, (_, index) => index - 12).map(steps =>
-                <option key={steps} value={steps}>{steps === 0 ? "Original key" :
-                  `${steps > 0 ? "+" : ""}${steps} semitones`}</option>)}
-            </select>
-          </label>
-          <label>Accidentals when transposed
-            <select value={flats ? "flats" : "sharps"} onChange={event => this.setState({flats: event.target.value === "flats"})}>
-              <option value="sharps">Sharps</option>
-              <option value="flats">Flats</option>
-            </select>
-          </label>
-          <button type="button" disabled={!title.trim() && !source.trim()} onClick={() => this.save()}>Save sheet</button>
-          <button type="button" disabled={!source.trim()} onClick={() => this.downloadText()}>
-            Download chord sheet text
-          </button>
-          <button type="button" disabled={!source.trim()} onClick={() => window.print()}>
-            Print / Save PDF
-          </button>
-        </div>
-        <p>Text downloads include the current edits and transposition, with chords in brackets. Downloading does not change your saved sheet.</p>
-      </div>
-
-      <div className={styles.practiceControls}>
-        <label>Chord diagrams
-          <select value={this.state.diagramMode} onChange={event => {
-            const diagramMode = event.target.value
-            this.setState({diagramMode})
-            try { localStorage.setItem("chord-sheet-diagrams:v1", diagramMode) } catch { /* Keep the session choice. */ }
-          }}>
-            <option value="block">Block diagrams</option>
-            <option value="line">Line diagrams</option>
-            <option value="hidden">Hidden</option>
-          </select>
-        </label>
-        <button type="button" disabled={!source.trim()} aria-pressed={this.state.practicing} onClick={this.togglePractice}>
-          {this.state.practicing ? "Exit practice view" : "Practice this sheet"}
-        </button>
-        {this.state.practicing && <>
-          <button type="button" aria-pressed={this.state.scrolling} onClick={this.state.scrolling ? this.pauseScroll : this.startScroll}>
-            {this.state.scrolling ? "Pause scrolling" : "Start scrolling"}
-          </button>
-          <button type="button" onClick={() => { this.pauseScroll(); this.preview.current.scrollTop = 0 }}>Back to top</button>
-          <label>Scroll speed: {this.state.scrollSpeed} px/s
-            <input type="range" min="5" max="100" step="5" value={this.state.scrollSpeed}
-              onChange={event => this.setState({scrollSpeed: Number(event.target.value)})} />
-          </label>
-          <p>Scroll manually to pause. Use Escape to leave practice view.</p>
-        </>}
-      </div>
-      <section ref={this.preview} className={styles.preview} aria-label="Chord sheet preview"
-        tabIndex={this.state.practicing ? 0 : undefined}
-        onWheel={this.pauseScroll} onTouchStart={this.pauseScroll} onPointerDown={this.pauseScroll}
-        onKeyDown={event => {
-          if (event.key === "Escape" && this.state.practicing) this.togglePractice()
-          if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(event.key)) this.pauseScroll()
-        }}>
-        <h2>{title.trim() || "Untitled song"}</h2>
-        {diagrams.length > 0 && <div className={styles.diagrams} aria-label="Chords used in this sheet">
-          {diagrams.map(({name, voicing}) => <div key={name}>
-            {!voicing ? <p>{name}: diagram unavailable</p> : this.state.diagramMode === "block"
-              ? <ChordDiagram {...voicing} name={name} caption />
-              : <code>{chordDiagramAscii(voicing.frets, name, "line")}</code>}
-          </div>)}
-        </div>}
-        {source.trim() ? parseChordSheet(source, shift, flats).map((line, lineIndex) =>
-          <div className={styles.line} key={lineIndex}>
-            {line.map(({chord, lyric}, segmentIndex) => <span className={styles.segment} key={segmentIndex}>
-              {chord && <strong>{chord}</strong>}
-              <span>{lyric}</span>
-            </span>)}
+        <section id="sheet-panel-create" role="tabpanel" aria-labelledby="sheet-tab-create" hidden={tab !== "create"} className={styles.editor}>
+          <div className={styles.actions}>
+            <div className={styles.sheetPicker}><span id="sheets-label">Sheets</span>
+              <details data-sheet-popover onToggle={event => { if (event.currentTarget.open) event.currentTarget.querySelector("input")?.focus() }}>
+                <summary aria-labelledby="sheets-label sheet-selection" onKeyDown={event => { if (event.key === "Escape") event.currentTarget.parentElement.open = false }}>
+                  <span id="sheet-selection">{selected?.title || "New sheet"}</span><span aria-hidden="true">⌄</span>
+                </summary>
+                <div className={styles.sheetMenu} onKeyDown={event => {
+                  if (event.key === "Escape") { const details = event.currentTarget.closest("details"); details.open = false; details.querySelector("summary").focus() }
+                }}>
+                  <input aria-label="Search sheets" type="search" placeholder="Search sheets…" value={this.state.songbookQuery}
+                    onChange={event => this.setState({songbookQuery: event.target.value})} />
+                  <div className={styles.sheetOptions}>
+                    <button type="button" onClick={event => { this.open(""); event.currentTarget.closest("details").open = false }}>+ New sheet</button>
+                    {visibleSheets.map(sheet => <button type="button" key={sheet.id} aria-pressed={activeId === sheet.id}
+                      onClick={event => { this.open(sheet.id); const details = event.currentTarget.closest("details"); details.open = false; details.querySelector("summary").focus() }}>
+                      <span>{sheet.title.trim() || "Untitled song"}</span><small>{STARTERS.some(s => s.id === sheet.id) ? "Starter" : "Saved"}</small>
+                    </button>)}
+                    {!visibleSheets.length && <p>No matching sheets.</p>}
+                  </div>
+                </div>
+              </details>
+            </div>
+            <label>Sort<select value={this.state.songbookSort} onChange={event => this.setState({songbookSort: event.target.value})}>
+              <option value="saved">Date</option><option value="title">A–Z</option>
+            </select></label>
+            <div className={styles.fileActions}>
+              <button ref={this.importButton} type="button" onClick={this.openImport}>Import</button>
+              <details data-sheet-popover className={styles.exportMenu}><summary>Export <span aria-hidden="true">⌄</span></summary>
+                <div className={styles.exportOptions} onClick={event => { event.currentTarget.closest("details").open = false }} onKeyDown={event => {
+                  if (event.key === "Escape") { const details = event.currentTarget.closest("details"); details.open = false; details.querySelector("summary").focus() }
+                }}>
+                  <button type="button" disabled={!sheets.length} onClick={() => this.downloadBackup()}>Download JSON songbook</button>
+                  <button type="button" disabled={!source.trim()} onClick={() => this.downloadText()}>Download Chord Sheet text</button>
+                  <button type="button" disabled={!source.trim()} onClick={() => window.print()}>Print / Save PDF</button>
+                </div>
+              </details>
+              <button className={styles.iconButton} type="button" title="Save sheet" aria-label="Save sheet" disabled={!title.trim() && !source.trim()} onClick={() => this.save()}><SaveIcon /></button>
+              <button className={styles.iconButton} type="button" title="Delete saved sheet" aria-label="Delete saved sheet" disabled={!sheets.some(sheet => sheet.id === activeId)} onClick={() => this.remove()}><DeleteIcon /></button>
+            </div>
           </div>
-        ) : <p>Add chords or lyrics to preview your sheet.</p>}
-      </section>
-      <Toast message={notice} notificationId={noticeId}
-        onDismiss={() => this.setState({notice: ""})} />
+          <label>Song title<input value={title} maxLength={SHEET_TITLE_LIMIT} onChange={event => this.setState({title: event.target.value})} /></label>
+          <label>Chords and lyrics<textarea value={source} maxLength={SHEET_SOURCE_LIMIT} rows={16} onChange={event => this.setState({source: event.target.value})} /></label>
+        </section>
+        <section id="sheet-panel-practice" role="tabpanel" aria-labelledby="sheet-tab-practice" hidden={tab !== "practice"} className={styles.practice}>
+          <div className={styles.practiceControls}>
+            <label>Transpose<select value={shift} onChange={event => this.setState({shift: Number(event.target.value)})}>
+              {Array.from({length: 25}, (_, i) => i - 12).map(steps => <option key={steps} value={steps}>{steps === 0 ? "Original key" : `${steps > 0 ? "+" : ""}${steps} semitones`}</option>)}
+            </select></label>
+            <label>Accidentals<select value={flats ? "flats" : "sharps"} onChange={event => this.setState({flats: event.target.value === "flats"})}><option value="sharps">Sharps</option><option value="flats">Flats</option></select></label>
+            <label>Diagrams<select value={this.state.diagramMode} onChange={event => this.setState({diagramMode: event.target.value})}><option value="block">Block</option><option value="line">Line</option><option value="hidden">Hidden</option></select></label>
+            <button type="button" disabled={!source.trim()} aria-pressed={this.state.scrolling} onClick={this.state.scrolling ? this.pauseScroll : this.startScroll}>{this.state.scrolling ? "Pause scrolling" : "Start scrolling"}</button>
+            <button className={styles.iconButton} type="button" title="Back to top" aria-label="Back to top" onClick={() => { this.pauseScroll(); this.preview.current.scrollTop = 0; this.setState({scrollTop: 0}) }}>↥</button>
+            <label>Speed<input aria-label="Scroll speed" type="range" min="5" max="100" step="5" value={this.state.scrollSpeed} onChange={event => this.setState({scrollSpeed: Number(event.target.value)})} /></label>
+          </div>
+          {this.renderPreview()}
+        </section>
+        <section id="sheet-panel-info" role="tabpanel" aria-labelledby="sheet-tab-info" hidden={tab !== "info"} className={styles.info}>
+          <h2>Create a sheet</h2>
+          <p>Put chords in brackets just before the words they go with, like <code>[Am]Here comes [F]the chorus</code>. Use blank lines between sections. For an instrumental line, enter just the chords.</p>
+          <p>Sheets searches titles and lyrics in both your saved sheets and starter songs. Date keeps the saved order; A–Z sorts by title. Starter originals cannot be deleted or overwritten. Saving a starter creates your own editable copy.</p>
+          <h2>Save and return</h2>
+          <p>The save icon updates an open saved sheet or creates a new copy. The delete icon deletes only personal saved sheets, after confirmation. Your last tab, search, sort, settings, scroll position, and unsaved edits are restored in this browser. Automatic scrolling stays paused when you return.</p>
+          <h2>Import and export</h2>
+          <p>Import a JSON songbook backup or a UTF-8 text / ChordPro file. Songbook import keeps existing sheets and skips unchanged copies of previously imported sheets. Text import opens a new unsaved sheet in its written key; the filename supplies a missing title.</p>
+          <p>ChordPro titles, artists, comments, sections, and capo notes are imported; other directives stay visible. Capo notes do not transpose chords. Text sheets can contain up to 16,000 characters; songbook backups can be up to 32 MB.</p>
+          <p>Download JSON songbook includes saved personal sheets only, so save edits before making a backup. Download Chord Sheet text includes current edits and transposition with bracketed chords. Print / Save PDF prints the rendered sheet, including the selected diagram style.</p>
+          <h2>Practice</h2>
+          <p>Practice shows chords above the lyrics. Transpose the sheet, choose sharps or flats, and display block diagrams, line diagrams, or no diagrams. Start scrolling and adjust the speed. Scroll manually to pause, or use Back to top. Escape returns to Create. Tab changes pause scrolling.</p>
+        </section>
+      </div>
+      {this.state.importOpen && <dialog ref={this.importDialog} className={styles.importDialog} aria-labelledby="sheet-import-title" onCancel={event => { event.preventDefault(); this.closeImport() }}>
+        <div className={styles.modalHeading}><h2 id="sheet-import-title">Import</h2><button type="button" aria-label="Close import" disabled={this.state.importing || this.state.importingText} onClick={this.closeImport}>×</button></div>
+        <fieldset disabled={this.state.importing || this.state.importingText}>
+          <legend>Format</legend>
+          <label><input type="radio" name="import-format" checked={this.state.importMode === "songbook"} onChange={() => this.setState({importMode: "songbook", importFile: null, importError: "", textImportError: ""})} /> JSON songbook</label>
+          <label><input type="radio" name="import-format" checked={this.state.importMode === "text"} onChange={() => this.setState({importMode: "text", importFile: null, importError: "", textImportError: ""})} /> Text / ChordPro</label>
+          <input key={this.state.importMode} type="file" aria-label="Choose import file" accept={this.state.importMode === "songbook" ? ".json,application/json" : ".txt,.cho,.crd,.chordpro,.pro,text/plain"} onChange={event => this.setState({importFile: event.target.files[0], importError: "", textImportError: ""})} />
+        </fieldset>
+        {(this.state.importError || this.state.textImportError) && <p role="alert">{this.state.importError || this.state.textImportError}</p>}
+        <div className={styles.modalActions}><button type="button" disabled={this.state.importing || this.state.importingText} onClick={this.closeImport}>Cancel</button><button type="button" disabled={!this.state.importFile || this.state.importing || this.state.importingText} onClick={this.submitImport}>{this.state.importing || this.state.importingText ? "Importing…" : "Import"}</button></div>
+      </dialog>}
+      <Toast message={notice} notificationId={noticeId} onDismiss={() => this.setState({notice: ""})} />
     </main>
   }
 }

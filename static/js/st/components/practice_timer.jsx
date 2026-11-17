@@ -1,4 +1,5 @@
 import * as React from "react"
+import {IconTimer} from "st/components/control_icons"
 import Toast from "st/components/toast"
 import {advanceTimer, formatCountdown} from "st/practice_timer"
 import styles from "./practice_timer.module.css"
@@ -94,10 +95,12 @@ export default class PracticeTimer extends React.Component {
 
     return <>
       <button type="button" className={styles.launcher} ref={this.toggleButton}
+        title={active ? `Practice timer · ${formatCountdown(countdown)}` : "Practice timer"}
+        aria-label={active ? `Practice timer, ${formatCountdown(countdown)} remaining` : "Practice timer"}
         aria-expanded={open} aria-controls="practice-timer-panel" onClick={() => {
           if (open) this.closePanel()
           else this.setState({open: true}, () => this.panel.current.focus())
-        }}>Practice timer{active ? ` · ${formatCountdown(countdown)}` : ""}</button>
+        }}><IconTimer width={22} /></button>
 
       <aside id="practice-timer-panel" hidden={!open} className={styles.panel}
         aria-labelledby="practice-timer-heading" ref={this.panel} tabIndex={-1}

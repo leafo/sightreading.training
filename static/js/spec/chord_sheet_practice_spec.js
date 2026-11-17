@@ -91,3 +91,113 @@ describe("Starter chord songs and diagrams", () => {
     expect(sheetChordDiagrams("plain lyrics")).toEqual([])
   })
 })
+
+describe("Chord Sheet Maker workspace recovery", () => {
+  let page, previousStorage, previousWindow, previousCancel, data
+  beforeEach(() => {
+    data = new Map()
+    previousStorage = globalThis.localStorage
+    previousWindow = globalThis.window
+    previousCancel = globalThis.cancelAnimationFrame
+    globalThis.localStorage = {
+      getItem: key => data.get(key) ?? null,
+      setItem: (key, value) => data.set(key, value)
+    }
+    globalThis.window = {confirm: () => true}
+    globalThis.cancelAnimationFrame = () => {}
+    page = new ChordSheetPage({})
+    page.setState = (update, callback) => {
+      Object.assign(page.state, typeof update === "function" ? update(page.state) : update)
+      callback?.()
+    }
+  })
+  afterEach(() => {
+    globalThis.localStorage = previousStorage
+    globalThis.window = previousWindow
+    globalThis.cancelAnimationFrame = previousCancel
+  })
+  it("opens Whiskey on first visit and recovers unsaved starter edits and preferences", () => {
+    page.loadEditor()
+    expect(page.state.title).toBe("Whiskey in the Jar")
+    expect(page.state.activeId).toBe("starter:whiskey-in-the-jar")
+    Object.assign(page.state, {source: "[C]An unsaved edit", tab: "practice", songbookQuery: "grace", songbookSort: "title", diagramMode: "line", scrollSpeed: 65, scrollTop: 100})
+    page.persistEditor()
+    page.state = {...page.state, source: "lost", tab: "create", scrolling: false}
+    page.loadEditor()
+    expect(page.state.source).toBe("[C]An unsaved edit")
+    expect(page.state.activeId).toBe("starter:whiskey-in-the-jar")
+    expect(page.state.tab).toBe("practice")
+    expect(page.state.practicing).toBe(true)
+    expect(page.state.scrolling).toBe(false)
+    expect(page.state.scrollTop).toBe(100)
+    expect(page.state.diagramMode).toBe("line")
+    expect(page.state.scrollSpeed).toBe(65)
+    expect(page.state.songbookQuery).toBe("grace")
+    expect(page.state.songbookSort).toBe("title")
+  })
+  it("saves a personal copy of a starter and never deletes its original", () => {
+    page.loadEditor()
+    page.remove()
+    expect(page.state.title).toBe("Whiskey in the Jar")
+    page.save()
+    expect(page.state.sheets.length).toBe(1)
+    expect(page.state.activeId.startsWith("starter:")).toBe(false)
+    const id = page.state.activeId
+    page.setState({source: "[G]Personal changes"})
+    page.save()
+    expect(page.state.sheets.length).toBe(1)
+    expect(page.state.activeId).toBe(id)
+    page.remove()
+    expect(page.state.sheets.length).toBe(0)
+    page.open("starter:whiskey-in-the-jar")
+    expect(page.state.source).toBe(STARTER_SHEETS[0].source)
+  })
+  it("can reset a new unsaved sheet and preserves an intentionally blank draft", () => {
+    page.loadEditor()
+    page.open("")
+    page.setState({title: "Unsaved", source: "[C]Draft"})
+    page.open("")
+    expect(page.state.source).toBe("")
+    page.persistEditor()
+    page.loadEditor()
+    expect(page.state.title).toBe("")
+    expect(page.state.source).toBe("")
+    expect(page.state.activeId).toBe("")
+  })
+  it("pauses when changing tabs and keeps the practice position", () => {
+    page.setState({tab: "practice", practicing: true, scrolling: true, scrollTop: 200})
+    page.preview.current = {scrollTop: 200, focus() {}}
+    page.selectTab("info")
+    expect(page.state.scrolling).toBe(false)
+    expect(page.state.practicing).toBe(false)
+    page.selectTab("practice")
+    expect(page.preview.current.scrollTop).toBe(200)
+    expect(page.state.practicing).toBe(true)
+  })
+  it("recovers songs independently of corrupt UI preferences and bounds numeric preferences", () => {
+    page.loadEditor()
+    page.setState({source: "[G]Recovered"})
+    page.persistEditor()
+    data.set("chord-sheet-ui:v1", "broken")
+    page.loadEditor()
+    expect(page.state.source).toBe("[G]Recovered")
+    data.set("chord-sheet-ui:v1", JSON.stringify({version: 1, scrollSpeed: 10000, scrollTop: -9, tab: "invalid"}))
+    page.loadEditor()
+    expect(page.state.scrollSpeed).toBe(100)
+    expect(page.state.scrollTop).toBe(0)
+  })
+  it("keeps an invalid import in the dialog and imports ChordPro as a new sheet", async () => {
+    page.loadEditor()
+    page.setState({importOpen: true, importMode: "text", importFile: {size: 2, name: "empty.txt", text: async () => ""}})
+    await page.submitImport()
+    expect(page.state.importOpen).toBe(true)
+    expect(page.state.textImportError).toBeTruthy()
+    page.setState({importFile: {size: 40, name: "test.cho", text: async () => "{title: Imported}\n[C]Hello"}})
+    await page.submitImport()
+    expect(page.state.importOpen).toBe(false)
+    expect(page.state.title).toBe("Imported")
+    expect(page.state.source).toContain("[C]Hello")
+    expect(page.state.activeId).toBe("")
+    expect(page.state.importingText).toBe(false)
+  })
+})

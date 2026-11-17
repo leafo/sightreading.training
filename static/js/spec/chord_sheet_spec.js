@@ -365,10 +365,13 @@ describe("Songbook search", () => {
       visit(node.props?.children)
     }
     visit(tree)
-    const options = elements.filter(node => node.type === "option")
-    expect(options.some(node => node.props.value === "1")).toBe(true)
-    expect(options.some(node => node.props.value === "2")).toBe(true)
-    expect(options.some(node => node.props.value === "3")).toBe(false)
+    // The current sheet stays named in the trigger even when filtered out.
+    expect(elements.find(node => node.props?.id === "sheet-selection").props.children).toBe("Song 10")
+    const choices = elements.filter(node => node.type === "button" && node.props["aria-pressed"] !== undefined && node.props.children?.[0]?.type === "span")
+    const text = choices.map(node => node.props.children[0].props.children)
+    expect(text).toContain("Song 2")
+    expect(text).not.toContain("Song 10")
+    expect(text).not.toContain("Untitled song")
     expect(page.state.title).toBe("Unsaved title")
     expect(page.state.source).toBe("Unsaved lyrics")
     expect(page.state.activeId).toBe("1")
