@@ -17,8 +17,8 @@
         }
 
         > button {
-            min-height: 44px;
-            padding: 10px 16px;
+            min-height: var(--control-height);
+            padding: 4px 12px;
             cursor: pointer;
             color: color-mix(in oklab, var(--button-color), black 10%);
             border-color: color-mix(in srgb, var(--button-color), transparent 20%);

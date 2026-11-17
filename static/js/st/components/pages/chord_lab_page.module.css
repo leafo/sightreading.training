@@ -19,7 +19,7 @@
 }
 
 .page select, .page button {
-  min-height: 44px;
+  min-height: var(--control-height);
   font: inherit;
 }
 
@@ -31,10 +31,10 @@
 .page_heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 4px; h1 { margin: 0; letter-spacing: -.8px; } p { color: var(--text-muted); } }
 .analysis { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px; padding: 12px; margin-top: 4px; background: var(--surface); border: 1px solid var(--border-color); border-radius: 12px; section { flex: 1; min-width: min(240px, 100%); } h2 { margin-top: 0; } }
 .heading_actions { display: flex; align-items: center; gap: 20px; }
-.match_list { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; button { min-height: 44px; cursor: pointer; } button[aria-pressed="true"] { outline: 2px solid var(--button-color); outline-offset: 2px; } }
+.match_list { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; button { min-height: var(--control-height); cursor: pointer; } button[aria-pressed="true"] { outline: 2px solid var(--button-color); outline-offset: 2px; } }
 .variants { background: var(--surface); padding: 24px; border: 1px solid var(--border-color); border-radius: 12px; margin-top: 24px; }
 .suggestion + .suggestion { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); }
-.suggestion summary { cursor: pointer; min-height: 44px; }
+.suggestion summary { cursor: pointer; min-height: var(--control-height); }
 .match_list { display: flex; flex-wrap: wrap; gap: 8px;
   > button { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; border-radius: 8px 8px 0 0; background: var(--surface-muted); color: var(--body-color); box-shadow: none; border: 1px solid var(--border-color); }
   > button[aria-selected="true"] { border-bottom: 3px solid var(--button-color); background: var(--surface); }
@@ -45,4 +45,4 @@
 
 .degree_context { margin-top: 0; margin-bottom: 0; }
 
-.reset { display: grid; place-items: center; width: 44px; height: 44px; padding: 8px; border-radius: 8px; cursor: pointer; flex: none; }
+.reset { display: grid; place-items: center; width: var(--control-height); height: var(--control-height); padding: 5px; border-radius: 8px; cursor: pointer; flex: none; }

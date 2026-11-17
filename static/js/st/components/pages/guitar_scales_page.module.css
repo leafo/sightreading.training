@@ -17,7 +17,7 @@
 }
 
 .controls select {
-  min-height: 44px;
+  min-height: var(--control-height);
   font: inherit;
 }
 

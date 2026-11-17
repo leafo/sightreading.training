@@ -1,4 +1,5 @@
 import * as React from "react"
+import {IconChordLab} from "st/components/control_icons"
 import {searchChords} from "st/chord_reference"
 import {guitarChordVoicings, assignFingers} from "st/guitar_chords"
 import {parseChordSheet, exportChordSheet} from "st/chord_sheet"
@@ -76,7 +77,7 @@ export default function SheetVoicings({source, shift, flats, activeChord, onActi
           return <div className={styles.voicingCard} key={key}>
             <label><input type="checkbox" checked={!!match} onChange={() => match ? remove(match) : change(addDefinition(normalized, name, shape.frets).source)} />{match?.alias || shape.category}</label>
             <ChordDiagram {...shape} name={name} /><code>{key}</code>{used && <small>Used in lyrics</small>}
-            <button type="button" onClick={() => onLab(name, shape.frets, match?.alias)}>Open in Lab</button>
+            <button type="button" onClick={() => onLab(name, shape.frets, match?.alias)} className={styles.labAction} aria-label={`Open ${name} in Chord Lab`} title={`Open ${name} in Chord Lab`}><IconChordLab /></button>
           </div>
         })}
       </div>
@@ -103,7 +104,7 @@ export default function SheetVoicings({source, shift, flats, activeChord, onActi
           <button type="button" disabled={!i} aria-label={`Move ${d.alias} up`} onClick={() => move(d, -1)}>↑</button>
           <button type="button" disabled={i === selected.length - 1} aria-label={`Move ${d.alias} down`} onClick={() => move(d, 1)}>↓</button>
           <button type="button" onClick={() => onInsert(`[${name}:${d.alias}]`, normalized)}>Insert into lyrics</button>
-          <button type="button" onClick={() => onLab(name, d.frets, d.alias)}>Open in Lab</button>
+          <button type="button" onClick={() => onLab(name, d.frets, d.alias)} className={styles.labAction} aria-label={`Open ${name} in Chord Lab`} title={`Open ${name} in Chord Lab`}><IconChordLab /></button>
           <button type="button" onClick={() => remove(d)}>Remove</button></div>
       </div>)}
       {(selected[0] || candidates[0]) && <p><code>{voicingToken(name, (selected[0] || candidates[0]).frets)}</code> also works when pasted directly into lyrics.</p>}
