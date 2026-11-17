@@ -14,3 +14,15 @@ export function IconEye({hidden = false}) {
     {hidden && <path d="m3 3 18 18"/>}
   </svg>
 }
+
+export function IconVoicings() {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+    <path d="M4 4h16M4 10h16M4 16h16M6 3v18M12 3v18M18 3v18"/><circle cx="6" cy="10" r="2" fill="currentColor"/><circle cx="18" cy="16" r="2" fill="currentColor"/>
+  </svg>
+}
+
+export function IconChordLab() {
+  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M9 3h6M10 3v7L4 19a1.3 1.3 0 0 0 1 2h14a1.3 1.3 0 0 0 1-2l-6-9V3M7 15h10"/><circle cx="11" cy="18" r=".7" fill="currentColor"/>
+  </svg>
+}

@@ -9,9 +9,9 @@
 .controls label { display: flex; gap: 8px; align-items: center; font-size: 14px; }
 .controls input[type=number] { width: 64px; }
 .controls input[type=range] { width: 100px; }
-.page input, .page select { padding: 6px; font: inherit; }
+.page input, .page select { padding: var(--control-padding-y) var(--control-padding-x); font: inherit; }
 .page button:focus-visible, .page input:focus-visible, .page select:focus-visible, .scroll:focus-visible { outline: 3px solid #3269b0; outline-offset: 2px; }
-.iconButton { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 8px; flex: none; }
+.iconButton { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; width: var(--control-height); height: var(--control-height); padding: 5px; flex: none; }
 .play { background: #47476d; }
 .sectionHeader { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .help { color: var(--body-color); }
@@ -31,7 +31,7 @@
 .grid .playhead .step { box-shadow: 0 0 0 2px #48863b; }
 .grid button.muted { opacity: 0.6; text-decoration: line-through; }
 .presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.presets button { overflow-wrap: anywhere; text-align: left; padding: 10px; }
+.presets button { overflow-wrap: anywhere; text-align: left; padding: 4px 8px; }
 .presets small { display: block; font-weight: normal; margin-top: 5px; }
 .patternManager { width: 315px; max-width: 100%; min-width: 0; text-align: right; }
 .patternManager small { display: block; margin-top: 6px; color: var(--body-color); font-size: 12px; }

@@ -13,8 +13,8 @@
 .page input {
   box-sizing: border-box;
   width: min(100%, 26rem);
-  min-height: 44px;
-  padding: 6px 10px;
+  min-height: var(--control-height);
+  padding: var(--control-padding-y) var(--control-padding-x);
   font: inherit;
 }
 
@@ -56,8 +56,8 @@
 }
 
 .suggestions button {
-  min-height: 44px;
-  padding: 6px 12px;
+  min-height: var(--control-height);
+  padding: var(--control-padding-y) var(--control-padding-x);
   font: inherit;
 }
 
@@ -72,11 +72,11 @@
   position: sticky;
   top: 74px;
   label { margin-top: 20px; font-weight: 600; }
-  select { display: block; width: 100%; min-height: 44px; font: inherit; margin-top: 8px; }
+  select { display: block; width: 100%; min-height: var(--control-height); font: inherit; margin-top: 8px; }
   p { font-size: 13px; line-height: 1.6; color: var(--text-muted); }
 }
 .root_picker { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
-.root_picker button { padding: 4px; min-height: 40px; background: var(--surface-muted); color: var(--body-color); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; }
+.root_picker button { padding: 4px; min-height: var(--control-height); background: var(--surface-muted); color: var(--body-color); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; }
 .root_picker button[aria-pressed="true"] { background: var(--button-color); color: white; }
 .chord_panel { min-width: 0; }
 .results { margin-top: 16px; }

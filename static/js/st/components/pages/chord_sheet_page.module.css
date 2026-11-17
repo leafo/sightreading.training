@@ -3,13 +3,13 @@
 .workspace { background: var(--surface); border: 1px solid var(--border-color); border-radius: 12px; padding: clamp(16px, 3vw, 28px); }
 .page label { display: grid; gap: 6px; min-width: 0; }
 .page :is(input, textarea, select, button, summary) { box-sizing: border-box; font: inherit; }
-.page :is(input, select, button, summary) { min-height: 44px; }
+.page :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, button, summary) { min-height: var(--control-height); }
 .page :is(input, textarea, select) { max-width: 100%; }
 .page :is(button, summary) { cursor: pointer; }
 .page :is(button, input, textarea, select, summary, section):focus-visible { outline: 2px solid var(--button-color); outline-offset: 3px; }
 .page button:disabled { cursor: default; opacity: .4; }
 .tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--border-color); margin-bottom: 24px; }
-.tabs button { border: 0; border-radius: 0; background: transparent; color: var(--body-color); box-shadow: none; padding: 10px 24px; border-bottom: 3px solid transparent; }
+.tabs button { border: 0; border-radius: 0; background: transparent; color: var(--body-color); box-shadow: none; padding: 4px 16px; border-bottom: 3px solid transparent; }
 .tabs button[aria-selected="true"] { font-weight: bold; border-bottom-color: var(--button-color); }
 .actions, .practiceControls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
 .editor > label { margin-top: 20px; }
@@ -17,21 +17,21 @@
 .editor textarea { font: 1rem/1.6 monospace; resize: vertical; padding: 14px; min-height: 320px; }
 .sheetPicker { display: grid; gap: 6px; width: min(320px, 100%); }
 .sheetPicker details, .exportMenu { position: relative; }
-.sheetPicker summary, .exportMenu summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 12px; list-style: none; }
+.sheetPicker summary, .exportMenu summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 10px; list-style: none; }
 .sheetPicker summary span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .page summary::-webkit-details-marker { display: none; }
 .sheetMenu, .exportOptions { position: absolute; top: calc(100% + 6px); z-index: 10; background: var(--surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; box-shadow: 0 8px 24px rgb(0 0 0 / 15%); }
 .sheetMenu { width: min(360px, calc(100vw - 72px)); left: 0; }
 .sheetMenu input { width: 100%; margin-bottom: 8px; }
 .sheetOptions { max-height: 300px; overflow-y: auto; }
-.sheetOptions button, .exportOptions button { display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; width: 100%; padding: 10px; color: var(--body-color); background: transparent; border: 0; box-shadow: none; }
+.sheetOptions button, .exportOptions button { display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; width: 100%; padding: 4px 8px; color: var(--body-color); background: transparent; border: 0; box-shadow: none; }
 .sheetOptions button span { overflow-wrap: anywhere; }
 .sheetOptions small { color: var(--text-muted); background: var(--surface-muted); border-radius: 4px; padding: 3px 6px; }
 .sheetOptions button[aria-pressed="true"], .sheetOptions button:hover, .exportOptions button:hover { background: var(--surface-muted); }
 .fileActions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
 .exportMenu summary { background: var(--button-color); color: white; }
 .exportOptions { right: 0; width: min(290px, calc(100vw - 72px)); }
-.iconButton { display: inline-grid; place-items: center; padding: 10px; min-width: 44px; }
+.iconButton { display: inline-grid; place-items: center; padding: 5px; min-width: var(--control-height); }
 .practiceControls { padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
 .practiceControls label { max-width: 190px; }
 .preview { height: 65vh; overflow-y: auto; overscroll-behavior: contain; overflow-wrap: anywhere; padding: 24px 4px; font-size: 1.2rem; }
@@ -76,7 +76,7 @@
 .voicingPanel h2 { font-size: 1.25rem; }
 .voicingPanel p { font-size: .9rem; line-height: 1.5; }
 .chordTabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0; }
-.chordTabs button { padding: 6px 10px; }
+.chordTabs button { padding: var(--control-padding-y) var(--control-padding-x); }
 .chordTabs button[aria-pressed="true"] { outline: 2px solid var(--button-color); outline-offset: 1px; }
 .voicingFieldset { border: 0; padding: 0; min-width: 0; }
 .voicingFieldset legend { font-size: 1.3rem; font-weight: bold; }
@@ -86,13 +86,13 @@
 .voicingCard label { display: flex; align-items: center; font-size: .85rem; overflow-wrap: anywhere; }
 .voicingCard figure { width: 100% !important; max-width: 150px; margin: 0 auto; }
 .voicingCard code { font-size: .8rem; display: block; overflow-wrap: anywhere; }
-.voicingCard button { font-size: .8rem; width: 100%; }
+.voicingCard button { font-size: .8rem; }
 .selectedVoicing { border-top: 1px solid var(--border-color); padding: 12px 0; display: grid; gap: 8px; }
 .selectedVoicing > div { display: flex; gap: 4px; flex-wrap: wrap; }
 .selectedVoicing button { font-size: .8rem; }
 .incoming { border: 2px solid var(--button-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
 .incoming button { margin: 8px 8px 0 0; }
-.diagramAction { display: block; background: transparent; color: var(--body-color); border: 0; box-shadow: none; font-size: .75rem !important; padding: 4px; }
+.page .diagramAction, .page .labAction { display: inline-grid; place-items: center; width: var(--control-icon-size); min-width: var(--control-icon-size); height: var(--control-icon-size); min-height: var(--control-icon-size); margin: 4px 4px 0 0; background: transparent; color: var(--body-color); border: 0; box-shadow: none; font-size: .75rem !important; padding: 4px; }
 .lyricChord { background: transparent; color: inherit; font: inherit !important; font-weight: bold !important; border: 0; box-shadow: none; padding: 0 .5ch 0 0; min-height: unset !important; text-align: left; }
 .lyricChord small { display: block; font-size: .65em; font-weight: normal; }
 @media (max-width: 900px) {
@@ -108,3 +108,5 @@
 }
 .voicingPanel .modalHeading { position: sticky; top: 0; z-index: 3; background: var(--surface); padding-bottom: 8px; }
 .voicingCard figure { box-sizing: border-box; }
+
+.page .diagramAction:hover, .page .labAction:hover { background: var(--surface-muted); color: var(--body-color); }

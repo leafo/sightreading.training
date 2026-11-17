@@ -1,4 +1,5 @@
 import * as React from "react"
+import {IconVoicings, IconChordLab} from "st/components/control_icons"
 
 import {setTitle} from "st/globals"
 import {STARTER_SHEETS} from "st/starter_sheets"
@@ -416,8 +417,8 @@ export default class ChordSheetPage extends React.Component {
           {!voicing ? <p role={error ? "alert" : undefined}>{name}{alias ? ` · ${alias}` : ""}: {error || "diagram unavailable"}</p> : diagramMode === "block"
             ? <ChordDiagram {...voicing} name={name} caption={alias ? `${name} · ${alias}` : true} />
             : <code>{chordDiagramAscii(voicing.frets, name, "line")}{alias ? ` · ${alias}` : ""}</code>}
-          <button className={styles.diagramAction} type="button" onClick={() => { this.pauseScroll(); this.setState({voicingsOpen: true, activeChord: name}) }}>Choose voicings</button>
-          {voicing && <button className={styles.diagramAction} type="button" onClick={() => this.openVoicingLab(name, voicing.frets, alias)}>Open in Lab</button>}
+          <button className={styles.diagramAction} type="button" onClick={() => { this.pauseScroll(); this.setState({voicingsOpen: true, activeChord: name}) }} aria-label={`Choose voicings for ${name}`} title={`Choose voicings for ${name}`}><IconVoicings /></button>
+          {voicing && <button className={styles.diagramAction} type="button" onClick={() => this.openVoicingLab(name, voicing.frets, alias)} aria-label={`Open ${name} in Chord Lab`} title={`Open ${name} in Chord Lab`}><IconChordLab /></button>}
         </div>)}
       </div>}
       {source.trim() ? parseChordSheet(source, shift, flats).map((line, lineIndex) =>
@@ -513,7 +514,7 @@ export default class ChordSheetPage extends React.Component {
               <button className={styles.iconButton} type="button" title="Delete saved sheet" aria-label="Delete saved sheet" disabled={!sheets.some(sheet => sheet.id === activeId)} onClick={() => this.remove()}><DeleteIcon /></button>
             </div>
           </div>
-          <button type="button" aria-controls="sheet-voicing-panel" aria-expanded={this.state.voicingsOpen} onClick={() => { this.pauseScroll(); this.setState({voicingsOpen: !this.state.voicingsOpen}) }}>Voicings</button>
+          <button type="button" className={styles.iconButton} aria-label="Choose voicings" title="Choose voicings" aria-controls="sheet-voicing-panel" aria-expanded={this.state.voicingsOpen} onClick={() => { this.pauseScroll(); this.setState({voicingsOpen: !this.state.voicingsOpen}) }}><IconVoicings /></button>
           <label>Song title<input value={title} maxLength={SHEET_TITLE_LIMIT} onChange={event => this.setState({title: event.target.value})} /></label>
           <label>Chords and lyrics<textarea ref={this.editorInput} onBlur={event => { this.insertPosition = event.currentTarget.selectionStart }} onSelect={event => { this.insertPosition = event.currentTarget.selectionStart }} value={source} maxLength={SHEET_SOURCE_LIMIT} rows={16} onChange={event => this.setState({source: event.target.value})} /></label>
         </section>
@@ -524,7 +525,7 @@ export default class ChordSheetPage extends React.Component {
             </select></label>
             <label>Accidentals<select value={flats ? "flats" : "sharps"} onChange={event => this.setState({flats: event.target.value === "flats"})}><option value="sharps">Sharps</option><option value="flats">Flats</option></select></label>
             <label>Diagrams<select value={this.state.diagramMode} onChange={event => this.setState({diagramMode: event.target.value})}><option value="block">Block</option><option value="line">Line</option><option value="hidden">Hidden</option></select></label>
-            <button type="button" aria-controls="sheet-voicing-panel" aria-expanded={this.state.voicingsOpen} onClick={() => { this.pauseScroll(); this.setState({voicingsOpen: !this.state.voicingsOpen}) }}>Voicings</button>
+            <button type="button" className={styles.iconButton} aria-label="Choose voicings" title="Choose voicings" aria-controls="sheet-voicing-panel" aria-expanded={this.state.voicingsOpen} onClick={() => { this.pauseScroll(); this.setState({voicingsOpen: !this.state.voicingsOpen}) }}><IconVoicings /></button>
             <button type="button" disabled={!source.trim()} aria-pressed={this.state.scrolling} onClick={this.state.scrolling ? this.pauseScroll : this.startScroll}>{this.state.scrolling ? "Pause scrolling" : "Start scrolling"}</button>
             <button className={styles.iconButton} type="button" title="Back to top" aria-label="Back to top" onClick={() => { this.pauseScroll(); this.preview.current.scrollTop = 0; this.setState({scrollTop: 0}) }}>↥</button>
             <label>Speed<input aria-label="Scroll speed" type="range" min="5" max="100" step="5" value={this.state.scrollSpeed} onChange={event => this.setState({scrollSpeed: Number(event.target.value)})} /></label>

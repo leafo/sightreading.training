@@ -25,7 +25,7 @@
         border: 1px solid color-mix(in oklab, var(--border-color), white 10%);
         font-family: 'Raleway', sans-serif;
         font-size: 16px;
-        padding: 8px 16px;
+        padding: var(--control-padding-y) var(--control-padding-x);
         width: 50%;
     }
 
