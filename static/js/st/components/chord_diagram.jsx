@@ -2,6 +2,7 @@ import * as React from "react"
 import {useDiagramSize, diagramWidth} from "st/diagram_size"
 import Toast from "st/components/toast"
 import {diagramNote, diagramRange, diagramTones, copyChordDiagram, FRET_MARKERS} from "st/chord_diagram_data"
+import {voicingToken} from "st/voicing_markup"
 import {STRING_NAMES} from "st/guitar_chords"
 import styles from "./guitar_visuals.module.css"
 
@@ -17,7 +18,7 @@ export default function ChordDiagram({frets, fingers, name = "Guitar chord", lab
     const menu = event.currentTarget.closest("details")
     menu.open = false
     menu.querySelector("summary").focus()
-    try { await copyChordDiagram(frets, name, format); setMessage("Diagram copied") }
+    try { if (format === "markup") await navigator.clipboard.writeText(voicingToken(name, frets)); else await copyChordDiagram(frets, name, format); setMessage("Diagram copied") }
     catch { setMessage("Could not copy. Allow clipboard access and try again.") }
   }
   const bottom = 50 + rows * spacing
@@ -27,7 +28,7 @@ export default function ChordDiagram({frets, fingers, name = "Guitar chord", lab
       <summary aria-label="Copy chord diagram" title="Copy as">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2" /><path d="M16 8V3H3v13h5" /></svg>
       </summary>
-      <div role="group" aria-label="Copy as"><span>Copy as</span><button type="button" onClick={event => copy(event, "block")}>Block</button><button type="button" onClick={event => copy(event, "line")}>Line</button></div>
+      <div role="group" aria-label="Copy as"><span>Copy as</span><button type="button" onClick={event => copy(event, "block")}>Block</button><button type="button" onClick={event => copy(event, "line")}>Line</button><button type="button" onClick={event => copy(event, "markup")}>Chord Sheet markup</button></div>
     </details>
     <svg viewBox={`0 0 ${right + 35} ${bottom + 30}`} role="img" aria-label={`${name}: ${summary}`}>
       <title>{`${name}: ${summary}`}</title>
@@ -62,7 +63,7 @@ export default function ChordDiagram({frets, fingers, name = "Guitar chord", lab
       {Array.from({length: rows}, (_, row) => start + row).filter(fret => FRET_MARKERS.includes(fret)).map(fret =>
         <text key={`label${fret}`} x="4" y={50 + (fret - start + .5) * spacing + 6} fill="currentColor" fontSize="18">{fret}</text>)}
     </svg>
-    {caption && <figcaption>{name}</figcaption>}
+    {caption && <figcaption>{typeof caption === "string" ? caption : name}</figcaption>}
     <Toast message={message} onDismiss={() => setMessage(null)} />
   </figure>
 }

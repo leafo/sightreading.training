@@ -3,7 +3,7 @@ import {ROOTS, SCALE_TYPES} from "st/guitar_scales"
 const choose = (value, choices, fallback) => choices.includes(value) ? value : fallback
 const diagramLabels = ["fingers", "notes", "intervals", "both"]
 const labels = ["notes", "degrees", "both"]
-const frets = value => Array.isArray(value) && value.length === 6 && value.every(fret => fret === null || Number.isInteger(fret) && fret >= 0 && fret <= 12) ? [...value] : Array(6).fill(null)
+const frets = value => Array.isArray(value) && value.length === 6 && value.every(fret => fret === null || Number.isInteger(fret) && fret >= 0 && fret <= 24) ? [...value] : Array(6).fill(null)
 export function scalesState(value = {}) {
   return {root: choose(value.root, ROOTS, "A"), type: choose(value.type, Object.keys(SCALE_TYPES), "Minor pentatonic"),
     instrument: choose(value.instrument, ["guitar", "piano"], "guitar"), labels: choose(value.labels, labels, "notes")}

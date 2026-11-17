@@ -5,6 +5,7 @@ import {OPEN_PITCHES, STRING_NAMES} from "st/guitar_chords"
 import styles from "./guitar_visuals.module.css"
 
 export default function GuitarFretboard({frets = Array(6).fill(null), onChange, tones, labels = "notes", showAllNotes = false, onReset, quiet = false}) {
+  const lastFret = Math.max(12, ...frets.map(f => f || 0)) > 12 ? 24 : 12
   const select = (string, fret) => onChange?.(frets.map((value, index) => index === string ? (value === fret ? null : fret) : value))
   const Cell = onChange ? "button" : "div"
   return <section aria-label="Guitar fretboard" className={styles.instrument}>
@@ -14,10 +15,10 @@ export default function GuitarFretboard({frets = Array(6).fill(null), onChange, 
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M4 10a8 8 0 1 1 0 5M4 4v6h6" /></svg>
       </button>}
     </div>
-    <div className={styles.scroll} tabIndex="0" role="group" aria-label="Scrollable fretboard, frets 0 to 12">
-      <div className={styles.fretboard}>
-        {[5, 4, 3, 2, 1, 0].map(string => <div className={styles.string} key={string}>
-          {Array.from({length: 13}, (_, fret) => {
+    <div className={styles.scroll} tabIndex="0" role="group" aria-label={`Scrollable fretboard, frets 0 to ${lastFret}`}>
+      <div className={styles.fretboard} style={lastFret > 12 ? {minWidth: 1700} : undefined}>
+        {[5, 4, 3, 2, 1, 0].map(string => <div className={styles.string} style={{gridTemplateColumns: `48px repeat(${lastFret}, minmax(52px, 1fr))`}} key={string}>
+          {Array.from({length: lastFret + 1}, (_, fret) => {
             const pitch = OPEN_PITCHES[string] + fret
             const tone = tones?.find(note => note.pitchClass === pitch % 12)
             const selected = onChange ? frets[string] === fret : !!tone
@@ -33,7 +34,7 @@ export default function GuitarFretboard({frets = Array(6).fill(null), onChange, 
             </Cell>
           })}
         </div>)}
-        <div className={styles.fret_numbers}>{Array.from({length: 13}, (_, fret) => <span key={fret}>
+        <div className={styles.fret_numbers} style={{gridTemplateColumns: `48px repeat(${lastFret}, minmax(52px, 1fr))`}}>{Array.from({length: lastFret + 1}, (_, fret) => <span key={fret}>
           {FRET_MARKERS.includes(fret) ? fret : ""}{FRET_MARKERS.includes(fret) && <small>{fret === 12 ? "••" : "•"}</small>}
         </span>)}</div>
       </div>

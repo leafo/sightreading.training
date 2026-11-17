@@ -69,3 +69,42 @@
   .practice[hidden] { display: block !important; }
   .diagrams details { display: none; }
 }
+.sheetLayout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.withVoicings { grid-template-columns: minmax(0, 1.4fr) minmax(290px, 1fr); }
+.sheetMain { min-width: 0; }
+.voicingPanel { border-left: 1px solid var(--border-color); padding-left: 16px; max-height: 76vh; overflow-y: auto; min-width: 0; }
+.voicingPanel h2 { font-size: 1.25rem; }
+.voicingPanel p { font-size: .9rem; line-height: 1.5; }
+.chordTabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0; }
+.chordTabs button { padding: 6px 10px; }
+.chordTabs button[aria-pressed="true"] { outline: 2px solid var(--button-color); outline-offset: 1px; }
+.voicingFieldset { border: 0; padding: 0; min-width: 0; }
+.voicingFieldset legend { font-size: 1.3rem; font-weight: bold; }
+.voicingGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); gap: 8px; }
+.voicingCard { border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; min-width: 0; }
+.voicingCard:has(input:checked) { border-color: var(--button-color); background: var(--surface-muted); }
+.voicingCard label { display: flex; align-items: center; font-size: .85rem; overflow-wrap: anywhere; }
+.voicingCard figure { width: 100% !important; max-width: 150px; margin: 0 auto; }
+.voicingCard code { font-size: .8rem; display: block; overflow-wrap: anywhere; }
+.voicingCard button { font-size: .8rem; width: 100%; }
+.selectedVoicing { border-top: 1px solid var(--border-color); padding: 12px 0; display: grid; gap: 8px; }
+.selectedVoicing > div { display: flex; gap: 4px; flex-wrap: wrap; }
+.selectedVoicing button { font-size: .8rem; }
+.incoming { border: 2px solid var(--button-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.incoming button { margin: 8px 8px 0 0; }
+.diagramAction { display: block; background: transparent; color: var(--body-color); border: 0; box-shadow: none; font-size: .75rem !important; padding: 4px; }
+.lyricChord { background: transparent; color: inherit; font: inherit !important; font-weight: bold !important; border: 0; box-shadow: none; padding: 0 .5ch 0 0; min-height: unset !important; text-align: left; }
+.lyricChord small { display: block; font-size: .65em; font-weight: normal; }
+@media (max-width: 900px) {
+  .withVoicings { grid-template-columns: minmax(0, 1fr); }
+  .voicingPanel { position: fixed; inset: auto 0 0; z-index: 30; background: var(--surface); max-height: 65vh; padding: 16px; border: 1px solid var(--border-color); border-radius: 12px 12px 0 0; box-shadow: 0 -8px 30px rgb(0 0 0 / 20%); }
+  .voicingPanel .voicingGrid { grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); }
+}
+@media print {
+  .workspace > .sheetLayout, .sheetLayout > .sheetMain { display: block !important; }
+  .sheetMain > :not(.practice), .sheetLayout > .voicingPanel, .diagramAction { display: none !important; }
+  .sheetLayout, .sheetMain { margin: 0; padding: 0; }
+  .lyricChord { color: black; }
+}
+.voicingPanel .modalHeading { position: sticky; top: 0; z-index: 3; background: var(--surface); padding-bottom: 8px; }
+.voicingCard figure { box-sizing: border-box; }
