@@ -1,0 +1,52 @@
+.page { box-sizing: border-box; width: 100%; max-width: 1040px; margin: 0 auto; padding: 28px 20px 50px; }
+.heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; }
+.heading h1 { margin: 0 0 8px; }
+.heading p { margin: 0; font-size: 13px; font-style: italic; }
+.panel { background: var(--surface); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; margin-bottom: 20px; min-width: 0; }
+.panel h2 { font-size: 19px; margin: 0 0 14px; }
+.panel p { font-size: 14px; line-height: 1.5; }
+.controls { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.controls label { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+.controls input[type=number] { width: 64px; }
+.controls input[type=range] { width: 100px; }
+.page input, .page select { padding: 6px; font: inherit; }
+.page button:focus-visible, .page input:focus-visible, .page select:focus-visible, .scroll:focus-visible { outline: 3px solid #3269b0; outline-offset: 2px; }
+.iconButton { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 8px; flex: none; }
+.play { background: #47476d; }
+.sectionHeader { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.help { color: var(--body-color); }
+.scroll { overflow-x: auto; padding-bottom: 8px; }
+.grid { border-collapse: separate; border-spacing: 3px; width: max-content; table-layout: fixed; }
+.grid th { font-size: 12px; width: 36px; height: 30px; padding: 0; text-align: center; }
+.grid th.quarter { font-size: 18px; font-weight: 700; }
+.grid th.eighth { font-size: 14px; font-weight: 600; }
+.grid th.sixteenth { font-size: 10px; font-weight: 400; }
+.grid td { padding: 0; }
+.grid th:first-child { position: sticky; left: 0; z-index: 1; background: var(--surface); width: 140px; min-width: 140px; padding-right: 6px; text-align: left; }
+.grid th button { width: 100%; text-align: left; background: var(--drum-label-background); color: var(--drum-label-color); border-color: var(--border-color); min-height: 36px; }
+.grid .step { display: block; box-sizing: border-box; min-width: 36px; width: 36px; height: 36px; min-height: 36px; max-height: 36px; aspect-ratio: 1; padding: 0; background: var(--drum-step-background); color: var(--text-muted); border-color: var(--drum-step-border); border-radius: 4px; }
+.grid .step.active { background: #54547f; color: white; border-color: #414168; }
+.grid .beat { box-shadow: -2px 0 var(--border-color); }
+.grid .playhead { background: #c9e9bc; }
+.grid .playhead .step { box-shadow: 0 0 0 2px #48863b; }
+.grid button.muted { opacity: 0.6; text-decoration: line-through; }
+.presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.presets button { overflow-wrap: anywhere; text-align: left; padding: 10px; }
+.presets small { display: block; font-weight: normal; margin-top: 5px; }
+.patternManager { width: 315px; max-width: 100%; min-width: 0; text-align: right; }
+.patternManager small { display: block; margin-top: 6px; color: var(--body-color); font-size: 12px; }
+.patternTools { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: flex-end; gap: 8px; }
+.patternPicker { display: flex; flex: 1; min-width: 100px; flex-direction: column; gap: 6px; text-align: left; font-size: 13px; }
+.patternPicker select { width: 100%; min-width: 0; box-sizing: border-box; height: 33px; padding: 4px; text-overflow: ellipsis; }
+.patternTools .iconButton { width: 33px; height: 33px; padding: 6px; }
+.patternTools .iconButton svg { width: 16.5px; height: 16.5px; }
+.nameDialog { box-sizing: border-box; width: 380px; max-width: calc(100vw - 32px); padding: 24px; border: 1px solid var(--border-color); border-radius: 10px; }
+.nameDialog::backdrop { background: var(--modal-backdrop); }
+.nameDialog h2 { margin: 0 0 16px; font-size: 20px; }
+.nameDialog label { display: flex; flex-direction: column; gap: 8px; }
+.nameDialog input { box-sizing: border-box; width: 100%; }
+.nameDialog p { font-size: 13px; line-height: 1.5; }
+.dialogActions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+@media (max-width: 800px) { .heading { align-items: flex-start; flex-direction: column; } .patternManager { align-self: flex-end; } }
+@media (max-width: 450px) { .page { padding: 20px 10px; } .panel { padding: 12px; } .presets { grid-template-columns: repeat(2, 1fr); } }
+

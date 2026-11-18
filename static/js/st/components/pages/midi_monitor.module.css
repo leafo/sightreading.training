@@ -5,7 +5,7 @@
 }
 
 .device_list {
-    color: #666;
+    color: var(--text-muted);
 }
 
 .debug_controls {
@@ -14,7 +14,7 @@
     align-items: center;
     margin-bottom: 15px;
     padding: 10px;
-    background: #f8f8f8;
+    background: var(--surface-muted);
     border-radius: 4px;
     flex-wrap: wrap;
     gap: 10px;
@@ -33,7 +33,7 @@
 
     .filter_label {
         font-weight: bold;
-        color: #666;
+        color: var(--text-muted);
         font-size: 14px;
     }
 
@@ -80,7 +80,7 @@
 .events_table_container {
     max-height: 60vh;
     overflow-y: auto;
-    border: 1px solid #ddd;
+    border: 1px solid var(--surface-muted);
     border-radius: 4px;
 
     @media (max-width: 600px) {
@@ -95,14 +95,14 @@
     font-size: 12px;
 
     thead {
-        background: #f5f5f5;
+        background: var(--surface-muted);
         position: sticky;
         top: 0;
         z-index: 1;
 
         th {
             padding: 8px 6px;
-            border-bottom: 2px solid #ddd;
+            border-bottom: 2px solid var(--surface-muted);
             text-align: left;
             font-weight: bold;
             font-size: 11px;
@@ -113,7 +113,7 @@
     tbody {
         tr {
             &:nth-child(even) {
-                background: #fafafa;
+                background: var(--surface-muted);
             }
 
             &:hover {
@@ -123,7 +123,7 @@
 
         td {
             padding: 4px 6px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--surface-muted);
             white-space: nowrap;
             font-size: 11px;
         }
@@ -152,14 +152,14 @@
 
 .time_delta {
     text-align: right;
-    color: #666;
+    color: var(--text-muted);
 }
 
 .source {
     max-width: 160px;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #333;
+    color: var(--body-color);
 
     @media (max-width: 600px) {
         max-width: 80px;
@@ -181,7 +181,7 @@
 
 .channel {
     text-align: center;
-    color: #666;
+    color: var(--text-muted);
 }
 
 .message_type {
@@ -190,17 +190,18 @@
 
 .note {
     font-weight: bold;
-    color: #333;
+    color: var(--body-color);
 }
 
 .velocity {
     text-align: right;
-    color: #666;
+    color: var(--text-muted);
 }
 
 .no_events {
     text-align: center;
     padding: 40px;
-    color: #666;
+    color: var(--text-muted);
     font-style: italic;
 }
+

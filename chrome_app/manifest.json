@@ -1,14 +1,14 @@
 {
-  "name": "Sight Reading Training",
+  "name": "Napland Music Tools",
   "description": "Practice sight reading and music theory directly in your browser. Learn random notes or add your own songs.",
   "version": "1",
   "manifest_version": 2,
   "app": {
     "urls": [
-      "https://sightreading.training/"
+      "https://music-tools.naplandgames.com/"
     ],
     "launch": {
-      "web_url": "https://sightreading.training"
+      "web_url": "https://music-tools.naplandgames.com"
     }
   },
   "icons": {

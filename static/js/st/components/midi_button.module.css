@@ -1,7 +1,7 @@
 .midi_button {
     background: transparent;
     padding: 6px 8px;
-    color: #666;
+    color: var(--text-muted);
     font-size: 14px;
     cursor: pointer;
 
@@ -14,8 +14,8 @@
         opacity: 1.0;
     }
 
-    img {
-        opacity: 0.6;
+    .midi_label {
+        font-weight: bold;
         margin-right: 4px;
     }
 
@@ -27,7 +27,7 @@
         min-width: 0;
         box-sizing: border-box;
         max-width: 150px;
-        color: #444;
+        color: var(--body-color);
         font-weight: bold;
     }
 
@@ -35,3 +35,4 @@
         background: color-mix(in oklab, var(--body-background), white 5%);
     }
 }
+

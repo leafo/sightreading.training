@@ -1,4 +1,4 @@
-# About Sightreading.training
+# About Napland Music Tools
 
 This site is a free way to practice [sight
 reading](https://en.wikipedia.org/wiki/Sight-reading) by playing randomly
@@ -7,13 +7,13 @@ Additionally, you'll find some other tools to help you with your ear and music
 theory in general.
 
 **This project is 100% free & open-source**, you can contribute to development
-on GitHub: <https://github.com/leafo/sightreading.training>
+on GitHub: [Napland Music Tools](https://github.com/Naphier/music-tools)
 
 ## A Work In Progress
 
 This app is far from complete and is still being developed. If you have ideas
 or feedback please [post on our
-tracker](https://github.com/leafo/sightreading.training/issues).
+tracker](https://github.com/Naphier/music-tools/issues).
 
 ## Note on Tooltips
 
@@ -22,7 +22,7 @@ it would be nice to address this in the future, in the meantime you can often
 hover over buttons, checkboxes, inputs and sliders to see a tooltip describing
 in more details what the control changes. If you are still having trouble
 understanding how something works feel free to [open a ticket
-here](https://github.com/leafo/sightreading.training/issues).
+here](https://github.com/Naphier/music-tools/issues).
 
 > Unfortunately this doesn't work so well on mobile devices. We recommend
 > getting familiar with the software on your desktop or laptop before adapting
@@ -95,3 +95,4 @@ you're playing.
 ## Icon credits
 
 <a href="https://www.flaticon.com/free-icons/reset" title="reset icons">Reset icons created by Rahul Kaklotar - Flaticon</a>
+

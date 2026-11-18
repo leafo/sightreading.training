@@ -76,7 +76,7 @@ export class GuideContents extends React.PureComponent {
         }} />
         <section className={classNames(pageContainerStyles.page_container, styles.page_container)}>
           <a target="_blank"
-            href={`https://github.com/leafo/sightreading.training/edit/master/static/guides/${this.props.pageSource}.md`}>
+            href={`https://github.com/Naphier/music-tools/edit/main/static/guides/${this.props.pageSource}.md`}>
               Edit this page on GitHub
           </a>
         </section>
@@ -118,7 +118,7 @@ export class GuidePage extends React.PureComponent {
 export function guideRoutes() {
   return <>
     <Route path="/about" element={<GuidePage />}>
-      <Route index element={<GuideContents title="About Sight Reading Trainer" pageSource="about" />}/>
+      <Route index element={<GuideContents title="About Napland Music Tools" pageSource="about" />}/>
     </Route>
     <Route path="/guide" element={<GuidePage />}>
       <Route path="generators" element={<GuideContents title="Sight Reading Random Notes" pageSource="generators" />} />

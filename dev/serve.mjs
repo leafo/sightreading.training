@@ -39,4 +39,4 @@ const {port} = await ctx.serve({
   port: 3000,
 })
 
-console.log(`\nSight Reading Trainer (frontend only): http://localhost:${port}/`)
+console.log(`\nNapland Music Tools (frontend only): http://localhost:${port}/`)

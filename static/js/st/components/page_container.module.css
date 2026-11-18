@@ -1,5 +1,5 @@
 .page_container {
-    background: white;
+    background: var(--surface);
     margin: 60px auto;
     width: 600px;
     padding: 40px;
@@ -35,3 +35,4 @@
         }
     }
 }
+

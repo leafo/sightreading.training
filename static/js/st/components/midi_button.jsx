@@ -11,11 +11,12 @@ export default function MidiButton(props) {
     }}
     className={styles.midi_button}>
       <div>
-        <img src="/static/svg/midi.svg" alt="MIDI" />
+        <span className={styles.midi_label}>MIDI</span>
         <span className={styles.current_input_name}>
           {props.midiInput ? props.midiInput.name : "Select device"}
         </span>
       </div>
   </button>
 }
+
 

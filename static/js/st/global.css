@@ -72,7 +72,7 @@ button, .button {
     }
 
     &.outline {
-        background: white;
+        background: var(--surface);
         color: color-mix(in oklab, var(--button-color), black 10%);
     }
 
@@ -83,14 +83,14 @@ button, .button {
 }
 
 blockquote {
-    background: #f7f7f7;
+    background: var(--surface-muted);
     padding: 1em;
     margin: 1em 0;
 
     > p {
         margin: 0;
         margin-bottom: 1em;
-        color: #666;
+        color: var(--text-muted);
 
         &:first-child {
             margin-top: 0;
@@ -112,3 +112,43 @@ a {
 .header_spacer {
     height: 50px;
 }
+
+
+:root {
+    color-scheme: light;
+    --surface: #fff;
+    --surface-muted: #f3f3f3;
+    --text-muted: #666;
+    --focus-color: #426ad1;
+    --notation-filter: none;
+    --modal-backdrop: rgba(255, 255, 255, 0.8);
+    --drum-step-background: #ededf3;
+    --drum-step-border: #d7d7e2;
+    --drum-label-background: #f0f0f6;
+    --drum-label-color: #37374e;
+}
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --body-background: #181a21;
+    --body-color: #e6e8f0;
+    --surface: #232631;
+    --surface-muted: #303440;
+    --text-muted: #b0b5c6;
+    --border-color: #656b7d;
+    --button-color: #7777a8;
+    --button-color-highlight: #42465b;
+    --focus-color: #b6bfff;
+    --notation-filter: invert(1) hue-rotate(180deg);
+    --error-color: #ff9292;
+    --modal-backdrop: rgba(0, 0, 0, 0.75);
+    --drum-step-background: #303440;
+    --drum-step-border: #555b6d;
+    --drum-label-background: #303440;
+    --drum-label-color: #e6e8f0;
+}
+input, select, textarea {
+    color: var(--body-color);
+    background-color: var(--surface);
+    border-color: var(--border-color);
+}
+:focus-visible { outline: 2px solid var(--focus-color); outline-offset: 2px; }

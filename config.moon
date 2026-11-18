@@ -1,7 +1,7 @@
 import config from require "lapis.config"
 
 config {"development", "production", "test"}, ->
-  app_name "sightreading.training"
+  app_name "music-tools"
   session_name "mursic"
 
   daemon "off"

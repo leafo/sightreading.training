@@ -82,12 +82,12 @@
     }
 
     fieldset {
-        border: 1px solid #ddd;
+        border: 1px solid var(--surface-muted);
         legend {
             font-size: 13px;
             font-weight: bold;
             text-transform: uppercase;
-            color: #666;
+            color: var(--text-muted);
         }
     }
 
@@ -121,3 +121,4 @@
 .page_container {
     /* placeholder for choose_device combined class */
 }
+

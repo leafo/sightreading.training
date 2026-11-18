@@ -4,7 +4,8 @@ import {Link, Navigate} from "react-router-dom"
 import {setTitle} from "st/globals"
 import {JsonForm, TextInputRow} from "st/components/forms"
 
-import {init as initApp, getSession} from "st/app"
+import {getSession} from "st/app"
+import {completeAuth} from "st/auth"
 
 import pageContainerStyles from "../page_container.module.css"
 import formStyles from "st/components/form.module.css"
@@ -22,8 +23,7 @@ export default class LoginPage extends React.Component {
       return
     }
 
-    initApp(res)
-    this.setState({ redirectTo: "/" })
+    if (!completeAuth(res)) this.setState({errorMessage: "Could not log in. Please try again."})
   }
 
   constructor() {
@@ -32,17 +32,13 @@ export default class LoginPage extends React.Component {
   }
 
   render() {
-    if (this.state.redirectTo) {
-      return <Navigate replace to={this.state.redirectTo} />
-    }
-
     if (getSession().currentUser) {
       return <Navigate replace to="/" />
     }
 
     return <div className={`login_page ${pageContainerStyles.page_container}`}>
       <h2>Log in</h2>
-      <JsonForm action="/login.json" afterSubmit={this.afterSubmit.bind(this)}>
+      <JsonForm authenticate action="/login.json" afterSubmit={this.afterSubmit.bind(this)}>
         {this.state.errorMessage ? <div className={formStyles.form_error}>{this.state.errorMessage}</div> : null}
 
         <TextInputRow name="username" required={true}>Username</TextInputRow>

@@ -29,6 +29,7 @@
   "scripts": {
     "dev": "node dev/serve.mjs",
     "build_assets": "node dev/build_assets.mjs",
+    "test_auth": "node --test tests/auth.test.cjs",
     "note_math_csv": "node dev/note_math_csv.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

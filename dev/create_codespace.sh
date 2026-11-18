@@ -6,7 +6,7 @@ if [[ "${1:-}" == "--help" ]]; then
   echo "Create or reuse a private frontend preview using your GitHub Codespaces quota."
   exit 0
 fi
-repo=Naphier/sightreading.training
+repo=Naphier/music-tools
 branch=${1:-$(git branch --show-current)}
 [[ -n "$branch" ]] || { echo "Specify a pushed branch." >&2; exit 1; }
 command -v gh >/dev/null || { echo "Install GitHub CLI and run gh auth login first." >&2; exit 1; }

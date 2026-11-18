@@ -55,7 +55,7 @@
         width: 250px;
         flex: none;
         box-sizing: border-box;
-        background: #EFEFEF;
+        background: var(--surface-muted);
         padding: 20px;
 
         .nav_header {
@@ -86,3 +86,4 @@
     }
 
 }
+

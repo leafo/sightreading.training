@@ -9,7 +9,7 @@ return function()
   local original_http = package.loaded['resty.http']
   local http = {}
   local factory = require('spec.factory')
-  local feedback, issues, comments, calls, offline, pending_create, values
+  local feedback, issues, comments, calls, offline, pending_create, pending_comment, values
   local function fake_request(_, url, opts)
     calls[#calls + 1] = {url = url, opts = opts}
     assert.is_true(opts.ssl_verify)
@@ -35,6 +35,7 @@ return function()
       result = {id = #comments + 1, body = body.body, user = {login = 'test-bot'},
         issue_number = tonumber(url:match('/issues/(%d+)/'))}
       comments[#comments + 1] = result
+      if pending_comment then return nil, 'ambiguous comment timeout' end
     elseif url:match('/issues$') and opts.method == 'POST' then
       local number = #issues + 1
       result = {number = number, title = body.title, body = body.body, state = 'open'}
@@ -57,7 +58,7 @@ return function()
     package.loaded['helpers.feedback'] = nil
     feedback = require('helpers.feedback')
     issues = {{number = 1, title = 'Scroll speed', state = 'open'}}
-    comments, calls, offline, pending_create = {}, {}, false, false
+    comments, calls, offline, pending_create, pending_comment = {}, {}, false, false, false
     values = {SR_FEEDBACK_ENABLED = '1', SR_FEEDBACK_TOKEN = 'test-token'}
     stub(os, 'getenv', function(name) return values[name] end)
     http.new = function() return {set_timeouts = function() end, request_uri = fake_request} end
@@ -91,35 +92,82 @@ return function()
     assert.is_false(pcall(feedback.vote, ctx(user, {issue = '1'})))
     assert.equal(0, tonumber(db.select('count(*) AS n FROM feedback_votes')[1].n))
   end)
-  it('deduplicates votes and mirrors the count for the alert workflow', function()
-    local first = factory.Users()
-    feedback.vote(ctx(first, {issue = '1'}))
+  it('posts one attributed comment per website account and ignores client-supplied usernames', function()
+    local first = factory.Users({username = 'sean'})
+    feedback.vote(ctx(first, {issue = '1', username = 'forged-user'}))
     feedback.vote(ctx(first, {issue = '1'}))
     for i = 2, 5 do feedback.vote(ctx(factory.Users(), {issue = '1'})) end
     db.query("UPDATE feedback_issues SET sync_after = now() - interval '1 second'")
     feedback.reconcile()
     assert.equal(5, tonumber(db.select('count(*) AS n FROM feedback_votes')[1].n))
-    assert.equal(1, #comments)
-    assert.is_truthy(comments[1].body:find('Website upvotes: 5', 1, true))
-    assert.is_truthy(comments[1].body:find('Alert threshold: 5', 1, true))
-    feedback.vote(ctx(factory.Users(), {issue = '1'}))
-    db.query("UPDATE feedback_issues SET sync_after = now() - interval '1 second'")
+    assert.equal(5, #comments)
+    assert.is_truthy(comments[1].body:find('sean voted for this from the site', 1, true))
+    assert.is_nil(comments[1].body:find('forged-user', 1, true))
+    local ids = {}
+    for _, comment in ipairs(comments) do
+      local id = comment.body:match('<!%-%- website%-feedback%-vote:(%d+) %-%->')
+      assert.is_truthy(id)
+      assert.is_nil(ids[id])
+      ids[id] = true
+    end
+    assert.equal(0, tonumber(db.select('count(*) AS n FROM feedback_votes WHERE comment_id IS NULL')[1].n))
     feedback.reconcile()
-    assert.equal(1, #comments)
-    assert.is_truthy(comments[1].body:find('Website upvotes: 6', 1, true))
+    assert.equal(5, #comments)
   end)
-  it('keeps saved votes when GitHub synchronization fails and retries', function()
-    local user = factory.Users()
-    feedback.vote(ctx(user, {issue = '1'}))
-    db.query("UPDATE feedback_issues SET synced_count = -1, sync_after = now() - interval '1 second'")
+  it('keeps queued votes through a GitHub outage and retries them', function()
+    feedback.vote(ctx(factory.Users(), {issue = '1'}))
+    local result = feedback.vote(ctx(factory.Users(), {issue = '1'}))
+    assert.is_true(result.sync_pending)
+    db.query("UPDATE feedback_issues SET sync_after = now() - interval '1 second'")
     offline = true
     assert.is_false(feedback.sync(1))
-    assert.equal(1, tonumber(db.select('count(*) AS n FROM feedback_votes')[1].n))
+    assert.equal(2, tonumber(db.select('count(*) AS n FROM feedback_votes')[1].n))
     offline = false
     db.query("UPDATE feedback_issues SET sync_after = now() - interval '1 second'")
     feedback.reconcile()
+    assert.equal(2, #comments)
+    assert.equal(0, tonumber(db.select('count(*) AS n FROM feedback_votes WHERE comment_id IS NULL')[1].n))
+  end)
+  it('recovers an accepted comment after an ambiguous timeout without a duplicate', function()
+    pending_comment = true
+    local result = feedback.vote(ctx(factory.Users(), {issue = '1'}))
+    assert.is_true(result.success)
+    assert.is_true(result.sync_pending)
     assert.equal(1, #comments)
-    assert.equal(1, tonumber(db.select('synced_count FROM feedback_issues')[1].synced_count))
+    pending_comment = false
+    db.query("UPDATE feedback_issues SET sync_after = now() - interval '1 second'")
+    feedback.reconcile()
+    assert.equal(1, #comments)
+    assert.equal(comments[1].id, tonumber(db.select('comment_id FROM feedback_votes')[1].comment_id))
+  end)
+  it('does not adopt a forged vote comment from a different GitHub account', function()
+    pending_comment = true
+    feedback.vote(ctx(factory.Users(), {issue = '1'}))
+    pending_comment = false
+    comments[1].user.login = 'attacker'
+    db.query("UPDATE feedback_issues SET sync_after = now() - interval '1 second'")
+    feedback.reconcile()
+    assert.equal(2, #comments)
+    assert.equal('test-bot', comments[2].user.login)
+  end)
+  it('escapes username Markdown and mentions while preserving vote attribution', function()
+    local user = factory.Users()
+    db.query('UPDATE users SET username = ? WHERE id = ?', '@someone*[x]', user.id)
+    user:refresh()
+    feedback.vote(ctx(user, {issue = '1'}))
+    assert.is_truthy(comments[1].body:find(' voted for this from the site\n\n<!-- website-feedback-vote:', 1, true))
+    assert.is_nil(comments[1].body:find('@someone', 1, true))
+    assert.is_truthy(comments[1].body:find('\\*\\[x\\]', 1, true))
+  end)
+  it('resumes pending deliveries after an expired worker lease', function()
+    feedback.vote(ctx(factory.Users(), {issue = '1'}))
+    feedback.vote(ctx(factory.Users(), {issue = '1'}))
+    db.query("UPDATE feedback_issues SET sync_after = now() - interval '1 second', sync_lease = now() + interval '1 hour'")
+    feedback.reconcile()
+    assert.equal(1, #comments)
+    db.query("UPDATE feedback_issues SET sync_lease = now() - interval '1 second'")
+    feedback.reconcile()
+    assert.equal(2, #comments)
   end)
   it('creates one issue and first vote for repeated submission UUIDs', function()
     local user = factory.Users()

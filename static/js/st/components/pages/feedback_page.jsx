@@ -2,6 +2,7 @@ import * as React from "react"
 import {Link} from "react-router-dom"
 import {getSession} from "st/app"
 import {csrfToken, setTitle, FRONTEND_ONLY} from "st/globals"
+import Toast from "st/components/toast"
 import styles from "./feedback_page.module.css"
 
 async function request(path, data, signal) {
@@ -94,7 +95,7 @@ export default function FeedbackPage() {
         return
       }
       setCreated(result.issue)
-      setMessage(result.sync_pending ? "Ticket created and your vote saved. GitHub's vote count will update shortly." : "Ticket created with your first upvote.")
+      setMessage(result.sync_pending ? "Ticket created and your vote saved. Your GitHub vote comment will appear shortly." : "Ticket created with your first upvote.")
       key.current = null
       setTicketTitle("")
       setDescription("")
@@ -106,7 +107,8 @@ export default function FeedbackPage() {
   return <main className={styles.page}>
     <h1>Help shape the site</h1>
     <p>Report a problem or suggest a feature. Search open GitHub issues first, then upvote a match or create a new ticket.</p>
-    <p>At {threshold} website upvotes, the maintainer gets a GitHub mention. Each signed-in account gets one vote per issue. GitHub thumbs-up reactions are counted separately.</p>
+    <p>At {threshold} total votes from this site and GitHub thumbs-up reactions, the maintainer gets a GitHub mention. Each signed-in account gets one website vote per issue.</p>
+    <p>Voting posts your site username publicly on GitHub: “username voted for this from the site”.</p>
     {preview ? <p role="status">Feedback is available on the full site. This frontend preview cannot search, create tickets, or save votes.</p> : <>
       {!signedIn && <p><Link to="/login">Log in</Link> or <Link to="/register">register</Link> to vote or submit. Anyone can search.</p>}
       <form className={styles.search} onSubmit={e => { e.preventDefault(); load(query) }}>
@@ -120,7 +122,8 @@ export default function FeedbackPage() {
         }} /> <button disabled={loading || busy}>Search</button></div>
       </form>
       {error && <p role="alert" className={styles.error}>{error}</p>}
-      {message && <p role="status">{message} {created && <a href={created.url} target="_blank" rel="noreferrer">View issue #{created.number}</a>}</p>}
+      <Toast message={message} onDismiss={() => setMessage("")} />
+      {created && <p><a href={created.url} target="_blank" rel="noreferrer">View created issue #{created.number}</a></p>}
       <section aria-label="Open issues" aria-busy={loading}>
         <h2>{searched ? "Similar open issues" : "Recently updated issues"}</h2>
         {loading ? <p>Searching GitHub…</p> : <>
@@ -128,7 +131,7 @@ export default function FeedbackPage() {
           <ul className={styles.issues}>{issues.map(issue => <li key={issue.number}>
             <a href={issue.url} target="_blank" rel="noreferrer">#{issue.number} {issue.title}</a>
             <button type="button" disabled={busy || !signedIn || issue.voted} aria-label={`Upvote issue ${issue.number}`} onClick={() => vote(issue)}>
-              {issue.voted ? "Voted" : "Upvote"} · {issue.votes}
+              {issue.voted ? "Voted" : "Upvote"} · {issue.votes} site votes
             </button>
           </li>)}</ul>
           <p>Showing up to {searched ? 20 : 30} issues. Refine your search if you don’t see a match.</p>

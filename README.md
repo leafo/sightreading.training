@@ -1,14 +1,14 @@
-# Sight Reading Trainer
+# Napland Music Tools
 
-## <https://sightreading.training>
+## <https://music-tools.naplandgames.com>
 
-![test](https://github.com/leafo/sightreading.training/workflows/test/badge.svg)
+![test](https://github.com/Naphier/music-tools/workflows/test/badge.svg)
 
 [![Twitch Link](http://leafo.net/dump/twitch-banner.svg)](https://www.twitch.tv/moonscript)
 
 A tool for practicing sight reading, learning songs, and training other musical skills in your browser. The successor to <https://github.com/leafo/mursic>.
 
-Learn more on [the guide](https://sightreading.training/about).
+Learn more on [the guide](https://music-tools.naplandgames.com/about).
 
 ![screenshot](http://leafo.net/shotsnb/2016-05-14_16-30-55.png)
 
@@ -45,7 +45,7 @@ To test a pull-request branch without installing anything locally:
 3. If the preview is not running, run `bash dev/start_preview.sh` in the Codespaces terminal.
 4. When Codespaces forwards port 3000, select **Open in Browser**. If the
    notification is missed, open the **Ports** panel and use the globe icon next
-   to **Sight Reading Trainer**.
+   to **Napland Music Tools**.
 5. Visit `/flash-cards/note-math` on the forwarded HTTPS URL.
 
 The forwarded site runs in the codespace; only the browser is local. The
@@ -103,6 +103,12 @@ Mode, Speed and keyboard visibility, then reloading. Build a streak, miss a note
 and verify Last Streak stays visible through more misses. Reset should zero the
 session counters. Account sync and account Stats need a backend-enabled deployment.
 
+## Authentication sessions
+
+Login, registration and logout refresh the session CSRF token before submitting. Successful authentication loads a fresh page so trainer preferences and statistics start with the current account. Failed logout keeps the current account visible and reports the error. Session-bound HTML and JSON responses use `Cache-Control: no-store`.
+
+Run the authentication transport regressions with `npm run test_auth`; the backend CI also exercises a cookie-preserving login/logout/account-switch sequence.
+
 ## Full-backend production runtime
 
 Production requires `SR_STAGE` (`dev` or `prd`), `SR_PUBLIC_URL` (an HTTPS origin
@@ -130,17 +136,46 @@ It discovers MoonScript specs once, excluding their generated Lua copies. The CI
 image uses Debian PostgreSQL 15; the private runtime integration also checks the
 production PostgreSQL 17 stack.
 
+## Adding practice tools
+
+Follow the [new-tool playbook](docs/adding-tools.md) for routes, navigation,
+state persistence, audio lifecycle, accessibility, verification, and PR previews.
+
+### Drum Machine
+
+Open **Drum Machine** in the navigation or visit `/drum-machine`. Toggle hits across
+eight synthesized percussion tracks, choose from ten drum sets, mute instruments, set 30–240 BPM, and add
+eighth-note swing. Choose 4/4, 3/4, 5/4, or 6/8 with one or two bars; extending
+repeats the first bar. In 6/8, BPM counts dotted quarters; six numbered eighth-note beats each have four
+subdivisions (24 cells per bar), with adjustable swing. Eighteen editable presets cover rock, funk, blues, hip-hop, dance, and more.
+Use the top-right Your patterns selector and save/new/delete icons to manage up to
+100 named patterns on the current browser. New and Save open a naming dialog and preserve the current beat;
+confirming selects the named pattern in the dropdown. Saving the same name replaces
+it. These patterns are local and do not sync to accounts. Playback uses Web Audio
+and stops when leaving the page. No external drum samples or MIDI setup are needed.
+
+Available sets: Classic, Heavy Rock, Woodblocks, Jazz, 808 / Hip-hop, 909 / House,
+Industrial, Latin Percussion, Lo-fi, and Taiko / Cinematic. These are synthesized
+interpretations; Latin and Taiko display instrument names suited to their sounds.
+Press Space to start/stop playback when focus is outside interactive controls.
+
+Drum-set choices are saved with named patterns. Switching sets during playback
+keeps the beat running; loading a groove preset retains your selected set.
+
+## Upstream
+
+Music Tools builds on [leafo/sightreading.training](https://github.com/leafo/sightreading.training) by Leaf Corcoran. Original attribution is retained in the source.
+
+The default branch in this fork is `main`; upstream still uses `master`. When incorporating upstream changes, fetch `upstream`, then merge `upstream/master` into a review branch based on `main` and open a pull request targeting this fork’s `main`. The branch names do not need to match.
+
 
 ## Website feedback
 
-The Feedback menu opens `/feedback`: search open issues, upvote a match, or create
-an issue after reviewing similar titles. Search is public; submission and voting
-require a website account. The author receives the first vote. PostgreSQL enforces
-one vote per account per issue. Website votes are mirrored in a bot comment on the
-GitHub issue; they are separate from GitHub reactions. At five votes, a separate
-comment mentions the maintainer once. Raising or lowering the threshold does not
-send another alert for already-alerted issues.
-
-This requires the full backend and `lapis migrate`. The frontend-only preview
-shows an availability message and never pretends to save feedback. See
-[the feedback integration contract](docs/feedback.md) for application settings.
+The Feedback menu opens `/feedback`: search open GitHub issues, upvote a match,
+or create an issue after reviewing similar titles. Signed-in accounts get one
+website vote per issue. Each vote posts “<username> voted for this from the site”
+on GitHub. Website vote comments plus the issue’s native thumbs-up reactions
+trigger a single maintainer mention at five total votes. See
+[the integration contract](docs/feedback.md) for settings and delivery behavior.
+The full backend, migrations and a repository-scoped GitHub credential are required;
+the frontend-only preview shows an availability message.

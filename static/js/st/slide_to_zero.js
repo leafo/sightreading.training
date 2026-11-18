@@ -4,6 +4,7 @@ export default class SlideToZero {
     this.value = 0;
     this.speed = opts.speed || 1; // 1 unit a second
     this.animating = false;
+    this.frameRequest = null;
 
     this.onUpdate = opts.onUpdate || function() {}
     this.onStop = opts.onStop || function() {}
@@ -19,6 +20,11 @@ export default class SlideToZero {
 
   cancel() {
     this.canceled = true
+    this.animating = false
+    if (this.frameRequest !== null) {
+      window.cancelAnimationFrame(this.frameRequest)
+      this.frameRequest = null
+    }
   }
 
   add(delta) {
@@ -36,8 +42,10 @@ export default class SlideToZero {
     this.canceled = false
     this.onStart();
     this.onUpdate(this.value);
+    if (this.canceled) return;
 
     let frameUpdate = time => {
+      this.frameRequest = null;
       if (this.canceled) {
         this.animating = false;
         return;
@@ -45,7 +53,7 @@ export default class SlideToZero {
 
       if (lastFrame === null) {
         lastFrame = time;
-        window.requestAnimationFrame(frameUpdate);
+        this.frameRequest = window.requestAnimationFrame(frameUpdate);
         return;
       }
 
@@ -53,7 +61,7 @@ export default class SlideToZero {
       lastFrame = time;
 
       if (dt == 0) {
-        window.requestAnimationFrame(frameUpdate);
+        this.frameRequest = window.requestAnimationFrame(frameUpdate);
         return;
       }
 
@@ -70,14 +78,18 @@ export default class SlideToZero {
 
       this.onUpdate(this.value);
 
+      // onUpdate may pause scrolling while waiting for the next correct note.
+      // Leave no pending frame, so add() can start with a fresh clock immediately.
+      if (this.canceled) return;
+
       if (this.value > 0) {
-        window.requestAnimationFrame(frameUpdate);
+        this.frameRequest = window.requestAnimationFrame(frameUpdate);
       } else {
         this.animating = false;
         this.onStop();
       }
     }
 
-    window.requestAnimationFrame(frameUpdate);
+    this.frameRequest = window.requestAnimationFrame(frameUpdate);
   }
 }

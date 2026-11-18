@@ -20,6 +20,9 @@ class extends lapis.Application
     attr
 
   @before_filter =>
+    -- HTML contains a session-bound CSRF token; never reuse it for another
+    -- cookie session through a browser or intermediary cache.
+    @res.headers["Cache-Control"] = "no-store"
     if config.public_host and @req.headers.host != config.public_host
       @write { status: 400, layout: false }, "Invalid host"
       return
@@ -42,6 +45,9 @@ class extends lapis.Application
   "/logout.json": post =>
     @flow("login")\do_logout!
     json: { success: true }
+
+  "/csrf-token.json": get =>
+    json: { csrfToken: @csrf_token }
 
   "/login.json": post =>
     @flow("login")\do_login!

@@ -2,7 +2,7 @@
     box-sizing: border-box;
     padding: 0 20px;
     height: 50px;
-    background: white;
+    background: var(--surface);
     position: fixed;
     top: 0;
     left: 0;
@@ -17,10 +17,11 @@
 
     .user_links {
         flex: 1;
+        min-width: 0;
         display: flex;
         align-items: center;
         gap: 20px;
-        color: #666;
+        color: var(--text-muted);
 
         > a, > .right_section {
             white-space: nowrap;
@@ -32,12 +33,12 @@
         button {
             background: transparent;
             padding: 6px 8px;
-            color: #666;
+            color: var(--text-muted);
             font-size: 14px;
             cursor: pointer;
 
             > svg {
-                fill: #333;
+                fill: var(--body-color);
                 margin-left: 3px;
                 display: inline-block;
                 vertical-align: 1px;
@@ -49,7 +50,7 @@
             right: 0;
             bottom: 0;
             left: 0;
-            background: rgba(255, 255, 255, 0.8);
+            background: var(--modal-backdrop);
             z-index: 1;
         }
 
@@ -63,7 +64,7 @@
         top: 100%;
         left: 0;
         min-width: 200px;
-        background: white;
+        background: var(--surface);
         margin-top: 10px;
 
         border: 1px solid color-mix(in oklab, var(--border-color), white 10%);
@@ -127,6 +128,7 @@
     .right_section {
         text-align: right;
         flex: 1;
+        min-width: 0;
     }
 
     .logo, .logo_small {
@@ -160,7 +162,7 @@
         line-height: 15px;
         font-size: 22px;
         text-transform: uppercase;
-        color: #444;
+        color: var(--body-color);
         a {
             color: inherit;
             text-decoration: none;
@@ -176,7 +178,7 @@
         padding: 3px 6px;
         font-weight: bold;
         text-decoration: none;
-        color: #444;
+        color: var(--body-color);
 
         &:hover {
             color: var(--button-color);
@@ -185,10 +187,28 @@
         &:global(.active) {
             font-weight: bold;
             text-decoration: none;
-            background: #f6f6f6;
+            background: var(--surface-muted);
             color: color-mix(in oklab, var(--button-color), black 8%);
             border-radius: 2px;
             box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
         }
     }
+}
+
+
+.wordmark {
+    display: block;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+    line-height: 1.1;
+    white-space: nowrap;
+    color: var(--body-color);
+    span { color: var(--button-color); }
+}
+@media (max-width: 1200px) {
+    .wordmark { font-size: 17px; span { display: block; font-size: 12px; letter-spacing: 1px; } }
+}
+@media (max-width: 480px) {
+    .header { padding: 0 10px; gap: 10px; }
 }

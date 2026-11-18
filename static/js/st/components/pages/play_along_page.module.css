@@ -19,7 +19,7 @@
     .play_along_workspace {
         > h2 {
             font-size: 20px;
-            background: white;
+            background: var(--surface);
             padding: 20px 20px 0 40px;
             margin: 0;
         }
@@ -90,7 +90,7 @@
     }
 
     .song_tracks {
-        background: white;
+        background: var(--surface);
         margin: 0;
         padding: 20px 40px;
         display: flex;
@@ -142,7 +142,7 @@
 
     .input_label {
         font-size: 13px;
-        color: #666;
+        color: var(--text-muted);
         font-weight: bold;
         margin-bottom: 5px;
     }
@@ -160,3 +160,4 @@
         text-align: center;
     }
 }
+

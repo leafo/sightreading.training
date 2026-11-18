@@ -1,6 +1,7 @@
 
 import * as React from "react"
 import {csrfToken, FRONTEND_ONLY} from "st/globals"
+import {postAuth} from "st/auth"
 import * as types from "prop-types"
 
 import classNames from "classnames"
@@ -45,7 +46,8 @@ export class JsonForm extends React.Component {
     validate: types.func,
     beforeSubmit: types.func,
     afterSubmit: types.func,
-    method: types.string
+    method: types.string,
+    authenticate: types.bool
   }
 
   constructor() {
@@ -79,6 +81,16 @@ export class JsonForm extends React.Component {
     }
 
     let url = this.refs.form.getAttribute("action")
+
+    if (this.props.authenticate) {
+      this.setState({loading: true})
+      postAuth(url, formData).then(res => {
+        this.props.afterSubmit?.(res)
+      }).catch(() => {
+        this.props.afterSubmit?.({errors: ["Could not complete authentication. Refresh the page and try again."]})
+      }).finally(() => this.setState({loading: false}))
+      return
+    }
 
     let request = new XMLHttpRequest()
     request.open(this.props.method, url)

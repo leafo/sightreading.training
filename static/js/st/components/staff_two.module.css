@@ -3,3 +3,6 @@
         display: block;
     }
 }
+
+
+.notes_staff > svg { filter: var(--notation-filter); }

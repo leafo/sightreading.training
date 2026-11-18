@@ -1,0 +1,42 @@
+.picker {
+    position: relative;
+    flex: none;
+    color: var(--body-color);
+    summary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 4px;
+        cursor: pointer;
+        list-style: none;
+        &::-webkit-details-marker { display: none; }
+        &:hover { background: var(--surface-muted); }
+        &:focus-visible { outline: 2px solid var(--focus-color); }
+    }
+}
+.options {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    display: flex;
+    gap: 4px;
+    padding: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--surface);
+    box-shadow: 0 4px 16px #0003;
+    button {
+        display: flex;
+        padding: 8px;
+        background: var(--surface);
+        color: var(--body-color);
+        border-color: transparent;
+        &[aria-pressed="true"] {
+            background: var(--surface-muted);
+            border-color: var(--button-color);
+        }
+        &:hover { background: var(--surface-muted); color: var(--body-color); }
+    }
+}

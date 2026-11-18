@@ -1,0 +1,60 @@
+.launcher {
+    position: fixed;
+    right: 12px;
+    bottom: 12px;
+    z-index: 8;
+    margin-bottom: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.panel {
+    position: fixed;
+    right: 12px;
+    bottom: 58px;
+    width: min(350px, calc(100vw - 24px));
+    max-height: calc(100dvh - 70px);
+    overflow: auto;
+    box-sizing: border-box;
+    z-index: 9;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--surface);
+    box-shadow: 0 4px 18px rgb(0 0 0 / 20%);
+}
+
+.heading, .fields, .actions {
+    display: flex;
+    gap: 8px;
+}
+
+.heading {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.heading h2 {
+    margin: 0;
+}
+
+.fields label {
+    flex: 1;
+    min-width: 0;
+}
+
+.fields input {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.countdown {
+    font-size: 2rem;
+    font-variant-numeric: tabular-nums;
+    margin: 12px 0;
+}
+
+.notification {
+    --toast-bottom: 60px;
+}

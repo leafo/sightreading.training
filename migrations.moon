@@ -143,3 +143,12 @@ package.loaded.migrations =
       UNIQUE (user_id, day, daily_slot)
     )]]
     create_index "feedback_submissions", "user_id", "created_at"
+
+
+  [1794960000]: =>
+    db.query "ALTER TABLE feedback_votes ADD COLUMN id bigserial UNIQUE NOT NULL"
+    db.query "ALTER TABLE feedback_votes ADD COLUMN username text"
+    db.query "UPDATE feedback_votes v SET username = u.username FROM users u WHERE u.id = v.user_id"
+    db.query "ALTER TABLE feedback_votes ALTER COLUMN username SET NOT NULL"
+    db.query "ALTER TABLE feedback_votes ADD COLUMN comment_id bigint"
+    create_index "feedback_votes", "issue_number", where: "comment_id is null"

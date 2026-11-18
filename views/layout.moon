@@ -11,7 +11,9 @@ class Layout extends Widget
     html_5 ->
       head ->
         meta charset: "UTF-8"
-        title "Sight Reading Trainer"
+        title "Napland Music Tools"
+        script type: "text/javascript", ->
+          raw [[(function(){var theme="system";try{theme=localStorage.getItem("napland:theme")||theme}catch(e){}var dark=theme==="dark"||(theme!=="light"&&theme!=="dark"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.dataset.theme=dark?"dark":"light";document.documentElement.style.colorScheme=dark?"dark":"light"})()]]
         if config._name == "production" or @params.prod_assets
           link rel: "stylesheet", href: "/static/main.min.css?#{buster}"
         else
@@ -38,19 +40,7 @@ class Layout extends Widget
             div class: "header_spacer", ->
               div class: "header", ->
                 a class: "logo_link", href: "/", ->
-                  img {
-                    class: "logo"
-                    src: "/static/img/logo.svg"
-                    height: 35
-                    alt: ""
-                  }
-
-                  img {
-                    class: "logo_small"
-                    src: "/static/img/logo-small.svg"
-                    height: 35
-                    alt: ""
-                  }
+                  span class: "wordmark", "Napland Music Tools"
 
         script type: "text/javascript", ->
           raw "window.ST_initial_session = #{to_json @initial_state!}"
@@ -91,3 +81,4 @@ class Layout extends Widget
           ga('send', 'pageview');
         }
       ]]
+

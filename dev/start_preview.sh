@@ -6,7 +6,7 @@ mkdir -p dev/out
 exec 9>dev/out/preview.lock
 flock -w 60 9
 ready() {
-  curl --noproxy '*' -fsS --max-time 3 http://127.0.0.1:3000/ | grep -q '<title>Sight Reading Trainer</title>' &&
+  curl --noproxy '*' -fsS --max-time 3 http://127.0.0.1:3000/ | grep -q '<title>Napland Music Tools</title>' &&
     curl --noproxy '*' -fsS --max-time 3 http://127.0.0.1:3000/dev/out/main.js -o /dev/null &&
     curl --noproxy '*' -fsS --max-time 3 http://127.0.0.1:3000/dev/out/main.css -o /dev/null
 }

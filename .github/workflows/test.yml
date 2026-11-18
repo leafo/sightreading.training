@@ -13,7 +13,9 @@ jobs:
         with: {node-version: '24', cache: npm}
       - name: Locked frontend dependencies and generated assets
         run: npm ci && npm run build_assets
-      - name: Test GitHub popularity alerts without network access
+      - name: Authentication browser-session transport regression tests
+        run: npm run test_auth
+      - name: Test feedback popularity alerts
         run: node --test .github/scripts/feedback_alert.test.cjs
       - name: Build disposable backend test image
         run: docker build -t sightreading-test .

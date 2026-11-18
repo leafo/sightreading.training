@@ -19,6 +19,7 @@
         font-size: 12px;
         font-weight: bold;
         text-transform: uppercase;
-        color: #999;
+        color: var(--text-muted);
     }
 }
+

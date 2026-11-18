@@ -121,7 +121,7 @@
 
             .label {
                 font-size: 14px;
-                opacity: 0.8;
+                color: var(--body-color);
             }
         }
 
@@ -132,9 +132,9 @@
 
     .toggle_switch {
         flex: none;
-        border: 2px solid #333;
+        border: 2px solid var(--border-color);
         border-radius: 4px;
-        background: #333;
+        background: var(--surface);
         position: relative;
         font-weight: bold;
         font-size: 13px;
@@ -149,7 +149,7 @@
             left: 0;
             top: 0;
             bottom: 0;
-            background: var(--button-color);
+            background: #595982;
             z-index: 1;
             border-radius: 2px;
             transition: 0.1s ease all;
@@ -164,18 +164,18 @@
 
             .toggle_option {
                 &:nth-child(1) {
-                    opacity: 0.5;
+                    color: var(--body-color);
                 }
 
                 &:nth-child(2) {
-                    opacity: 1;
+                    color: white;
                 }
             }
         }
 
         .toggle_option {
             &:nth-child(2) {
-                opacity: 0.5;
+                color: var(--body-color);
             }
 
             display: inline-block;
@@ -201,7 +201,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #666;
+        color: var(--text-muted);
         background: var(--body-background);
         font-size: 12px;
     }
@@ -255,3 +255,4 @@
     max-width: 20rem;
     margin-top: 0.5rem;
 }
+

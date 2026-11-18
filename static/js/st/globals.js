@@ -9,9 +9,9 @@ export const FRONTEND_ONLY = typeof ST_FRONTEND_ONLY !== "undefined" && ST_FRONT
 
 export function setTitle(title) {
   if (title) {
-    document.title = `${title} | Sight Reading Trainer`
+    document.title = `${title} | Napland Music Tools`
   } else {
-    document.title = "Sight Reading Trainer"
+    document.title = "Napland Music Tools"
   }
 }
 

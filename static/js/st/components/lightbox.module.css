@@ -7,7 +7,7 @@
     max-height: calc(100vh - 60px);
 
     &::backdrop {
-        background: rgba(255, 255, 255, 0.8);
+        background: var(--modal-backdrop);
         animation: backdrop-fade-in 0.2s ease;
     }
 
@@ -16,7 +16,7 @@
     }
 
     .lightbox_content {
-        background: white;
+        background: var(--surface);
         border: 1px solid color-mix(in oklab, var(--border-color), white 10%);
         border-radius: 6px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
@@ -26,7 +26,7 @@
 
         h2 {
             margin-top: 0;
-            color: #444;
+            color: var(--body-color);
         }
 
         p {
@@ -75,3 +75,4 @@
         opacity: 1;
     }
 }
+

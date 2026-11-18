@@ -10,7 +10,7 @@
     left: 0;
     top: var(--header-height);
     bottom: 0;
-    background: #D6D6D6;
+    background: var(--surface-muted);
     width: var(--settings-panel-width);
     border-right: 2px solid var(--border-color);
     z-index: 1;
@@ -58,9 +58,9 @@
     }
 
     .toggle_option {
-        background: white;
+        background: var(--surface);
         border: 1px solid var(--border-color);
-        color: #444;
+        color: var(--body-color);
 
         &.active {
             color: color-mix(in oklab, var(--button-color), black 10%);
@@ -82,7 +82,7 @@
     .generator_input {
         .input_label {
             font-size: 13px;
-            color: #666;
+            color: var(--text-muted);
             font-weight: bold;
         }
 
@@ -113,7 +113,7 @@
             label {
                 font-size: 12px;
                 font-weight: bold;
-                color: #666;
+                color: var(--text-muted);
                 display: flex;
 
                 > *  {
@@ -139,10 +139,11 @@
         h4 {
             font-weight: bold;
             text-transform: uppercase;
-            color: #666;
+            color: var(--text-muted);
             font-size: 12px;
             margin: 0 10px;
             margin-bottom: 10px;
         }
     }
 }
+

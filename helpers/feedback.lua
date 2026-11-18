@@ -6,14 +6,14 @@ local assert_error = require('lapis.application').assert_error
 local M = {}
 local function settings()
   assert_error(os.getenv('SR_FEEDBACK_ENABLED') == '1', 'Feedback is not available yet.')
-  local repo = os.getenv('SR_FEEDBACK_REPO') or 'Naphier/sightreading.training'
+  local repo = os.getenv('SR_FEEDBACK_REPO') or 'Naphier/music-tools'
   local threshold = tonumber(os.getenv('SR_FEEDBACK_THRESHOLD') or '5')
   assert(repo:match('^[%w_.-]+/[%w_.-]+$'), 'Invalid feedback repository')
   assert(threshold and threshold >= 1 and threshold <= 100000 and threshold % 1 == 0, 'Invalid feedback threshold')
   return {repo = repo, threshold = threshold}
 end
 local function github(method, path, body)
-  local cfg = settings()
+  settings()
   local token = require('helpers.runtime_config').secret('SR_FEEDBACK_TOKEN')
   local client = require('resty.http').new()
   client:set_timeouts(3000, 5000, 5000)
@@ -68,10 +68,10 @@ end
 local function track(number)
   db.query('INSERT INTO feedback_issues (issue_number) VALUES (?) ON CONFLICT DO NOTHING', number)
 end
-local function add_vote(number, user_id)
+local function add_vote(number, user)
   track(number)
-  db.query([[INSERT INTO feedback_votes (issue_number, user_id) VALUES (?, ?)
-    ON CONFLICT DO NOTHING]], number, user_id)
+  db.query([[INSERT INTO feedback_votes (issue_number, user_id, username) VALUES (?, ?, ?)
+    ON CONFLICT DO NOTHING]], number, user.id, user.username)
 end
 -- Limit search grammar to words; user text cannot escape the repository/open
 -- issue constraints. Repeat the scope for each OR branch of GitHub search.
@@ -117,7 +117,7 @@ function M.vote(ctx)
   local user_id = account(ctx)
   local number = number_param(ctx.params.issue)
   local issue = ensure_open(number)
-  add_vote(number, user_id)
+  add_vote(number, ctx.current_user)
   local synced = M.sync(number)
   return {success = true, issue = decorated(issue, user_id), sync_pending = not synced}
 end
@@ -133,7 +133,7 @@ function M.create(ctx)
   if existing then
     if existing.issue_number and existing.issue_number ~= db.NULL then
       local issue = github('GET', issue_path(existing.issue_number))
-      add_vote(existing.issue_number, user_id)
+      add_vote(existing.issue_number, ctx.current_user)
       local synced = M.sync(existing.issue_number)
       return {success = true, issue = decorated(issue, user_id), sync_pending = not synced}
     end
@@ -163,64 +163,64 @@ function M.create(ctx)
     title = safe_title, body = safe_description .. '\n\nSubmitted through the website feedback tool.\n' .. marker
   })
   db.query('UPDATE feedback_submissions SET issue_number = ? WHERE id = ?', issue.number, claimed[1].id)
-  add_vote(issue.number, user_id)
+  add_vote(issue.number, ctx.current_user)
   local synced = M.sync(issue.number)
   return {success = true, issue = decorated(issue, user_id), sync_pending = not synced}
 end
 local actor
-local function find_comment(number, marker)
+local function published_votes(number)
   if not actor then actor = github('GET', '/user').login end
+  local published = {}
   for page = 1, 10 do
     local comments = github('GET', issue_path(number) .. '/comments?per_page=100&page=' .. page)
     for _, comment in ipairs(comments) do
-      if comment.user.login == actor and comment.body:find(marker, 1, true) then return comment end
+      if comment.user.login == actor then
+        local id = comment.body:match('^.- voted for this from the site\n\n<!%-%- website%-feedback%-vote:(%d+) %-%->$')
+        if id then published[id] = comment.id end
+      end
     end
-    if #comments < 100 then return nil end
+    if #comments < 100 then return published end
   end
   error('Too many comments to reconcile safely')
 end
+local function pending(number)
+  return db.select('1 FROM feedback_votes WHERE issue_number = ? AND comment_id IS NULL LIMIT 1', number)[1] ~= nil
+end
+local function vote_body(vote)
+  -- Escape user-controlled Markdown, newlines and mentions. The username comes
+  -- from the authenticated account, never request parameters, and is snapshotted.
+  local username = vote.username:gsub('[%c]', ' ')
+  username = username:gsub('([\\`*_{}%[%]()#+%.!<>|~%-])', '\\%1'):gsub('@', '@\226\128\139')
+  return username .. ' voted for this from the site\n\n<!-- website-feedback-vote:' .. vote.id .. ' -->'
+end
 function M.sync(number)
-  -- One worker per issue. All external calls happen outside database transactions.
-  -- Failed writes back off; the persisted vote count is never rolled back.
+  if not pending(number) then return true end
+  -- One writer per issue; votes and delivery IDs persist across worker restarts.
   local lease = db.query([[UPDATE feedback_issues SET sync_lease = now() + interval '10 minutes'
     WHERE issue_number = ? AND sync_lease <= now() AND sync_after <= now() RETURNING *]], number)[1]
   if not lease then return false end
-  local votes = count(number)
   local ok = pcall(function()
-    local marker = '<!-- website-feedback-votes -->'
-    local comment_id = lease.vote_comment_id ~= db.NULL and lease.vote_comment_id or nil
-    if not comment_id then
-      local comment = find_comment(number, marker)
-      comment_id = comment and comment.id
+    local published = published_votes(number)
+    local votes = db.select([[* FROM feedback_votes WHERE issue_number = ? AND comment_id IS NULL
+      ORDER BY id LIMIT 25]], number)
+    for _, vote in ipairs(votes) do
+      -- Discover an accepted comment after a timeout or a crash before DB update.
+      local id = published[tostring(vote.id)]
+      if not id then id = github('POST', issue_path(number) .. '/comments', {body = vote_body(vote)}).id end
+      db.query('UPDATE feedback_votes SET comment_id = ? WHERE id = ?', id, vote.id)
     end
-    local body = marker .. '\n**Website upvotes: ' .. votes .. '**\nAlert threshold: ' .. settings().threshold .. '\n\nOne vote per signed-in website account. Native GitHub reactions are separate.'
-    if tonumber(lease.synced_count) ~= votes or tonumber(lease.synced_threshold) ~= settings().threshold or not comment_id then
-      if comment_id then
-        local patched = pcall(github, 'PATCH', '/repos/' .. settings().repo .. '/issues/comments/' .. comment_id, {body = body})
-        if not patched then
-          -- Deleted comments are rediscovered/recreated on the next retry.
-          db.query('UPDATE feedback_issues SET vote_comment_id = NULL WHERE issue_number = ?', number)
-          error('Vote comment update failed')
-        end
-      else
-        comment_id = github('POST', issue_path(number) .. '/comments', {body = body}).id
-      end
-    end
-    db.query('UPDATE feedback_issues SET vote_comment_id = ?, synced_count = ?, synced_threshold = ? WHERE issue_number = ?', comment_id, votes, settings().threshold, number)
-
   end)
   db.query([[UPDATE feedback_issues SET sync_lease = now(), sync_after = now() + interval '1 minute'
     WHERE issue_number = ?]], number)
   if not ok and ngx then ngx.log(ngx.ERR, 'Feedback GitHub synchronization pending') end
-  return ok
+  return ok and not pending(number)
 end
 function M.reconcile()
   settings()
   local rows = db.select([[f.issue_number FROM feedback_issues f
     WHERE f.sync_lease <= now() AND f.sync_after <= now()
-      AND (f.synced_count <> (SELECT count(*) FROM feedback_votes v WHERE v.issue_number = f.issue_number)
-        OR f.synced_threshold <> ?)
-    ORDER BY f.sync_after LIMIT 10]], settings().threshold)
+      AND EXISTS (SELECT 1 FROM feedback_votes v WHERE v.issue_number = f.issue_number AND v.comment_id IS NULL)
+    ORDER BY f.sync_after LIMIT 10]])
   for _, row in ipairs(rows) do M.sync(row.issue_number) end
 end
 return M

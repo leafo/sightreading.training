@@ -1,0 +1,56 @@
+.page {
+  box-sizing: border-box;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px clamp(10px, 3vw, 24px) 64px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.controls label {
+  display: grid;
+  gap: 4px;
+}
+
+.controls select {
+  min-height: 44px;
+  font: inherit;
+}
+
+.controls select:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.fretboard {
+  width: 100%;
+  margin-bottom: 20px;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: clamp(12px, 3.5vw, 16px);
+}
+
+.fretboard caption {
+  text-align: left;
+  margin-bottom: 8px;
+}
+
+.fretboard th, .fretboard td {
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  background: var(--surface);
+}
+
+.root {
+  display: inline-block;
+  padding: 3px 2px;
+  border-radius: 4px;
+  background: #54547f;
+  color: white;
+}
