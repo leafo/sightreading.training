@@ -15,6 +15,8 @@ jobs:
         run: npm ci && npm run build_assets
       - name: Chord tools and practice scrolling regression tests
         run: npm run test_chord_lab
+      - name: Play Along arrangements, pitch and playback regression tests
+        run: npm run test_beginner_songs && npm run test_play_along
       - name: Authentication browser-session transport regression tests
         run: npm run test_auth
       - name: Test feedback popularity alerts

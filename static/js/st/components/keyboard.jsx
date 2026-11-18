@@ -47,7 +47,7 @@ export default class Keyboard extends React.PureComponent {
         return
       }
 
-      if (event.target.matches("input")) {
+      if (event.target.matches("input, button, textarea, select")) {
         return
       }
 

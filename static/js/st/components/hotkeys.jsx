@@ -22,7 +22,7 @@ export default class Hotkeys extends React.Component {
         return
       }
 
-      if (event.target.matches("input, button, textarea")) {
+      if (event.target.matches("input, button, textarea, select")) {
         return
       }
 

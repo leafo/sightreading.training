@@ -1,6 +1,9 @@
 import * as React from "react"
 import {Link} from "react-router-dom"
 import {getBeginnerSong} from "st/beginner_songs"
+import {transposeSong, playAlongState, displayedChords, MIN_TRANSPOSE, MAX_TRANSPOSE} from "st/play_along"
+import {readToolState, persistToolPage} from "st/tool_preferences"
+import Toast from "st/components/toast"
 
 import Keyboard from "st/components/keyboard"
 import StaffSongNotes from "st/components/staff_song_notes"
@@ -121,6 +124,7 @@ export class PlayAlongPage extends React.Component {
     this.songEditorRef = React.createRef()
 
     this.state = {
+      ...readToolState("play-along", playAlongState),
       heldNotes: {}, // notes by name, for the keyboard
       heldSongNotes: {},
       bpm: 60,
@@ -219,8 +223,8 @@ export class PlayAlongPage extends React.Component {
   refreshSong() {
     let code = this.state.currentSongCode
     try {
-      let song = SongParser.load(code, this.songParserParams())
-      this.setSong(song)
+      const sourceSong = SongParser.load(code, this.songParserParams())
+      this.setSong(transposeSong(sourceSong, this.state.transpose), {sourceSong})
     } catch(e) {
       this.setState({
         songError: e.message
@@ -274,7 +278,18 @@ export class PlayAlongPage extends React.Component {
     request.send()
   }
 
-  setSong(song) {
+  changeTranspose = value => {
+    const transpose = Number(value)
+    try {
+      const sourceSong = SongParser.load(this.state.currentSongCode, this.songParserParams())
+      const song = transposeSong(sourceSong, transpose)
+      this.setSong(song, {sourceSong, transpose, preserveLoop: true})
+    } catch (error) {
+      this.setState({transposeError: error.message})
+    }
+  }
+
+  setSong(song, {sourceSong = song, transpose = this.state.transpose, preserveLoop = false} = {}) {
     if (this.state.preset) {
       song.getTrack(0).trackName = "Melody"
       song.getTrack(1).trackName = "Chords"
@@ -285,12 +300,20 @@ export class PlayAlongPage extends React.Component {
       this.state.songTimer.reset()
     }
 
+    // Stop the old pitches before installing new note objects or clearing input.
+    Object.keys(this.state.heldNotes).forEach(note => this.props.midiOutput?.noteOff(parseNote(note), 100))
+    this.midiInput.heldNotes = {}
+    this.midiInput.sustainPedalOn = false
+    this.resetHitNotes()
+    const stop = song.getStopInBeats()
     this.setState({
       loading: false,
       songError: null,
-      song,
-      loopLeft: 0,
-      loopRight: song.getStopInBeats(),
+      transposeError: null,
+      song, sourceSong, transpose,
+      heldNotes: {}, heldSongNotes: {},
+      loopLeft: preserveLoop ? Math.min(this.state.loopLeft, stop) : 0,
+      loopRight: preserveLoop ? Math.min(this.state.loopRight, stop) : stop,
 
       songTimer: new SongTimer({
         onUpdate: this.updateBeat.bind(this),
@@ -300,8 +323,9 @@ export class PlayAlongPage extends React.Component {
       })
     }, () => {
       // restore our position in the song (temporary while we edit)
-      this.state.songTimer.beat = currentBeat || 0
-      this.updateBeat(currentBeat || 0)
+      const beat = Math.min(currentBeat || 0, stop)
+      this.state.songTimer.beat = beat
+      this.updateBeat(beat)
     })
   }
 
@@ -396,6 +420,7 @@ export class PlayAlongPage extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    persistToolPage(this, "play-along", playAlongState, prevState)
     if (prevState.bpm != this.state.bpm) {
       if (this.state.songTimer) {
         this.state.songTimer.setBpm(this.state.bpm)
@@ -451,7 +476,7 @@ export class PlayAlongPage extends React.Component {
     }
 
     this.currentBeat = beat
-    this.refs.currentBeatField.setState({ value: beat })
+    this.refs.currentBeatField?.setState({ value: beat })
   }
 
   getTrackRef(idx) {
@@ -549,8 +574,19 @@ export class PlayAlongPage extends React.Component {
         {this.state.preset ? <section>
           <Link to="/play-along">Back to songs</Link>
           <p>{this.state.preset.description}</p>
-          <p>Chords (one per measure): {this.state.preset.chords.map(c => c === "Fsm" ? "F#m" : c).join(" · ")}</p>
+          <p>Chords (one per measure): {displayedChords(this.state.preset.chords, this.state.transpose, this.state.song?.metadata.keySignature || 0).join(" · ")}</p>
         </section> : null}
+        {this.state.currentSongCode && <div className={styles.pitch_controls}>
+          <label>Transpose (half steps)
+            <select value={this.state.transpose} onChange={event => this.changeTranspose(event.target.value)}>
+              {Array.from({length: MAX_TRANSPOSE - MIN_TRANSPOSE + 1}, (_, index) => index + MIN_TRANSPOSE).map(value =>
+                <option key={value} value={value}>{value === 0 ? "0 · Original pitch" : `${value > 0 ? "+" : ""}${value}`}</option>)}
+            </select>
+          </label>
+          {this.state.song && <span>Key signature: {keySignature.name()}</span>}
+          <small>Changing pitch pauses playback. The editor keeps the original notes.</small>
+          {this.state.transposeError && <span role="alert">{this.state.transposeError}</span>}
+        </div>}
         {this.renderSongTrackTools()}
         <div className={classNames(staffStyles.staff_wrapper, styles.staff_wrapper)}>
           {songError}
@@ -560,6 +596,7 @@ export class PlayAlongPage extends React.Component {
         {this.state.enableEditor ? this.renderEditor() : this.renderKeyboard()}
       </div>
       <Hotkeys keyMap={this.keyMap} />
+      <Toast message={this.state.storageWarning} onDismiss={() => this.setState({storageWarning: null})} />
     </div>
   }
 
@@ -699,9 +736,13 @@ export class PlayAlongPage extends React.Component {
   }
 
   renderKeyboard() {
+    const range = this.state.song?.noteRange()
+    const lower = range ? Math.floor(parseNote(range[0]) / 12) * 12 : 48
+    const upper = range ? Math.min(127, Math.max(lower + 35, Math.ceil((parseNote(range[1]) + 1) / 12) * 12 - 1)) : 84
     return <Keyboard
-      lower={"C4"}
-      upper={"C7"}
+      key={this.state.transpose}
+      lower={lower}
+      upper={upper}
       className={styles.keyboard}
       midiOutput={this.props.midiOutput}
       heldNotes={this.state.heldNotes}
@@ -714,7 +755,7 @@ export class PlayAlongPage extends React.Component {
     return <SongEditor
       parserParams={this.songParserParams()}
       ref={this.songEditorRef}
-      songNotes={this.state.song}
+      songNotes={this.state.sourceSong || this.state.song}
       song={this.state.preset ? null : this.state.songModel}
       code={this.state.currentSongCode}
       onCode={code => this.setState({
