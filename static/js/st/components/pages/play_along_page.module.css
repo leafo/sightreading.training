@@ -161,3 +161,8 @@
     }
 }
 
+
+.pitch_controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px clamp(12px, 3vw, 40px); background: var(--surface); }
+.pitch_controls label { display: flex; align-items: center; gap: 8px; }
+.pitch_controls small { color: var(--text-muted); }
+.pitch_controls [role="alert"] { color: var(--error-color); width: 100%; }
