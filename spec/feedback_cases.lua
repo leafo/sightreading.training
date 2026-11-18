@@ -54,7 +54,8 @@ return function()
       request_key = key or '12345678-1234-1234-1234-123456789abc', reviewed = '1', confirm_new = '1'}
   end
   before_each(function()
-    db.query('TRUNCATE feedback_votes, feedback_submissions, feedback_issues RESTART IDENTITY')
+    -- Isolate accounts as well as votes from auth specs and factory reloads.
+    db.query('TRUNCATE feedback_votes, feedback_submissions, feedback_issues, users RESTART IDENTITY CASCADE')
     package.loaded['helpers.feedback'] = nil
     feedback = require('helpers.feedback')
     issues = {{number = 1, title = 'Scroll speed', state = 'open'}}
@@ -67,7 +68,7 @@ return function()
   after_each(function()
     package.loaded['resty.http'] = original_http
     os.getenv:revert()
-    db.query('TRUNCATE feedback_votes, feedback_submissions, feedback_issues RESTART IDENTITY')
+    db.query('TRUNCATE feedback_votes, feedback_submissions, feedback_issues, users RESTART IDENTITY CASCADE')
     package.loaded['helpers.feedback'] = nil
   end)
   it('allows anonymous search and bounds repository search grammar', function()
