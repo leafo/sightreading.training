@@ -1,9 +1,4 @@
-.page {
-  box-sizing: border-box;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 24px clamp(10px, 3vw, 24px) 64px;
-}
+.page { --tool-page-width: 1240px; }
 
 .page label {
   display: block;
@@ -18,10 +13,6 @@
   font: inherit;
 }
 
-.page :is(input, button):focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-}
 
 .results {
   display: grid;
@@ -29,12 +20,14 @@
   gap: 12px;
   list-style: none;
   padding: 0;
+  margin-top: 0;
 }
 
 .results li {
-  border: 1px solid currentColor;
-  border-radius: 6px;
-  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-panel);
+  padding: var(--panel-padding);
+  background: var(--surface);
 }
 
 .results :is(h2, p, dl) {
@@ -61,14 +54,13 @@
   font: inherit;
 }
 
-.page { max-width: 1240px; }
 .page h1 { letter-spacing: -.8px; }
 .workspace { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 24px; align-items: start; }
 .search_panel {
   background: var(--surface);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: var(--radius-panel);
+  padding: var(--panel-padding);
   position: sticky;
   top: 74px;
   label { margin-top: 20px; font-weight: 600; }
@@ -79,8 +71,6 @@
 .root_picker button { padding: 4px; min-height: var(--control-height); background: var(--surface-muted); color: var(--body-color); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; }
 .root_picker button[aria-pressed="true"] { background: var(--button-color); color: white; }
 .chord_panel { min-width: 0; }
-.results { margin-top: 16px; }
-.results li { padding: 20px; border-color: var(--border-color); border-radius: 12px; background: var(--surface); }
 .results h2 { font-size: 28px; letter-spacing: -.5px; }
 .results details { margin: 16px 0; summary { cursor: pointer; min-height: 32px; } }
 .results dd { margin-bottom: 12px; }
@@ -100,7 +90,6 @@
 .diagram_toolbar { flex: 0 0 129px; }
 .diagram_toolbar > label { margin-bottom: 0; }
 .diagram_toolbar input[type="range"] { min-height: 0; height: 16px; padding: 0; }
-.results { margin-top: 0; }
 @media (max-width: 600px) {
   .page_heading { flex-wrap: wrap; }
   .diagram_toolbar { margin-left: auto; }

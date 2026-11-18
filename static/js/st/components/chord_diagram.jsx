@@ -1,4 +1,6 @@
 import * as React from "react"
+import ui from "./ui.module.css"
+import {ActionIcon} from "./control_icons"
 import {useDiagramSize, diagramWidth} from "st/diagram_size"
 import Toast from "st/components/toast"
 import {diagramNote, diagramRange, diagramTones, copyChordDiagram, FRET_MARKERS} from "st/chord_diagram_data"
@@ -6,7 +8,11 @@ import {voicingToken} from "st/voicing_markup"
 import {STRING_NAMES} from "st/guitar_chords"
 import styles from "./guitar_visuals.module.css"
 
-export default function ChordDiagram({frets, fingers, name = "Guitar chord", labels = "fingers", caption = false}) {
+export function DiagramAction({label, children, ...props}) {
+  return <button type="button" className={styles.diagram_action} aria-label={label} title={label} {...props}>{children}</button>
+}
+
+export default function ChordDiagram({frets, fingers, name = "Guitar chord", labels = "fingers", caption = true, actions}) {
   const zoom = useDiagramSize()
   const spacing = labels === "both" ? 42 : 28
   const left = 35
@@ -23,13 +29,16 @@ export default function ChordDiagram({frets, fingers, name = "Guitar chord", lab
   }
   const bottom = 50 + rows * spacing
   const summary = frets.map((fret, index) => `${STRING_NAMES[index]} ${fret === null ? "muted" : fret === 0 ? "open" : `fret ${fret}${fingers?.[index] ? ` finger ${fingers[index]}` : ""}`}`).join(", ")
-  return <figure className={styles.diagram} style={{width: diagramWidth(zoom) * (labels === "both" ? 4 / 3 : 1)}}>
+  return <figure className={styles.diagram} style={{width: diagramWidth(zoom)}}>
+    <div className={styles.diagram_toolbar} role="group" aria-label={`${name} actions`}>
+    {actions}
     <details className={styles.copy_menu}>
-      <summary aria-label="Copy chord diagram" title="Copy as">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="8" y="8" width="12" height="13" rx="2" /><path d="M16 8V3H3v13h5" /></svg>
+      <summary className={ui.icon_button} aria-label="Copy chord diagram" title="Copy as">
+        <ActionIcon name="copy" size={16} />
       </summary>
       <div role="group" aria-label="Copy as"><span>Copy as</span><button type="button" onClick={event => copy(event, "block")}>Block</button><button type="button" onClick={event => copy(event, "line")}>Line</button><button type="button" onClick={event => copy(event, "markup")}>Chord Sheet markup</button></div>
     </details>
+    </div>
     <svg viewBox={`0 0 ${right + 35} ${bottom + 30}`} role="img" aria-label={`${name}: ${summary}`}>
       <title>{`${name}: ${summary}`}</title>
       {Array.from({length: rows + 1}, (_, row) => <line key={`f${row}`} x1="35" x2={right}

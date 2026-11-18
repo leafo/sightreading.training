@@ -1,12 +1,15 @@
 import * as React from "react"
-import {IconVoicings, IconChordLab} from "st/components/control_icons"
+import {downloadFile} from "st/browser_download"
+import ui from "../ui.module.css"
+import {tabNavigationIndex} from "st/tab_navigation"
+import {IconVoicings, IconChordLab, ActionIcon} from "st/components/control_icons"
 
 import {setTitle} from "st/globals"
 import {STARTER_SHEETS} from "st/starter_sheets"
 import SheetVoicings from "st/components/sheet_voicings"
 import {readDefinitions, addDefinition, putDefinition, fretText} from "st/voicing_markup"
 import {createLabHandoff, readLabHandoff, incomingVoicing} from "st/voicing_handoff"
-import ChordDiagram from "st/components/chord_diagram"
+import ChordDiagram, {DiagramAction} from "st/components/chord_diagram"
 import {sheetChordDiagrams} from "st/sheet_chord_diagrams"
 import {chordDiagramAscii} from "st/chord_diagram_data"
 import Toast from "st/components/toast"
@@ -18,8 +21,6 @@ import styles from "./chord_sheet_page.module.css"
 
 const UI_STORAGE_KEY = "chord-sheet-ui:v1"
 const STARTERS = STARTER_SHEETS.map(sheet => ({...sheet, id: `starter:${sheet.id}`, shift: 0, flats: false}))
-const SaveIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M5 3h12l4 4v14H3V3h2Z"/><path d="M7 3v6h9V3M7 21v-8h10v8"/></svg>
-const DeleteIcon = () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>
 
 const EMPTY_SHEET = {title: "", source: "", shift: 0, flats: false}
 
@@ -314,15 +315,7 @@ export default class ChordSheetPage extends React.Component {
   downloadBackup() {
     try {
       const backup = exportSongbook(readSongbook(localStorage))
-      const url = URL.createObjectURL(new Blob([backup], {type: "application/json"}))
-      const link = document.createElement("a")
-      link.href = url
-      link.download = "music-tools-songbook.json"
-      try {
-        link.click()
-      } finally {
-        setTimeout(() => URL.revokeObjectURL(url), 1000)
-      }
+      downloadFile(backup, "music-tools-songbook.json", "application/json")
     } catch {
       this.notify("Could not download the songbook backup.")
     }
@@ -330,18 +323,12 @@ export default class ChordSheetPage extends React.Component {
 
   downloadText() {
     const {title, source, shift, flats} = this.state
-    let url
     try {
-      url = URL.createObjectURL(new Blob([exportChordSheet(source, shift, flats)], {type: "text/plain;charset=utf-8"}))
-      const link = document.createElement("a")
-      link.href = url
+      const text = exportChordSheet(source, shift, flats)
       const filename = title.trim().replace(/[^\p{L}\p{N} _-]/gu, "").slice(0, 80).trim() || "chord-sheet"
-      link.download = `${filename}.txt`
-      link.click()
+      downloadFile(text, `${filename}.txt`, "text/plain;charset=utf-8")
     } catch {
       this.setState({voicingError: "Could not export text. Fix invalid or out-of-range transposed voicings and try again."})
-    } finally {
-      if (url) setTimeout(() => URL.revokeObjectURL(url), 1000)
     }
   }
 
@@ -415,10 +402,12 @@ export default class ChordSheetPage extends React.Component {
       {diagrams.length > 0 && <div className={styles.diagrams} aria-label="Chords used in this sheet">
         {diagrams.map(({name, voicing, alias, key, error}) => <div key={key}>
           {!voicing ? <p role={error ? "alert" : undefined}>{name}{alias ? ` · ${alias}` : ""}: {error || "diagram unavailable"}</p> : diagramMode === "block"
-            ? <ChordDiagram {...voicing} name={name} caption={alias ? `${name} · ${alias}` : true} />
+            ? <ChordDiagram {...voicing} name={name} caption={alias ? `${name} · ${alias}` : true} actions={<>
+                <DiagramAction label={`Choose voicings for ${name}`} onClick={() => { this.pauseScroll(); this.setState({voicingsOpen: true, activeChord: name}) }}><IconVoicings /></DiagramAction>
+                <DiagramAction label={`Open ${name} in Chord Lab`} onClick={() => this.openVoicingLab(name, voicing.frets, alias)}><IconChordLab /></DiagramAction>
+              </>} />
             : <code>{chordDiagramAscii(voicing.frets, name, "line")}{alias ? ` · ${alias}` : ""}</code>}
-          <button className={styles.diagramAction} type="button" onClick={() => { this.pauseScroll(); this.setState({voicingsOpen: true, activeChord: name}) }} aria-label={`Choose voicings for ${name}`} title={`Choose voicings for ${name}`}><IconVoicings /></button>
-          {voicing && <button className={styles.diagramAction} type="button" onClick={() => this.openVoicingLab(name, voicing.frets, alias)} aria-label={`Open ${name} in Chord Lab`} title={`Open ${name} in Chord Lab`}><IconChordLab /></button>}
+          {!voicing && <button type="button" onClick={() => this.setState({voicingsOpen: true, activeChord: name})}>Choose voicings for {name}</button>}
         </div>)}
       </div>}
       {source.trim() ? parseChordSheet(source, shift, flats).map((line, lineIndex) =>
@@ -436,7 +425,7 @@ export default class ChordSheetPage extends React.Component {
     const allSheets = [...STARTERS, ...sheets]
     const visibleSheets = searchSongbook(allSheets, this.state.songbookQuery, this.state.songbookSort)
     const selected = allSheets.find(sheet => sheet.id === activeId)
-    return <main className={styles.page} onPointerDown={event => {
+    return <main className={`${ui.tool_page} ${styles.page}`} onPointerDown={event => {
       event.currentTarget.querySelectorAll("details[data-sheet-popover][open]").forEach(details => {
         if (!details.contains(event.target)) details.open = false
       })
@@ -448,12 +437,13 @@ export default class ChordSheetPage extends React.Component {
             id={`sheet-tab-${name}`} role="tab" aria-selected={tab === name} aria-controls={`sheet-panel-${name}`}
             tabIndex={tab === name ? 0 : -1}
             onClick={() => this.selectTab(name)} onKeyDown={event => {
-              let next
-              if (event.key === "ArrowRight") next = tabs[(index + 1) % tabs.length]
-              if (event.key === "ArrowLeft") next = tabs[(index + tabs.length - 1) % tabs.length]
-              if (event.key === "Home") next = tabs[0]
-              if (event.key === "End") next = tabs[tabs.length - 1]
-              if (next) { event.preventDefault(); this.selectTab(next); document.getElementById(`sheet-tab-${next}`)?.focus() }
+              const nextIndex = tabNavigationIndex(event.key, index, tabs.length)
+              if (nextIndex !== null) {
+                event.preventDefault()
+                const next = tabs[nextIndex]
+                this.selectTab(next)
+                document.getElementById(`sheet-tab-${next}`)?.focus()
+              }
             }}>{name[0].toUpperCase() + name.slice(1)}</button>)}
         </div>
         {this.state.voicingError && <p role="alert">{this.state.voicingError}</p>}
@@ -510,8 +500,8 @@ export default class ChordSheetPage extends React.Component {
                   <button type="button" disabled={!source.trim()} onClick={() => window.print()}>Print / Save PDF</button>
                 </div>
               </details>
-              <button className={styles.iconButton} type="button" title="Save sheet" aria-label="Save sheet" disabled={!title.trim() && !source.trim()} onClick={() => this.save()}><SaveIcon /></button>
-              <button className={styles.iconButton} type="button" title="Delete saved sheet" aria-label="Delete saved sheet" disabled={!sheets.some(sheet => sheet.id === activeId)} onClick={() => this.remove()}><DeleteIcon /></button>
+              <button className={styles.iconButton} type="button" title="Save sheet" aria-label="Save sheet" disabled={!title.trim() && !source.trim()} onClick={() => this.save()}><ActionIcon name="save" /></button>
+              <button className={styles.iconButton} type="button" title="Delete saved sheet" aria-label="Delete saved sheet" disabled={!sheets.some(sheet => sheet.id === activeId)} onClick={() => this.remove()}><ActionIcon name="trash" /></button>
             </div>
           </div>
           <button type="button" className={styles.iconButton} aria-label="Choose voicings" title="Choose voicings" aria-controls="sheet-voicing-panel" aria-expanded={this.state.voicingsOpen} onClick={() => { this.pauseScroll(); this.setState({voicingsOpen: !this.state.voicingsOpen}) }}><IconVoicings /></button>

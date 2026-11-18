@@ -1,9 +1,4 @@
-.page {
-  box-sizing: border-box;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px clamp(10px, 3vw, 24px) 64px;
-}
+.page { --tool-page-width: 1200px; }
 
 .controls {
   display: flex;
@@ -21,9 +16,5 @@
   font: inherit;
 }
 
-.controls select:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-}
 
 .hint { color: var(--text-muted); font-size: 13px; }

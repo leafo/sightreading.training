@@ -1,10 +1,10 @@
 import * as React from "react"
-import {IconChordLab} from "st/components/control_icons"
+import {IconChordLab, IconVoicings} from "st/components/control_icons"
 import {searchChords} from "st/chord_reference"
 import {guitarChordVoicings, assignFingers} from "st/guitar_chords"
 import {parseChordSheet, exportChordSheet} from "st/chord_sheet"
 import {readDefinitions, addDefinition, putDefinition, fretText, parseFrets, voicingToken, ALIAS_PATTERN} from "st/voicing_markup"
-import ChordDiagram from "st/components/chord_diagram"
+import ChordDiagram, {DiagramAction} from "st/components/chord_diagram"
 import styles from "./pages/chord_sheet_page.module.css"
 
 export default function SheetVoicings({source, shift, flats, activeChord, onActiveChord, onChange, onInsert, onLab, onClose}) {
@@ -75,9 +75,9 @@ export default function SheetVoicings({source, shift, flats, activeChord, onActi
           const key = fretText(shape.frets), match = selected.find(d => fretText(d.frets) === key)
           const used = segments.some(s => s.chord === name && s.voicing?.frets && fretText(s.voicing.frets) === key)
           return <div className={styles.voicingCard} key={key}>
-            <label><input type="checkbox" checked={!!match} onChange={() => match ? remove(match) : change(addDefinition(normalized, name, shape.frets).source)} />{match?.alias || shape.category}</label>
-            <ChordDiagram {...shape} name={name} /><code>{key}</code>{used && <small>Used in lyrics</small>}
-            <button type="button" onClick={() => onLab(name, shape.frets, match?.alias)} className={styles.labAction} aria-label={`Open ${name} in Chord Lab`} title={`Open ${name} in Chord Lab`}><IconChordLab /></button>
+            <ChordDiagram {...shape} name={name} caption={match?.alias ? `${name} · ${match.alias}` : true} actions={<>
+              <DiagramAction label={`${match ? "Remove" : "Select"} ${name} voicing ${key}`} aria-pressed={!!match} onClick={() => match ? remove(match) : change(addDefinition(normalized, name, shape.frets).source)}><IconVoicings /></DiagramAction>
+              <DiagramAction label={`Open ${name} in Chord Lab`} onClick={() => onLab(name, shape.frets, match?.alias)}><IconChordLab /></DiagramAction></>} /><code>{key}</code>{used && <small>Used in lyrics</small>}
           </div>
         })}
       </div>
@@ -104,7 +104,6 @@ export default function SheetVoicings({source, shift, flats, activeChord, onActi
           <button type="button" disabled={!i} aria-label={`Move ${d.alias} up`} onClick={() => move(d, -1)}>↑</button>
           <button type="button" disabled={i === selected.length - 1} aria-label={`Move ${d.alias} down`} onClick={() => move(d, 1)}>↓</button>
           <button type="button" onClick={() => onInsert(`[${name}:${d.alias}]`, normalized)}>Insert into lyrics</button>
-          <button type="button" onClick={() => onLab(name, d.frets, d.alias)} className={styles.labAction} aria-label={`Open ${name} in Chord Lab`} title={`Open ${name} in Chord Lab`}><IconChordLab /></button>
           <button type="button" onClick={() => remove(d)}>Remove</button></div>
       </div>)}
       {(selected[0] || candidates[0]) && <p><code>{voicingToken(name, (selected[0] || candidates[0]).frets)}</code> also works when pasted directly into lyrics.</p>}

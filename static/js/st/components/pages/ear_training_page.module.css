@@ -6,7 +6,7 @@
     }
 
     .exercise_header {
-        padding: 20px;
+        padding: var(--panel-padding);
         display: flex;
         align-items: center;
         gap: 10px;

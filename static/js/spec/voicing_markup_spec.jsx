@@ -99,7 +99,8 @@ describe("Sheet voicing workspace and Lab round trip", () => {
   afterEach(()=>{globalThis.localStorage=oldStorage;globalThis.sessionStorage=oldSession;globalThis.location=oldLocation;globalThis.history=oldHistory;globalThis.cancelAnimationFrame=oldCancel})
   it("renders selectable shapes, custom inputs, ordering and insert controls",()=>{
     const html=renderToStaticMarkup(<SheetVoicings source={sheet} shift={0} flats={false} onClose={()=>{}} />)
-    expect(html).toContain('type="checkbox"')
+    expect(html).toContain('aria-label="Remove C7 voicing x-3-2-3-1-x"')
+    expect(html).toContain('title="Remove C7 voicing x-3-2-3-1-x" aria-pressed="true"')
     expect(html).toContain("Insert into lyrics")
     expect(html).toContain("Move verse up")
     expect(html).toContain("Used in lyrics")

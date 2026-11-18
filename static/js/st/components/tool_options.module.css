@@ -1,4 +1,4 @@
-.gear { display: grid; place-items: center; width: var(--control-height); height: var(--control-height); padding: 5px; border: 1px solid var(--border-color); border-radius: 10px; color: var(--body-color); background: var(--surface); box-shadow: none; cursor: pointer; }
+.gear { composes: icon_button from "./ui.module.css"; border: 1px solid var(--border-color); border-radius: 6px; color: var(--body-color); background: var(--surface); box-shadow: none; cursor: pointer; }
 .gear:focus-visible { outline: 2px solid var(--button-color); outline-offset: 2px; }
 .flyout.flyout {
     position: fixed; inset: 50px 0 0 auto; margin: 0; padding: 0;

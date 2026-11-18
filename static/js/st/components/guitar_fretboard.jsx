@@ -1,4 +1,5 @@
 import * as React from "react"
+import IconReset from "st/components/reset_icon"
 import {FRET_MARKERS} from "st/chord_diagram_data"
 import {chordNote} from "st/chord_lab"
 import {OPEN_PITCHES, STRING_NAMES} from "st/guitar_chords"
@@ -12,7 +13,7 @@ export default function GuitarFretboard({frets = Array(6).fill(null), onChange, 
     <div className={styles.toolbar}>
       {!quiet && <span className={styles.fretboard_hint}>Standard tuning · E A D G B E · {onChange ? "Tap a fret to place a note; tap it again to mute the string. ○ open · × muted." : "Highlighted notes belong to the scale; an outlined dot marks the root."}</span>}
       {onReset && <button type="button" className={styles.reset} aria-label="Reset fretboard" title="Reset fretboard" onClick={onReset}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M4 10a8 8 0 1 1 0 5M4 4v6h6" /></svg>
+        <IconReset width={20} />
       </button>}
     </div>
     <div className={styles.scroll} tabIndex="0" role="group" aria-label={`Scrollable fretboard, frets 0 to ${lastFret}`}>

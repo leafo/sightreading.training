@@ -5,7 +5,7 @@ import {identifyChordMatches, identifyChords, guitarVoicing, chordNote} from "st
 import {guitarChordVoicings, OPEN_PITCHES, noteClass} from "st/guitar_chords"
 import {searchChords} from "st/chord_reference"
 import {chordDiagramAscii, copyChordDiagram} from "st/chord_diagram_data"
-import ChordDiagram from "st/components/chord_diagram"
+import ChordDiagram, {DiagramAction} from "st/components/chord_diagram"
 import ChordVoicings from "st/components/chord_voicings"
 import Scales from "st/components/pages/guitar_scales_page"
 import Lab from "st/components/pages/chord_lab_page"
@@ -49,16 +49,34 @@ describe("Jazz voicing recognition", () => {
 
 describe("Shared chord diagram presentation and export", () => {
   const frets = [null, 3, 2, 0, 1, 0]
-  it("renders fingers, notes, intervals and combined labels without redundant captions", () => {
+  it("renders all label modes with the same caption and diagram width", () => {
     for (const labels of ["fingers", "notes", "intervals", "both"]) {
       const text = html(<ChordDiagram frets={frets} fingers={[null, 3, 2, null, 1, null]} name="C" labels={labels} />)
       expect(text).toContain('aria-label="Copy chord diagram"')
       expect(text).toContain('aria-label="Copy as"')
-      expect(text).not.toContain("<figcaption>")
+      expect(text).toContain("<figcaption>C</figcaption>")
+      expect(text).toContain(`style="width:${diagramWidth(readDiagramSize())}px"`)
       expect(text).toContain(">Block</button>")
       expect(text).toContain(">Line</button>")
       if (labels === "notes" || labels === "both") expect(text).toContain(">C</text>")
       if (labels === "intervals" || labels === "both") expect(text).toContain(">3</text>")
+    }
+  })
+  it("keeps named icon actions and copy above the diagram inside its figure", () => {
+    const text = html(<ChordDiagram frets={frets} name="C" actions={<DiagramAction label="Choose C voicing"><svg aria-hidden="true" /></DiagramAction>} />)
+    expect(text.indexOf('aria-label="Choose C voicing"')).toBeLessThan(text.indexOf('<svg viewBox='))
+    expect(text.indexOf('aria-label="Copy chord diagram"')).toBeLessThan(text.indexOf('<svg viewBox='))
+    expect(text).toContain('title="Choose C voicing"')
+  })
+  it("places catalog actions inside each figure without detached action labels", () => {
+    const text = html(<ChordVoicings notes={["C", "E", "G"]} name="C" linkToLab />)
+    expect(text).not.toContain('>Analyze</a>')
+    expect(text).not.toContain('>Copy markup</button>')
+    expect(text).not.toContain('>Add to sheet</a>')
+    for (const figure of text.match(/<figure[\s\S]*?<\/figure>/g) || []) {
+      expect(figure).toContain('aria-label="Open C in Chord Lab"')
+      expect(figure).toContain('aria-label="Add C to Chord Sheet"')
+      expect(figure).toContain('aria-label="Copy chord diagram"')
     }
   })
   it("exports exact single-line tabs and five-fret blocks with open/muted/high positions", () => {
@@ -106,6 +124,17 @@ describe("Trimmed tool UI", () => {
     text = html(page.render())
     expect(text).not.toContain("A (1) · C (♭3)")
     expect(text).toContain("Two-octave piano")
+  })
+  it("places the matches label outside the box and tabs before its content", () => {
+    const page = new Lab({})
+    page.state.frets = [null, 3, 2, 3, 1, null]
+    const section = elements(page.render()).find(node => node.props?.["aria-labelledby"] === "chord-matches-heading")
+    const children = React.Children.toArray(section.props.children)
+    expect(children[0].type).toBe("h2")
+    expect(children[0].props.children).toBe("Chord Matches")
+    expect(React.Children.toArray(children[1].props.children)[0].props.role).toBe("tablist")
+    const text = html(section)
+    expect(text.indexOf('role="tablist"')).toBeLessThan(text.indexOf('<figure'))
   })
   it("shows note-letter chord tabs and keeps guitar diagrams out of piano mode", () => {
     const page = new Lab({})
