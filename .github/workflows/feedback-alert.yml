@@ -1,0 +1,41 @@
+name: Popular feedback alert
+on:
+  issue_comment:
+    types: [created, edited]
+  schedule:
+    - cron: '7,37 * * * *'
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Optional issue number to reconcile (otherwise checks all open issues)'
+        required: false
+        type: string
+permissions:
+  contents: read
+  issues: write
+# Serialize checks and writes across both event and recovery runs.
+concurrency:
+  group: feedback-popularity-alert
+  cancel-in-progress: false
+jobs:
+  notify:
+    if: >-
+      github.event_name != 'issue_comment' ||
+      (!github.event.issue.pull_request &&
+       github.event.comment.user.login == (vars.FEEDBACK_BOT_LOGIN || github.repository_owner) &&
+       contains(github.event.comment.body, '<!-- website-feedback-vote:'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
+        env:
+          FEEDBACK_VOTE_THRESHOLD: ${{ vars.FEEDBACK_VOTE_THRESHOLD || '5' }}
+          FEEDBACK_BOT_LOGIN: ${{ vars.FEEDBACK_BOT_LOGIN || github.repository_owner }}
+          FEEDBACK_ALERT_LOGIN: ${{ vars.FEEDBACK_ALERT_LOGIN || github.repository_owner }}
+        with:
+          script: |
+            const notify = require('./.github/scripts/feedback_alert.cjs')
+            await notify({github, context, core})

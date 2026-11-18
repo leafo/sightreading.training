@@ -1,0 +1,17 @@
+.page { max-width: 850px; margin: 30px auto; padding: 0 20px 50px; line-height: 1.6; }
+.page h1 { line-height: 1.2; }
+.page section { margin-top: 30px; }
+.page button { padding: 9px 14px; cursor: pointer; }
+.page button:disabled { cursor: default; opacity: .6; }
+.page input:not([type="checkbox"]), .page textarea { padding: 10px; font: inherit; box-sizing: border-box; width: 100%; max-width: 100%; }
+.search label, .ticket > label { display: block; font-weight: bold; margin: 15px 0 5px; }
+.search > div { display: flex; gap: 10px; }
+.issues { padding: 0; list-style: none; }
+.issues li { display: flex; align-items: center; justify-content: space-between; gap: 15px; border-bottom: 1px solid #aaa; padding: 15px 0; }
+.issues a { overflow-wrap: anywhere; }
+.issues button { white-space: nowrap; flex-shrink: 0; }
+.ticket > button { margin-top: 12px; }
+.ticket .review { font-weight: normal; }
+.review input { margin-right: 8px; }
+.error { color: #a42020; padding: 12px; border: 1px solid currentColor; }
+@media (max-width: 500px) { .issues li { align-items: flex-start; flex-direction: column; } }

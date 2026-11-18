@@ -17,6 +17,8 @@ jobs:
         run: npm run test_chord_lab
       - name: Authentication browser-session transport regression tests
         run: npm run test_auth
+      - name: Test feedback popularity alerts
+        run: node --test .github/scripts/feedback_alert.test.cjs
       - name: Build disposable backend test image
         run: docker build -t sightreading-test .
       - name: Test full backend with disposable PostgreSQL

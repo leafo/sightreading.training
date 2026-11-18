@@ -65,7 +65,7 @@ export default class Header extends React.Component {
             <NavLink to="/about" aria-label="Guide" title="Guide">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5M12 17v1" /></svg>
             </NavLink>
-            {userLinks.filter(link => link.key === "stats")}
+            {userLinks.filter(link => link.key === "feedback" || link.key === "stats")}
             <ThemePicker />
           </div>
         </section>
@@ -102,6 +102,7 @@ export default class Header extends React.Component {
       <NavLink key="chord-lab" to="/chord-lab" {...toggleActive}>Chord Lab</NavLink>,
       <NavLink key="chord-sheet" to="/chord-sheet" {...toggleActive}>Chord Sheet</NavLink>,
       <NavLink key="chord-reference" to="/chord-reference" {...toggleActive}>Chord Reference</NavLink>,
+      <NavLink end key="feedback" to="/feedback" {...toggleActive}>Feedback</NavLink>,
       <NavLink end key="about" to="/about" {...toggleActive}>Guide</NavLink>,
     ]
 

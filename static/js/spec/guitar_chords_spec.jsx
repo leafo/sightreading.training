@@ -91,6 +91,7 @@ describe("Sidebar navigation", () => {
     const nav = elements(sidebar).find(node => node.type === "nav")
     expect(elements(nav).some(node => node.type === ThemePicker || node.type === MidiButton)).toBeFalse()
     expect(elements(sidebar).some(node => node.props?.["aria-label"] === "Guide")).toBeTrue()
+    expect(elements(sidebar).some(node => node.props?.to === "/feedback")).toBeTrue()
     expect(elements(sidebar).filter(node => node.type === MidiButton).length).toBe(1)
     expect(nodes().filter(node => node.type === MidiButton).length).toBe(1)
     expect(nodes().some(node => node.props?.children === "Your music workspace")).toBeFalse()

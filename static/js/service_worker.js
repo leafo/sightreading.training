@@ -15,6 +15,10 @@ self.addEventListener("fetch", function(event) {
     return
   }
 
+  if (new URL(event.request.url).pathname.startsWith("/feedback")) {
+    return
+  }
+
   if (event.request.url.match(/\bmanifest\.json\b/)) {
     return
   }

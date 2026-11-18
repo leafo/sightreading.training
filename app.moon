@@ -78,6 +78,16 @@ class extends lapis.Application
     @flow("hits")\register_hits!
     json: { success: true }
 
+  "/feedback.json": multi {
+    get: =>
+      headers: { ["Cache-Control"]: "no-store" }, json: require("helpers.feedback").list @
+    post: =>
+      json: require("helpers.feedback").create @
+  }
+
+  "/feedback/:issue/vote.json": post =>
+    json: require("helpers.feedback").vote @
+
   "/trainer-preferences.json": post =>
     @flow("trainer_preferences")\save!
     json: { success: true }

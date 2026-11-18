@@ -211,3 +211,17 @@ describe "app", ->
       assert.same {"invalid csrf"}, res.errors
       user\refresh!
       assert.same {}, user.trainer_preferences
+
+
+  describe "feedback routes", ->
+    it "rejects issue creation with invalid CSRF before any remote write", ->
+      status, res = request_as factory.Users!, "/feedback.json", {
+        expect: "json", post: { csrf_token: "invalid" }
+      }
+      assert.same {"invalid csrf"}, res.errors
+
+    it "rejects votes with invalid CSRF before any remote write", ->
+      status, res = request_as factory.Users!, "/feedback/1/vote.json", {
+        expect: "json", post: { csrf_token: "invalid" }
+      }
+      assert.same {"invalid csrf"}, res.errors

@@ -42,4 +42,4 @@ production = ->
     }
   }
 
-{:production}
+{:production, :secret}

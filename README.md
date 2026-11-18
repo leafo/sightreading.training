@@ -205,3 +205,14 @@ are marked `no 5`. Ordinary triads and altered fifths still require all tones.
 Common grips now include C7 `x-3-2-3-1-x` and major/minor seventh/ninth shells.
 
 See the [completed task list and remaining manual checks](docs/review/chord-ui-task-list.md).
+
+## Website feedback
+
+The Feedback menu opens `/feedback`: search open GitHub issues, upvote a match,
+or create an issue after reviewing similar titles. Signed-in accounts get one
+website vote per issue. Each vote posts “<username> voted for this from the site”
+on GitHub. Website vote comments plus the issue’s native thumbs-up reactions
+trigger a single maintainer mention at five total votes. See
+[the integration contract](docs/feedback.md) for settings and delivery behavior.
+The full backend, migrations and a repository-scoped GitHub credential are required;
+the frontend-only preview shows an availability message.

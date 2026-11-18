@@ -9,6 +9,7 @@ import FlashCardPage from "st/components/pages/flash_card_page"
 import EarTrainingPage from "st/components/pages/ear_training_page"
 import {PlayAlongPageWithParams as PlayAlongPage} from "st/components/pages/play_along_page"
 import LatencyPage from "st/components/pages/latency"
+import FeedbackPage from "st/components/pages/feedback_page"
 import MidiMonitorPage from "st/components/pages/midi_monitor"
 import SongsPage from "st/components/pages/songs"
 import NotFoundPage from "st/components/pages/not_found"
@@ -160,6 +161,7 @@ class Layout extends React.Component {
         <Route path="/chord-reference" element={<ChordReferencePage {...pageProps} />} />
         <Route path="/stats" element={<StatsPage {...pageProps} />} />
         <Route path="/latency" element={<LatencyPage {...pageProps} />} />
+        <Route path="/feedback" element={<FeedbackPage />} />
         <Route path="/midi-monitor" element={<MidiMonitorPage {...pageProps} />} />
         <Route path="/new-song" element={<PlayAlongPage newSong={true} editorOpen={true} {...pageProps} />} />
 

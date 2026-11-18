@@ -112,3 +112,43 @@ package.loaded.migrations =
 
   [1792195200]: =>
     add_column "users", "trainer_preferences", "jsonb not null default '{}'::jsonb"
+
+
+  [1793577600]: =>
+    db.query [[CREATE TABLE feedback_issues (
+      issue_number integer PRIMARY KEY CHECK (issue_number > 0),
+      vote_comment_id bigint,
+      synced_count integer NOT NULL DEFAULT -1,
+      synced_threshold integer NOT NULL DEFAULT 0,
+      sync_after timestamp NOT NULL DEFAULT now(),
+      sync_lease timestamp NOT NULL DEFAULT now()
+    )]]
+    db.query [[CREATE TABLE feedback_votes (
+      issue_number integer NOT NULL REFERENCES feedback_issues(issue_number),
+      user_id integer NOT NULL REFERENCES users(id),
+      created_at timestamp NOT NULL DEFAULT now(),
+      PRIMARY KEY (issue_number, user_id)
+    )]]
+    db.query [[CREATE TABLE feedback_submissions (
+      id serial PRIMARY KEY,
+      user_id integer NOT NULL REFERENCES users(id),
+      request_key varchar(64) NOT NULL,
+      day date NOT NULL DEFAULT current_date,
+      daily_slot integer NOT NULL CHECK (daily_slot BETWEEN 1 AND 5),
+      title text NOT NULL,
+      description text NOT NULL,
+      issue_number integer,
+      created_at timestamp NOT NULL DEFAULT now(),
+      UNIQUE (user_id, request_key),
+      UNIQUE (user_id, day, daily_slot)
+    )]]
+    create_index "feedback_submissions", "user_id", "created_at"
+
+
+  [1794960000]: =>
+    db.query "ALTER TABLE feedback_votes ADD COLUMN id bigserial UNIQUE NOT NULL"
+    db.query "ALTER TABLE feedback_votes ADD COLUMN username text"
+    db.query "UPDATE feedback_votes v SET username = u.username FROM users u WHERE u.id = v.user_id"
+    db.query "ALTER TABLE feedback_votes ALTER COLUMN username SET NOT NULL"
+    db.query "ALTER TABLE feedback_votes ADD COLUMN comment_id bigint"
+    create_index "feedback_votes", "issue_number", where: "comment_id is null"

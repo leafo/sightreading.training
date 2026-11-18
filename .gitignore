@@ -14,3 +14,8 @@ nginx.conf.compiled
 
 # Generated build identity; each image/preview writes its own timestamp.
 static/build-info.json
+
+# Handwritten backend integration (not generated MoonScript).
+!helpers/feedback.lua
+
+!spec/feedback_cases.lua
