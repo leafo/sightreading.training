@@ -123,8 +123,8 @@
 
         > button {
             margin-left: 15px;
-            font-size: 18px;
-            padding: 10px 20px;
+            font-size: var(--control-font-size);
+            padding: var(--control-padding-y) var(--control-padding-x);
 
             &:first-child {
                 margin-left: 0;

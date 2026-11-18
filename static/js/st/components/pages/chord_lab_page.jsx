@@ -1,4 +1,8 @@
 import * as React from "react"
+import ui from "../ui.module.css"
+import {tabNavigationIndex} from "st/tab_navigation"
+import IconReset from "st/components/reset_icon"
+import visualStyles from "../guitar_visuals.module.css"
 
 import {Link} from "react-router-dom"
 import VoicingTransfer from "st/components/voicing_transfer"
@@ -74,15 +78,15 @@ export default class ChordLabPage extends React.Component {
   }
 
   renderChordTabs(chords, selected, field, pitches) {
-    return <div className={styles.match_list} role="tablist" aria-label={field === "selectedMatch" ? "Chord matches" : "Suggested chords"}>
+    return <div className={`${ui.tab_list} ${styles.match_list}`} role="tablist" aria-label={field === "selectedMatch" ? "Chord matches" : "Suggested chords"}>
       {chords.map((chord, index) => {
         const tones = chordTones(chord.name).filter(tone => !chord.omittedFifth || pitches?.some(pitch => pitch % 12 === tone.pitchClass))
         return <button key={chord.name} type="button" role="tab" aria-selected={selected === chord.name}
           tabIndex={selected === chord.name ? 0 : -1}
           onClick={() => this.setState({[field]: chord.name})}
           onKeyDown={event => {
-            const move = {ArrowRight: (index + 1) % chords.length, ArrowLeft: (index + chords.length - 1) % chords.length, Home: 0, End: chords.length - 1}[event.key]
-            if (move === undefined) return
+            const move = tabNavigationIndex(event.key, index, chords.length)
+            if (move === null) return
             event.preventDefault()
             this.setState({[field]: chords[move].name})
             event.currentTarget.parentElement.querySelectorAll('[role="tab"]')[move].focus()
@@ -104,12 +108,12 @@ export default class ChordLabPage extends React.Component {
     const suggestions = matches.length ? [] : suggestChords(pitches)
     const activeSuggestion = suggestions.find(item => item.name === this.state.selectedSuggestion) || suggestions[0]
     const chooseVoicing = frets => this.setState({frets: [...frets], instrument: "guitar"})
-    return <main className={styles.page}>
+    return <main className={`${ui.tool_page} ${styles.page}`}>
       <div className={styles.page_heading}><h1>Chord Lab</h1>
         <div className={styles.heading_actions}><Link to="/chord-reference">Search chords →</Link>
         {instrument === "guitar" && <button type="button" className={styles.reset} aria-label="Reset fretboard" title="Reset fretboard"
           onClick={() => this.setState({frets: Array(6).fill(null), selectedMatch: ""})}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M4 10a8 8 0 1 1 0 5M4 4v6h6" /></svg>
+          <IconReset width={20} />
         </button>}
         <ToolOptions>
           <label>Instrument<select value={instrument} onChange={event => { this.resetMidi(); this.setState({instrument: event.target.value}) }}>
@@ -140,24 +144,26 @@ export default class ChordLabPage extends React.Component {
         </>}
       {labels !== "notes" && <p className={styles.degree_context}>Degrees relative to {selected ? `${selected.split("/")[0]} root` : `the current bass (${notes[0] || "select a note"})`}.</p>}
       {instrument === "guitar" && <DiagramSize />}
-      <div className={styles.analysis}>
-        {instrument === "guitar" && <ChordDiagram frets={frets} fingers={assignFingers(frets)} name={selected || "Your voicing"} labels={this.state.diagramLabels} />}
-        <section aria-live="polite"><h2>Chord matches</h2>
+      <section className={styles.matches} aria-labelledby="chord-matches-heading">
+        <h2 id="chord-matches-heading">Chord Matches</h2>
+        <div className={styles.analysis}>
           {matches.length ? this.renderChordTabs(matchDetails, selected, "selectedMatch", pitches) : <p>{notes.length < 3 ? "Select at least three different notes to identify a chord." : "No direct match."}</p>}
-        </section>
-      </div>
-      {instrument === "guitar" && selected && validFrets(frets) && <section className={styles.actions} aria-label="Use voicing in Chord Sheet">
-        <VoicingTransfer name={selected} frets={frets} />
-        {this.state.sheetReturn && <>
-          <p>Return to {this.state.sheetContext.title || "Untitled song"} with this exact shape.</p>
-          <Link reloadDocument to={`/chord-sheet?sheetReturn=${this.state.sheetReturn}&action=add&voicing=${encodeURIComponent(voicingToken(selected, frets))}`}>Add variation and return</Link>
-          {this.state.sheetContext.alias && <Link reloadDocument to={`/chord-sheet?sheetReturn=${this.state.sheetReturn}&action=replace&voicing=${encodeURIComponent(voicingToken(selected, frets))}`}>Replace this voicing and return</Link>}
-        </>}
-      </section>}
+          <div className={styles.match_content} aria-live="polite">
+            {instrument === "guitar" && <ChordDiagram frets={frets} fingers={assignFingers(frets)} name={selected || "Your voicing"} labels={this.state.diagramLabels}
+              actions={selected && validFrets(frets) && <>
+                <VoicingTransfer name={selected} frets={frets} />
+                {this.state.sheetReturn && <>
+                  <Link className={visualStyles.diagram_link} aria-label="Add variation and return" title="Add variation and return" reloadDocument to={`/chord-sheet?sheetReturn=${this.state.sheetReturn}&action=add&voicing=${encodeURIComponent(voicingToken(selected, frets))}`}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="m8 5-5 5 5 5M3 10h11a5 5 0 0 1 0 10M17 2v8M13 6h8" /></svg></Link>
+                  {this.state.sheetContext.alias && <Link className={visualStyles.diagram_link} aria-label="Replace this voicing and return" title="Replace this voicing and return" reloadDocument to={`/chord-sheet?sheetReturn=${this.state.sheetReturn}&action=replace&voicing=${encodeURIComponent(voicingToken(selected, frets))}`}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="m8 3-5 5 5 5M3 8h11a6 6 0 0 1 0 12H9M14 5l3-3 3 3" /></svg></Link>}
+                </>}
+              </>} />}
+            {instrument === "guitar" && selected && <div id="match-voicings" role="tabpanel" aria-label={`${selected} voicings`}>
+              <ChordVoicings notes={tones.map(tone => tone.name)} bassNote={selected.split("/")[1]} name={selected} labels={this.state.diagramLabels} onChoose={chooseVoicing} />
+            </div>}
+          </div>
+        </div>
+      </section>
       {this.state.sheetReturn && <p><Link reloadDocument to="/chord-sheet">Return to sheet without changes</Link></p>}
-      {instrument === "guitar" && selected && <section className={styles.variants} id="match-voicings" role="tabpanel" aria-label={`${selected} voicings`}>
-        <ChordVoicings notes={tones.map(tone => tone.name)} bassNote={selected.split("/")[1]} name={selected} labels={this.state.diagramLabels} onChoose={chooseVoicing} />
-      </section>}
       {suggestions.length > 0 && <section className={styles.variants}>
         <h2>Suggestions</h2>
         {this.renderChordTabs(suggestions, activeSuggestion.name, "selectedSuggestion")}

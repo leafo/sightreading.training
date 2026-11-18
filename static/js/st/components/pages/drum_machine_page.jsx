@@ -1,4 +1,6 @@
 import * as React from "react"
+import ui from "../ui.module.css"
+import {ActionIcon} from "st/components/control_icons"
 import {createPortal} from "react-dom"
 import {setTitle} from "st/globals"
 import {DRUM_KITS} from "st/drum_kits"
@@ -16,17 +18,6 @@ function isDrumVolume(value) {
 }
 
 const TAGLINES = ["Find you groove", "Groovy", "Tss tss tssss", "Boom chucka", "Bum dum..."]
-
-function DrumIcon({name}) {
-  return <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    {name === "play" && <path fill="currentColor" stroke="none" d="M7 4v16l14-8z" />}
-    {name === "stop" && <rect fill="currentColor" stroke="none" x="5" y="5" width="14" height="14" rx="1" />}
-    {name === "volume" && <><path d="M11 4 6 8H3v8h3l5 4zM15 8a6 6 0 0 1 0 8M18 4a11 11 0 0 1 0 16" /></>}
-    {name === "save" && <><path d="M5 3h12l4 4v14H3V3zM7 3v6h10V3M7 21v-8h10v8M14 5v2" /></>}
-    {name === "plus" && <path d="M12 5v14M5 12h14" />}
-    {name === "trash" && <><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" /></>}
-  </svg>
-}
 
 class PatternNameDialog extends React.Component {
   dialog = React.createRef()
@@ -292,7 +283,7 @@ export default class DrumMachinePage extends React.Component {
     const compound = pattern.timeSignature === "6/8"
     const triplet = pattern.subdivision === "triplet"
     const steps = Array.from({length: pattern.bars * meter.steps}, (_, i) => i)
-    const editor = <main className={styles.page}>
+    const editor = <main className={`${ui.tool_page} ${styles.page}`}>
       {dialogAction && <PatternNameDialog action={dialogAction} name={dialogName} error={dialogError}
         onChange={dialogName => this.setState({dialogName, dialogError: ""})} onSubmit={() => this.submitPatternName()}
         onCancel={() => this.setState({dialogAction: null, dialogError: ""})} />}
@@ -306,16 +297,16 @@ export default class DrumMachinePage extends React.Component {
                 {saved.map(item => <option key={item.name} value={item.name}>{item.name}</option>)}
               </select>
             </label>
-            <button type="button" className={styles.iconButton} aria-label="Save pattern" title="Save pattern" onClick={() => this.openSaveDialog()}><DrumIcon name="save" /></button>
-            <button type="button" className={styles.iconButton} aria-label="New pattern" title="Save current beat as a new pattern" onClick={() => this.newPattern()}><DrumIcon name="plus" /></button>
-            <button type="button" className={styles.iconButton} aria-label="Delete saved pattern" title="Delete selected saved pattern" disabled={!selectedName} onClick={() => this.deleteSelected()}><DrumIcon name="trash" /></button>
+            <button type="button" className={styles.iconButton} aria-label="Save pattern" title="Save pattern" onClick={() => this.openSaveDialog()}><ActionIcon name="save" /></button>
+            <button type="button" className={styles.iconButton} aria-label="New pattern" title="Save current beat as a new pattern" onClick={() => this.newPattern()}><ActionIcon name="plus" /></button>
+            <button type="button" className={styles.iconButton} aria-label="Delete saved pattern" title="Delete selected saved pattern" disabled={!selectedName} onClick={() => this.deleteSelected()}><ActionIcon name="trash" /></button>
           </div>
         </section>
       </header>
       <Toast message={message} notificationId={notificationId} onDismiss={() => this.setState({message: ""})} />
       <section className={styles.panel} aria-label="Playback controls">
         <div className={styles.controls}>
-          <button className={`${styles.play} ${styles.iconButton}`} aria-label={playing || starting ? "Stop" : "Play"} aria-keyshortcuts="Space" title={playing || starting ? "Stop (Space)" : "Play (Space)"} onClick={() => this.togglePlayback()}><DrumIcon name={playing || starting ? "stop" : "play"} /></button>
+          <button className={`${styles.play} ${styles.iconButton}`} aria-label={playing || starting ? "Stop" : "Play"} aria-keyshortcuts="Space" title={playing || starting ? "Stop (Space)" : "Play (Space)"} onClick={() => this.togglePlayback()}><ActionIcon name={playing || starting ? "stop" : "play"} /></button>
           <label>Tempo <input aria-label="Tempo BPM" type="number" min="30" max="240" step="any" value={tempoInput}
             onChange={e => this.changeTempo(e.target.value)} onBlur={() => this.commitTempo()}
             onKeyDown={e => {
@@ -336,7 +327,7 @@ export default class DrumMachinePage extends React.Component {
           </select></label>
           <label>Swing {Math.round(pattern.swing * 100)}%<input aria-label="Swing" disabled={triplet} title="Delays offbeat eighth notes (&). 0% is straight; 33% is a triplet shuffle." type="range" min="0" max="50" value={Math.round(pattern.swing * 100)}
             onChange={e => this.changePattern({...pattern, swing: Number(e.target.value) / 100})} /></label>
-          <label><DrumIcon name="volume" /> {Math.round(volume * 100)}%
+          <label><ActionIcon name="volume" /> {Math.round(volume * 100)}%
             <input aria-label="Volume" aria-valuetext={`${Math.round(volume * 100)} percent`} type="range" min="0" max={MAX_DRUM_VOLUME * 100}
               value={Math.round(volume * 100)} onChange={e => this.changeVolume(Number(e.target.value) / 100)} />
           </label>
@@ -344,7 +335,7 @@ export default class DrumMachinePage extends React.Component {
       </section>
       <section className={styles.panel} aria-label="Pattern editor">
         <div className={styles.sectionHeader}><h2>Just beat it</h2>
-          <button className={styles.iconButton} aria-label="Clear pattern" title="Clear pattern" onClick={() => this.changePattern({...emptyPattern(pattern.bars, pattern.timeSignature, pattern.subdivision), kit: pattern.kit, bpm: pattern.bpm, swing: pattern.swing})}><DrumIcon name="trash" /></button>
+          <button className={styles.iconButton} aria-label="Clear pattern" title="Clear pattern" onClick={() => this.changePattern({...emptyPattern(pattern.bars, pattern.timeSignature, pattern.subdivision), kit: pattern.kit, bpm: pattern.bpm, swing: pattern.swing})}><ActionIcon name="trash" /></button>
         </div>
         <p className={styles.help}>Toggle steps to add hits. Mute individual tracks with their names. Two bars repeat the first bar when extended. {compound && "6/8: six numbered eighth notes per bar. BPM counts dotted quarters."} {triplet && "Triplets are evenly spaced. Swing applies to straight steps."}</p>
         <div className={styles.scroll} tabIndex="0" aria-label="Scrollable drum steps">
@@ -380,7 +371,7 @@ export default class DrumMachinePage extends React.Component {
 
     if (!this.state.floating || !this.floatingWindow) return editor
     return <>
-      <main className={styles.page}>
+      <main className={`${ui.tool_page} ${styles.page}`}>
         <h1>Drum Machine</h1>
         <p>The editor is open in a floating window.</p>
         <button type="button" onClick={() => this.floatingWindow?.close()}>Return editor to tab</button>

@@ -1,4 +1,5 @@
 import * as React from "react"
+import ui from "../ui.module.css"
 import {Link} from "react-router-dom"
 import ChordVoicings from "st/components/chord_voicings"
 import DiagramSize from "st/components/diagram_size"
@@ -28,7 +29,7 @@ export default class ChordReferencePage extends React.Component {
   render() {
     const {query} = this.state
     const results = query.trim() ? searchChords(query) : []
-    return <main className={styles.page}>
+    return <main className={`${ui.tool_page} ${styles.page}`}>
       <div className={styles.page_heading}>
         <div><h1>Chord Reference</h1>
           <p className={styles.intro}>Find a chord by symbol, name, mood, or style to see its notes and interval formula.</p>

@@ -1,4 +1,5 @@
 import * as React from "react"
+import ui from "../ui.module.css"
 import {setTitle} from "st/globals"
 import {guitarScale, ROOTS, SCALE_TYPES} from "st/guitar_scales"
 import {scalesState, readToolState, persistToolPage} from "st/tool_preferences"
@@ -15,7 +16,7 @@ export default class GuitarScalesPage extends React.Component {
   render() {
     const {root, type, instrument, labels} = this.state
     const {notes} = guitarScale(root, type, 12)
-    return <main className={styles.page}>
+    return <main className={`${ui.tool_page} ${styles.page}`}>
       <h1>Scales</h1>
       <p>Explore a scale on guitar or piano.</p>
       <div className={styles.controls}>

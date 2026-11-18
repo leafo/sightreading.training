@@ -7,7 +7,7 @@
     }
 
     .content_column {
-        padding: 20px;
+        padding: var(--panel-padding);
 
         > section {
             h2 {

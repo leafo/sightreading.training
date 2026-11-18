@@ -1,8 +1,10 @@
 import * as React from "react"
+import {IconChordLab, IconVoicings} from "./control_icons"
+import visualStyles from "./guitar_visuals.module.css"
 import {Link} from "react-router-dom"
 import {useDiagramSize, diagramWidth} from "st/diagram_size"
 import VoicingTransfer from "st/components/voicing_transfer"
-import ChordDiagram from "st/components/chord_diagram"
+import ChordDiagram, {DiagramAction} from "st/components/chord_diagram"
 import {guitarChordVoicings} from "st/guitar_chords"
 import styles from "./chord_voicings.module.css"
 
@@ -14,13 +16,14 @@ export default function ChordVoicings({notes, bassNote, name, onChoose, linkToLa
     {["Common", "Moveable", "Less common"].map(category => {
       const group = shapes.filter(shape => shape.category === category)
       if (!group.length) return null
-      return <section key={category}><h3>{category} voicings</h3><div className={styles.shapes} style={{gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${diagramWidth(zoom) * (labels === "both" ? 4 / 3 : 1) + 28}px), 1fr))`}}>
+      return <section key={category}><h3>{category} voicings</h3><div className={styles.shapes} style={{gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${diagramWidth(zoom)}px), 1fr))`}}>
         {group.map(shape => <div className={styles.shape} key={shape.frets.join(",")}>
-          <ChordDiagram {...shape} name={name} labels={labels} />
-          <VoicingTransfer name={name} frets={shape.frets} />
+          <ChordDiagram {...shape} name={name} labels={labels} actions={<>
+            {onChoose && <DiagramAction label={`Use ${name} voicing`} onClick={() => onChoose(shape.frets)}><IconVoicings /></DiagramAction>}
+            {linkToLab && <Link className={visualStyles.diagram_link} aria-label={`Open ${name} in Chord Lab`} title={`Open ${name} in Chord Lab`} to={`/chord-lab?frets=${shape.frets.map(fret => fret ?? "x").join(",")}`}><IconChordLab /></Link>}
+            <VoicingTransfer name={name} frets={shape.frets} />
+          </>} />
           {shape.omittedFifth && <small>no 5</small>}
-          {onChoose && <button type="button" onClick={() => onChoose(shape.frets)}>Use</button>}
-          {linkToLab && <Link to={`/chord-lab?frets=${shape.frets.map(fret => fret ?? "x").join(",")}`}>Analyze</Link>}
         </div>)}
       </div></section>
     })}
