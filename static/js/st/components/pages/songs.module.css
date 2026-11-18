@@ -7,7 +7,7 @@
     }
 
     .content_column {
-        padding: 20px;
+        padding: var(--panel-padding);
 
         > section {
             h2 {
@@ -40,7 +40,7 @@
         .song_title {
             font-size: 20px;
             a {
-                color: #55556b;
+                color: var(--body-color);
                 text-decoration: none;
             }
             margin-bottom: 5px;

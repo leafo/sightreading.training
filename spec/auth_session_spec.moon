@@ -61,3 +61,34 @@ describe "browser authentication sessions", ->
     status, _, headers = request "/"
     assert.same 200, status
     assert.same "no-store", headers.cache_control
+
+  it "saves and clears only the authenticated account's display name", ->
+    user = factory.Users password: "test-password"
+    other = factory.Users display_name: "Other musician"
+    visit = browser!
+    token = visit("/csrf-token.json").csrfToken
+    save_name = (name, account_id=tostring(user.id), csrf_token=token) ->
+      visit "/display-name.json", {display_name: name, :account_id, :csrf_token}
+
+    assert.same { "You must be logged in" }, save_name("Guest").errors
+    assert.same user.id, visit("/login.json", {
+      username: user.username, password: "test-password", csrf_token: token
+    }).currentUser.id
+    token = visit("/csrf-token.json").csrfToken
+    assert.same { "invalid csrf" }, save_name("Invalid token", tostring(user.id), "wrong").errors
+    assert.same { "Your account changed. Reload the page and try again." }, save_name("Wrong account", tostring(other.id)).errors
+    assert.same { "Display name is too long" }, save_name(string.rep("a", 256)).errors
+    assert.same { "Display names cannot contain control characters" }, save_name("A\nB").errors
+
+    name = "Band </script> name"
+    saved = save_name "  #{name}  "
+    assert.same name, saved.currentUser.displayName
+    assert.same user.username, saved.currentUser.username
+    user\refresh!
+    other\refresh!
+    assert.same name, user\name_for_display!
+    assert.same "Other musician", other\name_for_display!
+
+    assert.same user.username, save_name("   ").currentUser.username
+    user\refresh!
+    assert.same user.username, user\name_for_display!

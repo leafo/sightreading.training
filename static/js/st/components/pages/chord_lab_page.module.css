@@ -1,0 +1,45 @@
+.page { --tool-page-width: 1200px; }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.page label {
+  display: grid;
+  gap: 4px;
+}
+
+.page select, .page button {
+  min-height: var(--control-height);
+  font: inherit;
+}
+
+
+.page_heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 4px; h1 { margin: 0; letter-spacing: -.8px; } p { color: var(--text-muted); } }
+.matches > h2 { margin: 16px 0 8px; font-size: 1.25rem; }
+.analysis { min-width: 0; background: var(--surface); border: 1px solid var(--border-color); border-radius: 8px; overflow: visible; }
+.match_content { display: grid; gap: 20px; padding: 16px; min-width: 0; }
+.match_content > div { min-width: 0; }
+.analysis > p { margin: 16px; }
+.analysis > .match_list { margin: 0; justify-content: flex-start; align-items: stretch; gap: 0; border-bottom: 1px solid var(--border-color); }
+.analysis > .match_list > button { border-top: 0; border-left: 0; border-radius: 0; margin: 0; padding: 6px 12px; }
+.analysis > .match_list > button:first-child { border-top-left-radius: 7px; }
+
+.heading_actions { display: flex; align-items: center; gap: 20px; }
+.match_list { margin: 0; }
+.variants { background: var(--surface); padding: 24px; border: 1px solid var(--border-color); border-radius: var(--radius-panel); margin-top: 24px; }
+.suggestion + .suggestion { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); }
+.suggestion summary { cursor: pointer; min-height: var(--control-height); }
+.match_list > button { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.match_list :is(span, small) { font-size: 12px; }
+
+
+.page_heading p { margin: 4px 0; }
+
+.degree_context { margin-top: 0; margin-bottom: 0; }
+
+.reset { composes: icon_button from "../ui.module.css"; }

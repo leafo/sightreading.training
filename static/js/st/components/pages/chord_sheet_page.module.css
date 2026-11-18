@@ -1,0 +1,106 @@
+.page { --tool-page-width: 1200px; }
+.page > h1 { margin: 0 0 20px; letter-spacing: -.8px; }
+.workspace { background: var(--surface); border: 1px solid var(--border-color); border-radius: var(--radius-panel); padding: clamp(16px, 3vw, 28px); }
+.page label { display: grid; gap: 6px; min-width: 0; }
+.page :is(input, textarea, select, button, summary) { box-sizing: border-box; font: inherit; }
+.page :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, button, summary) { min-height: var(--control-height); }
+.page :is(input, textarea, select) { max-width: 100%; }
+.page :is(button, summary) { cursor: pointer; }
+.page button:disabled { cursor: default; opacity: .4; }
+.tabs { composes: tab_list from "../ui.module.css"; margin-bottom: 24px; }
+.actions, .practiceControls { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+.editor > label { margin-top: 20px; }
+.editor > label input, .editor textarea { width: 100%; }
+.editor textarea { font: 1rem/1.6 monospace; resize: vertical; padding: 14px; min-height: 320px; }
+.sheetPicker { display: grid; gap: 6px; width: min(320px, 100%); }
+.sheetPicker details, .exportMenu { position: relative; }
+.sheetPicker summary, .exportMenu summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 10px; list-style: none; }
+.sheetPicker summary span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.page summary::-webkit-details-marker { display: none; }
+.sheetMenu, .exportOptions { position: absolute; top: calc(100% + 6px); z-index: 10; background: var(--surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; box-shadow: 0 8px 24px rgb(0 0 0 / 15%); }
+.sheetMenu { width: min(360px, calc(100vw - 72px)); left: 0; }
+.sheetMenu input { width: 100%; margin-bottom: 8px; }
+.sheetOptions { max-height: 300px; overflow-y: auto; }
+.sheetOptions button, .exportOptions button { display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; width: 100%; padding: 4px 8px; color: var(--body-color); background: transparent; border: 0; box-shadow: none; }
+.sheetOptions button span { overflow-wrap: anywhere; }
+.sheetOptions small { color: var(--text-muted); background: var(--surface-muted); border-radius: 4px; padding: 3px 6px; }
+.sheetOptions button[aria-pressed="true"], .sheetOptions button:hover, .exportOptions button:hover { background: var(--surface-muted); }
+.fileActions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
+.exportMenu summary { background: var(--button-color); color: white; }
+.exportOptions { right: 0; width: min(290px, calc(100vw - 72px)); }
+.iconButton { composes: icon_button from "../ui.module.css"; }
+.practiceControls { padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+.practiceControls label { max-width: 190px; }
+.preview { height: 65vh; overflow-y: auto; overscroll-behavior: contain; overflow-wrap: anywhere; padding: 24px 4px; font-size: 1.2rem; }
+.preview h2 { margin-top: 0; }
+.line { min-height: 1.5em; font: 1em/1.5 monospace; break-inside: avoid; }
+.segment { display: inline-flex; max-width: 100%; flex-direction: column; vertical-align: bottom; white-space: pre-wrap; }
+.segment strong { padding-right: .5ch; }
+.diagrams { display: flex; flex-wrap: wrap; align-items: start; gap: 16px; margin-bottom: 24px; }
+.diagrams > div { break-inside: avoid; }
+.diagrams figure { margin: 0; }
+.diagrams code { display: block; white-space: pre-wrap; }
+.info { max-width: 780px; line-height: 1.6; }
+.info h2 { margin-top: 24px; }
+.info h2:first-child { margin-top: 0; }
+.importDialog { box-sizing: border-box; width: min(560px, calc(100vw - 24px)); max-height: calc(100vh - 48px); overflow-y: auto; padding: 24px; border: 1px solid var(--border-color); border-radius: var(--radius-panel); background: var(--surface); color: var(--body-color); }
+.importDialog::backdrop { background: rgb(0 0 0 / 45%); }
+.modalHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.modalHeading h2 { margin: 0; }
+.modalHeading button { background: transparent; color: var(--body-color); box-shadow: none; border: 0; font-size: 24px; }
+.importDialog fieldset { display: flex; flex-wrap: wrap; gap: 12px; border: 0; padding: 12px 0; }
+.importDialog legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.importDialog fieldset label { display: flex; align-items: center; gap: 8px; }
+.importDialog input[type="file"] { width: 100%; }
+.modalActions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; }
+@media (max-width: 640px) {
+  .fileActions { margin-left: 0; width: 100%; }
+  .tabs button { flex: 1; padding-inline: 12px; }
+  .sheetPicker { flex: 1; min-width: 150px; }
+  .exportOptions { left: 0; right: auto; }
+}
+@media print {
+  :global(.page_layout):has(> .page) > :not(.page),
+  .page > :not(.workspace), .workspace > :not(.practice), .practice > :not(.preview) { display: none !important; }
+  .page, .workspace, .practice, .preview { color: black; background: white; border: 0; border-radius: 0; box-shadow: none; padding: 0; margin: 0; max-width: none; width: 100%; height: auto; overflow: visible; }
+  .practice[hidden] { display: block !important; }
+  .diagrams details { display: none; }
+}
+.sheetLayout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.withVoicings { grid-template-columns: minmax(0, 1.4fr) minmax(290px, 1fr); }
+.sheetMain { min-width: 0; }
+.voicingPanel { border-left: 1px solid var(--border-color); padding-left: 16px; max-height: 76vh; overflow-y: auto; min-width: 0; }
+.voicingPanel h2 { font-size: 1.25rem; }
+.voicingPanel p { font-size: .9rem; line-height: 1.5; }
+.chordTabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 12px 0; }
+.chordTabs button { padding: var(--control-padding-y) var(--control-padding-x); }
+.chordTabs button[aria-pressed="true"] { outline: 2px solid var(--button-color); outline-offset: 1px; }
+.voicingFieldset { border: 0; padding: 0; min-width: 0; }
+.voicingFieldset legend { font-size: 1.3rem; font-weight: bold; }
+.voicingGrid { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; }
+.voicingCard { border: 1px solid var(--border-color); border-radius: 8px; padding: 0; min-width: 0; max-width: 100%; }
+.voicingCard:has(button[aria-pressed="true"]) { border-color: var(--button-color); background: var(--surface-muted); }
+.voicingCard code { font-size: .8rem; display: block; overflow-wrap: anywhere; }
+.voicingCard button { font-size: .8rem; }
+.selectedVoicing { border-top: 1px solid var(--border-color); padding: 12px 0; display: grid; gap: 8px; }
+.selectedVoicing > div { display: flex; gap: 4px; flex-wrap: wrap; }
+.selectedVoicing button { font-size: .8rem; }
+.incoming { border: 2px solid var(--button-color); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.incoming button { margin: 8px 8px 0 0; }
+.lyricChord { background: transparent; color: inherit; font: inherit !important; font-weight: bold !important; border: 0; box-shadow: none; padding: 0 .5ch 0 0; min-height: unset !important; text-align: left; }
+.lyricChord small { display: block; font-size: .65em; font-weight: normal; }
+@media (max-width: 900px) {
+  .withVoicings { grid-template-columns: minmax(0, 1fr); }
+  .voicingPanel { position: fixed; inset: auto 0 0; z-index: 30; background: var(--surface); max-height: 65vh; padding: 16px; border: 1px solid var(--border-color); border-radius: 12px 12px 0 0; box-shadow: 0 -8px 30px rgb(0 0 0 / 20%); }
+  .voicingPanel .voicingGrid { grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); }
+}
+@media print {
+  .workspace > .sheetLayout, .sheetLayout > .sheetMain { display: block !important; }
+  .sheetMain > :not(.practice), .sheetLayout > .voicingPanel { display: none !important; }
+  .sheetLayout, .sheetMain { margin: 0; padding: 0; }
+  .lyricChord { color: black; }
+}
+.voicingPanel .modalHeading { position: sticky; top: 0; z-index: 3; background: var(--surface); padding-bottom: 8px; }
+
+
+.voicingCard > :is(label, code, small) { margin: 6px; }

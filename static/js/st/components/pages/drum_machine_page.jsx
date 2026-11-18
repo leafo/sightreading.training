@@ -1,25 +1,23 @@
 import * as React from "react"
+import ui from "../ui.module.css"
+import {ActionIcon} from "st/components/control_icons"
+import {createPortal} from "react-dom"
 import {setTitle} from "st/globals"
 import {DRUM_KITS} from "st/drum_kits"
-import DrumAudio from "st/drum_audio"
+import DrumAudio, {MAX_DRUM_VOLUME} from "st/drum_audio"
 import Toast from "st/components/toast"
 import {TRACKS, PRESETS, STORAGE_KEY, emptyPattern, validatePattern, resizePattern, readSavedPatterns, TIME_SIGNATURES, meterFor, changeTimeSignature, changeSubdivision, stepMarker} from "st/drum_patterns"
 import styles from "./drum_machine_page.module.css"
 
 const SESSION_KEY = "drum-machine:session:v1"
 
-const TAGLINES = ["Find you groove", "Groovy", "Tss tss tssss", "Boom chucka", "Bum dum..."]
+const VOLUME_KEY = "drum-machine:volume"
 
-function DrumIcon({name}) {
-  return <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    {name === "play" && <path fill="currentColor" stroke="none" d="M7 4v16l14-8z" />}
-    {name === "stop" && <rect fill="currentColor" stroke="none" x="5" y="5" width="14" height="14" rx="1" />}
-    {name === "volume" && <><path d="M11 4 6 8H3v8h3l5 4zM15 8a6 6 0 0 1 0 8M18 4a11 11 0 0 1 0 16" /></>}
-    {name === "save" && <><path d="M5 3h12l4 4v14H3V3zM7 3v6h10V3M7 21v-8h10v8M14 5v2" /></>}
-    {name === "plus" && <path d="M12 5v14M5 12h14" />}
-    {name === "trash" && <><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" /></>}
-  </svg>
+function isDrumVolume(value) {
+  return Number.isFinite(value) && value >= 0 && value <= MAX_DRUM_VOLUME
 }
+
+const TAGLINES = ["Find you groove", "Groovy", "Tss tss tssss", "Boom chucka", "Bum dum..."]
 
 class PatternNameDialog extends React.Component {
   dialog = React.createRef()
@@ -64,18 +62,76 @@ export default class DrumMachinePage extends React.Component {
     try {
       const session = JSON.parse(window.localStorage.getItem(SESSION_KEY))
       if (session) {
+        if (isDrumVolume(session.volume)) volume = session.volume
         pattern = validatePattern(session.pattern)
         if (saved.some(item => item.name === session.selectedName)) selectedName = session.selectedName
         if (typeof session.name === "string") name = session.name
         muted = Object.fromEntries(TRACKS.map(([id]) => [id, session.muted?.[id] === true]))
-        if (Number.isFinite(session.volume) && session.volume >= 0 && session.volume <= 1) volume = session.volume
       }
     } catch {
       // Start with defaults if the previous session is unavailable.
     }
+    try {
+      const storedVolume = JSON.parse(window.localStorage.getItem(VOLUME_KEY))
+      if (isDrumVolume(storedVolume)) volume = storedVolume
+    } catch {
+      // Keep the legacy session value or default if the preference is unavailable.
+    }
     this.state = {pattern, tempoInput: String(pattern.bpm), saved, selectedName, name, dialogAction: null, dialogName: "", dialogError: "", muted, volume, playing: false, starting: false, currentStep: -1, message}
     this.tagline = TAGLINES[Math.floor(Math.random() * TAGLINES.length)]
     this.audio = new DrumAudio(currentStep => this.setState({currentStep}))
+  }
+
+  floatingToggle = React.createRef()
+
+  openFloatingWindow = async () => {
+    if (this.openingFloatingWindow || this.floatingWindow) return
+    this.openingFloatingWindow = true
+    let floatingWindow
+    try {
+      floatingWindow = await window.documentPictureInPicture.requestWindow({width: 800, height: 660})
+      if (this.unmounted) {
+        floatingWindow.close()
+        return
+      }
+
+      const {document: floatingDocument} = floatingWindow
+      floatingDocument.title = "Drum Machine"
+      floatingDocument.documentElement.lang = document.documentElement.lang || "en"
+      floatingDocument.documentElement.dataset.theme = document.documentElement.dataset.theme || "light"
+      floatingDocument.documentElement.style.colorScheme = document.documentElement.style.colorScheme
+
+      for (const stylesheet of document.querySelectorAll('link[rel="stylesheet"], style')) {
+        const copy = floatingDocument.importNode(stylesheet, true)
+        if (stylesheet.href) copy.href = stylesheet.href
+        floatingDocument.head.append(copy)
+      }
+
+      this.floatingWindow = floatingWindow
+      floatingWindow.addEventListener("keydown", this.handlePlaybackKey)
+      floatingWindow.addEventListener("pagehide", this.handleFloatingClose, {once: true})
+      this.setState({floating: true}, () => this.floatingToggle.current?.focus())
+    } catch {
+      floatingWindow?.close()
+      if (!this.unmounted) this.notify("Could not open the floating window. Try again from the Drum Machine.")
+    } finally {
+      this.openingFloatingWindow = false
+    }
+  }
+
+  handleFloatingClose = () => {
+    this.floatingWindow?.removeEventListener("keydown", this.handlePlaybackKey)
+    this.floatingWindow = null
+    if (!this.unmounted) this.setState({floating: false}, () => this.floatingToggle.current?.focus())
+  }
+
+  renderFloatingToggle() {
+    if (!window.documentPictureInPicture) return null
+    const {floating} = this.state
+    return <button ref={this.floatingToggle} className={styles.floatingToggle} type="button" onClick={floating ?
+      () => this.floatingWindow?.close() : this.openFloatingWindow}>
+      {floating ? "Return to tab" : "Open floating window"}
+    </button>
   }
 
   handlePlaybackKey = event => {
@@ -83,6 +139,16 @@ export default class DrumMachinePage extends React.Component {
     if (event.target?.isContentEditable || event.target?.closest?.("input, textarea, select, button, a, dialog, [role=button], [role=textbox]")) return
     event.preventDefault()
     if (!event.repeat) this.togglePlayback()
+  }
+
+  changeVolume(value) {
+    this.setState({volume: value})
+    this.audio.setVolume(value)
+    try {
+      window.localStorage.setItem(VOLUME_KEY, JSON.stringify(value))
+    } catch {
+      // Volume remains adjustable when browser storage is unavailable.
+    }
   }
 
   componentDidMount() {
@@ -103,6 +169,7 @@ export default class DrumMachinePage extends React.Component {
   componentWillUnmount() {
     this.unmounted = true
     window.removeEventListener("keydown", this.handlePlaybackKey)
+    this.floatingWindow?.close()
     this.audio.dispose()
   }
 
@@ -142,7 +209,7 @@ export default class DrumMachinePage extends React.Component {
     }
     this.setState({starting: true, message: ""})
     try {
-      const started = await this.audio.start(() => this.state.pattern, () => this.state.muted, this.state.volume)
+      const started = await this.audio.start(() => this.state.pattern, () => this.state.muted, () => this.state.volume)
       if (started && !this.unmounted) this.setState({playing: true, starting: false})
     } catch {
       this.audio.stop()
@@ -189,7 +256,7 @@ export default class DrumMachinePage extends React.Component {
       return fail("You can save up to 100 patterns. Delete one to make room.")
     }
     const saved = [...this.state.saved.filter(item => item.name !== name), {name, pattern: validatePattern(pattern)}]
-    return this.persist(saved, `Saved “${name}” on this browser.`, {selectedName: name, name, ...state})
+    return this.persist(saved, `Saved “${name}”.`, {selectedName: name, name, ...state})
   }
 
   deleteSelected() {
@@ -216,12 +283,12 @@ export default class DrumMachinePage extends React.Component {
     const compound = pattern.timeSignature === "6/8"
     const triplet = pattern.subdivision === "triplet"
     const steps = Array.from({length: pattern.bars * meter.steps}, (_, i) => i)
-    return <main className={styles.page}>
+    const editor = <main className={`${ui.tool_page} ${styles.page}`}>
       {dialogAction && <PatternNameDialog action={dialogAction} name={dialogName} error={dialogError}
         onChange={dialogName => this.setState({dialogName, dialogError: ""})} onSubmit={() => this.submitPatternName()}
         onCancel={() => this.setState({dialogAction: null, dialogError: ""})} />}
       <header className={styles.heading}>
-        <div><h1>Drum Machine</h1><p>{this.tagline}</p></div>
+        <div><h1>Drum Machine</h1><p>{this.tagline}</p>{this.renderFloatingToggle()}</div>
         <section className={styles.patternManager} aria-label="Saved patterns">
           <div className={styles.patternTools}>
             <label className={styles.patternPicker}>Your patterns
@@ -230,17 +297,16 @@ export default class DrumMachinePage extends React.Component {
                 {saved.map(item => <option key={item.name} value={item.name}>{item.name}</option>)}
               </select>
             </label>
-            <button type="button" className={styles.iconButton} aria-label="Save pattern" title="Save pattern" onClick={() => this.openSaveDialog()}><DrumIcon name="save" /></button>
-            <button type="button" className={styles.iconButton} aria-label="New pattern" title="Save current beat as a new pattern" onClick={() => this.newPattern()}><DrumIcon name="plus" /></button>
-            <button type="button" className={styles.iconButton} aria-label="Delete saved pattern" title="Delete selected saved pattern" disabled={!selectedName} onClick={() => this.deleteSelected()}><DrumIcon name="trash" /></button>
+            <button type="button" className={styles.iconButton} aria-label="Save pattern" title="Save pattern" onClick={() => this.openSaveDialog()}><ActionIcon name="save" /></button>
+            <button type="button" className={styles.iconButton} aria-label="New pattern" title="Save current beat as a new pattern" onClick={() => this.newPattern()}><ActionIcon name="plus" /></button>
+            <button type="button" className={styles.iconButton} aria-label="Delete saved pattern" title="Delete selected saved pattern" disabled={!selectedName} onClick={() => this.deleteSelected()}><ActionIcon name="trash" /></button>
           </div>
-          <small title="Patterns currently save on this browser; account syncing is not available yet."><a href="/login">Login</a>/<a href="/register">Register</a> to cloud save</small>
         </section>
       </header>
       <Toast message={message} notificationId={notificationId} onDismiss={() => this.setState({message: ""})} />
       <section className={styles.panel} aria-label="Playback controls">
         <div className={styles.controls}>
-          <button className={`${styles.play} ${styles.iconButton}`} aria-label={playing || starting ? "Stop" : "Play"} aria-keyshortcuts="Space" title={playing || starting ? "Stop (Space)" : "Play (Space)"} onClick={() => this.togglePlayback()}><DrumIcon name={playing || starting ? "stop" : "play"} /></button>
+          <button className={`${styles.play} ${styles.iconButton}`} aria-label={playing || starting ? "Stop" : "Play"} aria-keyshortcuts="Space" title={playing || starting ? "Stop (Space)" : "Play (Space)"} onClick={() => this.togglePlayback()}><ActionIcon name={playing || starting ? "stop" : "play"} /></button>
           <label>Tempo <input aria-label="Tempo BPM" type="number" min="30" max="240" step="any" value={tempoInput}
             onChange={e => this.changeTempo(e.target.value)} onBlur={() => this.commitTempo()}
             onKeyDown={e => {
@@ -261,15 +327,15 @@ export default class DrumMachinePage extends React.Component {
           </select></label>
           <label>Swing {Math.round(pattern.swing * 100)}%<input aria-label="Swing" disabled={triplet} title="Delays offbeat eighth notes (&). 0% is straight; 33% is a triplet shuffle." type="range" min="0" max="50" value={Math.round(pattern.swing * 100)}
             onChange={e => this.changePattern({...pattern, swing: Number(e.target.value) / 100})} /></label>
-          <label title="Volume"><DrumIcon name="volume" /><input aria-label="Volume" type="range" min="0" max="100" value={Math.round(volume * 100)} onChange={e => {
-            const value = Number(e.target.value) / 100
-            this.setState({volume: value}); this.audio.setVolume(value)
-          }} /></label>
+          <label><ActionIcon name="volume" /> {Math.round(volume * 100)}%
+            <input aria-label="Volume" aria-valuetext={`${Math.round(volume * 100)} percent`} type="range" min="0" max={MAX_DRUM_VOLUME * 100}
+              value={Math.round(volume * 100)} onChange={e => this.changeVolume(Number(e.target.value) / 100)} />
+          </label>
         </div>
       </section>
       <section className={styles.panel} aria-label="Pattern editor">
         <div className={styles.sectionHeader}><h2>Just beat it</h2>
-          <button className={styles.iconButton} aria-label="Clear pattern" title="Clear pattern" onClick={() => this.changePattern({...emptyPattern(pattern.bars, pattern.timeSignature, pattern.subdivision), kit: pattern.kit, bpm: pattern.bpm, swing: pattern.swing})}><DrumIcon name="trash" /></button>
+          <button className={styles.iconButton} aria-label="Clear pattern" title="Clear pattern" onClick={() => this.changePattern({...emptyPattern(pattern.bars, pattern.timeSignature, pattern.subdivision), kit: pattern.kit, bpm: pattern.bpm, swing: pattern.swing})}><ActionIcon name="trash" /></button>
         </div>
         <p className={styles.help}>Toggle steps to add hits. Mute individual tracks with their names. Two bars repeat the first bar when extended. {compound && "6/8: six numbered eighth notes per bar. BPM counts dotted quarters."} {triplet && "Triplets are evenly spaced. Swing applies to straight steps."}</p>
         <div className={styles.scroll} tabIndex="0" aria-label="Scrollable drum steps">
@@ -302,5 +368,15 @@ export default class DrumMachinePage extends React.Component {
         }}>{preset.name}<small>{preset.pattern.timeSignature} · {preset.pattern.bpm} BPM</small></button>)}</div>
       </section>
     </main>
+
+    if (!this.state.floating || !this.floatingWindow) return editor
+    return <>
+      <main className={`${ui.tool_page} ${styles.page}`}>
+        <h1>Drum Machine</h1>
+        <p>The editor is open in a floating window.</p>
+        <button type="button" onClick={() => this.floatingWindow?.close()}>Return editor to tab</button>
+      </main>
+      {createPortal(editor, this.floatingWindow.document.body)}
+    </>
   }
 }

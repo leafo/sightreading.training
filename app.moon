@@ -1,6 +1,8 @@
 lapis = require "lapis"
 
 import assert_error from require "lapis.application"
+import trim from require "lapis.util"
+db = require "lapis.db"
 import set_csrf from require "helpers.csrf"
 
 import get, post, multi from require "helpers.app"
@@ -55,6 +57,17 @@ class extends lapis.Application
 
   "/register.json": post =>
     @flow("login")\do_register!
+    json: @flow("formatter")\session!
+
+  "/display-name.json": post =>
+    user = assert_error @current_user, "You must be logged in"
+    assert_error @params.account_id == tostring(user.id), "Your account changed. Reload the page and try again."
+    assert_error type(@params.display_name) == "string", "Enter a display name"
+    name = trim @params.display_name
+    assert_error not name\find("%c"), "Display names cannot contain control characters"
+    assert_error #name <= 255, "Display name is too long"
+    assert_error user\update({ display_name: (if name == "" then db.NULL else name) }), "Could not save display name"
+    user\refresh!
     json: @flow("formatter")\session!
 
   "/_health/ready": get =>

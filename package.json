@@ -29,6 +29,8 @@
   "scripts": {
     "dev": "node dev/serve.mjs",
     "build_assets": "node dev/build_assets.mjs",
+    "test_beginner_songs": "node dev/test_beginner_songs.cjs",
+    "test_chord_lab": "node dev/test_chord_lab.cjs",
     "test_auth": "node --test tests/auth.test.cjs",
     "note_math_csv": "node dev/note_math_csv.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"

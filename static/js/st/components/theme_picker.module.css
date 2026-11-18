@@ -18,7 +18,7 @@
 }
 .options {
     position: absolute;
-    top: calc(100% + 6px);
+    bottom: calc(100% + 6px);
     right: 0;
     display: flex;
     gap: 4px;
@@ -38,5 +38,27 @@
             border-color: var(--button-color);
         }
         &:hover { background: var(--surface-muted); color: var(--body-color); }
+    }
+}
+
+.inline_options {
+    display: flex;
+    gap: 4px;
+    button {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        min-height: 62px;
+        padding: 8px 4px;
+        font-size: 12px;
+        color: var(--body-color);
+        background: var(--surface);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: none;
+        cursor: pointer;
+        &[aria-pressed="true"] { background: var(--surface-muted); border-color: var(--button-color); }
     }
 }

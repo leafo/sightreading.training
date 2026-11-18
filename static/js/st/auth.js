@@ -1,6 +1,6 @@
 // Authentication must use the token belonging to the current cookie, rather
 // than a token embedded in a page left open before the session changed.
-const actions = new Set(["/login.json", "/register.json", "/logout.json"])
+const actions = new Set(["/login.json", "/register.json", "/logout.json", "/display-name.json"])
 
 export async function postAuth(action, data = new FormData()) {
   if (!actions.has(action)) throw new Error("Unknown authentication action")

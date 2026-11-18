@@ -7,3 +7,20 @@
 .summary {
     margin-bottom: 2rem;
 }
+
+.share_stats {
+    margin-top: 2rem;
+
+    summary {
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    textarea {
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        max-width: 32rem;
+        margin: 0.5rem 0;
+    }
+}

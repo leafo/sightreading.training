@@ -5,7 +5,7 @@
     overflow-y: auto;
 
     .midi_input_row {
-        padding: 6px 10px;
+        padding: var(--control-padding-y) var(--control-padding-x);
         display: flex;
         align-items: center;
         cursor: pointer;

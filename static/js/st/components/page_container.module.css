@@ -1,18 +1,24 @@
 .page_container {
     background: var(--surface);
     margin: 60px auto;
-    width: 600px;
+    box-sizing: border-box;
+    width: min(680px, calc(100% - 40px));
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgb(0 0 0 / 4%);
     padding: 40px;
 
     @media (max-width: 640px) {
-        margin: 0;
-        width: auto;
+        margin: 24px auto;
+        width: calc(100% - 24px);
         padding: 20px;
     }
 
     > h2 {
         margin-top: 0;
-        font-size: 32px;
+        font-size: clamp(24px, 4vw, 32px);
+        line-height: 1.2;
+        letter-spacing: -0.5px;
     }
 
     p {

@@ -14,7 +14,7 @@ function ThemeIcon({theme}) {
   </svg>
 }
 
-export default function ThemePicker() {
+export default function ThemePicker({inline = false}) {
   const [theme, updateTheme] = React.useState(readTheme)
   React.useEffect(() => {
     const sync = event => {
@@ -23,6 +23,12 @@ export default function ThemePicker() {
     window.addEventListener("storage", sync)
     return () => window.removeEventListener("storage", sync)
   }, [])
+  if (inline) return <div className={styles.inline_options} role="group" aria-label="Color theme">
+    {THEMES.map(value => <button key={value} type="button" aria-pressed={theme === value}
+      onClick={() => {setTheme(value); updateTheme(value)}}>
+      <ThemeIcon theme={value} />{value[0].toUpperCase() + value.slice(1)}
+    </button>)}
+  </div>
   return <details className={styles.picker}>
     <summary title={`Theme: ${theme}`} aria-label={`Choose theme (current: ${theme})`}>
       <ThemeIcon theme={theme} />

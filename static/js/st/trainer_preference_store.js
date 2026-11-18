@@ -69,7 +69,7 @@ export default class TrainerPreferenceStore {
       if (this.desired === document) {
         try { this.storage.setItem("sightreading.trainer.pending.v1", "false") } catch (e) {}
       }
-      this.user.trainerPreferences = JSON.parse(document)
+      this.user.trainerPreferences = {...JSON.parse(document), diagramZoom: this.user.trainerPreferences?.diagramZoom}
       success = true
       this.onStatus("Settings saved to account")
     } catch (e) {

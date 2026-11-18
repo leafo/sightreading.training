@@ -1,4 +1,9 @@
 .launcher {
+    display: grid;
+    place-items: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
     position: fixed;
     right: 12px;
     bottom: 12px;

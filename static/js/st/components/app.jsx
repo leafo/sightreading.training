@@ -1,4 +1,6 @@
 import SightReadingPage from "st/components/pages/sight_reading_page"
+import AccountPage from "st/components/pages/account_page"
+import {getSession} from "st/app"
 import LoginPage from "st/components/pages/login_page"
 import RegisterPage from "st/components/pages/register_page"
 import {guideRoutes} from "st/components/pages/guide_pages"
@@ -13,6 +15,9 @@ import SongsPage from "st/components/pages/songs"
 import NotFoundPage from "st/components/pages/not_found"
 import DrumMachinePage from "st/components/pages/drum_machine_page"
 import GuitarScalesPage from "st/components/pages/guitar_scales_page"
+import ChordLabPage from "st/components/pages/chord_lab_page"
+import ChordSheetPage from "st/components/pages/chord_sheet_page"
+import ChordReferencePage from "st/components/pages/chord_reference_page"
 import Header from "st/components/header"
 
 import DevicePickerLightbox from "st/components/device_picker_lightbox"
@@ -123,6 +128,10 @@ class Layout extends React.Component {
         <Route path="/staff2" element={<SightReadingPage useStaffTwo={true} {...pageProps} />} />
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/register" element={<RegisterPage/>} />
+        <Route path="/account" element={<AccountPage onSave={displayName => {
+          getSession().currentUser.displayName = displayName
+          this.forceUpdate()
+        }} />} />
 
         <Route path="/ear-training">
           <Route path="interval-melodies" element={<EarTrainingPage exercise="melody_recognition" {...pageProps} />} />
@@ -139,12 +148,17 @@ class Layout extends React.Component {
 
         <Route path="/play-along">
           <Route index element={<SongsPage {...pageProps} />} />
+          <Route path="beginner/:preset_id" element={<PlayAlongPage {...pageProps} />} />
           <Route path="recent" element={<SongsPage filter="recent" {...pageProps} />} />
           <Route path="*" element={<SongsPage filter="invalid" {...pageProps} />} />
         </Route>
 
         <Route path="/drum-machine" element={<DrumMachinePage {...pageProps} />} />
-        <Route path="/guitar-scales" element={<GuitarScalesPage {...pageProps} />} />
+        <Route path="/scales" element={<GuitarScalesPage {...pageProps} />} />
+        <Route path="/guitar-scales" element={<Navigate replace to="/scales" />} />
+        <Route path="/chord-lab" element={<ChordLabPage {...pageProps} />} />
+        <Route path="/chord-sheet" element={<ChordSheetPage {...pageProps} />} />
+        <Route path="/chord-reference" element={<ChordReferencePage {...pageProps} />} />
         <Route path="/stats" element={<StatsPage {...pageProps} />} />
         <Route path="/latency" element={<LatencyPage {...pageProps} />} />
         <Route path="/feedback" element={<FeedbackPage />} />

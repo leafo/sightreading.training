@@ -18,13 +18,13 @@ export default class Select extends React.Component {
   onChange(e) {
     let value = e.target.value
     if (this.props.onChange) {
-      if (value == this.props.value) {
+      if (String(value) === String(this.props.value)) {
         return
       }
 
       this.props.onChange(value)
     } else {
-      if (value == this.state.value) {
+      if (String(value) === String(this.state.value)) {
         return
       }
 
@@ -59,7 +59,7 @@ export default class Select extends React.Component {
 
   findOption(optionValue) {
     for (let o of this.props.options) {
-      if (o.value == optionValue) {
+      if (String(o.value) === String(optionValue)) {
         return o
       }
     }
@@ -67,7 +67,7 @@ export default class Select extends React.Component {
 
   // name of what's currently selected
   currentOption() {
-    let searchValue = this.props.value || this.state.value
+    let searchValue = this.props.value ?? this.state.value
 
     if (searchValue != undefined) {
       return this.findOption(searchValue)

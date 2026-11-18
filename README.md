@@ -168,6 +168,43 @@ Music Tools builds on [leafo/sightreading.training](https://github.com/leafo/sig
 
 The default branch in this fork is `main`; upstream still uses `master`. When incorporating upstream changes, fetch `upstream`, then merge `upstream/master` into a review branch based on `main` and open a pull request targeting this fork’s `main`. The branch names do not need to match.
 
+## Scales and chord exploration
+
+**Scales** (`/scales`, with `/guitar-scales` retained as a redirect) displays a
+0–12 guitar fretboard or a two-octave piano from C3 to C5. Choose notes, intervals,
+or both; all occurrences of each scale tone are highlighted.
+
+Chord Lab's upper-right gear opens the instrument and display options. Its
+fretboard has a reset icon, and chord labels can show notes or degrees. Exact
+matches offer common, moveable, and less-common voicings; near matches list notes
+to add or remove and offer suggested shapes. Applying a voicing switches to guitar
+without clearing the separate piano selection. Chord Reference also groups and
+links multiple shapes to the Lab.
+
+Scales, Chord Lab, and Chord Reference automatically save their settings and
+selections locally on this browser. They do not sync with accounts or other
+devices. Live MIDI notes, open options drawers, and expanded diagram groups are
+not restored. Corrupt settings fall back to defaults; denied writes show a
+transient warning and retry on the next change.
+
+See the [review checklist](docs/review/scales-chord-usability.md) for manual acceptance.
+
+
+### Compact chord browsing and diagram export
+
+Chord Lab presents match/suggestion tabs with note letters and shows the selected
+chord's returned voicings without foldouts. Piano mode keeps the guitar diagrams
+hidden. Reference and Lab share Notes, Fingers, Intervals, and Notes and intervals
+diagram options. Each diagram has a Copy as menu for five-fret ASCII blocks or
+single-line tabs such as `C = x-3-2-0-1-0`; wide user-entered shapes export as
+consecutive five-fret blocks. Clipboard failures can be retried.
+
+Jazz sixth, seventh, and extended chords may omit their natural fifth while
+retaining the root, defining third, and other extensions. Such matches and shapes
+are marked `no 5`. Ordinary triads and altered fifths still require all tones.
+Common grips now include C7 `x-3-2-3-1-x` and major/minor seventh/ninth shells.
+
+See the [completed task list and remaining manual checks](docs/review/chord-ui-task-list.md).
 
 ## Website feedback
 

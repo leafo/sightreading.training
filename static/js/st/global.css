@@ -12,6 +12,15 @@
     --button-color: #727290;
     --button-color-highlight: #e0e0e7;
 
+    --control-height: 32px;
+    --control-font-size: 14px;
+    --radius-control: 4px;
+    --radius-panel: 10px;
+    --panel-padding: 20px;
+    --control-icon-size: 28px;
+    --control-padding-y: 3px;
+    --control-padding-x: 10px;
+
     --default-width: 900px;
     --line-spacing: 30px;
 
@@ -45,11 +54,14 @@ button, .button {
     color: white;
     font-weight: bold;
     font-family: 'Raleway', sans-serif;
-    font-size: 14px;
+    font-size: var(--control-font-size);
     border: 0;
     background: var(--button-color);
-    padding: 5px 10px;
-    border-radius: 4px;
+    box-sizing: border-box;
+    min-height: var(--control-height);
+    line-height: 1.25;
+    padding: var(--control-padding-y) var(--control-padding-x);
+    border-radius: var(--radius-control);
     box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
     border: 1px solid var(--button-color);
     cursor: pointer;
@@ -59,6 +71,8 @@ button, .button {
         outline: none;
         box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2), 0 0 0 2px rgba(0, 0, 255, 0.2);
     }
+
+    &:focus-visible { outline: 2px solid var(--focus-color); outline-offset: 2px; }
 
     &:hover {
         background: color-mix(in oklab, var(--button-color), white 2%);
@@ -78,7 +92,7 @@ button, .button {
 
     &.big_button {
         font-size: 18px;
-        padding: 10px 18px;
+        padding: 5px 14px;
     }
 }
 
@@ -152,3 +166,14 @@ input, select, textarea {
     border-color: var(--border-color);
 }
 :focus-visible { outline: 2px solid var(--focus-color); outline-offset: 2px; }
+
+/* Shared compact form controls; leave musical surfaces and range inputs alone. */
+select, input:is([type="text"], [type="search"], [type="number"], [type="email"], [type="password"]) {
+    box-sizing: border-box;
+    min-height: var(--control-height);
+    padding: var(--control-padding-y) var(--control-padding-x);
+    font: inherit;
+    line-height: 1.25;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-control);
+}

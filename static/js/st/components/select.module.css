@@ -4,7 +4,9 @@
     min-width: 30px;
     position: relative;
     border: 1px solid var(--border-color);
-    padding: 4px 16px;
+    min-height: var(--control-height);
+    padding: var(--control-padding-y) var(--control-padding-x);
+    line-height: 24px;
     background: var(--surface);
     border-radius: 4px;
 
@@ -24,7 +26,7 @@
     }
 
     :global(.svgicon) {
-        margin-left: 10px;
+        margin-left: 8px;
         fill: color-mix(in srgb, var(--border-color), transparent 20%);
     }
 

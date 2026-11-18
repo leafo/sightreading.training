@@ -1,0 +1,41 @@
+/* Common layout primitives. Musical surfaces retain their own geometry. */
+.tool_page {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--tool-page-width, 1200px);
+  margin: 0 auto;
+  padding: 24px clamp(12px, 3vw, 24px) 64px;
+}
+.icon_button.icon_button {
+  box-sizing: border-box;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--icon-button-size, var(--control-height));
+  height: var(--icon-button-size, var(--control-height));
+  min-width: var(--icon-button-size, var(--control-height));
+  min-height: var(--icon-button-size, var(--control-height));
+  padding: 4px;
+  line-height: 1;
+  svg { display: block; width: 18px; height: 18px; }
+}
+.tab_list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: var(--tab-gap, 0);
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--border-color);
+}
+.tab_list > button, .tab_list > li > button {
+  padding: 4px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px 4px 0 0;
+  background: var(--surface-muted);
+  color: var(--body-color);
+  box-shadow: none;
+  cursor: pointer;
+  &[aria-selected="true"] { background: var(--surface); border-bottom: 3px solid var(--button-color); }
+}

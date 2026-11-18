@@ -1,0 +1,3 @@
+.groups { display: grid; gap: 20px; h3 { margin: 0 0 8px; font-size: 13px; color: var(--text-muted); } section { min-width: 0; } }
+.shapes { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+.shape { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; small { color: var(--text-muted); } }

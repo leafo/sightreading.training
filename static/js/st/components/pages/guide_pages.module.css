@@ -1,17 +1,29 @@
 .guide_page {
     display: flex;
     justify-content: center;
-    margin: 60px auto;
+    margin: 40px auto;
+    gap: 24px;
+    padding: 0 20px;
+    max-width: 960px;
 
     @media (max-width: 720px) {
-        margin: 0;
+        flex-direction: column;
+        margin: 24px auto;
+        padding: 0 12px;
         .page_navigation {
-            display: none;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            > section { margin: 0; flex: 1 1 140px; }
+            a { min-height: 44px; display: flex; align-items: center; }
         }
+        .page_container { width: 100%; margin: 0; }
     }
 
     .page_navigation {
-        width: 150px;
+        width: 180px;
+        flex-shrink: 0;
 
         > section {
             margin-bottom: 20px;
@@ -26,8 +38,19 @@
             font-size: 14px;
         }
 
-        a.active {
-            font-weight: bold;
+        a {
+            display: block;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--body-color);
+            &:hover { background: var(--surface-muted); }
+            &:focus-visible { outline: 2px solid var(--button-color); }
+            &:global(.active) {
+                font-weight: bold;
+                background: var(--surface-muted);
+                color: var(--button-color);
+            }
         }
 
         ul {
@@ -55,6 +78,7 @@
     }
 
     pre {
+        overflow-x: auto;
         padding: 10px;
         border-radius: 4px;
         background: rgba(0, 0, 0, 0.05);

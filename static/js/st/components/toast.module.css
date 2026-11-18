@@ -1,4 +1,4 @@
-.region { position: fixed; right: 20px; bottom: var(--toast-bottom, 20px); z-index: 1000; width: min(380px, calc(100vw - 40px)); pointer-events: none; }
+.region { position: fixed; right: 20px; top: var(--toast-top, auto); bottom: var(--toast-bottom, 20px); z-index: 1000; width: min(380px, calc(100vw - 40px)); pointer-events: none; }
 .toast { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #37374e; color: white; border-radius: 8px; box-shadow: 0 4px 18px rgb(0 0 0 / 20%); font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; pointer-events: auto; }
 .toast span { flex: 1; min-width: 0; }
 .toast button { flex: none; width: 28px; height: 28px; padding: 0; font-size: 22px; background: transparent; color: inherit; border: 0; }

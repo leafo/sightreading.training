@@ -1,14 +1,11 @@
 import * as React from "react"
-import * as ReactDOM from "react-dom"
 import classNames from "classnames"
 import {Link, NavLink} from "react-router-dom"
 
 import {trigger} from "st/events"
 import MidiButton from "st/components/midi_button"
 import ThemePicker from "st/components/theme_picker"
-import {IconDownArrow} from "st/components/icons"
 
-import Lightbox from "st/components/lightbox"
 
 import {getSession} from "st/app"
 
@@ -16,62 +13,11 @@ import {toggleActive} from "st/components/util"
 
 import styles from "./header.module.css"
 
-class SizedElement extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { }
-  }
-
-  componentDidMount() {
-    this.refreshWidth()
-
-    let timeout = null
-    this.resizeCallback = e => {
-      if (timeout) {
-        window.clearTimeout(timeout)
-        timeout = null
-      }
-
-      timeout = window.setTimeout(() => {
-        this.refreshWidth()
-        timeout = null
-      }, 100)
-    }
-
-    window.addEventListener("resize", this.resizeCallback)
-    this.resizeCallback()
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.resizeCallback)
-  }
-
-  refreshWidth() {
-    let el = ReactDOM.findDOMNode(this)
-    let width = el.getBoundingClientRect().width
-    if (this.state.width != width) {
-      this.setState({
-        width: width
-      }, function() {
-        if (this.props.onWidth) {
-          this.props.onWidth(this.state.width)
-        }
-      })
-    }
-  }
-
-  render() {
-    return <div className={this.props.className}>
-      {this.state.width ? this.props.children : null}
-    </div>
-  }
-}
-
 export default class Header extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      menuOpen: false
+      menuOpen: true
     }
   }
 
@@ -79,18 +25,16 @@ export default class Header extends React.Component {
     let userLinks = this.getPageLinks()
 
     let menu = null
-    let showMidiButton = !this.state.width || this.state.width < 450
-
 
     if (this.state.menuOpen) {
       let accountArea = null
-      const session = getSession()
+      const session = getSession() || {}
 
       if (session.currentUser) {
         accountArea = <div className={classNames(styles.account_area, styles.logged_in)}>
-          <span className={styles.username}>
-            {session.currentUser.username}
-          </span>
+          <NavLink className={styles.username} to="/account">
+            {session.currentUser.displayName || session.currentUser.username}
+          </NavLink>
           <a href="#" onClick={this.props.doLogout}>Log out</a>
         </div>
       } else {
@@ -100,77 +44,69 @@ export default class Header extends React.Component {
         </div>
       }
 
-      menu = <Lightbox
-        key="navigation_menu"
-        className={styles.navigation_menu}
-        onClick={e => {
-          if (e.target.matches("a")) {
-            this.setState({ menuOpen: false })
-          }
-        }}
-        onClose={(lb) => {
-          this.setState({ menuOpen: false })
-        }}
-      >
+      menu = <aside id="tool-navigation" className={styles.sidebar} aria-label="Tools and settings"
+        onClick={event => {
+          if (event.target.closest("a") && window.matchMedia("(max-width: 760px)").matches) this.closeMenu()
+        }}>
         {accountArea}
-        {showMidiButton ? <div className={styles.midi_button_wrapper}>{this.renderMidiButton()}</div> : null}
-        <ul>
-          {userLinks.map((link, i) => <li key={i}>{link}</li>)}
-        </ul>
-      </Lightbox>
+        <nav aria-label="Music tools" className={styles.tool_groups}>
+          {[
+            ["Training", ["root", "ear-training", "flash-cards"]],
+            ["Practice", ["play-along", "drum-machine", "chord-sheet"]],
+            ["Reference", ["guitar-scales", "chord-lab", "chord-reference"]]
+          ].map(([title, keys]) => <section key={title}>
+            <h3>{title}</h3>
+            <ul>{keys.map(key => userLinks.find(link => link.key === key)).filter(Boolean).map(link => <li key={link.key}>{link}</li>)}</ul>
+          </section>)}
+        </nav>
+        <section className={styles.theme_section}>
+          <div className={styles.midi_button_wrapper}>{this.renderMidiButton()}</div>
+          <div className={styles.footer_controls}>
+            <NavLink to="/about" aria-label="Guide" title="Guide">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5M12 17v1" /></svg>
+            </NavLink>
+            {userLinks.filter(link => link.key === "feedback" || link.key === "stats")}
+            <ThemePicker />
+          </div>
+        </section>
+      </aside>
     }
 
-    return <div className={styles.menu_toggle}>
-      <button type="button" onClick={e => {
-        this.setState({ menuOpen: !this.state.menuOpen })
-      }}>Menu {<IconDownArrow width={12}/>}</button>
-      {menu ? <div
-        onClick={e => this.setState({ menuOpen: false })}
-        className={styles.menu_shroud}></div> : null}
+    return <>
+      <button ref={this.menuButton ||= React.createRef()} className={styles.menu_toggle} type="button"
+        aria-label={this.state.menuOpen ? "Close navigation" : "Open navigation"}
+        aria-controls="tool-navigation" aria-expanded={this.state.menuOpen}
+        onClick={() => this.setState({menuOpen: !this.state.menuOpen})}>
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" strokeWidth="2" />
+        </svg>
+      </button>
+      {menu && <button type="button" className={styles.backdrop} tabIndex={-1}
+        aria-label="Close navigation" onClick={() => this.closeMenu()} />}
       {menu}
-    </div>
+    </>
   }
 
-  renderHorizontalNavigation() {
-    let userPanel = null
-    let userLinks = this.getPageLinks()
-
-    const session = getSession()
-
-    if (session.currentUser) {
-      userPanel = <div className={styles.right_section} key="user_in">
-        {session.currentUser.username}
-        {" " }
-        <a href="#" onClick={this.props.doLogout}>Log out</a>
-      </div>
-
-    } else {
-      userPanel = <div className={styles.right_section} key="user_out">
-        <NavLink to="/login" {...toggleActive}>Log in</NavLink>
-        {" or "}
-        <NavLink to="/register" {...toggleActive}>Register</NavLink>
-      </div>
-    }
-
-    return [
-      ...userLinks,
-      userPanel,
-    ]
+  closeMenu() {
+    this.setState({menuOpen: false}, () => this.menuButton.current?.focus())
   }
 
   getPageLinks() {
     let links = [
       <NavLink end key="root" to="/" {...toggleActive}>Staff</NavLink>,
-      <NavLink end key="ear-training" to="/ear-training/interval-melodies" {...toggleActive}>Ear Training</NavLink>,
+      <NavLink end key="ear-training" to="/ear-training/interval-melodies" {...toggleActive}>Ear</NavLink>,
       <NavLink end key="flash-cards" to="/flash-cards/note-math" {...toggleActive}>Flash Cards</NavLink>,
       <NavLink key="play-along" to="/play-along" {...toggleActive}>Play Along</NavLink>,
       <NavLink key="drum-machine" to="/drum-machine" {...toggleActive}>Drum Machine</NavLink>,
-      <NavLink key="guitar-scales" to="/guitar-scales" {...toggleActive}>Guitar Scales</NavLink>,
+      <NavLink key="guitar-scales" to="/scales" {...toggleActive}>Scales</NavLink>,
+      <NavLink key="chord-lab" to="/chord-lab" {...toggleActive}>Chord Lab</NavLink>,
+      <NavLink key="chord-sheet" to="/chord-sheet" {...toggleActive}>Chord Sheet</NavLink>,
+      <NavLink key="chord-reference" to="/chord-reference" {...toggleActive}>Chord Reference</NavLink>,
       <NavLink end key="feedback" to="/feedback" {...toggleActive}>Feedback</NavLink>,
       <NavLink end key="about" to="/about" {...toggleActive}>Guide</NavLink>,
     ]
 
-    const session = getSession()
+    const session = getSession() || {}
 
     if (session.currentUser) {
       links.push(<NavLink end key="stats" to="/stats" {...toggleActive}>Stats</NavLink>)
@@ -188,25 +124,22 @@ export default class Header extends React.Component {
   }
 
   render() {
-    let userPanel = null
-    let enableDropdown = this.state.width && this.state.width < 850
-    let hideMidiButton = !this.state.width || this.state.width < 450
-
-    return <div className={styles.header}>
+    return <header className={styles.header} onKeyDown={event => {
+      if (!this.state.menuOpen) return
+      if (event.key === "Escape") { this.closeMenu(); return }
+      if (event.key === "Tab" && window.matchMedia("(max-width: 760px)").matches) {
+        const controls = [...event.currentTarget.querySelectorAll('a, summary, button:not([tabindex="-1"])')]
+        const target = event.shiftKey ? controls.at(-1) : controls[0]
+        if (event.target === (event.shiftKey ? controls[0] : controls.at(-1))) {
+          event.preventDefault()
+          target.focus()
+        }
+      }
+    }}>
+      {this.renderNavigationMenu()}
       <Link to="/" className={styles.logo_link}>
         <span className={styles.wordmark}>Napland <span>Music Tools</span></span>
       </Link>
-
-      <SizedElement className={styles.user_links} onWidth={(w) => {
-        this.setState({ width: w })
-      }}>
-        {enableDropdown ? this.renderNavigationMenu() : this.renderHorizontalNavigation()}
-      </SizedElement>
-
-      {hideMidiButton ? null : this.renderMidiButton()}
-      <ThemePicker />
-    </div>
-
+    </header>
   }
 }
-

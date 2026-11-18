@@ -53,12 +53,13 @@ describe("Drum audio lifecycle", () => {
     audio.context = {
       currentTime: 0, sampleRate: 1, resume: async () => {},
       createGain: () => ({gain: {}, connect() {}, disconnect() {}}),
+      createWaveShaper: () => ({connect() {}, disconnect() {}}),
       createBuffer: () => ({getChannelData: () => new Float32Array(1)})
     }
     spyOn(audio, "hit")
     try {
       const pattern = PRESETS.find(p => p.name === "Blues shuffle").pattern
-      await audio.start(() => pattern, () => ({}), 0.7)
+      await audio.start(() => pattern, () => ({}), () => 0.7)
       for (let tick = 0; tick < 120; tick++) {
         audio.context.currentTime += 0.025
         jasmine.clock().tick(25)
@@ -73,11 +74,44 @@ describe("Drum audio lifecycle", () => {
       jasmine.clock().uninstall()
     }
   })
+  it("uses the latest volume after resume and soft-limits peaks at the output", async () => {
+    spyOn(window, "requestAnimationFrame").and.returnValue(1)
+    spyOn(window, "cancelAnimationFrame")
+    const audio = new DrumAudio(() => {})
+    let resume
+    let volume = 0.7
+    const master = {gain: {setTargetAtTime: jasmine.createSpy("setTargetAtTime")}, connect: jasmine.createSpy("connect"), disconnect() {}}
+    const shaper = {connect: jasmine.createSpy("connect"), disconnect: jasmine.createSpy("disconnect")}
+    audio.context = {
+      currentTime: 0, sampleRate: 1, destination: {},
+      resume: () => new Promise(resolve => { resume = resolve }),
+      createGain: () => master, createWaveShaper: () => shaper,
+      createBuffer: () => ({getChannelData: () => new Float32Array(1)})
+    }
+    try {
+      const start = audio.start(() => emptyPattern(), () => ({}), () => volume)
+      volume = 1.5
+      resume()
+      expect(await start).toBeTrue()
+      expect(master.gain.value).toBe(1.5)
+      expect(master.connect).toHaveBeenCalledWith(shaper)
+      expect(shaper.connect).toHaveBeenCalledWith(audio.context.destination)
+      expect(shaper.curve[512]).toBe(0)
+      expect(shaper.curve[768]).toBe(0.5)
+      expect(shaper.curve[1000]).toBeLessThan(1)
+      expect(shaper.curve[1024]).toBe(1)
+      audio.setVolume(0)
+      expect(master.gain.setTargetAtTime).toHaveBeenCalledWith(0, 0, 0.01)
+    } finally {
+      audio.stop()
+    }
+    expect(shaper.disconnect).toHaveBeenCalled()
+  })
   it("cancels a pending audio start when stopped before resume finishes", async () => {
     const audio = new DrumAudio(() => {})
     let resume
     audio.context = {resume: () => new Promise(resolve => { resume = resolve }), close: () => {}}
-    const start = audio.start(() => emptyPattern(), () => ({}), 0.7)
+    const start = audio.start(() => emptyPattern(), () => ({}), () => 0.7)
     audio.stop()
     resume()
     expect(await start).toBe(false)
@@ -223,6 +257,7 @@ describe("Drum time signatures", () => {
         audio.context = {
           currentTime: 0, sampleRate: 1, resume: async () => {},
           createGain: () => ({gain: {}, connect() {}, disconnect() {}}),
+          createWaveShaper: () => ({connect() {}, disconnect() {}}),
           createBuffer: () => ({getChannelData: () => new Float32Array(1)})
         }
         const hits = []
@@ -232,7 +267,7 @@ describe("Drum time signatures", () => {
         pattern.tracks.kick[0] = true
         const loopSeconds = bars * meter.steps / (meter.tempoSteps || meter.beatSteps) * 0.5
         try {
-          await audio.start(() => pattern, () => ({}), 0.7)
+          await audio.start(() => pattern, () => ({}), () => 0.7)
           for (let tick = 0; tick < Math.ceil((loopSeconds + 0.1) / 0.025); tick++) {
             audio.context.currentTime += 0.025
             jasmine.clock().tick(25)
@@ -499,13 +534,14 @@ describe("Drum sets", () => {
     audio.context = {
       currentTime: 0, sampleRate: 1, resume: async () => {},
       createGain: () => ({gain: {}, connect() {}, disconnect() {}}),
+      createWaveShaper: () => ({connect() {}, disconnect() {}}),
       createBuffer: () => ({getChannelData: () => new Float32Array(1)})
     }
     spyOn(audio, "hit")
     const pattern = {...emptyPattern(), kit: "rock"}
     pattern.tracks.kick.fill(true)
     try {
-      await audio.start(() => pattern, () => ({}), 0.7)
+      await audio.start(() => pattern, () => ({}), () => 0.7)
       expect(audio.hit.calls.mostRecent().args[2]).toBe("rock")
       pattern.kit = "wood"
       audio.context.currentTime = 0.1
@@ -601,5 +637,32 @@ describe("Drum Machine session", () => {
     expect(restored.volume).toBe(0.35)
     expect(restored.playing).toBeFalse()
     expect(restored.currentStep).toBe(-1)
+  })
+})
+
+describe("Drum volume", () => {
+  it("restores boost or mute even when the previous beat is unreadable", () => {
+    const values = new Map([["drum-machine:session:v1", "invalid JSON"]])
+    spyOnProperty(window, "localStorage", "get").and.returnValue({
+      getItem: key => values.get(key) ?? null,
+      setItem: (key, value) => values.set(key, value)
+    })
+    for (const volume of [1.5, 0]) {
+      const page = new DrumMachinePage({})
+      spyOn(page, "setState")
+      page.changeVolume(volume)
+      expect(page.setState).toHaveBeenCalledWith({volume})
+      expect(new DrumMachinePage({}).state.volume).toBe(volume)
+    }
+  })
+
+  it("retains the legacy volume when the dedicated preference is invalid", () => {
+    spyOnProperty(window, "localStorage", "get").and.returnValue({
+      getItem: key => ({
+        "drum-machine:session:v1": JSON.stringify({volume: 0.42, pattern: emptyPattern()}),
+        "drum-machine:volume": "9"
+      })[key] ?? null
+    })
+    expect(new DrumMachinePage({}).state.volume).toBe(0.42)
   })
 })

@@ -1,6 +1,17 @@
 import {KIT_VOICES} from "./drum_kits"
 import {TRACKS, stepDuration, meterFor} from "./drum_patterns"
 
+export const MAX_DRUM_VOLUME = 1.5
+
+// Preserve the mix below the knee and round off peaks from overlapping hits.
+const peakCurve = Float32Array.from({length: 1025}, (_, index) => {
+  const input = index / 512 - 1
+  const magnitude = Math.abs(input)
+  if (magnitude <= 0.75) return input
+  const excess = (magnitude - 0.75) / 0.25
+  return Math.sign(input) * (0.75 + 0.25 * excess * (1 + excess * (1 - excess)))
+})
+
 // Schedule against the audio clock, independently of React renders.
 export default class DrumAudio {
   constructor(onStep) {
@@ -8,7 +19,7 @@ export default class DrumAudio {
     this.pending = []
   }
 
-  async start(getPattern, getMuted, volume) {
+  async start(getPattern, getMuted, getVolume) {
     this.stop()
     const token = this.token
     const AudioContext = window.AudioContext || window.webkitAudioContext
@@ -17,8 +28,11 @@ export default class DrumAudio {
     await this.context.resume()
     if (token !== this.token) return false
     this.master = this.context.createGain()
-    this.master.gain.value = volume
-    this.master.connect(this.context.destination)
+    this.master.gain.value = getVolume()
+    this.peakShaper = this.context.createWaveShaper()
+    this.peakShaper.curve = peakCurve
+    this.master.connect(this.peakShaper)
+    this.peakShaper.connect(this.context.destination)
     this.noise = this.context.createBuffer(1, this.context.sampleRate, this.context.sampleRate)
     const data = this.noise.getChannelData(0)
     for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1
@@ -127,6 +141,7 @@ export default class DrumAudio {
     cancelAnimationFrame(this.frame)
     this.pending = []
     if (this.master) { this.master.disconnect(); this.master = null }
+    if (this.peakShaper) { this.peakShaper.disconnect(); this.peakShaper = null }
   }
 
   dispose() {

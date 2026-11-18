@@ -43,7 +43,8 @@ class Layout extends Widget
                   span class: "wordmark", "Napland Music Tools"
 
         script type: "text/javascript", ->
-          raw "window.ST_initial_session = #{to_json @initial_state!}"
+          session_json = (to_json @initial_state!)\gsub "<", "\\u003c"
+          raw "window.ST_initial_session = #{session_json}"
 
         @include_js "main"
 

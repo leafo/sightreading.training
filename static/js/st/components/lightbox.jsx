@@ -70,6 +70,7 @@ export default class Lightbox extends React.Component {
 
   render() {
     return <dialog
+      aria-labelledby={this.props.ariaLabelledby}
       ref={this.dialogRef ||= React.createRef()}
       className={classNames(styles.lightbox, this.constructor.className, this.props.className)}
       onClick={(e) => {

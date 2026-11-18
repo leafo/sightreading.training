@@ -1,4 +1,6 @@
 import * as React from "react"
+import {Link} from "react-router-dom"
+import {getBeginnerSong} from "st/beginner_songs"
 
 import Keyboard from "st/components/keyboard"
 import StaffSongNotes from "st/components/staff_song_notes"
@@ -232,6 +234,17 @@ export class PlayAlongPage extends React.Component {
       return
     }
 
+    if (this.props.params.preset_id) {
+      const preset = getBeginnerSong(this.props.params.preset_id)
+      if (!preset) {
+        this.setState({songError: "Beginner song not found", loading: false})
+        return
+      }
+      this.setState({preset, bpm: preset.bpm, currentSongCode: preset.song,
+        songModel: {title: preset.title}})
+      return
+    }
+
     this.setState({loading: true})
     let request = new XMLHttpRequest()
 
@@ -262,6 +275,10 @@ export class PlayAlongPage extends React.Component {
   }
 
   setSong(song) {
+    if (this.state.preset) {
+      song.getTrack(0).trackName = "Melody"
+      song.getTrack(1).trackName = "Chords"
+    }
     let currentBeat = this.currentBeat
 
     if (this.state.songTimer) {
@@ -529,6 +546,11 @@ export class PlayAlongPage extends React.Component {
 
       <div className={classNames(styles.play_along_workspace, { [styles.settings_open]: this.state.settingsPanelOpen })}>
         {this.state.songModel ? <h2>{this.state.songModel.title}</h2> : null}
+        {this.state.preset ? <section>
+          <Link to="/play-along">Back to songs</Link>
+          <p>{this.state.preset.description}</p>
+          <p>Chords (one per measure): {this.state.preset.chords.map(c => c === "Fsm" ? "F#m" : c).join(" · ")}</p>
+        </section> : null}
         {this.renderSongTrackTools()}
         <div className={classNames(staffStyles.staff_wrapper, styles.staff_wrapper)}>
           {songError}
@@ -693,7 +715,7 @@ export class PlayAlongPage extends React.Component {
       parserParams={this.songParserParams()}
       ref={this.songEditorRef}
       songNotes={this.state.song}
-      song={this.state.songModel}
+      song={this.state.preset ? null : this.state.songModel}
       code={this.state.currentSongCode}
       onCode={code => this.setState({
         currentSongCode: code
@@ -830,5 +852,5 @@ export class PlayAlongPage extends React.Component {
 
 export const PlayAlongPageWithParams = React.forwardRef((props, ref) => {
   const params = useParams()
-  return <PlayAlongPage {...props} params={params} ref={ref} />
+  return <PlayAlongPage key={params.preset_id || params.song_id || "new"} {...props} params={params} ref={ref} />
 })

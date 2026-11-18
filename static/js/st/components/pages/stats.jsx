@@ -2,12 +2,13 @@ import * as React from "react"
 import classNames from "classnames"
 import {Navigate} from "react-router-dom"
 import {setTitle} from "st/globals"
+import {practiceRecap} from "st/share_stats"
+import Toast from "st/components/toast"
 
 import pageContainerStyles from "../page_container.module.css"
 import styles from "./stats.module.css"
 
 import { startOfDay, format as formatDate, addDays, parseISO } from "date-fns"
-import { zonedTimeToUtc } from "date-fns-tz"
 
 import {Line} from "react-chartjs-2";
 
@@ -32,6 +33,7 @@ export default class StatsPage extends React.Component {
   }
 
   componentDidMount() {
+    this.mounted = true
     setTitle("Stats")
 
     const session = getSession()
@@ -42,6 +44,7 @@ export default class StatsPage extends React.Component {
   }
 
   componentWillUnmount() {
+    this.mounted = false
     if (this.request) {
       this.request.abort()
       delete this.request
@@ -79,7 +82,7 @@ export default class StatsPage extends React.Component {
   }
 
   dateStops(days=15) {
-    let d = startOfDay(zonedTimeToUtc(new Date()))
+    let d = startOfDay(new Date())
 
     let out = []
 
@@ -90,6 +93,20 @@ export default class StatsPage extends React.Component {
 
     out.reverse()
     return out
+  }
+
+  async copyRecap(recap) {
+    let message
+    try {
+      await navigator.clipboard.writeText(recap)
+      message = "Practice recap copied."
+    } catch {
+      message = "Could not copy automatically. Select and copy the recap below."
+    }
+
+    if (this.mounted) {
+      this.setState(({notificationId = 0}) => ({message, notificationId: notificationId + 1}))
+    }
   }
 
   renderStats() {
@@ -106,8 +123,8 @@ export default class StatsPage extends React.Component {
     for (let stop of stops) {
       let s = statsByDate[stop]
       if (s) {
-        hits.push(s.hits)
-        misses.push(s.misses)
+        hits.push(Number(s.hits ?? 0))
+        misses.push(Number(s.misses ?? 0))
       } else {
         hits.push(0)
         misses.push(0)
@@ -143,6 +160,8 @@ export default class StatsPage extends React.Component {
       ]
     }
 
+    const recap = practiceRecap(stops, hits, misses)
+
     return <div>
       {this.state.summary && <section className={styles.summary} aria-label="All-time hit statistics">
         <h2>All-time hits</h2>
@@ -152,6 +171,15 @@ export default class StatsPage extends React.Component {
       </section>}
       <h2>Daily stats</h2>
       <Line data={data} options={options} width={600} height={300} />
+      {recap && <details className={styles.share_stats}>
+        <summary>Share practice stats</summary>
+        <p>Copy a recap of the 15 days shown above to share wherever you like.</p>
+        <label htmlFor="practice-recap">Practice recap</label>
+        <textarea id="practice-recap" rows={4} readOnly value={recap} />
+        <button type="button" onClick={() => this.copyRecap(recap)}>Copy recap</button>
+      </details>}
+      <Toast message={this.state.message} notificationId={this.state.notificationId}
+        onDismiss={() => this.setState({message: undefined})} />
     </div>
   }
 
