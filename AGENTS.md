@@ -33,3 +33,24 @@
   as temporary, dismissible toasts, rather than persistent text in the page layout.
   Reuse `components/toast.jsx`; the default duration is five seconds. Keep actionable
   field-validation errors beside their input/dialog until corrected.
+
+
+# Page rendering, accessibility and design consistency
+
+- Whenever changing pages, navigation, controls, or other rendered UI, render a
+  representative page in a real browser before marking the work complete. Inspect
+  the rendered result, not only source code or a successful build. Check desktop
+  and mobile sizes and relevant light/dark themes, with signed-in/out and changed
+  interaction states as applicable. Include a rendered example or screenshot
+  evidence in the PR/review notes.
+- Review usability and accessibility: readable text and contrast, clipping,
+  overflow, spacing, touch targets, visible keyboard focus, keyboard operation,
+  accessible names, and whether the important actions remain discoverable.
+- Keep the site's design uniform. Reuse shared components, styles, and icon
+  definitions rather than introducing one-off variations of standard controls.
+- Use modern, consistent icons for standard actions such as copy, settings,
+  information/help, feedback, and statistics. An icon button or icon link must not
+  also have a visible text label. Give the control an accessible name (`aria-label`,
+  or appropriate image alt text) and a tooltip (`title`); hide decorative SVGs
+  from assistive technology. Ordinary text-only buttons remain appropriate for
+  actions that need an explicit written description.

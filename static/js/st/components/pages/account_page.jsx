@@ -1,5 +1,5 @@
 import * as React from "react"
-import {Navigate} from "react-router-dom"
+import {LoginRedirect} from "st/components/auth_navigation"
 
 import {getSession} from "st/app"
 import {postAuth} from "st/auth"
@@ -19,7 +19,7 @@ export default function AccountPage({onSave}) {
 
   React.useEffect(() => { setTitle("Account") }, [])
 
-  if (!user) return <Navigate replace to="/login" />
+  if (!user) return <LoginRedirect />
 
   async function save(event) {
     event.preventDefault()

@@ -216,3 +216,13 @@ trigger a single maintainer mention at five total votes. See
 [the integration contract](docs/feedback.md) for settings and delivery behavior.
 The full backend, migrations and a repository-scoped GitHub credential are required;
 the frontend-only preview shows an availability message.
+
+
+## Returning after login
+
+Login and registration return to the page where authentication started, including
+its query and fragment. Shared authentication links carry a local `return_to`
+URL through page refreshes, new tabs, and switching between login and registration.
+Protected Account and Stats routes use the same flow. External destinations and
+auth-page loops fall back to Staff. Authentication still loads a fresh document
+to refresh account state and CSRF tokens; logout continues to return to Staff.
