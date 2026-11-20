@@ -13,7 +13,7 @@ function browser(fetch) {
   const state = {token: "stale-page-token", navigations: []}
   const module = {exports: {}}
   vm.runInNewContext(source, {
-    module, exports: module.exports, FormData, fetch,
+    module, exports: module.exports, FormData, fetch, URL, URLSearchParams,
     document: {getElementById: () => ({setAttribute: (key, value) => {state.token = value}})},
     window: {location: {assign: path => state.navigations.push(path)}},
   })
@@ -87,4 +87,55 @@ test("HTTP errors and unapproved destinations cannot be reported as successful a
   await assert.rejects(auth.postAuth("/login.json", new FormData()), /Authentication failed/)
   await assert.rejects(auth.postAuth("https://other.example/login", new FormData()), /Unknown authentication action/)
   assert.deepEqual(auth.state.navigations, [])
+})
+
+
+test("returns to the full initiating page after login, including query and fragment", () => {
+  const auth = browser(() => {throw new Error("unexpected network")})
+  for (const path of ["/feedback", "/scales?instrument=piano#keyboard", "/song/123/test-song?transpose=2#practice"]) {
+    const page = new URL(path, "https://music-tools.example")
+    const login = new URL(auth.authUrl("/login", page), page)
+    assert.equal(login.searchParams.get("return_to"), path)
+    const destination = auth.authReturnTo(login)
+    assert.equal(auth.completeAuth({currentUser: {id: 1}}, {assign: p => auth.state.navigations.push(p)}, destination), true)
+    assert.equal(auth.state.navigations.at(-1), path)
+  }
+})
+
+test("switching forms, refreshing, and separate tabs retain their own return destinations", () => {
+  const auth = browser(() => {throw new Error("unexpected network")})
+  for (const origin of ["/feedback?search=scroll#issues", "/chord-lab?root=C"]) {
+    const login = new URL(auth.authUrl("/login", new URL(origin, "https://music-tools.example")), "https://music-tools.example")
+    const register = new URL(auth.authUrl("/register", login), login)
+    const backToLogin = new URL(auth.authUrl("/login", register), register)
+    // A fresh helper instance represents a reload/new document, with no storage.
+    const fresh = browser(() => {throw new Error("unexpected network")})
+    assert.equal(fresh.authReturnTo(register), origin)
+    assert.equal(fresh.authReturnTo(backToLogin), origin)
+    assert.equal(fresh.completeAuth({currentUser: {id: 2}}, {assign: p => fresh.state.navigations.push(p)}, fresh.authReturnTo(register)), true)
+    assert.deepEqual(fresh.state.navigations, [origin])
+  }
+})
+
+test("blocks external redirects, malformed targets, control characters and auth-page loops", () => {
+  const auth = browser(() => {throw new Error("unexpected network")})
+  for (const target of [undefined, null, "", "https://evil.example", "//evil.example", "javascript:alert(1)",
+    "/\\evil.example", "/%5cevil.example", "/%2f%2fevil.example", "/feedback\n", "/%0afeedback", "/%", "/login", "/register/", "/LOGIN?return_to=/feedback",
+    "/x/../login", "/%6cogin", "/register?return_to=//evil.example"]) {
+    assert.equal(auth.safeReturnTo(target), "/", String(target))
+    auth.completeAuth({currentUser: {id: 1}}, {assign: p => auth.state.navigations.push(p)}, target)
+    assert.equal(auth.state.navigations.at(-1), "/")
+  }
+  assert.throws(() => auth.authUrl("https://evil.example/login", {pathname: "/feedback"}), /Unknown authentication page/)
+  assert.equal(auth.authReturnTo({pathname: "/login", search: "?return_to=https%3A%2F%2Fevil.example"}), "/")
+})
+
+test("login/register without an origin fall back home; rejected login stays on its form", () => {
+  const auth = browser(() => {throw new Error("unexpected network")})
+  for (const pathname of ["/login", "/register"]) assert.equal(auth.authReturnTo({pathname}), "/")
+  assert.equal(auth.completeAuth({errors: ["Incorrect password"]}, {assign: p => auth.state.navigations.push(p)}, "/feedback"), false)
+  assert.deepEqual(auth.state.navigations, [])
+  // A stale query on another page cannot affect logout's existing home redirect.
+  auth.completeAuth({success: true}, {pathname: "/feedback", search: "?return_to=/account", assign: p => auth.state.navigations.push(p)})
+  assert.deepEqual(auth.state.navigations, ["/"])
 })

@@ -1,5 +1,5 @@
 import * as React from "react"
-import {Link} from "react-router-dom"
+import {AuthLink} from "st/components/auth_navigation"
 import {getSession} from "st/app"
 import {csrfToken, setTitle, FRONTEND_ONLY} from "st/globals"
 import Toast from "st/components/toast"
@@ -110,7 +110,7 @@ export default function FeedbackPage() {
     <p>At {threshold} total votes from this site and GitHub thumbs-up reactions, the maintainer gets a GitHub mention. Each signed-in account gets one website vote per issue.</p>
     <p>Voting posts your site username publicly on GitHub: “username voted for this from the site”.</p>
     {preview ? <p role="status">Feedback is available on the full site. This frontend preview cannot search, create tickets, or save votes.</p> : <>
-      {!signedIn && <p><Link to="/login">Log in</Link> or <Link to="/register">register</Link> to vote or submit. Anyone can search.</p>}
+      {!signedIn && <p><AuthLink to="/login">Log in</AuthLink> or <AuthLink to="/register">register</AuthLink> to vote or submit. Anyone can search.</p>}
       <form className={styles.search} onSubmit={e => { e.preventDefault(); load(query) }}>
         <label htmlFor="feedback-search">Search open issues</label>
         <div><input id="feedback-search" maxLength={200} value={query} placeholder="For example: scroll speed" onChange={e => {

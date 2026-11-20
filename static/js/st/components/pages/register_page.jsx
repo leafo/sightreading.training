@@ -1,16 +1,17 @@
 import * as React from "react"
 
-import {Link, Navigate} from "react-router-dom"
+import {Navigate} from "react-router-dom"
 import {setTitle} from "st/globals"
 import {JsonForm, TextInputRow} from "st/components/forms"
 
 import {getSession} from "st/app"
+import {AuthLink, withAuthReturnTo} from "st/components/auth_navigation"
 import {completeAuth} from "st/auth"
 
 import pageContainerStyles from "../page_container.module.css"
 import formStyles from "st/components/form.module.css"
 
-export default class RegisterPage extends React.Component {
+export class RegisterPage extends React.Component {
   componentDidMount() {
     setTitle("Register Account")
   }
@@ -23,7 +24,7 @@ export default class RegisterPage extends React.Component {
       return
     }
 
-    if (!completeAuth(res)) this.setState({errorMessage: "Could not register. Please try again."})
+    if (!completeAuth(res, window.location, this.props.returnTo)) this.setState({errorMessage: "Could not register. Please try again."})
   }
 
   constructor() {
@@ -33,7 +34,7 @@ export default class RegisterPage extends React.Component {
 
   render() {
     if (getSession().currentUser) {
-      return <Navigate replace to="/" />
+      return <Navigate replace to={this.props.returnTo} />
     }
 
     return <div className={`register_page ${pageContainerStyles.page_container}`}>
@@ -50,9 +51,11 @@ export default class RegisterPage extends React.Component {
         <div className={formStyles.form_buttons}>
           <button className="big_button">Submit</button>
           {" or "}
-          <Link to="/login">Log in to existing account</Link>
+          <AuthLink to="/login">Log in to existing account</AuthLink>
         </div>
       </JsonForm>
     </div>
   }
 }
+
+export default withAuthReturnTo(RegisterPage)

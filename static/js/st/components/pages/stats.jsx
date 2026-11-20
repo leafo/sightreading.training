@@ -1,6 +1,6 @@
 import * as React from "react"
 import classNames from "classnames"
-import {Navigate} from "react-router-dom"
+import {LoginRedirect} from "st/components/auth_navigation"
 import {setTitle} from "st/globals"
 import {practiceRecap} from "st/share_stats"
 import Toast from "st/components/toast"
@@ -185,7 +185,7 @@ export default class StatsPage extends React.Component {
 
   render() {
     if (!getSession().currentUser) {
-      return <Navigate to="/" replace />
+      return <LoginRedirect />
     }
 
     let inside

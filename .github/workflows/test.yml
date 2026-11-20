@@ -25,3 +25,22 @@ jobs:
         run: docker build -t sightreading-test .
       - name: Test full backend with disposable PostgreSQL
         run: docker run --rm sightreading-test
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with: {node-version: '24', cache: npm}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Render and review navigation and login return flows
+        run: npm run test_navigation_ui
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: navigation-review
+          path: dev/out/navigation-review/*.png
+          if-no-files-found: warn

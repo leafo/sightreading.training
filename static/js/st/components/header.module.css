@@ -89,7 +89,13 @@
 }
 
 .tool_groups { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
-.footer_controls { display: flex; align-items: center; justify-content: space-between; }
+.footer_controls { display: flex; align-items: center; justify-content: space-between; gap: 2px; min-width: 0; }
+/* Four fixed-size controls fit the compact sidebar without text wrapping. */
+.sidebar .footer_controls > a,
+.sidebar .footer_controls > details { box-sizing: border-box; flex: 0 0 40px; width: 40px; min-width: 40px; }
+.sidebar .footer_controls > a { justify-content: center; min-height: 44px; padding: 0; }
+.sidebar .footer_controls > details > summary { width: 40px; height: 44px; }
+.footer_controls svg { display: block; flex-shrink: 0; }
 
 .tool_groups a { white-space: nowrap; }
 .sidebar .midi_button_wrapper { margin-inline: 0; min-width: 0; overflow: hidden; }

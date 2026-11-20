@@ -4,6 +4,8 @@ import {Link, NavLink} from "react-router-dom"
 
 import {trigger} from "st/events"
 import MidiButton from "st/components/midi_button"
+import {ActionIcon} from "st/components/control_icons"
+import {AuthLink} from "st/components/auth_navigation"
 import ThemePicker from "st/components/theme_picker"
 
 
@@ -39,8 +41,8 @@ export default class Header extends React.Component {
         </div>
       } else {
         accountArea = <div className={classNames(styles.account_area, styles.logged_out)}>
-          <NavLink to="/login" {...toggleActive}>Log in</NavLink>
-          <NavLink to="/register" {...toggleActive}>Register</NavLink>
+          <AuthLink to="/login" {...toggleActive}>Log in</AuthLink>
+          <AuthLink to="/register" {...toggleActive}>Register</AuthLink>
         </div>
       }
 
@@ -63,7 +65,7 @@ export default class Header extends React.Component {
           <div className={styles.midi_button_wrapper}>{this.renderMidiButton()}</div>
           <div className={styles.footer_controls}>
             <NavLink to="/about" aria-label="Guide" title="Guide">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5M12 17v1" /></svg>
+              <ActionIcon name="help" size={22} />
             </NavLink>
             {userLinks.filter(link => link.key === "feedback" || link.key === "stats")}
             <ThemePicker />
@@ -102,14 +104,14 @@ export default class Header extends React.Component {
       <NavLink key="chord-lab" to="/chord-lab" {...toggleActive}>Chord Lab</NavLink>,
       <NavLink key="chord-sheet" to="/chord-sheet" {...toggleActive}>Chord Sheet</NavLink>,
       <NavLink key="chord-reference" to="/chord-reference" {...toggleActive}>Chord Reference</NavLink>,
-      <NavLink end key="feedback" to="/feedback" {...toggleActive}>Feedback</NavLink>,
+      <NavLink end key="feedback" to="/feedback" {...toggleActive} aria-label="Feedback" title="Feedback"><ActionIcon name="feedback" size={22} /></NavLink>,
       <NavLink end key="about" to="/about" {...toggleActive}>Guide</NavLink>,
     ]
 
     const session = getSession() || {}
 
     if (session.currentUser) {
-      links.push(<NavLink end key="stats" to="/stats" {...toggleActive}>Stats</NavLink>)
+      links.push(<NavLink end key="stats" to="/stats" {...toggleActive} aria-label="Stats" title="Stats"><ActionIcon name="stats" size={22} /></NavLink>)
     }
 
     return links
